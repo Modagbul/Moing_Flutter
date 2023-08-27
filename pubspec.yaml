@@ -40,6 +40,14 @@ dependencies:
   firebase_auth: ^4.7.3
   sign_in_with_apple: ^5.0.0
   http: ^1.1.0
+  get: ^4.6.5
+  get_it: ^7.2.0
+  navigation_history_observer: ^1.1.0
+  time_range_picker: ^2.2.0
+  timeago: ^3.2.2
+  flutter_screenutil: ^5.8.4
+  provider: ^6.0.4
+  flutter_local_notifications: ^15.1.0+1
 
 dev_dependencies:
   flutter_test:

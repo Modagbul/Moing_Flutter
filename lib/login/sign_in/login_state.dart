@@ -1,30 +1,49 @@
 import 'dart:convert';
-
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:moing_flutter/login/sign_in/login_platform.dart';
+import 'package:http/http.dart' as http;
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:moing_flutter/login/login_platform.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+class LoginState extends ChangeNotifier {
+  /// Login Page에서 사용하는 context를 가져옴.
+  final BuildContext context;
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+  /// LoginPage에서 사용할 State 관련 변수들 지정
   LoginPlatform _loginPlatform = LoginPlatform.none;
 
+  /// Context를 사용하여 initState() 생성
+  /// initState, dispose에서 controller 등 생성, 삭제 해주고,
+  /// 우리가 어떤 페이지에 있는지 알기 위해 log를 찍어서 확인한다.
+  LoginState({required this.context}) {
+    log('Instance "LoginState" has been created');
+    initState();
+  }
 
+  @override
+  void dispose() {
+    log('Instance "LoginState" has been removed');
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    /// 회사 앱에서는 Hive에 사용자를 저장해서, 값이 있으면 가져오는 식으로 사용함
+  }
+
+  /// 어떤 SNS로 로그인 했는지 확인 및 로그아웃 창 생성 (임시)
+  void checkSNS() {
+    if (_loginPlatform != LoginPlatform.none) {
+
+    }
+  }
+
+  /// 카카오 로그인 함수
   void signInWithKakao() async {
     try {
       bool isInstalled = await isKakaoTalkInstalled();
@@ -45,14 +64,13 @@ class _LoginScreenState extends State<LoginScreen> {
       final profileInfo = json.decode(response.body);
       print(profileInfo.toString());
 
-      setState(() {
-        _loginPlatform = LoginPlatform.kakao;
-      });
+      _loginPlatform = LoginPlatform.kakao;
     } catch (error) {
       print('카카오톡으로 로그인 실패 $error');
     }
   }
 
+  /// 로그아웃 함수
   void signOut() async {
     switch (_loginPlatform) {
       case LoginPlatform.facebook:
@@ -70,54 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
         break;
     }
 
-    setState(() {
-      _loginPlatform = LoginPlatform.none;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: signInWithApple,
-              child: Text('애플 로그인하기'),
-            ),
-            SignInWithAppleButton(
-              onPressed: signApple13,
-            ),
-            _loginPlatform != LoginPlatform.none
-                ? _logoutButton()
-                : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _loginButton(
-                  'kakao_logo',
-                  signInWithKakao,
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _loginButton(String path, VoidCallback onTap) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Ink.image(
-        image: AssetImage('asset/image/kakao_login_logo.png'),
-        width: 300,
-        height: 45,
-        child: InkWell(
-          onTap: onTap,
-        ),
-      ),
-    );
+    _loginPlatform = LoginPlatform.none;
   }
 
   /// IOS 13 버전 앱 로그인
@@ -153,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       print(getUserInfoFromJWT(appleCredential.identityToken));
 
+      _loginPlatform = LoginPlatform.apple;
       // Sign in the user with Firebase. If the nonce we generated earlier does
       // not match the nonce in `appleCredential.identityToken`, sign in will fail.
       /// 파이어베이스 인증
@@ -168,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // 이메일 가져오는 메서드
+  /// 애플 사용자 이메일 가져오는 메서드
   String? getUserInfoFromJWT(String? jwtDecode) {
     List<String> jwtList = jwtDecode?.split('.') ?? [];
     String payLoad = jwtList[1];
@@ -186,31 +158,4 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return null;
   }
-
-  /// IOS 13버전 이상 로그인 테스트
-  Future<void> signApple13() async {
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
-    print('credential: $credential');
-    print(credential.email);
-    print(credential.identityToken);
-    print('${credential.givenName} ${credential.familyName}');
-  }
-
-  Widget _logoutButton() {
-    return ElevatedButton(
-      onPressed: signOut,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(
-          const Color(0xff0165E1),
-        ),
-      ),
-      child: const Text('로그아웃'),
-    );
-  }
 }
-
