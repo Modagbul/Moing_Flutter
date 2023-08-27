@@ -1,8 +1,23 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.moing.moing_team">
     <application
-        android:label="moing_flutter"
+        android:label="모잉"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- 안드로이드 APPLE LOGIN Redirect를 위한 Activity -->
+        <activity
+            android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="signinwithapple" />
+                <data android:path="callback" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -29,17 +44,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <activity
-            android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
-            android:exported="true">
-            <intent-filter android:label="flutter_web_auth">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <!-- Redirect URI, "kakao${6671c3a9b377c8f302c17c14e2c940f2}://oauth" 형식 -->
-                <data android:scheme="kakao${6671c3a9b377c8f302c17c14e2c940f2}" android:host="oauth"/>
-            </intent-filter>
-        </activity>
     </application>
 </manifest>
