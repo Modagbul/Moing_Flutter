@@ -77,37 +77,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              '모잉 개발 드가자,,,',
-              style: TextStyle(
-                fontSize: 32.0,
-              ),
-            ),
             ElevatedButton(
-                onPressed: signInWithApple,
-                child: Text('애플 로그인하기'),
+              onPressed: signInWithApple,
+              child: Text('애플 로그인하기'),
             ),
             SignInWithAppleButton(
-                onPressed: signApple13,
+              onPressed: signApple13,
+            ),
+            _loginPlatform != LoginPlatform.none
+                ? _logoutButton()
+                : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _loginButton(
+                  'kakao_logo',
+                  signInWithKakao,
+                )
+              ],
             ),
           ],
-          child: _loginPlatform != LoginPlatform.none
-              ? _logoutButton()
-              : Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _loginButton(
-                'kakao_logo',
-                signInWithKakao,
-              )
-            ],
-          )),
+        ),
+      ),
     );
   }
 
@@ -131,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
     bool isAvailable = await SignInWithApple.isAvailable();
 
     /// IOS 13 버전 이상인 경우
-    if(isAvailable) {
+    if (isAvailable) {
       // Request credential for the currently signed in Apple account.
       final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -139,8 +134,9 @@ class _LoginScreenState extends State<LoginScreen> {
           AppleIDAuthorizationScopes.fullName,
         ],
         webAuthenticationOptions: WebAuthenticationOptions(
-            clientId: 'moing-team.moing.com',
-            redirectUri: Uri.parse('https://moing-ver2.firebaseapp.com/__/auth/handler'),
+          clientId: 'moing-team.moing.com',
+          redirectUri: Uri.parse(
+              'https://moing-ver2.firebaseapp.com/__/auth/handler'),
         ),
       );
 
@@ -166,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
     /// IOS 13 버전이 아닌 경우
     else {
       throw PlatformException(
-          code: 'APPLE_SIGN_IN_NOT_AVAILABLE',
+        code: 'APPLE_SIGN_IN_NOT_AVAILABLE',
         message: 'Sign in With Apple is not available on this device.',
       );
     }
@@ -184,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
     bool isVerified = userInfo['email_verified'] == "true";
-    if(isVerified) {
+    if (isVerified) {
       return userInfo['email'];
     }
 
@@ -194,17 +190,16 @@ class _LoginScreenState extends State<LoginScreen> {
   /// IOS 13버전 이상 로그인 테스트
   Future<void> signApple13() async {
     final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
     );
     print('credential: $credential');
     print(credential.email);
     print(credential.identityToken);
     print('${credential.givenName} ${credential.familyName}');
   }
-}
 
   Widget _logoutButton() {
     return ElevatedButton(
