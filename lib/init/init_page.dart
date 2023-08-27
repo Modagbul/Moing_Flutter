@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/login/init/init_state.dart';
+import 'package:moing_flutter/init/init_state.dart';
 import 'package:provider/provider.dart';
 
 class InitPage extends StatelessWidget {
