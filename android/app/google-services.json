@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "78739178434",
+    "project_id": "moing-ver2",
+    "storage_bucket": "moing-ver2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78739178434:android:1a610ee48682fc6044cc5b",
+        "android_client_info": {
+          "package_name": "com.moing.moing_team"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78739178434-21rmjq7q7b387p04hqm4o2ar3o0lrscr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moing.moing_team",
+            "certificate_hash": "83b5e8d6846094359f5d6411125b656badb960ad"
+          }
+        },
+        {
+          "client_id": "78739178434-kv9aqeagvfpmp7t9lgjkb630vg4tjser.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdWpdGeQPybHDem8lXOvOtT3s6ZkuHn5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78739178434-kv9aqeagvfpmp7t9lgjkb630vg4tjser.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "78739178434-0ku350gro7c3tc7a327gv226d1qcgvsv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.moing.teamMoing"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-package com.example.moing_flutter
+package com.moing.moing_team
 
 import io.flutter.embedding.android.FlutterActivity
 
