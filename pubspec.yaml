@@ -48,6 +48,7 @@ dependencies:
   flutter_screenutil: ^5.8.4
   provider: ^6.0.4
   flutter_local_notifications: ^15.1.0+1
+  flutter_svg: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ dev_dependencies:
 flutter:
   assets:
     - asset/image/
+    - asset/icons/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

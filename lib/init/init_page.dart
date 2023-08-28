@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/init/init_state.dart';
 import 'package:provider/provider.dart';
 
@@ -8,7 +9,10 @@ class InitPage extends StatelessWidget {
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => InitState(context: context), lazy: false,),
+        ChangeNotifierProvider(
+          create: (context) => InitState(context: context),
+          lazy: false,
+        ),
       ],
       builder: (context, _) {
         return InitPage();
@@ -18,24 +22,28 @@ class InitPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.passthrough,
-      children: [
-        /// splash 이미지 (임의로 카카오톡 이미지 집어넣음)
-        Image.asset(
-            'asset/image/kakao_login_logo.png',
-            fit: BoxFit.contain,
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(
+                'asset/image/moing_icon.png',
+                fit: BoxFit.contain,
+              ),
+            SvgPicture.asset(
+              'asset/icons/moing_logo.svg',
+              fit: BoxFit.contain,
+            ),
+            SvgPicture.asset(
+              'asset/icons/moing_text.svg',
+              fit: BoxFit.contain,
+            ),
+          ],
         ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            // brightness: Brightness.dark,
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            automaticallyImplyLeading: false,
-          ),
-        ),
-      ],
+      ),
     );
   }
+
 }
