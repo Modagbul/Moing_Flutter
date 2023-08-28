@@ -42,6 +42,7 @@ class OnBoardingThirdPage extends StatelessWidget {
                 '모잉불과 함께 \n우리 모임을 불태울 수 있어요',
                 style: TextStyle(
                   fontSize: 18.0,
+                  fontWeight: FontWeight.w600,
                   color: Color(0xffF4F6F8),
                 ),
                 textAlign: TextAlign.center,
@@ -77,6 +78,7 @@ class OnBoardingThirdPage extends StatelessWidget {
                 text: '시작하기',
                 textStyle: TextStyle(
                   fontSize: 18.0,
+                  fontWeight: FontWeight.w600,
                   color: Color(0xff1C1B1B),
                 ),
               ),

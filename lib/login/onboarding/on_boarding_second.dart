@@ -42,6 +42,7 @@ class OnBoardingSecondPage extends StatelessWidget {
                 '모잉불과 함께 \n우리 모임을 불태울 수 있어요',
                 style: TextStyle(
                   fontSize: 18.0,
+                  fontWeight: FontWeight.w600,
                   color: Color(0xffF4F6F8),
                 ),
                 textAlign: TextAlign.center,
@@ -76,6 +77,7 @@ class OnBoardingSecondPage extends StatelessWidget {
                 text: '다음으로',
                 textStyle: TextStyle(
                   fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
                   color: Color(0xffF1F1F1),
                 ),
               ),

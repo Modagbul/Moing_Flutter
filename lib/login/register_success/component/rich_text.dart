@@ -7,8 +7,9 @@ class RichTextGuide extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: TextStyle(
-          fontSize: 24.0,
+          fontSize: 18.0,
           color: Color(0xffFF725F),
+          fontWeight: FontWeight.w600,
         ),
         children: [
           TextSpan(

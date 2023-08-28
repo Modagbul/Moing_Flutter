@@ -38,7 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.15.1
   firebase_auth: ^4.7.3
-  sign_in_with_apple: ^5.0.0
+  sign_in_with_apple: ^3.0.0
+  crypto: ^3.0.3
   http: ^1.1.0
   get: ^4.6.5
   get_it: ^7.2.0
@@ -86,6 +87,27 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 
+  fonts:
+    - family: pretendard
+      fonts:
+        - asset: asset/fonts/Pretendard-Black.ttf
+          weight: 900
+        - asset: asset/fonts/Pretendard-Bold.ttf
+          weight: 700
+        - asset: asset/fonts/Pretendard-ExtraBold.ttf
+          weight: 800
+        - asset: asset/fonts/Pretendard-ExtraLight.ttf
+          weight: 200
+        - asset: asset/fonts/Pretendard-Light.ttf
+          weight: 300
+        - asset: asset/fonts/Pretendard-Medium.ttf
+          weight: 500
+        - asset: asset/fonts/Pretendard-Regular.ttf
+          weight: 400
+        - asset: asset/fonts/Pretendard-SemiBold.ttf
+          weight: 600
+        - asset: asset/fonts/Pretendard-Thin.ttf
+          weight: 100
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

@@ -43,6 +43,7 @@ class OnBoardingFirstPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Color(0xffF4F6F8),
+                  fontWeight: FontWeight.w600,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -81,6 +82,7 @@ class OnBoardingFirstPage extends StatelessWidget {
                     text: '다음으로',
                     textStyle: TextStyle(
                       fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
                       color: Color(0xffF1F1F1),
                     ),
                   ),

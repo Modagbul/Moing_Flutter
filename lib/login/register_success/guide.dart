@@ -25,6 +25,7 @@ class RegisterGuide extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24.0,
+                  fontWeight: FontWeight.w700,
                   color: Color(0xffE8E8EF),
                 ),
               ),
@@ -36,6 +37,7 @@ class RegisterGuide extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.0,
                   color: Color(0xff9B9999),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               SizedBox(
@@ -48,6 +50,7 @@ class RegisterGuide extends StatelessWidget {
                   textStyle: TextStyle(
                     color: Color(0xffF1F1F1),
                     fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
                   ),
                   buttonStyle: ButtonStyle(
                     fixedSize: MaterialStateProperty.all(
@@ -75,6 +78,7 @@ class RegisterGuide extends StatelessWidget {
                   textStyle: TextStyle(
                     color: Color(0xff1C1B1B),
                     fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
                   ),
                   buttonStyle: ButtonStyle(
                     fixedSize: MaterialStateProperty.all(

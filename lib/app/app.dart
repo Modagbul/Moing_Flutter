@@ -19,6 +19,10 @@ class MoingApp extends StatelessWidget {
       useInheritedMediaQuery: true,
       builder: (BuildContext context, child) {
         return MaterialApp(
+          theme: ThemeData(
+            fontFamily: 'pretendard',
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
           navigatorKey: GetIt.I.get<GlobalKey<NavigatorState>>(),
           title: 'Moing',
           initialRoute: InitPage.routeName,

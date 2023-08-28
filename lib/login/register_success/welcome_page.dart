@@ -30,6 +30,7 @@ class WelcomePage extends StatelessWidget {
               '환영해요, 모닥불님!',
               style: TextStyle(
                 fontSize: 24.0,
+                fontWeight: FontWeight.w600,
                 color: Color(0xffF4F6F8),
               ),
             ),
