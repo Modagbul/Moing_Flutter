@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:moing_flutter/login/onboarding/on_boarding.dart';
+import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_platform.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -47,7 +47,7 @@ class LoginState extends ChangeNotifier {
   /// 온보딩 페이지 이동 (테스트 코드)
   void moveOnBoard() {
     Navigator.of(context).pushNamed(
-      OnBoardingPage.routeName,
+      OnBoardingFirstPage.routeName,
     );
   }
   /// 카카오 로그인 함수
