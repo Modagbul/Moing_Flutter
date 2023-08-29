@@ -14,7 +14,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="signinwithapple" />
+                <data android:scheme="signinwithapplemoing" />
                 <data android:path="callback" />
             </intent-filter>
         </activity>

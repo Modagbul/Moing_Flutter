@@ -111,6 +111,7 @@ class LoginState extends ChangeNotifier {
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
+        /// ANDROID인 경우
         webAuthenticationOptions: WebAuthenticationOptions(
           clientId: 'moing-team.moing.com',
           redirectUri: Uri.parse(
