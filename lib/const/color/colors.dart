@@ -10,6 +10,7 @@ const grayScaleGrey300 = Color(0xffD9DCE1);
 const grayScaleGrey200 = Color(0xffE8EBEF);
 const grayScaleGrey100 = Color(0xffF4F6F8);
 const grayScaleBlack = Color(0xff0A0A0A);
+const grayScaleWhite = Color(0xffFFFFFF);
 
 const coralGrey900 = Color(0xff6B3028);
 const coralGrey800 = Color(0xff8C3F34);

@@ -1,12 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
+import 'package:moing_flutter/const/color/colors.dart';
 
 class SignUpState extends ChangeNotifier {
   final BuildContext context;
 
   final TextEditingController nicknameController = TextEditingController();
-  Color nicknameColor = const Color(0xff656569);
+  Color nicknameColor = grayScaleGrey550;
   String nicknameInfo = '(0/10)';
   String nicknameCheckButtonText = '닉네임 중복 확인';
   String prevSubmitNickname = '';
@@ -34,7 +35,7 @@ class SignUpState extends ChangeNotifier {
   // 닉네임 컬러, 닉네임 정보, 닉네임 버튼 텍스트 초기화 메소드
   void initNickname() {
     // 닉네임 컬러 - 기본 색상으로 변경
-    nicknameColor = const Color(0xff656569);
+    nicknameColor = grayScaleGrey550;
     // 닉네임 정보 - 닉네임 길이에 맞게 변경
     nicknameInfo = '(${nicknameController.text.length}/10)';
     // 닉네임 버튼 텍스트 - 초기화
@@ -70,7 +71,7 @@ class SignUpState extends ChangeNotifier {
       // 닉네임 정보 - 경고 텍스트
       nicknameInfo = '중복된 닉네임이에요';
       // 닉네임 컬러 - 경고 색상
-      nicknameColor = const Color(0xffF43A6F);
+      nicknameColor = errorColor;
       // 닉네임 버튼 텍스트 - '닉네임 중복 확인'으로 초기화
       nicknameCheckButtonText = '닉네임 중복 확인';
       notifyListeners();
@@ -89,7 +90,7 @@ class SignUpState extends ChangeNotifier {
     // 닉네임 정보 - 허용 텍스트
     nicknameInfo = '사용 가능한 닉네임이에요';
     // 닉네임 컬러 - 허용 컬러
-    nicknameColor = const Color(0xff88F0BE);
+    nicknameColor = subLight2;
     // 닉네임 버튼 텍스트 - '다음으로'
     nicknameCheckButtonText = '다음으로';
     // 제출한 닉네임 저장
