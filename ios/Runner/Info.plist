@@ -25,14 +25,19 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakao6671c3a9b377c8f302c17c14e2c940f2</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>78739178434-v9ou55jemaf18vrhhcvuu86q5amquugg.apps.googleusercontent.com</string>
+				<string>com.googleusercontent.apps.78739178434-v9ou55jemaf18vrhhcvuu86q5amquugg</string>
 			</array>
 		</dict>
-		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -59,19 +64,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>CFBundleURLTypes</key>
-        <array>
-          <dict>
-          <key>CFBundleURLSchemes</key>
-          <array>
-            <!-- kakao login -->
-            <string>kakao6671c3a9b377c8f302c17c14e2c940f2</string>
-          </array>
-          </dict>
-        </array>
 </dict>
 </plist>
