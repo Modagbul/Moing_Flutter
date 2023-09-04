@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
-import 'package:moing_flutter/login/sign_in/login_platform.dart';
 import 'package:http/http.dart' as http;
+import 'package:moing_flutter/utils/api/api_error.dart';
+import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'dart:io';
 
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -14,34 +15,21 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 class LoginState extends ChangeNotifier {
   /// Login Page에서 사용하는 context를 가져옴.
   final BuildContext context;
-
-  /// LoginPage에서 사용할 State 관련 변수들 지정
-  LoginPlatform _loginPlatform = LoginPlatform.none;
+  bool? _isRegistered;
+  TokenManagement tokenManagement = TokenManagement();
+  ApiException apiException = ApiException();
 
   /// Context를 사용하여 initState() 생성
   /// initState, dispose에서 controller 등 생성, 삭제 해주고,
   /// 우리가 어떤 페이지에 있는지 알기 위해 log를 찍어서 확인한다.
   LoginState({required this.context}) {
     log('Instance "LoginState" has been created');
-    initState();
   }
 
   @override
   void dispose() {
     log('Instance "LoginState" has been removed');
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    /// 회사 앱에서는 Hive에 사용자를 저장해서, 값이 있으면 가져오는 식으로 사용함
-  }
-
-  /// 어떤 SNS로 로그인 했는지 확인 및 로그아웃 창 생성 (임시)
-  void checkSNS() {
-    if (_loginPlatform != LoginPlatform.none) {
-
-    }
   }
 
   /// 온보딩 페이지 이동 (테스트 코드)
@@ -59,6 +47,7 @@ class LoginState extends ChangeNotifier {
           ? await UserApi.instance.loginWithKakaoTalk()
           : await UserApi.instance.loginWithKakaoAccount();
 
+      print(token);
       final url = Uri.https('kapi.kakao.com', '/v2/user/me');
 
       final response = await http.get(
@@ -71,35 +60,14 @@ class LoginState extends ChangeNotifier {
       final profileInfo = json.decode(response.body);
       print(profileInfo.toString());
 
-      _loginPlatform = LoginPlatform.kakao;
+
     } catch (error) {
       print('카카오톡으로 로그인 실패 $error');
     }
   }
 
-  /// 로그아웃 함수
-  void signOut() async {
-    switch (_loginPlatform) {
-      case LoginPlatform.facebook:
-        break;
-      case LoginPlatform.google:
-        break;
-      case LoginPlatform.kakao:
-        await UserApi.instance.logout();
-        break;
-      case LoginPlatform.naver:
-        break;
-      case LoginPlatform.apple:
-        break;
-      case LoginPlatform.none:
-        break;
-    }
-
-    _loginPlatform = LoginPlatform.none;
-  }
-
   /// IOS 13 버전 앱 로그인
-  Future<UserCredential> signInWithApple() async {
+  Future<void> signInWithApple() async {
     /// IOS 13 버전 이상인지 확인
     bool isAvailable = await SignInWithApple.isAvailable();
 
@@ -115,28 +83,13 @@ class LoginState extends ChangeNotifier {
         webAuthenticationOptions: WebAuthenticationOptions(
           clientId: 'moing-team.moing.com',
           redirectUri: Uri.parse(
-              'https://moing-ver2.firebaseapp.com/__/auth/handler'),
+              '${dotenv.env['MOING_API']}/auth/apple/callback'),
         ),
       );
 
-      // Create an `OAuthCredential` from the credential returned by Apple.
-      final oauthCredential = OAuthProvider("apple.com").credential(
-        idToken: appleCredential.identityToken,
-        accessToken: appleCredential.authorizationCode,
-      );
+      // decodeJWT(appleCredential!.identityToken!);
 
-      // 최초 1회 사용자 정보 확인. 그 이후에는 null로 뜬다.
-      print(appleCredential.givenName);
-      print(appleCredential.familyName);
-      print(appleCredential.email);
-
-      print(getUserInfoFromJWT(appleCredential.identityToken));
-
-      _loginPlatform = LoginPlatform.apple;
-      // Sign in the user with Firebase. If the nonce we generated earlier does
-      // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-      /// 파이어베이스 인증
-      return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      await appleLoginSendToken(appleCredential.identityToken!);
     }
 
     /// IOS 13 버전이 아닌 경우
@@ -148,22 +101,80 @@ class LoginState extends ChangeNotifier {
     }
   }
 
-  /// 애플 사용자 이메일 가져오는 메서드
-  String? getUserInfoFromJWT(String? jwtDecode) {
-    List<String> jwtList = jwtDecode?.split('.') ?? [];
-    String payLoad = jwtList[1];
-    payLoad = base64.normalize(payLoad);
+  /// 애플 소셜 로그인 요청 API
+  Future<void> appleLoginSendToken(String token) async {
+    final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signIn/apple';
 
-    final List<int> jsonData = base64.decode(payLoad);
-    final userInfo = jsonDecode(utf8.decode(jsonData));
-    print('userinfo: $userInfo');
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8', // 요청 헤더 설정
+      },
+      body: jsonEncode(<String, String>{
+        'token': token, // POST 요청 본문에 들어갈 토큰
+      }),
+    );
 
+    Map<String, dynamic> responseBody = jsonDecode(response.body);
+    if(responseBody['isSuccess'] == true) {
+      final String accessToken = responseBody['data']['accessToken'];
+      final String refreshToken = responseBody['data']['refreshToken'];
 
-    bool isVerified = userInfo['email_verified'] == "true";
-    if (isVerified) {
-      return userInfo['email'];
+      // sharedPreferences를 이용하여 accessToken, refreshToken 저장
+      await tokenManagement.saveToken(accessToken, refreshToken);
+
+      _isRegistered = responseBody['data']['registrationStatus'];
+      checkRegister(_isRegistered!);
     }
-
-    return null;
+    /// 에러 처리
+    else {
+      apiException.throwErrorMessage(responseBody['errorCode']);
+      // 토큰 재발급 처리 완료
+      if (responseBody['errorCode'] == 'J0003') {
+        print('토큰 재발급 처리 수행합니다.');
+        String accessToken = await tokenManagement.loadAccessToken();
+        await appleLoginSendToken(accessToken);
+      }
+    }
   }
+
+  /// 회원가입 여부 판단
+  void checkRegister(bool isRegistered) {
+    // 회원가입이 되어있는 경우
+    if(isRegistered) {
+      // TODO: 메인 화면으로 이동 (구현 예정)
+    }
+    // 회원가입 되어있지 않은 경우
+    else {
+      // 회원가입 화면으로 이동
+      Navigator.of(context).pushNamed(
+        OnBoardingFirstPage.routeName,
+      );
+    }
+  }
+
+  // 테스트
+  // void decodeJWT(String token) {
+  //   final parts = token.split('.');
+  //   if (parts.length != 3) {
+  //     throw Exception('Invalid token');
+  //   }
+  //
+  //   final header = parts[0];
+  //   final payload = parts[1];
+  //
+  //   final decodedHeader = json.decode(utf8.decode(base64Decode(base64.normalize(header))));
+  //   final decodedPayload = json.decode(utf8.decode(base64Decode(base64.normalize(payload))));
+  //
+  //   print('Header: $decodedHeader');
+  //   print('Payload: $decodedPayload');
+  //
+  //   final kid = decodedHeader['kid'];
+  //   final iss = decodedPayload['iss'];
+  //   final sub = decodedPayload['sub'];
+  //
+  //   print('KID: $kid');
+  //   print('ISS: $iss');
+  //   print('SUB: $sub');
+  // }
 }
