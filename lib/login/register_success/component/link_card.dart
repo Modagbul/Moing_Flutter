@@ -41,7 +41,7 @@ class InvitationCard extends StatelessWidget {
             Image.asset(
               'asset/image/register_link.png',
               fit: BoxFit.cover,
-              width: 270,
+              width: 260,
               height: 140,
             ),
           ],

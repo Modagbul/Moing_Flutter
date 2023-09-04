@@ -2,9 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/login/onboarding/component/next_button.dart';
 import 'package:moing_flutter/login/register_success/component/link_card.dart';
 import 'package:moing_flutter/login/register_success/component/rich_text.dart';
+import 'package:moing_flutter/login/register_success/guide_state.dart';
+import 'package:provider/provider.dart';
 
 class RegisterGuide extends StatelessWidget {
   static const routeName = '/register/guide';
+
+  static route(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RegisterGuideState(context: context)),
+      ],
+      builder: (context, _) {
+        return RegisterGuide();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +106,7 @@ class RegisterGuide extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onPressed: completePressed,
+                  onPressed: context.read<RegisterGuideState>().completePressed,
                 ),
               ),
             ],
@@ -105,11 +118,6 @@ class RegisterGuide extends StatelessWidget {
 
   /// 나만의 소모임 만들기 클릭
   myMoingPressed() {
-
-  }
-
-  /// 가입 완료하기 버튼 클릭
-  completePressed() {
 
   }
 }
