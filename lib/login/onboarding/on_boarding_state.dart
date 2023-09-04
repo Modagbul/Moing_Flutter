@@ -42,7 +42,7 @@ class OnBoardingState extends ChangeNotifier {
     }
   }
 
-  /// 스킵 버튼 -> 닉네입 설정 페이지로 이동
+  /// 스킵 버튼 -> 닉네임 설정 페이지로 이동
   void skip() {
     Navigator.of(context).pushNamed(
       WelcomePage.routeName,
