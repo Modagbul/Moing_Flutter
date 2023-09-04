@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moing_flutter/app/app.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:moing_flutter/login/test/test_screen.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
