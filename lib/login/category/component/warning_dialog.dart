@@ -16,88 +16,107 @@ class WarningDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      // 맨 아래에 어떻게 붙이지
       backgroundColor: Color(0xFF272727),
-      insetPadding: EdgeInsets.all(10),
+      insetPadding: EdgeInsets.all(15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center, // 아이콘과 텍스트 중앙 정렬
-            children: [
-              Icon(
-                Icons.warning,
-                size: 48, // 아이콘 크기 조절
-                color: Colors.white, // 아이콘 색상 설정
-              ),
-              SizedBox(width: 20), // 아이콘과 텍스트 사이 간격 조절
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          Container(
+            width: 500,
+            height: 160,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Image.asset(
+                    'asset/image/danger_icon.png',// 이미지의 세로 크기를 100으로 설정
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12), // 텍스트와 버튼 사이 간격 조절
-          Text(
-            content,
-            style: TextStyle(
-              color: Colors.white,
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 12), // 텍스트와 버튼 사이 간격 조절
+                Text(
+                  content,
+                  style: TextStyle(
+                    color: grayScaleGrey400,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 12), // 텍스트와 버튼 사이 간격 조절
+          SizedBox(height: 20), // 텍스트와 버튼 사이 간격 조절
           Row(
             mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: grayScaleGrey700,
-                  textStyle: const TextStyle(
-                    color: grayScaleGrey550,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    side: BorderSide(
-                      color: Color(0xff353538),
+              Container(
+                width: 150,
+                height: 55,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: grayScaleGrey700,
+                    textStyle: const TextStyle(
+                      color: grayScaleGrey550,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      side: BorderSide(
+                        color: Color(0xff353538),
+                      ),
                     ),
                   ),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text('나가기'),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: Text('나가기'),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: grayScaleWhite,
-                  textStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
+              SizedBox(width: 5),
+              Container(
+                width: 150,
+                height: 55,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: grayScaleWhite,
+                    padding: const EdgeInsets.all(16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      side: BorderSide(
+                        color: Color(0xff353538),
+                      ),
+                    ),
                   ),
-                  padding: const EdgeInsets.all(16.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    side: BorderSide(
-                      color: grayScaleWhite,
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(
+                    '계속 진행하기',
+                    style: TextStyle(
+                      color: grayScaleBlack,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: Text('계속 진행하기'),
               ),
             ],
           ),
+          SizedBox(height: 15),
         ],
       ),
     );
