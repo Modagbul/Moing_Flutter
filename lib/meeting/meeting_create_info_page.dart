@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
+import 'package:moing_flutter/meeting/meeting_create_info_state.dart';
 import 'package:provider/provider.dart';
 
-import 'meeting_create_info_state.dart';
-import 'outlined_text_field.dart';
+import '../components/outlined_text_field.dart';
 
 class MeetingCreateInfoPage extends StatelessWidget {
   static const routeName = '/meeting/create/info';
@@ -26,7 +26,6 @@ class MeetingCreateInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -97,12 +96,12 @@ class _InfoTextFields extends StatelessWidget {
           maxLines: 10,
           labelText: '소모임을 소개해주세요',
           counterText:
-          '(${context.watch<MeetingCreateInfoState>().introduceController.text.length}/300)',
+              '(${context.watch<MeetingCreateInfoState>().introduceController.text.length}/300)',
           hintText: '활동 목적과 계획을 포함해 작성해주세요',
           onChanged: (value) =>
               context.read<MeetingCreateInfoState>().updateTextField(),
           controller:
-          context.read<MeetingCreateInfoState>().introduceController,
+              context.read<MeetingCreateInfoState>().introduceController,
           onClearButtonPressed: () =>
               context.read<MeetingCreateInfoState>().clearIntroduceTextField(),
         ),
@@ -111,12 +110,12 @@ class _InfoTextFields extends StatelessWidget {
           maxLines: 10,
           labelText: '모임장의 각오 한마디',
           counterText:
-          '(${context.watch<MeetingCreateInfoState>().resolutionController.text.length}/100)',
+              '(${context.watch<MeetingCreateInfoState>().resolutionController.text.length}/100)',
           hintText: '자유롭게 작성해주세요',
           onChanged: (value) =>
               context.read<MeetingCreateInfoState>().updateTextField(),
           controller:
-          context.read<MeetingCreateInfoState>().resolutionController,
+              context.read<MeetingCreateInfoState>().resolutionController,
           onClearButtonPressed: () =>
               context.read<MeetingCreateInfoState>().clearResolutionTextField(),
         ),
@@ -152,5 +151,3 @@ class _NavButtons extends StatelessWidget {
     );
   }
 }
-
-

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
-import 'package:moing_flutter/meeting_create_start_state.dart';
+import 'package:moing_flutter/meeting/meeting_create_start_state.dart';
 import 'package:provider/provider.dart';
 
 class MeetingCreateStartPage extends StatelessWidget {
