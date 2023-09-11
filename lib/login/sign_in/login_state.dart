@@ -38,6 +38,7 @@ class LoginState extends ChangeNotifier {
       OnBoardingFirstPage.routeName,
     );
   }
+
   /// 카카오 로그인 함수
   void signInWithKakao() async {
     try {
@@ -60,9 +61,48 @@ class LoginState extends ChangeNotifier {
       final profileInfo = json.decode(response.body);
       print(profileInfo.toString());
 
+      // 카카오 로그인 후 백엔드에 토큰 전송
+      await sendKakaoTokenToBackend(token.accessToken);
 
     } catch (error) {
       print('카카오톡으로 로그인 실패 $error');
+    }
+  }
+
+  /// 카카오 토큰을 백엔드에 전송하는 함수
+  Future<void> sendKakaoTokenToBackend(String token) async {
+    final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signIn/kakao';
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8', // 요청 헤더 설정
+      },
+      body: jsonEncode(<String, String>{
+        'token': token, // POST 요청 본문에 들어갈 토큰
+      }),
+    );
+
+    Map<String, dynamic> responseBody = jsonDecode(response.body);
+    if(responseBody['isSuccess'] == true) {
+      final String accessToken = responseBody['data']['accessToken'];
+      final String refreshToken = responseBody['data']['refreshToken'];
+
+      // sharedPreferences를 이용하여 accessToken, refreshToken 저장
+      await tokenManagement.saveToken(accessToken, refreshToken);
+
+      _isRegistered = responseBody['data']['registrationStatus'];
+      checkRegister(_isRegistered!);
+    }
+    /// 에러 처리
+    else {
+      apiException.throwErrorMessage(responseBody['errorCode']);
+      // 토큰 재발급 처리 완료
+      if (responseBody['errorCode'] == 'J0003') {
+        print('토큰 재발급 처리 수행합니다.');
+        String accessToken = await tokenManagement.loadAccessToken();
+        await sendKakaoTokenToBackend(accessToken);
+      }
     }
   }
 
