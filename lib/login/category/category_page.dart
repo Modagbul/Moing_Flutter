@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/login/category/category_state.dart';
 import 'package:provider/provider.dart';
 import '../../const/color/colors.dart';
+import '../register_success/guide.dart';
 import 'component/CategoryButton.dart';
 import 'component/warning_dialog.dart';
 
@@ -23,6 +24,11 @@ class CategoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final categoryState = Provider.of<CategoryState>(context);
+
+    Color nextButtonColor = categoryState.isCategorySelected() ? grayScaleWhite : grayScaleGrey700;
+    Color nextButtonTextColor = categoryState.isCategorySelected() ? grayScaleBlack : grayScaleGrey500;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -119,19 +125,22 @@ class CategoryPage extends StatelessWidget {
                     height: 62,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: grayScaleWhite,
+                        backgroundColor: nextButtonColor,
                         padding: const EdgeInsets.all(16.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
+                      onPressed: categoryState.isCategorySelected()
+                          ? () {
+                        // 임시로 **
+                        Navigator.of(context).pushNamed(RegisterGuide.routeName);
+                      }
+                          : null,  // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
                       child: Text(
                         '다음으로',
                         style: TextStyle(
-                          color: grayScaleBlack,
+                          color: nextButtonTextColor,
                           fontSize: 16.0,
                           fontWeight: FontWeight.w600,
                         ),
