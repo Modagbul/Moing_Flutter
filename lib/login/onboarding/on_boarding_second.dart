@@ -9,13 +9,15 @@ import 'package:provider/provider.dart';
 class OnBoardingSecondPage extends StatelessWidget {
   static const routeName = '/onboard/second';
 
+  const OnBoardingSecondPage({super.key});
+
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => OnBoardingState(context: context, pageCount: 2)),
       ],
       builder: (context, _) {
-        return OnBoardingSecondPage();
+        return const OnBoardingSecondPage();
       },
     );
   }
@@ -35,10 +37,10 @@ class OnBoardingSecondPage extends StatelessWidget {
               ImageOnBoard(
                 imagePath: 'asset/image/black.jpeg',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 32.0,
               ),
-              Text(
+              const Text(
                 '모잉불과 함께 \n우리 모임을 불태울 수 있어요',
                 style: TextStyle(
                   fontSize: 18.0,
@@ -47,14 +49,14 @@ class OnBoardingSecondPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 88.0,
               ),
-              ImagePhase(
+              const ImagePhase(
                   phase1: 'asset/image/onboard_phase2.png',
                   phase2: 'asset/image/onboard_phase1.png',
                   phase3: 'asset/image/onboard_phase2.png'),
-              Spacer(),
+              const Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -70,14 +72,14 @@ class OnBoardingSecondPage extends StatelessWidget {
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
-                          side: BorderSide(
+                          side: const BorderSide(
                             color: Color(0xff9B9999),
                           ),
                         ),
                       ),
                     ),
                     text: '다음으로',
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,
                       color: Color(0xffF1F1F1),

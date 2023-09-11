@@ -6,7 +6,7 @@ class MoingAppBar extends StatelessWidget implements PreferredSizeWidget{
   final String imagePath;
   final Function onTap;
 
-  MoingAppBar({
+  const MoingAppBar({super.key,
     required this.title,
     required this.imagePath,
     required this.onTap,

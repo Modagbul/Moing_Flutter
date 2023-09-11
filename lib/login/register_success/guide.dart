@@ -8,13 +8,15 @@ import 'package:provider/provider.dart';
 class RegisterGuide extends StatelessWidget {
   static const routeName = '/register/guide';
 
+  const RegisterGuide({super.key});
+
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => RegisterGuideState(context: context)),
       ],
       builder: (context, _) {
-        return RegisterGuide();
+        return const RegisterGuide();
       },
     );
   }
@@ -30,10 +32,10 @@ class RegisterGuide extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 128.0,
               ),
-              Text(
+              const Text(
                 '소모임에 초대받았나요?',
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -42,10 +44,10 @@ class RegisterGuide extends StatelessWidget {
                   color: Color(0xffE8E8EF),
                 ),
               ),
-              SizedBox(height: 32.0,),
-              RichTextGuide(),
-              SizedBox(height: 20.0,),
-              Text(
+              const SizedBox(height: 32.0,),
+              const RichTextGuide(),
+              const SizedBox(height: 20.0,),
+              const Text(
                 '초대장이 없다면, 지금 바로 소모임을 만들어보세요.',
                 style: TextStyle(
                   fontSize: 14.0,
@@ -53,14 +55,14 @@ class RegisterGuide extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 60.0,
               ),
-              InvitationCard(),
-              SizedBox(height: 110,),
+              const InvitationCard(),
+              const SizedBox(height: 110,),
               NextButton(
                   text: '나만의 소모임 만들기',
-                  textStyle: TextStyle(
+                  textStyle: const TextStyle(
                     color: Color(0xffF1F1F1),
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,
@@ -75,7 +77,7 @@ class RegisterGuide extends StatelessWidget {
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
-                        side: BorderSide(
+                        side: const BorderSide(
                           color: Color(0xff9B9999),
                         ),
                       ),
@@ -83,12 +85,12 @@ class RegisterGuide extends StatelessWidget {
                   ),
                   onPressed: myMoingPressed,
               ),
-              SizedBox(height: 12.0,),
+              const SizedBox(height: 12.0,),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: NextButton(
                   text: '가입 완료하기',
-                  textStyle: TextStyle(
+                  textStyle: const TextStyle(
                     color: Color(0xff1C1B1B),
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,

@@ -25,7 +25,7 @@ class CustomButton extends StatelessWidget {
           children: [
             Padding(
               padding: imagePath.contains('kakao')
-                  ? EdgeInsets.only(left: 12.0)
+                  ? const EdgeInsets.only(left: 12.0)
                   : EdgeInsets.zero,
               child: Image.asset(
                 imagePath,
@@ -38,14 +38,14 @@ class CustomButton extends StatelessWidget {
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            SizedBox(width: 30.0,),
+            const SizedBox(width: 30.0,),
           ],
         ),
       ),

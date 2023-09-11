@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
-import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/main/main_page.dart';
 
 class RegisterGuideState extends ChangeNotifier {

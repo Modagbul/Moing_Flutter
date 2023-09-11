@@ -29,7 +29,7 @@ void main() async{
   // 방법 1. String nativeAppKey = dotenv.get('KAKAO_NATIVE_APP_KEY');
   // 방법 2. String nativeAppKey = dotenv.env['KAKAO_NATIVE_APP_KEY'];
 
-  runApp(MoingApp());
+  runApp(const MoingApp());
   // runApp(
   //   MaterialApp(
   //     home: TestScreen(),

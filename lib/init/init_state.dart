@@ -21,7 +21,7 @@ class InitState extends ChangeNotifier {
   /// 테스트 용도로 처음에는 무조건 로그인 페이지로 이동하도록 함
   void initStart() async {
     await Future.delayed(
-        Duration(
+        const Duration(
             seconds: 1,
             milliseconds: 8,
         ),

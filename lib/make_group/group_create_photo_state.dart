@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class MeetingPhotoState extends ChangeNotifier {
+class GroupCreatePhotoState extends ChangeNotifier {
   final BuildContext context;
   /// 클릭 제어
   bool onLoading = false;
   /// 사진 업로드
   XFile? avatarFile;
 
-  MeetingPhotoState({
+  GroupCreatePhotoState({
     required this.context,
   }) {
     initState();
@@ -47,7 +47,7 @@ class MeetingPhotoState extends ChangeNotifier {
       builder: (context) => AlertDialog(
         content: Text(
           message,
-          style: TextStyle(fontSize: 14),
+          style: const TextStyle(fontSize: 14),
           textAlign: TextAlign.center,
         ),
       ),

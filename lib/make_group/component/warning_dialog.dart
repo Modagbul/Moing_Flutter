@@ -7,7 +7,7 @@ class WarningDialog extends StatelessWidget {
   final String content;
   final VoidCallback onConfirm;
 
-  WarningDialog({
+  const WarningDialog({super.key,
     required this.title,
     required this.content,
     required this.onConfirm,
@@ -17,8 +17,8 @@ class WarningDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       // 맨 아래에 어떻게 붙이지
-      backgroundColor: Color(0xFF272727),
-      insetPadding: EdgeInsets.all(15),
+      backgroundColor: const Color(0xFF272727),
+      insetPadding: const EdgeInsets.all(15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
@@ -40,16 +40,16 @@ class WarningDialog extends StatelessWidget {
                 ),
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 12), // 텍스트와 버튼 사이 간격 조절
+                const SizedBox(height: 12), // 텍스트와 버튼 사이 간격 조절
                 Text(
                   content,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: grayScaleGrey400,
                     fontSize: 14,
                   ),
@@ -57,7 +57,7 @@ class WarningDialog extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 20), // 텍스트와 버튼 사이 간격 조절
+          const SizedBox(height: 20), // 텍스트와 버튼 사이 간격 조절
           Row(
             mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
             children: [
@@ -75,7 +75,7 @@ class WarningDialog extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Color(0xff353538),
                       ),
                     ),
@@ -83,10 +83,10 @@ class WarningDialog extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
-                  child: Text('나가기'),
+                  child: const Text('나가기'),
                 ),
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 5),
               Container(
                 width: 150,
                 height: 55,
@@ -96,7 +96,7 @@ class WarningDialog extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Color(0xff353538),
                       ),
                     ),
@@ -104,7 +104,7 @@ class WarningDialog extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
-                  child: Text(
+                  child: const Text(
                     '계속 진행하기',
                     style: TextStyle(
                       color: grayScaleBlack,
@@ -116,7 +116,7 @@ class WarningDialog extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
         ],
       ),
     );

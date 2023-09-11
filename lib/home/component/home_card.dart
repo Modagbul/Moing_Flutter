@@ -44,7 +44,7 @@ class HomeCard extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            SizedBox(width: 9.0,),
+                            const SizedBox(width: 9.0,),
                             const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -82,7 +82,7 @@ class HomeCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30.0,),
+                        const SizedBox(height: 30.0,),
                         Row(
                           children: [
                             ClipRRect(
@@ -94,7 +94,7 @@ class HomeCard extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(width: 2,),
+                            const SizedBox(width: 2,),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(4.0),
                               child: Image.asset(
@@ -104,7 +104,7 @@ class HomeCard extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(width: 2,),ClipRRect(
+                            const SizedBox(width: 2,),ClipRRect(
                               borderRadius: BorderRadius.circular(4.0),
                               child: Image.asset(
                                 'asset/image/black.jpeg',
@@ -113,7 +113,7 @@ class HomeCard extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(width: 2,),ClipRRect(
+                            const SizedBox(width: 2,),ClipRRect(
                               borderRadius: BorderRadius.circular(4.0),
                               child: Image.asset(
                                 'asset/image/black.jpeg',
@@ -122,7 +122,7 @@ class HomeCard extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(width: 2,),ClipRRect(
+                            const SizedBox(width: 2,),ClipRRect(
                               borderRadius: BorderRadius.circular(4.0),
                               child: Image.asset(
                                 'asset/image/black.jpeg',
@@ -131,10 +131,10 @@ class HomeCard extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(width: 2,),
+                            const SizedBox(width: 2,),
                           ],
                         ),
-                        SizedBox(height: 64.0,),
+                        const SizedBox(height: 64.0,),
                       ],
                     ),
                   ),
@@ -158,8 +158,8 @@ class HomeCard extends StatelessWidget {
                                 width: 45,
                                 height: 56,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 8.0),
                                 child: Text(
                                   '9',
                                   style: TextStyle(
@@ -171,12 +171,12 @@ class HomeCard extends StatelessWidget {
                               )
                             ],
                           ),
-                          SizedBox(width: 21,),
+                          const SizedBox(width: 21,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4.0),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 4.0),
                                 child: Text(
                                   '모닥모닥불',
                                   style: TextStyle(
@@ -193,8 +193,8 @@ class HomeCard extends StatelessWidget {
                                     Image.asset(
                                       'asset/image/user.png',
                                     ),
-                                    SizedBox(width: 4.0,),
-                                    Text(
+                                    const SizedBox(width: 4.0,),
+                                    const Text(
                                       '9명',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
@@ -202,12 +202,12 @@ class HomeCard extends StatelessWidget {
                                         color: grayScaleGrey550,
                                       ),
                                     ),
-                                    SizedBox(width: 12.0,),
+                                    const SizedBox(width: 12.0,),
                                     Image.asset(
                                       'asset/image/clock.png',
                                     ),
-                                    SizedBox(width: 4.0,),
-                                    Text(
+                                    const SizedBox(width: 4.0,),
+                                    const Text(
                                       '시작 2023.04.05',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
@@ -227,7 +227,7 @@ class HomeCard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 12.0,),
+            const SizedBox(width: 12.0,),
             Container(
               width: 335,
               height: 356,
@@ -236,7 +236,7 @@ class HomeCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(32),
               ),
             ),
-            SizedBox(width: 12.0,),
+            const SizedBox(width: 12.0,),
             Container(
               width: 335,
               height: 356,

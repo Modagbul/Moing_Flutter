@@ -8,13 +8,15 @@ import 'package:provider/provider.dart';
 class AlarmPage extends StatelessWidget {
   static const routeName = '/alarm';
 
+  const AlarmPage({super.key});
+
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AlarmState(context: context)),
       ],
       builder: (context, _) {
-        return AlarmPage();
+        return const AlarmPage();
       },
     );
   }
@@ -35,7 +37,7 @@ class AlarmPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              SizedBox(height: 24,),
+              const SizedBox(height: 24,),
               Expanded(
                 child: ListView.builder(
                   itemCount: alarmList.length,
@@ -68,7 +70,7 @@ class AlarmPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     alarmList![position].team!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: grayScaleGrey400,
@@ -76,7 +78,7 @@ class AlarmPage extends StatelessWidget {
                                   ),
                                   Text(
                                     alarmList![position].title!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       color: grayScaleGrey100,
@@ -85,13 +87,13 @@ class AlarmPage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Text(
                                 alarmList![position].time!,
                                 textAlign: TextAlign.end,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
                                   color: grayScaleGrey550,
@@ -105,8 +107,8 @@ class AlarmPage extends StatelessWidget {
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 61.0),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 61.0),
                 child: Text(
                   '받은 알림은 90일동안 보관해요',
                   style: TextStyle(

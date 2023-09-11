@@ -20,28 +20,28 @@ class HomeAppBar extends StatelessWidget {
           width: 65,
           height: 15,
         ),
-        Spacer(),
+        const Spacer(),
         Stack(
           alignment: Alignment.center,
           children: [
             Container(
               width: 21,
               height: 25,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xffFF6464),
                 shape: BoxShape.circle,
               ),
             ),
             Text(
               notificationCount,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ],
         ),
-        SizedBox(width: 4.0,),
+        const SizedBox(width: 4.0,),
         GestureDetector(
           onTap: onTap,
           child: Image.asset(

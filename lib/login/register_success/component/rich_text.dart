@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class RichTextGuide extends StatelessWidget {
+  const RichTextGuide({super.key});
 
   @override
   Widget build(BuildContext context) {
     return RichText(
-      text: TextSpan(
+      text: const TextSpan(
         style: TextStyle(
           fontSize: 18.0,
           color: Color(0xffFF725F),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/login/sign_in/component/custom_login_button.dart';
-import 'package:moing_flutter/login/sign_in/component/login_button.dart';
 import 'package:moing_flutter/login/sign_in/login_state.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   static const routeName = '/sign/in';
+
+  const LoginPage({super.key});
 
   static route(BuildContext context) {
     return MultiProvider(
@@ -14,7 +14,7 @@ class LoginPage extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LoginState(context: context)),
       ],
       builder: (context, _) {
-        return LoginPage();
+        return const LoginPage();
       },
     );
   }
@@ -61,7 +61,7 @@ class LoginPage extends StatelessWidget {
                   fixedSize: MaterialStateProperty.all(
                     Size(MediaQuery.of(context).size.width, 60),
                   ),
-                  backgroundColor: MaterialStateProperty.all(Color(0xffFEE500)),
+                  backgroundColor: MaterialStateProperty.all(const Color(0xffFEE500)),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -69,7 +69,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
