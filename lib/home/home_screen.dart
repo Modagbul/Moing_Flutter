@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               HomeAppBar(
                 notificationCount: '3',
-                onTap: onPressed,
+                onTap: context.read<HomeScreenState>().alarmPressed,
               ),
               const SizedBox(
                 height: 32.0,
@@ -82,6 +82,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
-  void onPressed() {}
 }

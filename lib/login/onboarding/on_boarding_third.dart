@@ -30,7 +30,7 @@ class OnBoardingThirdPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SkipButton(
-                onTap: () {},
+                onTap: context.read<OnBoardingState>().skip,
               ),
               ImageOnBoard(
                 imagePath: 'asset/image/black.jpeg',
@@ -55,31 +55,35 @@ class OnBoardingThirdPage extends StatelessWidget {
                   phase2: 'asset/image/onboard_phase2.png',
                   phase3: 'asset/image/onboard_phase1.png',
               ),
-              SizedBox(
-                height: 72.0,
-              ),
-              NextButton(
-                onPressed: context.watch<OnBoardingState>().next,
-                buttonStyle: ButtonStyle(
-                  fixedSize: MaterialStateProperty.all(
-                    Size(MediaQuery.of(context).size.width, 60),
-                  ),
-                  backgroundColor:
-                  MaterialStateProperty.all(Colors.white),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      side: BorderSide(
-                        color: Color(0xff9B9999),
+              Spacer(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: NextButton(
+                    onPressed: context.watch<OnBoardingState>().next,
+                    buttonStyle: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        Size(MediaQuery.of(context).size.width, 60),
+                      ),
+                      backgroundColor:
+                      MaterialStateProperty.all(Colors.white),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          side: BorderSide(
+                            color: Color(0xff9B9999),
+                          ),
+                        ),
                       ),
                     ),
+                    text: '시작하기',
+                    textStyle: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff1C1B1B),
+                    ),
                   ),
-                ),
-                text: '시작하기',
-                textStyle: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xff1C1B1B),
                 ),
               ),
             ],

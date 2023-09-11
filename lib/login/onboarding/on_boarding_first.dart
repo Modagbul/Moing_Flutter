@@ -54,9 +54,6 @@ class OnBoardingFirstPage extends StatelessWidget {
                   phase1: 'asset/image/onboard_phase1.png',
                   phase2: 'asset/image/onboard_phase2.png',
                   phase3: 'asset/image/onboard_phase2.png'),
-              SizedBox(
-                height: 72.0,
-              ),
               Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,

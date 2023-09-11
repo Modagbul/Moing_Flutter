@@ -10,7 +10,10 @@ import 'package:moing_flutter/login/onboarding/on_boarding_third.dart';
 import 'package:moing_flutter/login/register_success/guide.dart';
 import 'package:moing_flutter/login/register_success/welcome_page.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
+import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
+import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/main/main_page.dart';
+import 'package:moing_flutter/meeting_photo.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:moing_flutter/login/category/category_page.dart';
 
@@ -29,7 +32,8 @@ class MoingApp extends StatelessWidget {
           ),
           navigatorKey: GetIt.I.get<GlobalKey<NavigatorState>>(),
           title: 'Moing',
-          initialRoute: CatagoryPage.routeName,
+          initialRoute: InitPage.routeName,
+          // HomeScreen.routeName,
           routes: {
             /// StateLess 위젯만 필요하다면, 다음과 같이 작성!
             WelcomePage.routeName: (_) => WelcomePage(),
@@ -41,10 +45,12 @@ class MoingApp extends StatelessWidget {
             OnBoardingSecondPage.routeName: (context) => OnBoardingSecondPage.route(context),
             OnBoardingThirdPage.routeName: (context) => OnBoardingThirdPage.route(context),
             CatagoryPage.routeName: (context) => CatagoryPage.route(context),
-
+            SignUpPage.routeName: (context) => SignUpPage.route(context),
             HomeScreen.routeName: (context) => HomeScreen.route(context),
             RegisterGuide.routeName: (context) => RegisterGuide.route(context),
             MainPage.routeName: (context) => MainPage.route(context),
+            MeetingPhotoPage.routeName: (context) => MeetingPhotoPage.route(context),
+            AlarmPage.routeName: (context) => AlarmPage.route(context),
             
           },
           navigatorObservers: [
