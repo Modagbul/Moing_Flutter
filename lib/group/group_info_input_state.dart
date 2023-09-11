@@ -2,14 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-class MeetingCreateInfoState extends ChangeNotifier {
+class GroupInfoInputState extends ChangeNotifier {
   final BuildContext context;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController introduceController = TextEditingController();
   final TextEditingController resolutionController = TextEditingController();
 
-  MeetingCreateInfoState({
+  GroupInfoInputState({
     required this.context,
   }) {
     initState();

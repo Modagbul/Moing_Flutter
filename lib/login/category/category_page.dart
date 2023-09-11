@@ -5,10 +5,10 @@ import '../../const/color/colors.dart';
 import 'component/CategoryButton.dart';
 import 'component/warning_dialog.dart';
 
-class CatagoryPage extends StatelessWidget {
+class CategoryPage extends StatelessWidget {
   static const routeName = '/catagory';
 
-  const CatagoryPage({Key? key});
+  const CategoryPage({Key? key});
 
   static route(BuildContext context) {
     return MultiProvider(
@@ -16,7 +16,7 @@ class CatagoryPage extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CategoryState(context: context)),
       ],
       builder: (context, _) {
-        return CatagoryPage();
+        return CategoryPage();
       },
     );
   }
