@@ -30,7 +30,7 @@ class OnBoardingSecondPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SkipButton(
-                onTap: () {},
+                onTap: context.read<OnBoardingState>().skip,
               ),
               ImageOnBoard(
                 imagePath: 'asset/image/black.jpeg',
@@ -54,31 +54,35 @@ class OnBoardingSecondPage extends StatelessWidget {
                   phase1: 'asset/image/onboard_phase2.png',
                   phase2: 'asset/image/onboard_phase1.png',
                   phase3: 'asset/image/onboard_phase2.png'),
-              SizedBox(
-                height: 72.0,
-              ),
-              NextButton(
-                onPressed: context.watch<OnBoardingState>().next,
-                buttonStyle: ButtonStyle(
-                  fixedSize: MaterialStateProperty.all(
-                    Size(MediaQuery.of(context).size.width, 60),
-                  ),
-                  backgroundColor:
-                  MaterialStateProperty.all(Colors.transparent),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      side: BorderSide(
-                        color: Color(0xff9B9999),
+              Spacer(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: NextButton(
+                    onPressed: context.watch<OnBoardingState>().next,
+                    buttonStyle: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        Size(MediaQuery.of(context).size.width, 60),
+                      ),
+                      backgroundColor:
+                      MaterialStateProperty.all(Colors.transparent),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          side: BorderSide(
+                            color: Color(0xff9B9999),
+                          ),
+                        ),
                       ),
                     ),
+                    text: '다음으로',
+                    textStyle: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xffF1F1F1),
+                    ),
                   ),
-                ),
-                text: '다음으로',
-                textStyle: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xffF1F1F1),
                 ),
               ),
             ],

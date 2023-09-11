@@ -52,8 +52,12 @@ dependencies:
   flutter_svg: ^2.0.7
   flutter_dotenv: ^5.1.0
   shared_preferences: ^2.2.1
+  image_picker: ^0.8.7+1
+  permission_handler: ^10.2.0
+  aws_client: ^0.4.1
 
   google_sign_in: ^6.1.4
+  flutter_naver_login: ^1.8.0
   cloud_firestore: ^4.4.3
   cloud_functions: ^4.0.11
 

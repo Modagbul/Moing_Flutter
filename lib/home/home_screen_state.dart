@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/main/alarm/alarm.dart';
 
 class HomeScreenState extends ChangeNotifier {
   final BuildContext context;
@@ -11,5 +12,9 @@ class HomeScreenState extends ChangeNotifier {
     log('Instance "HomeScreenState" has been created');
   }
 
-
+  void alarmPressed() {
+    Navigator.of(context).pushNamed(
+      AlarmPage.routeName,
+    );
+  }
 }
