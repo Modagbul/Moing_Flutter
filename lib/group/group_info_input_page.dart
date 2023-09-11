@@ -2,31 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
+import 'package:moing_flutter/group/group_info_input_state.dart';
 import 'package:provider/provider.dart';
 
-import 'meeting_create_info_state.dart';
-import 'outlined_text_field.dart';
+import '../components/outlined_text_field.dart';
 
-class MeetingCreateInfoPage extends StatelessWidget {
+class GroupInfoInputPage extends StatelessWidget {
   static const routeName = '/meeting/create/info';
 
-  const MeetingCreateInfoPage({super.key});
+  const GroupInfoInputPage({super.key});
 
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => MeetingCreateInfoState(context: context)),
+            create: (_) => GroupInfoInputState(context: context)),
       ],
       builder: (context, _) {
-        return const MeetingCreateInfoPage();
+        return const GroupInfoInputPage();
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -86,10 +85,10 @@ class _InfoTextFields extends StatelessWidget {
           labelText: '소모임 이름',
           hintText: '최대 10자',
           onChanged: (value) =>
-              context.read<MeetingCreateInfoState>().updateTextField(),
-          controller: context.read<MeetingCreateInfoState>().nameController,
+              context.read<GroupInfoInputState>().updateTextField(),
+          controller: context.read<GroupInfoInputState>().nameController,
           onClearButtonPressed: () =>
-              context.read<MeetingCreateInfoState>().clearNameTextField(),
+              context.read<GroupInfoInputState>().clearNameTextField(),
           inputTextStyle: inputTextFieldStyle.copyWith(fontSize: 16.0),
         ),
         OutlinedTextField(
@@ -97,28 +96,28 @@ class _InfoTextFields extends StatelessWidget {
           maxLines: 10,
           labelText: '소모임을 소개해주세요',
           counterText:
-          '(${context.watch<MeetingCreateInfoState>().introduceController.text.length}/300)',
+              '(${context.watch<GroupInfoInputState>().introduceController.text.length}/300)',
           hintText: '활동 목적과 계획을 포함해 작성해주세요',
           onChanged: (value) =>
-              context.read<MeetingCreateInfoState>().updateTextField(),
+              context.read<GroupInfoInputState>().updateTextField(),
           controller:
-          context.read<MeetingCreateInfoState>().introduceController,
+              context.read<GroupInfoInputState>().introduceController,
           onClearButtonPressed: () =>
-              context.read<MeetingCreateInfoState>().clearIntroduceTextField(),
+              context.read<GroupInfoInputState>().clearIntroduceTextField(),
         ),
         OutlinedTextField(
           maxLength: 100,
           maxLines: 10,
           labelText: '모임장의 각오 한마디',
           counterText:
-          '(${context.watch<MeetingCreateInfoState>().resolutionController.text.length}/100)',
+              '(${context.watch<GroupInfoInputState>().resolutionController.text.length}/100)',
           hintText: '자유롭게 작성해주세요',
           onChanged: (value) =>
-              context.read<MeetingCreateInfoState>().updateTextField(),
+              context.read<GroupInfoInputState>().updateTextField(),
           controller:
-          context.read<MeetingCreateInfoState>().resolutionController,
+              context.read<GroupInfoInputState>().resolutionController,
           onClearButtonPressed: () =>
-              context.read<MeetingCreateInfoState>().clearResolutionTextField(),
+              context.read<GroupInfoInputState>().clearResolutionTextField(),
         ),
       ],
     );
@@ -135,7 +134,7 @@ class _NavButtons extends StatelessWidget {
       children: [
         Expanded(
           child: ElevatedButton(
-            style: defaultButtonStyle,
+            style: darkButtonStyle,
             onPressed: () {},
             child: const Text('이전으로'),
           ),
@@ -143,7 +142,7 @@ class _NavButtons extends StatelessWidget {
         const SizedBox(width: 4.0),
         Expanded(
           child: ElevatedButton(
-            style: activedButtonStyle,
+            style: brightButtonStyle,
             onPressed: () {},
             child: const Text('다음으로'),
           ),
@@ -152,5 +151,3 @@ class _NavButtons extends StatelessWidget {
     );
   }
 }
-
-

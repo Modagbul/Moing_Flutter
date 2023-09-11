@@ -3,6 +3,19 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class CategoryState extends ChangeNotifier{
+  String? selectedCategory;
+
+  void selectCategory(String category) {
+    selectedCategory = category;
+    notifyListeners();
+  }
+
+  void deselectCategory() {
+    selectedCategory = null;
+    notifyListeners();
+  }
+
+  bool isCategorySelected() => selectedCategory != null;
 
   final BuildContext context;
 

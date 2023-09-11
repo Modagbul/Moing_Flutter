@@ -1,11 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/login/category/category_page.dart';
 
-class MeetingCreateStartState extends ChangeNotifier {
+class GroupCreateStartState extends ChangeNotifier {
   final BuildContext context;
 
-  MeetingCreateStartState({
+  GroupCreateStartState({
     required this.context,
   }) {
     initState();
@@ -19,5 +20,9 @@ class MeetingCreateStartState extends ChangeNotifier {
   void dispose() {
     log('Instance "MeetingCreateStartState" has been removed');
     super.dispose();
+  }
+
+  void navigateCategory(){
+    Navigator.pushNamed(context, CategoryPage.routeName);
   }
 }

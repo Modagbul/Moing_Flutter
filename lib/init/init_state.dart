@@ -22,7 +22,7 @@ class InitState extends ChangeNotifier {
   void initStart() async {
     await Future.delayed(
         Duration(
-            seconds: 900, //1,
+            seconds: 1,
             milliseconds: 8,
         ),
     );

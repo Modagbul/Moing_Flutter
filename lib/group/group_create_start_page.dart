@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
-import 'package:moing_flutter/meeting_create_start_state.dart';
+import 'package:moing_flutter/group/group_create_start_state.dart';
+
 import 'package:provider/provider.dart';
 
-class MeetingCreateStartPage extends StatelessWidget {
+class GroupCreateStartPage extends StatelessWidget {
   static const routeName = '/meeting/create/start';
 
-  const MeetingCreateStartPage({super.key});
+  const GroupCreateStartPage({super.key});
 
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => MeetingCreateStartState(context: context)),
+            create: (_) => GroupCreateStartState(context: context)),
       ],
       builder: (context, _) {
-        return const MeetingCreateStartPage();
+        return const GroupCreateStartPage();
       },
     );
   }
@@ -56,9 +57,9 @@ class MeetingCreateStartPage extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
               ElevatedButton(
-                style: activedButtonStyle.copyWith(),
+                style: brightButtonStyle.copyWith(),
                 onPressed: () {
-                  // 버튼 클릭 시 수행할 동작
+                  context.read<GroupCreateStartState>().navigateCategory();
                 },
                 child: const Text('네, 확인했어요'),
               ),
