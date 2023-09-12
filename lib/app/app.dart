@@ -53,6 +53,8 @@ class MoingApp extends StatelessWidget {
             MainPage.routeName: (context) => MainPage.route(context),
 
             AlarmPage.routeName: (context) => AlarmPage.route(context),
+            CategoryPage.routeName: (context) => CategoryPage.route(context),
+            BoardMainPage.routeName: (context) => BoardMainPage.route(context),
 
             GroupCreateStartPage.routeName: (context) => GroupCreateStartPage.route(context),
             GroupCreateCategoryPage.routeName: (context) => GroupCreateCategoryPage.route(context),

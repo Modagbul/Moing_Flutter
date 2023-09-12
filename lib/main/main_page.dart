@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/app/app_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/home/home_screen.dart';
+import 'package:moing_flutter/home/home_screen_state.dart';
 import 'package:moing_flutter/main/main_state.dart';
 import 'package:moing_flutter/missions/missions_screen.dart';
 import 'package:moing_flutter/missions/missions_state.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
   static const routeName = '/main';
-
   const MainPage({super.key});
 
   static route(BuildContext context) {
@@ -22,6 +22,10 @@ class MainPage extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => AppState(),  // AppState를 추가합니다.
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HomeScreenState(context: context),
           lazy: false,
         ),
       ],
