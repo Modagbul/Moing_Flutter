@@ -11,7 +11,7 @@ class HomeText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle ts = TextStyle(
+    TextStyle ts = const TextStyle(
       color: grayScaleGrey100,
       fontWeight: FontWeight.w600,
       fontSize: 24.0,

@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../const/color/colors.dart';
-import '../const/style/text_field.dart' as style;
+import '../../const/color/colors.dart';
+import '../../const/style/text_field.dart' as style;
 
 class OutlinedTextField extends StatefulWidget {
   final int maxLength;

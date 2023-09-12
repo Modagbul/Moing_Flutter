@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 class InitPage extends StatelessWidget {
   static const routeName = '/';
 
+  const InitPage({super.key});
+
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -15,7 +17,7 @@ class InitPage extends StatelessWidget {
         ),
       ],
       builder: (context, _) {
-        return InitPage();
+        return const InitPage();
       },
     );
   }

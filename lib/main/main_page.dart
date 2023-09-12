@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
   static const routeName = '/main';
-
+  const MainPage({super.key});
 
   static route(BuildContext context) {
     return MultiProvider(
@@ -30,7 +30,7 @@ class MainPage extends StatelessWidget {
         ),
       ],
       builder: (context, snapshot) {
-        return MainPage();
+        return const MainPage();
       },
     );
   }
@@ -76,7 +76,7 @@ class MainPage extends StatelessWidget {
               IndexedStack(
                 sizing: StackFit.expand,
                 index: context.watch<AppState>().mainIndex,
-                children: [
+                children: const [
                   HomeScreen(),
                   MissionsScreen(),
                   MyPageScreen(),
@@ -95,12 +95,12 @@ class MainPage extends StatelessWidget {
               type: BottomNavigationBarType.fixed,
               unselectedItemColor: grayScaleGrey550,
               selectedItemColor: grayScaleGrey100,
-              selectedLabelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey100),
-              unselectedLabelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey550),
-              items: [
+              selectedLabelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey100),
+              unselectedLabelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey550),
+              items: const [
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
+                    padding: EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
                     child: Icon(Icons.home),
                   ),
                   label: '홈',
@@ -126,14 +126,14 @@ class MainPage extends StatelessWidget {
                 // ),
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
+                    padding: EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
                     child: Icon(Icons.tour),
                   ),
                   label: '미션목록',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
+                    padding: EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
                     child: Icon(Icons.person),
                   ),
                   label: '마이페이지',

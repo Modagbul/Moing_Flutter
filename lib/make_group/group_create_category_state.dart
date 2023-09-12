@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-class CategoryState extends ChangeNotifier{
+class GroupCreateCategoryState extends ChangeNotifier{
   String? selectedCategory;
 
   void selectCategory(String category) {
@@ -19,7 +19,7 @@ class CategoryState extends ChangeNotifier{
 
   final BuildContext context;
 
-  CategoryState({required this.context}) {
+  GroupCreateCategoryState({required this.context}) {
     log('Instance "LoginState" has been created');
     initState();
   }
@@ -30,7 +30,6 @@ class CategoryState extends ChangeNotifier{
     super.dispose();
   }
 
-  @override
   void initState() {
   }
 

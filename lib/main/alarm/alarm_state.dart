@@ -3,7 +3,7 @@ import 'package:moing_flutter/main/alarm/alarm_list.dart';
 
 class AlarmState extends ChangeNotifier {
   final BuildContext context;
-  List<Alarm> alarmList = new List.empty(growable: true);
+  List<Alarm> alarmList = List.empty(growable: true);
 
   AlarmState({required this.context}) {
     print('Instance "AlarmState" has been created');

@@ -21,10 +21,10 @@ class HomeMyMeeting extends StatelessWidget {
             color: grayScaleGrey400,
           ),
         ),
-        SizedBox(width: 12.0,),
+        const SizedBox(width: 12.0,),
         Text(
           meetingCount,
-          style: TextStyle(
+          style: const TextStyle(
             color: coralGrey600,
             fontSize: 18,
             fontWeight: FontWeight.w600,

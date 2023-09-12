@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_second.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_third.dart';
-import 'package:moing_flutter/login/register_success/welcome_page.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 
 class OnBoardingState extends ChangeNotifier {

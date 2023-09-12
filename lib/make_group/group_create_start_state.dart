@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/login/category/category_page.dart';
+import 'package:moing_flutter/make_group/group_create_category_page.dart';
+//import 'package:moing_flutter/login/category/group_create_category_page.dart';
 
 class GroupCreateStartState extends ChangeNotifier {
   final BuildContext context;
@@ -23,6 +24,6 @@ class GroupCreateStartState extends ChangeNotifier {
   }
 
   void navigateCategory(){
-    Navigator.pushNamed(context, CategoryPage.routeName);
+    Navigator.pushNamed(context, GroupCreateCategoryPage.routeName);
   }
 }

@@ -6,13 +6,13 @@ class AppState extends ChangeNotifier {
   int get mainIndex => _mainIndex;
 
   set mainIndex(int index) {
-    this._mainIndex = index;
+    _mainIndex = index;
     notifyListeners();
   }
 
-  moveToHomeScreen() => this.mainIndex = 0;
+  moveToHomeScreen() => mainIndex = 0;
 
-  moveToMissionsScreen() => this.mainIndex = 1;
+  moveToMissionsScreen() => mainIndex = 1;
 
-  moveToMyPageScreen() => this.mainIndex = 2;
+  moveToMyPageScreen() => mainIndex = 2;
 }

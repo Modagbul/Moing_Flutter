@@ -8,7 +8,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:provider/provider.dart';
 
 class BoardMainPage extends StatefulWidget {
-  static const routeName = '/meeting/create/info';
+  static const routeName = '/board/main';
 
   const BoardMainPage({super.key});
 

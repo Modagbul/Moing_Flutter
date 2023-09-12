@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
 
+  const HomeScreen({super.key});
+
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -17,7 +19,7 @@ class HomeScreen extends StatelessWidget {
             create: (_) => HomeScreenState(context: context)),
       ],
       builder: (context, _) {
-        return HomeScreen();
+        return const HomeScreen();
       },
     );
   }
@@ -28,7 +30,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -39,31 +41,23 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 32.0,
               ),
-              HomeText(nickName: '모닥불', encourage: '오늘도 모잉이 응원해요!'),
+              const HomeText(nickName: '모닥불', encourage: '오늘도 모잉이 응원해요!'),
               const SizedBox(height: 40.0),
-              HomeMyMeeting(
+              const HomeMyMeeting(
                 meetingCount: '2',
               ),
               const SizedBox(height: 12.0),
-              HomeCard(),
-              Spacer(),
+              const HomeCard(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     onPressed: () {},
-                    child: Text(
-                      '모임 만들기',
-                      style: TextStyle(
-                        color: grayScaleGrey700,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
-                    ),
                     style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all<Size>(
-                            Size(162, 51)), // 원하는 너비와 높이
+                            const Size(162, 51)), // 원하는 너비와 높이
                         backgroundColor:
                             MaterialStateProperty.all<Color>(grayScaleGrey100),
                         shape:
@@ -73,6 +67,14 @@ class HomeScreen extends StatelessWidget {
                                 BorderRadius.circular(32.0), // borderRadius 설정
                           ),
                         )),
+                    child: const Text(
+                      '모임 만들기',
+                      style: TextStyle(
+                        color: grayScaleGrey700,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ),
               )

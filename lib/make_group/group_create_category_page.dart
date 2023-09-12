@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/login/category/category_state.dart';
+import 'package:moing_flutter/make_group/component/category_button.dart';
+import 'package:moing_flutter/make_group/component/warning_dialog.dart';
+import 'package:moing_flutter/make_group/group_create_category_state.dart';
+import 'package:moing_flutter/make_group/group_create_info_page.dart';
 import 'package:provider/provider.dart';
-import '../../const/color/colors.dart';
-import '../register_success/guide.dart';
-import 'component/CategoryButton.dart';
-import 'component/warning_dialog.dart';
+import '../const/color/colors.dart';
 
-class CategoryPage extends StatelessWidget {
+class GroupCreateCategoryPage extends StatelessWidget {
   static const routeName = '/catagory';
 
-  const CategoryPage({Key? key});
+  const GroupCreateCategoryPage({
+    super.key,
+  });
 
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CategoryState(context: context)),
+        ChangeNotifierProvider(
+            create: (_) => GroupCreateCategoryState(context: context)),
       ],
       builder: (context, _) {
-        return CategoryPage();
+        return const GroupCreateCategoryPage();
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final categoryState = Provider.of<CategoryState>(context);
+    final categoryState = Provider.of<GroupCreateCategoryState>(context);
 
-    Color nextButtonColor = categoryState.isCategorySelected() ? grayScaleWhite : grayScaleGrey700;
-    Color nextButtonTextColor = categoryState.isCategorySelected() ? grayScaleBlack : grayScaleGrey500;
+    Color nextButtonColor =
+        categoryState.isCategorySelected() ? grayScaleWhite : grayScaleGrey700;
+    Color nextButtonTextColor =
+        categoryState.isCategorySelected() ? grayScaleBlack : grayScaleGrey500;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -53,47 +58,47 @@ class CategoryPage extends StatelessWidget {
               },
             );
           },
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
         ),
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              SizedBox(height: 34.0),
-              _Title(),
-              SizedBox(height: 76.0),
-              CategoryButton(
+              const SizedBox(height: 34.0),
+              const _Title(),
+              const SizedBox(height: 76.0),
+              const CategoryButton(
                 imagePath: 'asset/image/icon_sport.png', // 이미지 경로
                 buttonText: '스포츠/운동', // 버튼 텍스트
               ),
-              SizedBox(height: 8.0),
-              CategoryButton(
+              const SizedBox(height: 8.0),
+              const CategoryButton(
                 imagePath: 'asset/image/icon_life.png', // 이미지 경로
                 buttonText: '생활습관 개선', // 버튼 텍스트
               ),
-              SizedBox(height: 8.0),
-              CategoryButton(
+              const SizedBox(height: 8.0),
+              const CategoryButton(
                 imagePath: 'asset/image/icon_test.png', // 이미지 경로
                 buttonText: '시험/취업준비', // 버튼 텍스트
               ),
-              SizedBox(height: 8.0),
-              CategoryButton(
+              const SizedBox(height: 8.0),
+              const CategoryButton(
                 imagePath: 'asset/image/icon_study.png', // 이미지 경로
                 buttonText: '스터디/공부', // 버튼 텍스트
               ),
-              SizedBox(height: 8.0),
-              CategoryButton(
+              const SizedBox(height: 8.0),
+              const CategoryButton(
                 imagePath: 'asset/image/icon_read.png', // 이미지 경로
                 buttonText: '독서', // 버튼 텍스트
               ),
-              SizedBox(height: 8.0),
-              CategoryButton(
+              const SizedBox(height: 8.0),
+              const CategoryButton(
                 imagePath: 'asset/image/icon_etc.png', // 이미지 경로
                 buttonText: '그외 자기개발', // 버튼 텍스트
               ),
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
                 children: [
@@ -116,10 +121,10 @@ class CategoryPage extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
-                      child: Text('이전으로'),
+                      child: const Text('이전으로'),
                     ),
                   ),
-                  SizedBox(width: 5),
+                  const SizedBox(width: 5),
                   Container(
                     width: 172,
                     height: 62,
@@ -133,10 +138,11 @@ class CategoryPage extends StatelessWidget {
                       ),
                       onPressed: categoryState.isCategorySelected()
                           ? () {
-                        // 임시로 **
-                        Navigator.of(context).pushNamed(RegisterGuide.routeName);
-                      }
-                          : null,  // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
+                              // 임시로 **
+                              Navigator.of(context)
+                                  .pushNamed(GroupCreateInfoPage.routeName);
+                            }
+                          : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
                       child: Text(
                         '다음으로',
                         style: TextStyle(
@@ -179,9 +185,9 @@ class _Title extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16.0),
-        Align(
+        const Align(
           alignment: Alignment.centerLeft,
-          child: const Text(
+          child: Text(
             '소모임의 카테고리를 선택해주세요',
             style: TextStyle(
               color: grayScaleGrey550,

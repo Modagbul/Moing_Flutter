@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
-import 'package:moing_flutter/group/group_info_input_state.dart';
+import 'package:moing_flutter/make_group/group_create_info_state.dart';
 import 'package:provider/provider.dart';
 
-import '../components/outlined_text_field.dart';
+import '../utils/text_field/outlined_text_field.dart';
 
-class GroupInfoInputPage extends StatelessWidget {
+class GroupCreateInfoPage extends StatelessWidget {
   static const routeName = '/meeting/create/info';
 
-  const GroupInfoInputPage({super.key});
+  const GroupCreateInfoPage({super.key});
 
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => GroupInfoInputState(context: context)),
+            create: (_) => GroupCreateInfoState(context: context)),
       ],
       builder: (context, _) {
-        return const GroupInfoInputPage();
+        return const GroupCreateInfoPage();
       },
     );
   }
@@ -85,10 +85,10 @@ class _InfoTextFields extends StatelessWidget {
           labelText: '소모임 이름',
           hintText: '최대 10자',
           onChanged: (value) =>
-              context.read<GroupInfoInputState>().updateTextField(),
-          controller: context.read<GroupInfoInputState>().nameController,
+              context.read<GroupCreateInfoState>().updateTextField(),
+          controller: context.read<GroupCreateInfoState>().nameController,
           onClearButtonPressed: () =>
-              context.read<GroupInfoInputState>().clearNameTextField(),
+              context.read<GroupCreateInfoState>().clearNameTextField(),
           inputTextStyle: inputTextFieldStyle.copyWith(fontSize: 16.0),
         ),
         OutlinedTextField(
@@ -96,28 +96,28 @@ class _InfoTextFields extends StatelessWidget {
           maxLines: 10,
           labelText: '소모임을 소개해주세요',
           counterText:
-              '(${context.watch<GroupInfoInputState>().introduceController.text.length}/300)',
+              '(${context.watch<GroupCreateInfoState>().introduceController.text.length}/300)',
           hintText: '활동 목적과 계획을 포함해 작성해주세요',
           onChanged: (value) =>
-              context.read<GroupInfoInputState>().updateTextField(),
+              context.read<GroupCreateInfoState>().updateTextField(),
           controller:
-              context.read<GroupInfoInputState>().introduceController,
+              context.read<GroupCreateInfoState>().introduceController,
           onClearButtonPressed: () =>
-              context.read<GroupInfoInputState>().clearIntroduceTextField(),
+              context.read<GroupCreateInfoState>().clearIntroduceTextField(),
         ),
         OutlinedTextField(
           maxLength: 100,
           maxLines: 10,
           labelText: '모임장의 각오 한마디',
           counterText:
-              '(${context.watch<GroupInfoInputState>().resolutionController.text.length}/100)',
+              '(${context.watch<GroupCreateInfoState>().resolutionController.text.length}/100)',
           hintText: '자유롭게 작성해주세요',
           onChanged: (value) =>
-              context.read<GroupInfoInputState>().updateTextField(),
+              context.read<GroupCreateInfoState>().updateTextField(),
           controller:
-              context.read<GroupInfoInputState>().resolutionController,
+              context.read<GroupCreateInfoState>().resolutionController,
           onClearButtonPressed: () =>
-              context.read<GroupInfoInputState>().clearResolutionTextField(),
+              context.read<GroupCreateInfoState>().clearResolutionTextField(),
         ),
       ],
     );

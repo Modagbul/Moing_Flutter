@@ -2,20 +2,22 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
-import 'package:moing_flutter/meeting_photo_state.dart';
+import 'package:moing_flutter/make_group/group_create_photo_state.dart';
 import 'package:provider/provider.dart';
 
-class MeetingPhotoPage extends StatelessWidget {
+class GroupCreatePhotoPage extends StatelessWidget {
   static const routeName = '/meeting/photo';
+
+  const GroupCreatePhotoPage({super.key});
 
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => MeetingPhotoState(context: context)),
+            create: (_) => GroupCreatePhotoState(context: context)),
       ],
       builder: (context, _) {
-        return MeetingPhotoPage();
+        return const GroupCreatePhotoPage();
       },
     );
   }
@@ -26,21 +28,21 @@ class MeetingPhotoPage extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(Icons.close),
+            icon: const Icon(Icons.close),
             onPressed: () {} // Navigator.of(context).pop(),
             ),
         backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 34.0,
               ),
-              Text(
+              const Text(
                 '우리 소모임을 나타내는\n사진이 필요해요!',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
@@ -48,10 +50,10 @@ class MeetingPhotoPage extends StatelessWidget {
                   color: grayScaleGrey100,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12.0,
               ),
-              Text(
+              const Text(
                 '소모임의 대표 사진은 홈 화면에서의 썸네일로 적용되어요.\n소모임 개설 이후 자유롭게 변경 가능하니 걱정마세요!',
                 style: TextStyle(
                   fontSize: 14,
@@ -59,13 +61,13 @@ class MeetingPhotoPage extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 104.0,
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () =>
-                    context.read<MeetingPhotoState>().imageUpload(context),
+                    context.read<GroupCreatePhotoState>().imageUpload(context),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -76,17 +78,17 @@ class MeetingPhotoPage extends StatelessWidget {
                       ),
                       width: MediaQuery.of(context).size.width,
                       height:
-                          context.watch<MeetingPhotoState>().avatarFile == null
+                          context.watch<GroupCreatePhotoState>().avatarFile == null
                               ? 205
                               : 255,
                       child:
-                          context.watch<MeetingPhotoState>().avatarFile == null
+                          context.watch<GroupCreatePhotoState>().avatarFile == null
                               ? _ContainerText()
                               : ClipRRect(
                                   borderRadius: BorderRadius.circular(32.0),
                                   child: Image.file(
                                     File(context
-                                        .watch<MeetingPhotoState>()
+                                        .watch<GroupCreatePhotoState>()
                                         .avatarFile!
                                         .path),
                                     fit: BoxFit.cover,
@@ -96,11 +98,11 @@ class MeetingPhotoPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16.0,
               ),
-              context.watch<MeetingPhotoState>().avatarFile == null
-                  ? SizedBox.shrink()
+              context.watch<GroupCreatePhotoState>().avatarFile == null
+                  ? const SizedBox.shrink()
                   : SizedBox(
                       height: 60,
                       child: ElevatedButton(
@@ -112,9 +114,9 @@ class MeetingPhotoPage extends StatelessWidget {
                           ),
                         ),
                         onPressed: () => context
-                            .read<MeetingPhotoState>()
+                            .read<GroupCreatePhotoState>()
                             .imageUpload(context),
-                        child: Text(
+                        child: const Text(
                           '다시 고르기',
                           style: TextStyle(
                             color: grayScaleGrey100,
@@ -124,7 +126,7 @@ class MeetingPhotoPage extends StatelessWidget {
                         ),
                       ),
                     ),
-              Spacer(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 24.0),
                 child: Row(
@@ -141,7 +143,7 @@ class MeetingPhotoPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {},
-                          child: Text(
+                          child: const Text(
                             '이전으로',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
@@ -152,7 +154,7 @@ class MeetingPhotoPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Expanded(
@@ -167,7 +169,7 @@ class MeetingPhotoPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {},
-                          child: Text(
+                          child: const Text(
                             '만들기',
                             style: TextStyle(
                               fontSize: 18,
@@ -197,10 +199,10 @@ Widget _ContainerText() {
       Image.asset(
         'asset/image/image_upload.png',
       ),
-      SizedBox(
+      const SizedBox(
         width: 12.0,
       ),
-      Text(
+      const Text(
         '사진 업로드하기',
         style: TextStyle(
           fontWeight: FontWeight.w600,

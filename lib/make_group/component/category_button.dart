@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/make_group/group_create_category_state.dart';
 import 'package:provider/provider.dart';
 
 import '../../../const/color/colors.dart';
-import '../category_state.dart';
+
 class CategoryButton extends StatefulWidget {
   final String imagePath;
   final String buttonText;
 
-  CategoryButton({
+  const CategoryButton({
+    super.key,
     required this.imagePath,
     required this.buttonText,
   });
@@ -28,24 +30,28 @@ class _CategoryButtonState extends State<CategoryButton> {
 
   @override
   Widget build(BuildContext context) {
-    final categoryState = Provider.of<CategoryState>(context);
+    final categoryState = Provider.of<GroupCreateCategoryState>(context);
 
-    bool isButtonDisabled = categoryState.isCategorySelected() && categoryState.selectedCategory != widget.buttonText;
+    bool isButtonDisabled = categoryState.isCategorySelected() &&
+        categoryState.selectedCategory != widget.buttonText;
 
     return GestureDetector(
-      onTap: isButtonDisabled ? null : () {
-        setState(() {
-          if (!isClicked) {
-            categoryState.selectCategory(widget.buttonText);
-            isClicked = true;
-            currentImagePath = widget.imagePath.replaceAll('.png', '_col.png');
-          } else {
-            categoryState.deselectCategory(); // 추가: 카테고리 선택 해제
-            isClicked = false;
-            currentImagePath = widget.imagePath;
-          }
-        });
-      },
+      onTap: isButtonDisabled
+          ? null
+          : () {
+              setState(() {
+                if (!isClicked) {
+                  categoryState.selectCategory(widget.buttonText);
+                  isClicked = true;
+                  currentImagePath =
+                      widget.imagePath.replaceAll('.png', '_col.png');
+                } else {
+                  categoryState.deselectCategory(); // 추가: 카테고리 선택 해제
+                  isClicked = false;
+                  currentImagePath = widget.imagePath;
+                }
+              });
+            },
       child: Container(
         width: 353,
         height: 64,
@@ -61,18 +67,18 @@ class _CategoryButtonState extends State<CategoryButton> {
               ),
             )),
           ),
-          onPressed: null,  // `GestureDetector`에서 처리하므로 null로 설정
+          onPressed: null, // `GestureDetector`에서 처리하므로 null로 설정
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(width: 38),
+              const SizedBox(width: 38),
               Image.asset(
                 currentImagePath, // 현재 이미지 경로 사용
                 fit: BoxFit.contain,
                 width: 24,
                 height: 24,
               ),
-              SizedBox(width: 46),
+              const SizedBox(width: 46),
               Text(
                 widget.buttonText,
                 style: TextStyle(

@@ -24,8 +24,8 @@ class OnBoardingComponent extends StatelessWidget {
             children: [
 
 
-              SizedBox(height: 32.0,),
-              Text(
+              const SizedBox(height: 32.0,),
+              const Text(
                 '모잉불과 함께 \n우리 모임을 불태울 수 있어요',
                 style: TextStyle(
                   fontSize: 18.0,
@@ -33,24 +33,24 @@ class OnBoardingComponent extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 88.0,),
+              const SizedBox(height: 88.0,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
                       onBoardingPhase1,
                   ),
-                  SizedBox(width: 8.0,),
+                  const SizedBox(width: 8.0,),
                   Image.asset(
                       onBoardingPhase2,
                   ),
-                  SizedBox(width: 8.0,),
+                  const SizedBox(width: 8.0,),
                   Image.asset(
                       onBoardingPhase2,
                   ),
                 ],
               ),
-              SizedBox(height: 72.0,),
+              const SizedBox(height: 72.0,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: ElevatedButton(
@@ -63,12 +63,12 @@ class OnBoardingComponent extends StatelessWidget {
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
-                          side: BorderSide(color: Color(0xff9B9999),
+                          side: const BorderSide(color: Color(0xff9B9999),
                           ),
                         ),
                       )
                   ),
-                  child: Text(
+                  child: const Text(
                     '다음으로',
                     style: TextStyle(
                       fontSize: 16.0,
