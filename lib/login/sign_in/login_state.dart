@@ -128,7 +128,7 @@ class LoginState extends ChangeNotifier {
       );
 
       // decodeJWT(appleCredential!.identityToken!);
-
+      print('애플 액세스 토큰 : ${appleCredential.identityToken}');
       await appleLoginSendToken(appleCredential.identityToken!);
     }
 
