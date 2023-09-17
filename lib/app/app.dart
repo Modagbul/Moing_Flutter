@@ -12,6 +12,10 @@ import 'package:moing_flutter/login/register_success/welcome_page.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 import 'package:moing_flutter/main/alarm/alarm.dart';
+import 'package:moing_flutter/main/group_exit_and_finish/group_exit_page.dart';
+import 'package:moing_flutter/main/group_exit_and_finish/group_exit_success_page.dart';
+import 'package:moing_flutter/main/group_exit_and_finish/group_finish_success_page.dart';
+import 'package:moing_flutter/main/group_exit_and_finish/group_finish_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/make_group/group_create_category_page.dart';
 import 'package:moing_flutter/make_group/group_create_info_page.dart';
@@ -41,6 +45,7 @@ class MoingApp extends StatelessWidget {
           routes: {
             /// StateLess 위젯만 필요하다면, 다음과 같이 작성!
             WelcomePage.routeName: (_) => const WelcomePage(),
+
             /// StateFul 위젯이 필요하다면, 다음과 같이 작성!
             LoginPage.routeName: (context) => LoginPage.route(context),
             InitPage.routeName: (context) => InitPage.route(context),
@@ -54,13 +59,15 @@ class MoingApp extends StatelessWidget {
 
             AlarmPage.routeName: (context) => AlarmPage.route(context),
             BoardMainPage.routeName: (context) => BoardMainPage.route(context),
-
             GroupCreateStartPage.routeName: (context) => GroupCreateStartPage.route(context),
             GroupCreateCategoryPage.routeName: (context) => GroupCreateCategoryPage.route(context),
             GroupCreateInfoPage.routeName: (context) => GroupCreateInfoPage.route(context),
             GroupCreatePhotoPage.routeName: (context) => GroupCreatePhotoPage.route(context),
             GroupCreateSuccessPage.routeName: (context) => GroupCreateSuccessPage.route(context),
-            BoardMainPage.routeName: (context) => BoardMainPage.route(context),
+            GroupExitPage.routeName:(context) => GroupExitPage.route(context),
+            GroupFinishPage.routeName:(context) => GroupFinishPage.route(context),
+            GroupFinishSuccessPage.routeName:(context) => GroupFinishSuccessPage.route(context),
+            GroupExitApplyPage.routeName:(context) => GroupExitApplyPage.route(context),
           },
           navigatorObservers: [
             GetIt.I.get<NavigationHistoryObserver>(),
