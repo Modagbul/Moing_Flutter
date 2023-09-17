@@ -168,7 +168,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
                               BorderRadius.circular(16), // 버튼의 모서리 둥글게
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: context.read<GroupCreatePhotoState>().makePressed,
                           child: const Text(
                             '만들기',
                             style: TextStyle(

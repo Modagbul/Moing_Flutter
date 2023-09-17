@@ -17,6 +17,7 @@ import 'package:moing_flutter/make_group/group_create_category_page.dart';
 import 'package:moing_flutter/make_group/group_create_info_page.dart';
 import 'package:moing_flutter/make_group/group_create_photo_page.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
+import 'package:moing_flutter/make_group/group_create_success_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 
 
@@ -40,7 +41,6 @@ class MoingApp extends StatelessWidget {
           routes: {
             /// StateLess 위젯만 필요하다면, 다음과 같이 작성!
             WelcomePage.routeName: (_) => const WelcomePage(),
-
             /// StateFul 위젯이 필요하다면, 다음과 같이 작성!
             LoginPage.routeName: (context) => LoginPage.route(context),
             InitPage.routeName: (context) => InitPage.route(context),
@@ -59,7 +59,7 @@ class MoingApp extends StatelessWidget {
             GroupCreateCategoryPage.routeName: (context) => GroupCreateCategoryPage.route(context),
             GroupCreateInfoPage.routeName: (context) => GroupCreateInfoPage.route(context),
             GroupCreatePhotoPage.routeName: (context) => GroupCreatePhotoPage.route(context),
-
+            GroupCreateSuccessPage.routeName: (context) => GroupCreateSuccessPage.route(context),
             BoardMainPage.routeName: (context) => BoardMainPage.route(context),
           },
           navigatorObservers: [

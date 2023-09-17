@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: context.read<HomeScreenState>().makeGroupPressed,
                     style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all<Size>(
                             const Size(162, 51)), // 원하는 너비와 높이
@@ -66,7 +66,8 @@ class HomeScreen extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.circular(32.0), // borderRadius 설정
                           ),
-                        )),
+                        ),
+                    ),
                     child: const Text(
                       '모임 만들기',
                       style: TextStyle(

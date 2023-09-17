@@ -143,7 +143,7 @@ class _NavButtons extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             style: brightButtonStyle,
-            onPressed: () {},
+            onPressed: context.read<GroupCreateInfoState>().nextPressed,
             child: const Text('다음으로'),
           ),
         ),

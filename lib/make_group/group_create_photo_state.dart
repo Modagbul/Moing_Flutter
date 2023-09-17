@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:moing_flutter/make_group/group_create_success_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GroupCreatePhotoState extends ChangeNotifier {
@@ -51,6 +52,13 @@ class GroupCreatePhotoState extends ChangeNotifier {
           textAlign: TextAlign.center,
         ),
       ),
+    );
+  }
+
+  // 만들기 버튼 클릭
+  void makePressed() {
+    Navigator.of(context).pushNamed(
+      GroupCreateSuccessPage.routeName,
     );
   }
 }
