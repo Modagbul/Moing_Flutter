@@ -6,11 +6,13 @@ class WarningDialog extends StatelessWidget {
   final String title;
   final String content;
   final VoidCallback onConfirm;
+  final VoidCallback onCanceled;
 
   const WarningDialog({super.key,
     required this.title,
     required this.content,
     required this.onConfirm,
+    required this.onCanceled,
   });
 
   @override
@@ -80,9 +82,7 @@ class WarningDialog extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
+                  onPressed: onCanceled,
                   child: const Text('나가기'),
                 ),
               ),
@@ -101,9 +101,7 @@ class WarningDialog extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
+                  onPressed: onConfirm,
                   child: const Text(
                     '계속 진행하기',
                     style: TextStyle(

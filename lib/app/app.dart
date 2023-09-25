@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
+import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/init/init_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
@@ -68,6 +69,7 @@ class MoingApp extends StatelessWidget {
             GroupFinishPage.routeName:(context) => GroupFinishPage.route(context),
             GroupFinishSuccessPage.routeName:(context) => GroupFinishSuccessPage.route(context),
             GroupExitApplyPage.routeName:(context) => GroupExitApplyPage.route(context),
+            FixGroupPage.routeName:(context) => FixGroupPage.route(context),
           },
           navigatorObservers: [
             GetIt.I.get<NavigationHistoryObserver>(),

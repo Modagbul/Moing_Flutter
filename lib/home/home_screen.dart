@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/home/component/home_appbar.dart';
 import 'package:moing_flutter/home/component/home_card.dart';
 import 'package:moing_flutter/home/component/home_my_meeting.dart';
@@ -51,21 +52,37 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 12.0),
               const HomeCard(),
               const Spacer(),
-              ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).pushNamed(
-                    GroupFinishPage.routeName,
-                  );
-                },
-                child: Text('강제종료 테스트'),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: (){
+                      Navigator.of(context).pushNamed(
+                        GroupFinishPage.routeName,
+                      );
+                    },
+                    child: Text('강제종료 테스트'),
+                  ),
+                  ElevatedButton(
+                    onPressed: (){
+                      Navigator.of(context).pushNamed(
+                        GroupExitPage.routeName,
+                      );
+                    },
+                    child: Text('탈퇴 테스트'),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).pushNamed(
-                    GroupExitPage.routeName,
-                  );
-                },
-                child: Text('탈퇴 테스트'),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: (){
+                      Navigator.of(context).pushNamed(
+                        FixGroupPage.routeName,
+                      );
+                    },
+                    child: Text('소모임 정보수정'),
+                  ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),

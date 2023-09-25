@@ -30,3 +30,5 @@ const subDark2 = Color(0xff1B7046);
 const subDark3 = Color(0xff645A07);
 
 const errorColor = Color(0xffF43A6F);
+const grayBlack2 = Color(0xffFDFDFD);
+const grayBlack8 = Color(0xff66676A);
