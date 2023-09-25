@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
+import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GroupCreatePhotoState extends ChangeNotifier {
   final BuildContext context;
+  final ViewUtil viewUtil = ViewUtil();
   /// 클릭 제어
   bool onLoading = false;
   /// 사진 업로드
@@ -34,25 +36,11 @@ class GroupCreatePhotoState extends ChangeNotifier {
       avatarFile = assetFile;
     } catch (e) {
       print(e.toString());
-      showAlertDialog(message: e.toString());
+      viewUtil.showAlertDialog(context: context, message: e.toString());
     } finally {
       onLoading = false;
       notifyListeners();
     }
-  }
-
-  // 오류 메세지 출력
-  void showAlertDialog({required String message}) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Text(
-          message,
-          style: const TextStyle(fontSize: 14),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
   }
 
   // 만들기 버튼 클릭

@@ -52,6 +52,9 @@ class GroupCreateCategoryPage extends StatelessWidget {
                       onConfirm: () {
                         Navigator.of(context).pop(true);
                       },
+                      onCanceled: () {
+                        Navigator.of(context).pop(true);
+                      },
                     ),
                   ],
                 );
