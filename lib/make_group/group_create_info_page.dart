@@ -26,21 +26,23 @@ class GroupCreateInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
-      body: const SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                _Title(),
-                SizedBox(height: 40.0),
-                _InfoTextFields(),
-                _NavButtons(),
+                const _Title(),
+                SizedBox(height: screenHeight * 0.04),
+                const _InfoTextFields(),
+                const _NavButtons(),
               ],
             ),
           ),
@@ -78,7 +80,9 @@ class _InfoTextFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         OutlinedTextField(
           maxLength: 10,
@@ -91,6 +95,7 @@ class _InfoTextFields extends StatelessWidget {
               context.read<GroupCreateInfoState>().clearNameTextField(),
           inputTextStyle: inputTextFieldStyle.copyWith(fontSize: 16.0),
         ),
+        SizedBox(height: screenHeight * 0.04),
         OutlinedTextField(
           maxLength: 300,
           maxLines: 10,
@@ -100,11 +105,11 @@ class _InfoTextFields extends StatelessWidget {
           hintText: '활동 목적과 계획을 포함해 작성해주세요',
           onChanged: (value) =>
               context.read<GroupCreateInfoState>().updateTextField(),
-          controller:
-              context.read<GroupCreateInfoState>().introduceController,
+          controller: context.read<GroupCreateInfoState>().introduceController,
           onClearButtonPressed: () =>
               context.read<GroupCreateInfoState>().clearIntroduceTextField(),
         ),
+        SizedBox(height: screenHeight * 0.04),
         OutlinedTextField(
           maxLength: 100,
           maxLines: 10,
@@ -114,11 +119,11 @@ class _InfoTextFields extends StatelessWidget {
           hintText: '자유롭게 작성해주세요',
           onChanged: (value) =>
               context.read<GroupCreateInfoState>().updateTextField(),
-          controller:
-              context.read<GroupCreateInfoState>().resolutionController,
+          controller: context.read<GroupCreateInfoState>().resolutionController,
           onClearButtonPressed: () =>
               context.read<GroupCreateInfoState>().clearResolutionTextField(),
         ),
+        SizedBox(height: screenHeight * 0.04),
       ],
     );
   }

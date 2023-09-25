@@ -61,6 +61,8 @@ dependencies:
   cloud_firestore: ^4.4.3
   cloud_functions: ^4.0.11
 
+  percent_indicator: ^4.2.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
