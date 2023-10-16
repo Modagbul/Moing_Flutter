@@ -30,7 +30,7 @@ class LoginPage extends StatelessWidget {
             children: [
               const SizedBox(height: 25.0),
               Image.asset(
-                'asset/image/moing_icon_sign.png',
+                'asset/image/moving_icon_sign.png',
                 width: 393,
                 height: 403,
                 fit: BoxFit.contain,

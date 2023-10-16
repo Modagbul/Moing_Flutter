@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/missions/missions_group_page.dart';
-import 'package:moing_flutter/missions/missions_state.dart';
+import 'package:moing_flutter/missions/component/repeat_mission_card.dart';
+import 'package:moing_flutter/missions/component/single_mission_card.dart';
+import 'package:moing_flutter/missions/missions_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
 import '../home/component/home_appbar.dart';
-import 'component/repeat_mission_card.dart';
-import 'component/single_mission_card.dart';
 import 'missions_group_state.dart';
+import 'missions_state.dart';
 
-class MissionsScreen extends StatelessWidget {
-  static const routeName = '/missons';
+class MissionsGroupPage extends StatelessWidget {
+  static const routeName = '/missons/group';
 
-  const MissionsScreen({
-    super.key,
-  });
+  const MissionsGroupPage({super.key});
 
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => MissionsState(context: context)),
+        ChangeNotifierProvider(
+            create: (_) => MissionsGroupState(context: context)),
       ],
       builder: (context, _) {
-        return const MissionsScreen();
+        return const MissionsGroupPage();
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final missonsState = Provider.of<MissionsState>(context);
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -41,7 +38,7 @@ class MissionsScreen extends StatelessWidget {
             children: [
               HomeAppBar(
                 notificationCount: '3',
-                onTap: context.watch<MissionsState>().alarmPressed,
+                onTap: context.watch<MissionsGroupState>().alarmPressed,
               ),
               const SizedBox(
                 height: 32.0,
@@ -53,6 +50,8 @@ class MissionsScreen extends StatelessWidget {
                   const SizedBox(width: 5),
                   GroupMissionsButton(),
                   const SizedBox(width: 5),
+                  Spacer(),
+                  MyDropdown(),
                 ],
               ),
               const SizedBox(
@@ -87,19 +86,31 @@ class AllMissionsButton extends StatelessWidget {
       height: 43,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: grayScaleWhite,
+          backgroundColor: grayScaleGrey700,
           padding: const EdgeInsets.all(12.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
         ),
         onPressed: () {
-          Navigator.of(context).pop(true);
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) =>
+                  ChangeNotifierProvider(
+                create: (_) => MissionsState(context: context),
+                child: MissionsScreen(),
+              ),
+              transitionsBuilder: (context, animation1, animation2, child) {
+                return child; // 애니메이션 없이 바로 child 위젯을 반환
+              },
+              transitionDuration: Duration(milliseconds: 0), // 전환 시간을 0으로 설정
+            ),
+          );
         },
         child: Text(
           '전체미션',
           style: TextStyle(
-            color: grayScaleGrey700,
+            color: grayScaleGrey400,
             fontSize: 16.0,
             fontWeight: FontWeight.w600,
           ),
@@ -117,31 +128,19 @@ class GroupMissionsButton extends StatelessWidget {
       height: 43,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: grayScaleGrey700,
+          backgroundColor: grayScaleWhite,
           padding: const EdgeInsets.all(12.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
         ),
         onPressed: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation1, animation2) =>
-                  ChangeNotifierProvider(
-                    create: (_) => MissionsGroupState(context: context),
-                    child: MissionsGroupPage(),
-                  ),
-              transitionsBuilder: (context, animation1, animation2, child) {
-                return child; // 애니메이션 없이 바로 child 위젯을 반환
-              },
-              transitionDuration: Duration(milliseconds: 0), // 전환 시간을 0으로 설정
-            ),
-          );
+          Navigator.of(context).pop(true);
         },
         child: Text(
           '모임별 미션',
           style: TextStyle(
-            color: grayScaleGrey400,
+            color: grayScaleGrey700,
             fontSize: 16.0,
             fontWeight: FontWeight.w600,
           ),

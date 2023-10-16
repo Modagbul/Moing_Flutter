@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                     onPressed: context.read<HomeScreenState>().makeGroupPressed,
                     style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all<Size>(
-                            const Size(162, 51)), // 원하는 너비와 높이
+                            const Size(137, 54)), // 원하는 너비와 높이
                         backgroundColor:
                             MaterialStateProperty.all<Color>(grayScaleGrey100),
                         shape:
