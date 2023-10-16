@@ -5,34 +5,39 @@ class MoingAppBar extends StatelessWidget implements PreferredSizeWidget{
   final String? title;
   final String imagePath;
   final Function onTap;
+  final double spacing;
 
   const MoingAppBar({super.key,
     required this.title,
     required this.imagePath,
     required this.onTap,
+    this.spacing = 32.0,
   });
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      titleSpacing: title != null ? 20.0 : 12.0, // 12가 기본값
-      title: Text(
-        title ?? '',
-        style: title != null
-            ? const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: grayScaleGrey300,
-              )
-            : null,
-      ),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 20.0,top: 12.0,bottom: 12.0,),
-        child: GestureDetector(
-          onTap: () => onTap(),
-          child: Image.asset(imagePath),
-        ),
+    return SafeArea(
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0,top: 12.0,bottom: 12.0,),
+            child: GestureDetector(
+              onTap: () => onTap(),
+              child: Image.asset(imagePath),
+            ),
+          ),
+          SizedBox(width: spacing,),
+          Text(
+            title ?? '',
+            style: title != null
+                ? const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: grayScaleGrey300,
+            )
+                : null,
+          ),
+        ],
       ),
     );
   }

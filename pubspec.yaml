@@ -61,6 +61,12 @@ dependencies:
   flutter_naver_login: ^1.8.0
   cloud_firestore: ^4.4.3
   cloud_functions: ^4.0.11
+  badges: ^2.0.3
+  bottom_sheet: ^3.1.1
+  built_collection: ^5.1.1
+  built_value: ^8.3.3
+
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

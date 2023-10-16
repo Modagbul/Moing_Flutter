@@ -3,14 +3,13 @@ import 'package:moing_flutter/board/screen/board_goal_screen.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/board_mission_screen.dart';
 import 'package:moing_flutter/board/component/board_main_bottom_sheet.dart';
-
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:provider/provider.dart';
 
 class BoardMainPage extends StatefulWidget {
   static const routeName = '/board/main';
 
-  const BoardMainPage({super.key});
+  const BoardMainPage({Key? key}) : super(key: key);
 
   static route(BuildContext context) {
     return MultiProvider(
@@ -45,16 +44,20 @@ class _BoardMainPageState extends State<BoardMainPage>
     const title = '소모임 이름';
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: title),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TabBar(
-            controller: context.read<BoardMainState>().tabController,
-            tabs: const [
-              Tab(text: '목표보드'),
-              Tab(text: '미션목록'),
-            ],
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.6,
+            child: _CustomTabBar(
+              tabs: const [
+                '목표보드',
+                '미션인증',
+              ],
+              tabController: context.read<BoardMainState>().tabController,
+            ),
           ),
           Expanded(
             child: TabBarView(
@@ -78,6 +81,12 @@ class _BoardMainPageState extends State<BoardMainPage>
       backgroundColor: Colors.transparent,
       title: Text(title),
       centerTitle: false,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back), // 뒤로 가기 아이콘
+        onPressed: () {
+          Navigator.of(context).pop(); // 뒤로 가기 버튼을 누르면 이전 화면으로 돌아갑니다.
+        },
+      ),
       actions: [
         IconButton(
           onPressed: () {
@@ -105,6 +114,37 @@ class _BoardMainPageState extends State<BoardMainPage>
       builder: (BuildContext context) {
         return const BoardMainBottomSheet();
       },
+    );
+  }
+}
+
+class _CustomTabBar extends StatelessWidget {
+  final List<String> tabs;
+  final TabController tabController;
+
+  const _CustomTabBar({
+    required this.tabs,
+    required this.tabController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TabBar(
+      labelColor: grayScaleGrey100,
+      labelStyle: const TextStyle(
+        fontSize: 24.0,
+        fontWeight: FontWeight.w600,
+      ),
+      unselectedLabelColor: grayScaleGrey550,
+      unselectedLabelStyle: const TextStyle(
+        fontSize: 24.0,
+        fontWeight: FontWeight.w600,
+      ),
+      indicatorColor: Colors.transparent,
+      controller: tabController,
+      tabs: tabs.map((tabText) {
+        return Tab(text: tabText);
+      }).toList(),
     );
   }
 }

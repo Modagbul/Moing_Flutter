@@ -2,14 +2,14 @@
 class Alarm {
   String? team;
   String? title;
-  String? context;
+  String? content;
   String? time;
   String? imagePath;
 
   Alarm({
     required this.team,
     required this.title,
-    required this.context,
+    required this.content,
     required this.time,
     required this.imagePath,
   });

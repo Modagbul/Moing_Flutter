@@ -13,3 +13,15 @@ const TextStyle bodyTextStyle = TextStyle(
   fontSize: 14.0,
   fontWeight: FontWeight.w600,
 );
+
+const TextStyle contentTextStyle = TextStyle(
+  color: grayScaleGrey400,
+  fontSize: 16.0,
+  fontWeight: FontWeight.w500,
+);
+
+const TextStyle buttonTextStyle = TextStyle(
+  color: grayScaleGrey900,
+  fontSize: 18.0,
+  fontWeight: FontWeight.w600,
+);

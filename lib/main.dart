@@ -30,11 +30,6 @@ void main() async{
   // 방법 2. String nativeAppKey = dotenv.env['KAKAO_NATIVE_APP_KEY'];
 
   runApp(const MoingApp());
-  // runApp(
-  //   MaterialApp(
-  //     home: TestScreen(),
-  //   )
-  // );
 }
 
 Future<void> initializeDefault() async {
