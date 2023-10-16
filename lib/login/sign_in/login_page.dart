@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/login/sign_in/component/custom_login_button.dart';
 import 'package:moing_flutter/login/sign_in/login_state.dart';
+import 'package:moing_flutter/main/main_page.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -30,7 +32,7 @@ class LoginPage extends StatelessWidget {
             children: [
               const SizedBox(height: 25.0),
               Image.asset(
-                'asset/image/moving_icon_sign.png',
+                'asset/image/moing_icon_sign.png',
                 width: 393,
                 height: 403,
                 fit: BoxFit.contain,
@@ -84,6 +86,21 @@ class LoginPage extends StatelessWidget {
                       'asset/image/modakbul_icon.png',// 이미지의 세로 크기를 100으로 설정
                       fit: BoxFit.contain,
                     ),
+                  ),
+                ),
+              ),
+              /// 임시 코드
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: ElevatedButton(
+                    onPressed: () {Navigator.pushNamed(context, MainPage.routeName);},
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.transparent, // 배경색을 투명으로 설정
+                    ),
+                    child:
+                    Text('홈 화면으로 이동'),
                   ),
                 ),
               ),

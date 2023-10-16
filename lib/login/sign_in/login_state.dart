@@ -192,29 +192,4 @@ class LoginState extends ChangeNotifier {
       );
     }
   }
-
-  // 테스트
-  // void decodeJWT(String token) {
-  //   final parts = token.split('.');
-  //   if (parts.length != 3) {
-  //     throw Exception('Invalid token');
-  //   }
-  //
-  //   final header = parts[0];
-  //   final payload = parts[1];
-  //
-  //   final decodedHeader = json.decode(utf8.decode(base64Decode(base64.normalize(header))));
-  //   final decodedPayload = json.decode(utf8.decode(base64Decode(base64.normalize(payload))));
-  //
-  //   print('Header: $decodedHeader');
-  //   print('Payload: $decodedPayload');
-  //
-  //   final kid = decodedHeader['kid'];
-  //   final iss = decodedPayload['iss'];
-  //   final sub = decodedPayload['sub'];
-  //
-  //   print('KID: $kid');
-  //   print('ISS: $iss');
-  //   print('SUB: $sub');
-  // }
 }
