@@ -23,7 +23,11 @@ import 'package:moing_flutter/make_group/group_create_info_page.dart';
 import 'package:moing_flutter/make_group/group_create_photo_page.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
+import 'package:moing_flutter/post/post_main_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
+
+import '../post/post_create_page.dart';
+import '../post/post_detail_page.dart';
 
 
 class MoingApp extends StatelessWidget {
@@ -70,6 +74,10 @@ class MoingApp extends StatelessWidget {
             GroupFinishSuccessPage.routeName:(context) => GroupFinishSuccessPage.route(context),
             GroupExitApplyPage.routeName:(context) => GroupExitApplyPage.route(context),
             FixGroupPage.routeName:(context) => FixGroupPage.route(context),
+
+            PostMainPage.routeName:(context) => PostMainPage.route(context),
+            PostDetailPage.routeName:(context) => PostDetailPage.route(context),
+            PostCreatePage.routeName:(context) => PostCreatePage.route(context),
           },
           navigatorObservers: [
             GetIt.I.get<NavigationHistoryObserver>(),
