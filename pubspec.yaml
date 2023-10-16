@@ -55,6 +55,7 @@ dependencies:
   image_picker: ^0.8.7+1
   permission_handler: ^10.2.0
   aws_client: ^0.4.1
+  percent_indicator: ^4.2.3
 
   google_sign_in: ^6.1.4
   flutter_naver_login: ^1.8.0
@@ -64,8 +65,6 @@ dependencies:
   bottom_sheet: ^3.1.1
   built_collection: ^5.1.1
   built_value: ^8.3.3
-
-  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:
