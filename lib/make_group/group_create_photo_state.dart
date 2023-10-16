@@ -45,8 +45,10 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
   // 만들기 버튼 클릭
   void makePressed() {
-    Navigator.of(context).pushNamed(
-      GroupCreateSuccessPage.routeName,
-    );
+    if(avatarFile != null) {
+      Navigator.of(context).pushNamed(
+        GroupCreateSuccessPage.routeName,
+      );
+    }
   }
 }

@@ -93,98 +93,23 @@ class FixGroupPage extends StatelessWidget {
                 OutlinedTextField(
                     maxLength: 10,
                     labelText: '소모임 이름',
-                    onChanged: (value) => context.read<FixGroupState>().updateTextField,
+                    onChanged: (value) => context.read<FixGroupState>().updateTextField(),
                     controller: context.read<FixGroupState>().nameController,
+                    inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
                     onClearButtonPressed: context.read<FixGroupState>().clearNameTextField,
-                ),
-                SizedBox(height: 16.0),
-                Text(
-                  '소모임 이름',
-                  style: bodyTextStyle,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                SizedBox(
-                  height: 52,
-                  child: TextField(
-                    maxLength: 10,
-                    maxLengthEnforcement: MaxLengthEnforcement.none,
-                    controller: context.watch<FixGroupState>().nameController,
-                    onChanged: (value) =>
-                        context.read<FixGroupState>().updateTextField(),
-                    style: contentTextStyle.copyWith(color: grayBlack2),
-                    decoration: InputDecoration(
-                      counterText: '',
-                      contentPadding: EdgeInsets.only(left: 16, top: 16.5),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: grayScaleGrey700,
-                      suffixIcon: context
-                              .watch<FixGroupState>()
-                              .nameController
-                              .text
-                              .isNotEmpty
-                          ? GestureDetector(
-                              onTap: context
-                                  .read<FixGroupState>()
-                                  .clearNameTextField,
-                              child: Image.asset(
-                                'asset/image/icon_exit.png',
-                              ),
-                            )
-                          : null,
-                    ),
-                  ),
                 ),
                 SizedBox(
                   height: 48,
                 ),
-                Text(
-                  '소모임을 소개해주세요',
-                  style: bodyTextStyle,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                SizedBox(
-                  height: 182,
-                  child: TextField(
-                    maxLines: 10,
-                    maxLength: 300,
-                    maxLengthEnforcement: MaxLengthEnforcement.none,
-                    controller:
-                        context.watch<FixGroupState>().introduceController,
-                    onChanged: (value) =>
-                        context.read<FixGroupState>().updateTextCountField(),
-                    style:
-                        bodyTextStyle.copyWith(color: grayBlack2, height: 1.4),
-                    decoration: InputDecoration(
-                      counterText: '',
-                      contentPadding: EdgeInsets.all(16),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: grayScaleGrey700,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Row(
-                  children: [
-                    Spacer(),
-                    Text(
-                      context.read<FixGroupState>().introduceTextCount,
-                      style: bodyTextStyle,
-                    ),
-                  ],
+                OutlinedTextField(
+                  maxLength: 300,
+                  maxLines: 10,
+                  labelText: '소모임을 소개해주세요',
+                  counterText: '(${context.watch<FixGroupState>().introduceController.text.length}/300)',
+                  onChanged: (value) => context.read<FixGroupState>().updateTextField(),
+                  controller: context.read<FixGroupState>().introduceController,
+                  inputTextStyle: bodyTextStyle.copyWith(color: grayBlack2),
+                  onClearButtonPressed: context.read<FixGroupState>().clearIntroduceTextField,
                 ),
                 SizedBox(
                   height: 40,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+const grayBackground = Color(0xff0F0F0F);
 const grayScaleGrey900 = Color(0xff1C1B1B);
 const grayScaleGrey700 = Color(0xff1F1F1F);
 const grayScaleGrey600 = Color(0xff272727);

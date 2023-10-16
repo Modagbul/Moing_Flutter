@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/group_create_photo_state.dart';
 import 'package:provider/provider.dart';
 
@@ -161,20 +162,27 @@ class GroupCreatePhotoPage extends StatelessWidget {
                       child: SizedBox(
                         height: 60,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: grayScaleWhite,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(16), // 버튼의 모서리 둥글게
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.all(Colors.transparent),
+                            minimumSize: MaterialStateProperty.all<Size>(
+                                Size(double.infinity, 60)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
                             ),
+                            backgroundColor:
+                            context.watch<GroupCreatePhotoState>().avatarFile != null
+                                ? MaterialStateProperty.all(Colors.white)
+                                : MaterialStateProperty.all(grayScaleGrey700),
                           ),
-                          onPressed: context.read<GroupCreatePhotoState>().makePressed,
-                          child: const Text(
+                          onPressed: () {context.read<GroupCreatePhotoState>().makePressed();},
+                          child: Text(
                             '만들기',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: grayScaleGrey900,
+                            style: context.watch<GroupCreatePhotoState>().avatarFile != null
+                                ? buttonTextStyle
+                                : buttonTextStyle.copyWith(
+                              color: grayScaleGrey500,
                             ),
                           ),
                         ),
