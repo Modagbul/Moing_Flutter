@@ -64,7 +64,7 @@ class MainPage extends StatelessWidget {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => MissionState(),
+            create: (_) => MissionsState(context: context),
             lazy: false,
           ),
         ],

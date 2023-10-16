@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
+import 'package:moing_flutter/board/screen/completed_mission_page.dart';
+import 'package:moing_flutter/board/screen/ongoing_misson_page.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/init/init_page.dart';
@@ -23,6 +26,13 @@ import 'package:moing_flutter/make_group/group_create_info_page.dart';
 import 'package:moing_flutter/make_group/group_create_photo_page.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
+
+import 'package:moing_flutter/missions/missions_group_page.dart';
+import 'package:navigation_history_observer/navigation_history_observer.dart';
+
+import '../board/screen/board_mission_screen.dart';
+import '../missions/missions_screen.dart';
+
 import 'package:moing_flutter/post/post_main_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 
@@ -46,7 +56,7 @@ class MoingApp extends StatelessWidget {
           ),
           navigatorKey: GetIt.I.get<GlobalKey<NavigatorState>>(),
           title: 'Moing',
-          initialRoute: LoginPage.routeName,
+          initialRoute: BoardMainPage.routeName,
           routes: {
             /// StateLess 위젯만 필요하다면, 다음과 같이 작성!
             WelcomePage.routeName: (_) => const WelcomePage(),
@@ -62,8 +72,16 @@ class MoingApp extends StatelessWidget {
             RegisterGuide.routeName: (context) => RegisterGuide.route(context),
             MainPage.routeName: (context) => MainPage.route(context),
 
+            MissionsScreen.routeName: (context) => MissionsScreen.route(context),
+            MissionsGroupPage.routeName: (context) => MissionsGroupPage.route(context),
+
             AlarmPage.routeName: (context) => AlarmPage.route(context),
             BoardMainPage.routeName: (context) => BoardMainPage.route(context),
+            
+            BoardMissionScreen.routeName: (context) => BoardMissionScreen.route(context),
+            CompletedMissionPage.routeName: (context) => CompletedMissionPage.route(context),
+            OngoingMissionPage.routeName: (context) => OngoingMissionPage.route(context),
+            
             GroupCreateStartPage.routeName: (context) => GroupCreateStartPage.route(context),
             GroupCreateCategoryPage.routeName: (context) => GroupCreateCategoryPage.route(context),
             GroupCreateInfoPage.routeName: (context) => GroupCreateInfoPage.route(context),
@@ -87,3 +105,4 @@ class MoingApp extends StatelessWidget {
     );
   }
 }
+
