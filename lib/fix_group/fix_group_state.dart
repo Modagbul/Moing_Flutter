@@ -10,7 +10,10 @@ class FixGroupState extends ChangeNotifier {
   final ViewUtil viewUtil = ViewUtil();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController introduceController = TextEditingController();
+
+  String nameGroupText = '';
   String introduceTextCount='(0/300)';
+
   /// 클릭 제어
   bool onLoading = false;
   /// 사진 업로드
@@ -18,30 +21,44 @@ class FixGroupState extends ChangeNotifier {
 
   FixGroupState({required this.context}) {
     print('Instance "GroupFinishExitState" has been created');
+
+    // nameController에 리스너 추가
+    nameController.addListener(_onNameTextChanged);
+  }
+
+  // nameController 텍스트 변경 감지
+  void _onNameTextChanged() {
+    // nameController.text를 사용하여 필요한 작업 수행
+    nameGroupText = nameController.text;
+    notifyListeners();
   }
 
   @override
   void dispose() {
+    // 리스너 제거
+    nameController.removeListener(_onNameTextChanged);
+
     nameController.dispose();
     introduceController.dispose();
     log('Instance "GroupFinishExitState" has been removed');
     super.dispose();
   }
 
-  // 텍스트 필드 초기화 메소드
+
+  // 이름 텍스트 필드 초기화 메소드
   void clearNameTextField() {
     nameController.clear();
     notifyListeners();
   }
 
-  // 텍스트 필드 변경 감지 메소드
-  void updateTextField() {
+  // 소개글 텍스트 필드 초기화 메소드
+  void clearIntroduceTextField() {
+    introduceController.clear();
     notifyListeners();
   }
 
-  void updateTextCountField() {
-    int textCount = introduceController.text.length;
-    introduceTextCount = '($textCount/300)';
+  // 텍스트 필드 변경 감지 메소드
+  void updateTextField() {
     notifyListeners();
   }
 

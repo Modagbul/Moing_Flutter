@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
 import 'package:moing_flutter/login/register_success/welcome_page.dart';
 
 class SignUpState extends ChangeNotifier {
@@ -82,7 +83,8 @@ class SignUpState extends ChangeNotifier {
     // 중복 x, 다음으로 넘어갈 준비가 된 버튼일 경우 - 화면 이동
     if (nicknameCheckButtonText == '다음으로' && prevSubmitNickname == nickname) {
       log('닉네임($nickname) 저장 및 화면 이동');
-      Navigator.pushNamed(context, WelcomePage.routeName);
+      //Navigator.pushNamed(context, WelcomePage.routeName);
+      Navigator.pushNamed(context, SignUpGenderPage.routeName);
       notifyListeners();
       return;
     }

@@ -69,7 +69,7 @@ class _Title extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: const Text(
-            '반가워요, 닉네임만 입력하면 돼요!',
+            '처음 오셨군요, 반가워요',
             style: TextStyle(
               color: grayScaleGrey550,
               fontSize: 14.0,

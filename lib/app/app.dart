@@ -5,6 +5,8 @@ import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/init/init_page.dart';
+import 'package:moing_flutter/login/date/sign_up_date_page.dart';
+import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_second.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_third.dart';
@@ -54,9 +56,12 @@ class MoingApp extends StatelessWidget {
             OnBoardingSecondPage.routeName: (context) => OnBoardingSecondPage.route(context),
             OnBoardingThirdPage.routeName: (context) => OnBoardingThirdPage.route(context),
             SignUpPage.routeName: (context) => SignUpPage.route(context),
+            SignUpGenderPage.routeName: (context) => SignUpGenderPage.route(context),
+            SignUpDatePage.routeName: (context) => SignUpDatePage.route(context),
             HomeScreen.routeName: (context) => HomeScreen.route(context),
             RegisterGuide.routeName: (context) => RegisterGuide.route(context),
             MainPage.routeName: (context) => MainPage.route(context),
+
 
             AlarmPage.routeName: (context) => AlarmPage.route(context),
             BoardMainPage.routeName: (context) => BoardMainPage.route(context),
