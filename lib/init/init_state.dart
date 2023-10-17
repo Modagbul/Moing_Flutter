@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
+import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 
 class InitState extends ChangeNotifier {
   BuildContext context;
+  final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
 
   InitState({required this.context}) {
     print('Instance "InitState" has been created');
@@ -27,11 +30,21 @@ class InitState extends ChangeNotifier {
         ),
     );
 
-    Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName,
-            // false 값은 넣어도 되고 안 넣어도 됨 -> 검색 고고
-            (route) => false
-    );
+    String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
+    /// 이전에 가입한 적 있는 유저
+    if(oldUser == 'true') {
+      Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName,
+          // false 값은 넣어도 되고 안 넣어도 됨 -> 검색 고고
+              (route) => false
+      );
+    }
+    else {
+      Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName,
+          // false 값은 넣어도 되고 안 넣어도 됨 -> 검색 고고
+              (route) => false
+      );
+    }
     return ;
   }
 

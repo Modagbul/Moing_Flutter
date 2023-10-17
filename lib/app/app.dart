@@ -58,7 +58,8 @@ class MoingApp extends StatelessWidget {
           ),
           navigatorKey: GetIt.I.get<GlobalKey<NavigatorState>>(),
           title: 'Moing',
-          initialRoute: InitPage.routeName,
+          // initialRoute: InitPage.routeName,
+          initialRoute: OnBoardingFirstPage.routeName,
           routes: {
             /// StateLess 위젯만 필요하다면, 다음과 같이 작성!
             WelcomePage.routeName: (_) => const WelcomePage(),

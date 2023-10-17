@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
-import 'package:moing_flutter/login/register_success/welcome_page.dart';
+import 'package:http/http.dart' as http;
+import 'package:moing_flutter/utils/api/api_error.dart';
 
 class SignUpState extends ChangeNotifier {
   final BuildContext context;
@@ -13,6 +16,8 @@ class SignUpState extends ChangeNotifier {
   String nicknameInfo = '(0/10)';
   String nicknameCheckButtonText = '닉네임 중복 확인';
   String prevSubmitNickname = '';
+
+  ApiException apiException = ApiException();
 
   // 닉네임 중복 확인을 위한 더미 데이터 - 삭제 예정
   final nicknameList = ["A", "aB", "ABC"];
@@ -82,8 +87,6 @@ class SignUpState extends ChangeNotifier {
 
     // 중복 x, 다음으로 넘어갈 준비가 된 버튼일 경우 - 화면 이동
     if (nicknameCheckButtonText == '다음으로' && prevSubmitNickname == nickname) {
-      log('닉네임($nickname) 저장 및 화면 이동');
-      //Navigator.pushNamed(context, WelcomePage.routeName);
       Navigator.pushNamed(context, SignUpGenderPage.routeName);
       notifyListeners();
       return;
@@ -100,5 +103,59 @@ class SignUpState extends ChangeNotifier {
     prevSubmitNickname = nicknameController.value.text;
 
     notifyListeners();
+  }
+
+  /// 닉네임 중복검사 요청
+  Future<void> checkNicknameOverlapped(String nickname) async {
+    final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/nickname/$nickname';
+
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8', // 요청 헤더 설정
+      },
+    );
+
+    Map<String, dynamic> responseBody = jsonDecode(response.body);
+    if(responseBody['isSuccess'] == true) {
+      // 닉네임 중복인 경우
+      if(responseBody['data']['isDuplicated']) {
+        print('닉네임 중복 발생');
+        // 닉네임 정보 - 경고 텍스트
+        nicknameInfo = '중복된 닉네임이에요';
+        // 닉네임 컬러 - 경고 색상
+        nicknameColor = errorColor;
+        // 닉네임 버튼 텍스트 - '닉네임 중복 확인'으로 초기화
+        nicknameCheckButtonText = '닉네임 중복 확인';
+        notifyListeners();
+        return;
+      }
+
+      // 닉네임 중복 아닌 경우
+      print('닉네임 사용 가능');
+      if (nicknameCheckButtonText == '다음으로' && prevSubmitNickname == nickname) {
+        log('닉네임($nickname) 저장 및 화면 이동');
+        //Navigator.pushNamed(context, WelcomePage.routeName);
+        Navigator.pushNamed(context, SignUpGenderPage.routeName, arguments: nickname);
+        notifyListeners();
+        return;
+      }
+
+      // 중복된 닉네임이 아닐 경우 - 다음으로 넘어갈 준비
+      // 닉네임 정보 - 허용 텍스트
+      nicknameInfo = '사용 가능한 닉네임이에요';
+      // 닉네임 컬러 - 허용 컬러
+      nicknameColor = subLight2;
+      // 닉네임 버튼 텍스트 - '다음으로'
+      nicknameCheckButtonText = '다음으로';
+      // 제출한 닉네임 저장
+      prevSubmitNickname = nicknameController.value.text;
+
+      notifyListeners();
+    }
+    /// 에러 처리
+    else {
+      apiException.throwErrorMessage(responseBody['errorCode']);
+    }
   }
 }

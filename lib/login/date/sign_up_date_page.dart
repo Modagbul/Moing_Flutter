@@ -13,10 +13,14 @@ class SignUpDatePage extends StatelessWidget {
   static const routeName = '/sign/up/date';
 
   static route(BuildContext context) {
+    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final String nickname = data['nickname'] as String;
+    final String gender = data['gender'] as String;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => SignUpDateState(context: context)),
+            create: (_) => SignUpDateState(context: context, nickname: nickname, gender: gender)),
       ],
       builder: (context, _) {
         return const SignUpDatePage();
@@ -68,7 +72,7 @@ class SignUpDatePage extends StatelessWidget {
               const SizedBox(
                 height: 4,
               ),
-              Text(
+              const Text(
                 '생일은 언제인가요?',
                 style: headerTextStyle,
               ),
@@ -81,11 +85,11 @@ class SignUpDatePage extends StatelessWidget {
                   scrollViewOptions: const DatePickerScrollViewOptions(
                     year: ScrollViewDetailOptions(
                       label: '년',
-                      margin: const EdgeInsets.only(right: 8),
+                      margin: EdgeInsets.only(right: 8),
                     ),
                     month: ScrollViewDetailOptions(
                       label: '월',
-                      margin: const EdgeInsets.only(right: 8),
+                      margin: EdgeInsets.only(right: 8),
                     ),
                     day: ScrollViewDetailOptions(
                       label: '일',
@@ -96,7 +100,7 @@ class SignUpDatePage extends StatelessWidget {
                   },
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 32.0),
                 child: WhiteButton(

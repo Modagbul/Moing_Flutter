@@ -30,7 +30,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
             icon: const Icon(Icons.close),
-            onPressed: () {} // Navigator.of(context).pop(),
+            onPressed: () {Navigator.of(context).pop();}
             ),
         backgroundColor: Colors.transparent,
       ),
@@ -49,6 +49,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   fontSize: 24,
                   color: grayScaleGrey100,
+                  height: 1.3,
                 ),
               ),
               const SizedBox(
@@ -60,6 +61,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
                   fontSize: 14,
                   color: grayScaleGrey550,
                   fontWeight: FontWeight.w500,
+                  height: 1.7,
                 ),
               ),
               const SizedBox(
@@ -143,7 +145,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
                                   BorderRadius.circular(16), // 버튼의 모서리 둥글게
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {Navigator.of(context).pop();},
                           child: const Text(
                             '이전으로',
                             style: TextStyle(

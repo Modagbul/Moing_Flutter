@@ -6,14 +6,15 @@ import 'package:provider/provider.dart';
 
 class SignUpGenderPage extends StatelessWidget {
   static const routeName = '/sign/up/gender';
-
   const SignUpGenderPage({super.key});
 
   static route(BuildContext context) {
+    final String nickname = ModalRoute.of(context)?.settings.arguments as String;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => SignUpGenderState(context: context)),
+            create: (_) => SignUpGenderState(nickname: nickname, context: context),),
       ],
       builder: (context, _) {
         return const SignUpGenderPage();
