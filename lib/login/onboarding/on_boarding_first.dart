@@ -46,17 +46,16 @@ class OnBoardingFirstPage extends StatelessWidget {
                   fontSize: 18.0,
                   color: Color(0xffF4F6F8),
                   fontWeight: FontWeight.w600,
+                  height: 1.6,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(
-                height: 88.0,
-              ),
+              const Spacer(),
               const ImagePhase(
                   phase1: 'asset/image/onboard_phase1.png',
                   phase2: 'asset/image/onboard_phase2.png',
                   phase3: 'asset/image/onboard_phase2.png'),
-              const Spacer(),
+              const SizedBox(height: 72,),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(

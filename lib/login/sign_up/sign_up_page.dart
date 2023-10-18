@@ -165,7 +165,7 @@ class _NicknameCheckButton extends StatelessWidget {
       ),
       onPressed: context.watch<SignUpState>().isNicknameValid()
           ? () {
-              context.read<SignUpState>().checkNickname(
+              context.read<SignUpState>().checkNicknameOverlapped(
                     context.read<SignUpState>().nicknameController.text,
                   );
             }

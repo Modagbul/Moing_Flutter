@@ -59,7 +59,7 @@ class RegisterGuide extends StatelessWidget {
                 height: 60.0,
               ),
               const InvitationCard(),
-              const SizedBox(height: 110,),
+              Spacer(),
               NextButton(
                   text: '나만의 소모임 만들기',
                   textStyle: const TextStyle(
@@ -86,29 +86,32 @@ class RegisterGuide extends StatelessWidget {
                   onPressed: myMoingPressed,
               ),
               const SizedBox(height: 12.0,),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: NextButton(
-                  text: '가입 완료하기',
-                  textStyle: const TextStyle(
-                    color: Color(0xff1C1B1B),
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  buttonStyle: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      Size(
-                        MediaQuery.of(context).size.width, 60,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 24.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: NextButton(
+                    text: '가입 완료하기',
+                    textStyle: const TextStyle(
+                      color: Color(0xff1C1B1B),
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    buttonStyle: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        Size(
+                          MediaQuery.of(context).size.width, 60,
+                        ),
+                      ),
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
                       ),
                     ),
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
+                    onPressed: context.read<RegisterGuideState>().completePressed,
                   ),
-                  onPressed: context.read<RegisterGuideState>().completePressed,
                 ),
               ),
             ],

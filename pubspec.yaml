@@ -56,7 +56,6 @@ dependencies:
   permission_handler: ^10.2.0
   aws_client: ^0.4.1
   percent_indicator: ^4.2.3
-
   google_sign_in: ^6.1.4
   flutter_naver_login: ^1.8.0
   cloud_firestore: ^4.4.3

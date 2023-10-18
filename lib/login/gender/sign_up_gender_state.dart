@@ -7,14 +7,12 @@ class SignUpGenderState extends ChangeNotifier {
   final BuildContext context;
   String? selectedGender;
   bool isSelected = false;
+  String nickname = '';
 
   SignUpGenderState({
     required this.context,
+    required this.nickname,
   }) {
-    initState();
-  }
-
-  void initState() {
     log('Instance "SignUpGenderState" has been created');
   }
 
@@ -25,9 +23,11 @@ class SignUpGenderState extends ChangeNotifier {
   }
 
   void nextPressed() {
-    if(isSelected) {
-      Navigator.pushNamed(context, SignUpDatePage.routeName);
+    if (isSelected) {
+      Navigator.pushNamed(context, SignUpDatePage.routeName, arguments: {
+        'nickname': nickname,
+        'gender': selectedGender,
+      });
     }
   }
-
 }
