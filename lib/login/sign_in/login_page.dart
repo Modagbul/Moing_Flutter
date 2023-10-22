@@ -38,9 +38,7 @@ class LoginPage extends StatelessWidget {
                     height: 403,
                     fit: BoxFit.contain,
                   ),
-                  const SizedBox(
-                    height: 73.0,
-                  ),
+                  const Spacer(),
                   CustomButton(
                     onPressed: context.read<LoginState>().signInWithApple,
                     text: 'Apple로 로그인',
@@ -77,37 +75,13 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Spacer(),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: ElevatedButton(
-                        onPressed: context.read<LoginState>().moveSignPage,
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.transparent, // 배경색을 투명으로 설정
-                        ),
-                        child: Image.asset(
-                          'asset/image/modakbul_icon.png', // 이미지의 세로 크기를 100으로 설정
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  /// 임시 코드
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, MainPage.routeName);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.transparent, // 배경색을 투명으로 설정
-                        ),
-                        child: Text('홈 화면으로 이동'),
+                      padding: const EdgeInsets.only(bottom: 24.0, top: 40),
+                      child: Image.asset(
+                        'asset/image/modakbul_icon.png', // 이미지의 세로 크기를 100으로 설정
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),

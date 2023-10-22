@@ -5,6 +5,7 @@ import 'package:moing_flutter/home/component/home_appbar.dart';
 import 'package:moing_flutter/home/component/home_card.dart';
 import 'package:moing_flutter/home/component/home_my_meeting.dart';
 import 'package:moing_flutter/home/component/home_nickname_and_encourage.dart';
+import 'package:moing_flutter/home/component/home_no_card.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_exit_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_page.dart';
@@ -44,18 +45,22 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 32.0,
               ),
-              const HomeText(nickName: '모닥불', encourage: '오늘도 모잉이 응원해요!'),
+              HomeText(
+                  nickName: '${context.watch<HomeScreenState>().futureData?.memberNickName ?? '모닥불'}님,',
+                  encourage: '오늘도 모잉이 응원해요!'),
               const SizedBox(height: 40.0),
-              const HomeMyMeeting(
-                meetingCount: '2',
+              HomeMyMeeting(
+                meetingCount: context.watch<HomeScreenState>().futureData?.numOfTeam.toString() ?? '0',
               ),
               const SizedBox(height: 12.0),
-              const HomeCard(),
+              (context.watch<HomeScreenState>().futureData?.numOfTeam ?? 0) > 0
+                  ? const HomeCard()
+                  : HomeNoCard(),
               const Spacer(),
               Row(
                 children: [
                   ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pushNamed(
                         GroupFinishPage.routeName,
                       );
@@ -63,19 +68,23 @@ class HomeScreen extends StatelessWidget {
                     child: Text('강제종료 테스트'),
                   ),
                   ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pushNamed(
                         GroupExitPage.routeName,
                       );
                     },
                     child: Text('탈퇴 테스트'),
                   ),
+                  ElevatedButton(
+                    onPressed: context.read<HomeScreenState>().apiTest,
+                    child: Text('API 테스트 버튼'),
+                  ),
                 ],
               ),
               Row(
                 children: [
                   ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pushNamed(
                         FixGroupPage.routeName,
                       );
@@ -91,17 +100,16 @@ class HomeScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: context.read<HomeScreenState>().makeGroupPressed,
                     style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all<Size>(
-                            const Size(137, 54)), // 원하는 너비와 높이
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(grayScaleGrey100),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(32.0), // borderRadius 설정
-                          ),
+                      minimumSize: MaterialStateProperty.all<Size>(
+                          const Size(137, 54)), // 원하는 너비와 높이
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(grayScaleGrey100),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(32.0), // borderRadius 설정
                         ),
+                      ),
                     ),
                     child: const Text(
                       '모임 만들기',

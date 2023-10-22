@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/fcm/fcm_state.dart';
 import 'package:moing_flutter/login/register_success/welcome_page.dart';
-import 'package:http/http.dart' as http;
+import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/request/sign_up_request.dart';
-import 'package:moing_flutter/model/response/sign_up_response.dart';
 import 'package:moing_flutter/utils/api/api_error.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
@@ -19,6 +17,7 @@ class SignUpDateState extends ChangeNotifier {
   final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
   final TokenManagement tokenManagement = TokenManagement();
   final ApiException apiException = ApiException();
+  final APICall call = APICall();
   DateTime selectedDate = DateTime.now();
 
   String nickname = '';
@@ -40,18 +39,17 @@ class SignUpDateState extends ChangeNotifier {
   void nextPressed() async {
     // 생년월일만 가져옴.
     String formattedDate = selectedDate.toLocal().toString().split(' ')[0];
-    String? accessToken = await tokenManagement.loadAccessToken();
-
-    bool? result = await signUp(formattedDate, accessToken);
-    if(result == true) {
+    bool? result = await signUp(formattedDate);
+    if (result == true) {
       Navigator.of(context).pushNamed(
         WelcomePage.routeName,
       );
     }
   }
 
-  Future<bool?> signUp(String birthDate, String? accessToken) async {
+  Future<bool?> signUp(String birthDate) async {
     String? fcmToken;
+
     await Future.microtask(() async {
       final fcmState = context.read<FCMState>();
 
@@ -59,65 +57,53 @@ class SignUpDateState extends ChangeNotifier {
       fcmToken = await fcmState.updateToken();
     });
 
-    if(fcmToken == null) {
+    if (fcmToken == null) {
       print('fcmToken값을 가져올 수 없습니다..');
       return null;
     }
+    final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signUp';
+
+    switch (gender) {
+      case '남자':
+        gender = 'MAN';
+        break;
+      case '여자':
+        gender = 'WOMAN';
+        break;
+      case '기타':
+        gender = 'NEUTRALITY';
+        break;
+    }
+
+    SignUpData data = SignUpData(
+      nickName: nickname,
+      gender: gender,
+      birthDate: birthDate,
+      fcmToken: fcmToken!,
+    );
+
     try {
-      final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signUp';
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'PUT',
+        body: data.toJson(),
+        fromJson: (json) => json as Map<String, dynamic>,
+      );
 
-      switch(gender) {
-        case '남자':
-          gender = 'MAN';
-          break;
-        case '여자':
-          gender = 'WOMAN';
-          break;
-        case '기타':
-          gender = 'NEUTRALITY';
-          break;
+      if(apiResponse.isSuccess == true) {
+        tokenManagement.saveToken(apiResponse.data?['accessToken'],
+            apiResponse.data?['refreshToken']);
+        print('${apiResponse.data?['refreshToken']}');
+        return apiResponse.data?['registrationStatus'] == true ? true : false;
       }
-
-      SignUpData data = SignUpData(
-        nickName: nickname,
-        gender: gender,
-        birthDate: birthDate,
-        fcmToken: fcmToken!,
-      );
-
-      print('requestData : ${data.toString()}');
-      final response = await http.put(
-        Uri.parse(apiUrl),
-        headers: {
-          "Content-Type": "application/json;charset=UTF-8",
-          "Authorization": "Bearer $accessToken",
-        },
-        body: jsonEncode(data.toJson()),
-      );
-
-      if (response.statusCode == 200) {
-        ApiResponse<SignUpResponseData> apiResponse = ApiResponse.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)),
-              (data) => SignUpResponseData.fromJson(data),
-        );
-        tokenManagement.saveToken(apiResponse.data.accessToken, apiResponse.data.refreshToken);
-        return apiResponse.data.registrationStatus == true ? true : false;
-      } else {
-        var responseBody = jsonDecode(utf8.decode(response.bodyBytes));
-        apiException.throwErrorMessage(responseBody['errorCode']);
-        // 토큰 재발급 처리 완료
-        if (responseBody['errorCode'] == 'J0003') {
-          print('토큰 재발급 처리 수행합니다.');
-          String? refreshToken = await tokenManagement.loadRefreshToken();
-          if(refreshToken == null) {
-            print('refreshToken 존재하지 않습니다..');
-            return null;
-          }
-          await signUp(birthDate, refreshToken);
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          signUp(birthDate);
         }
       }
     } catch (e) {
-      print('SignUpDateState에서 회원가입 도중 에러가 발생했습니다 : ${e.toString()}');
+      print('소모임 생성 실패: $e');
     }
   }
 }
