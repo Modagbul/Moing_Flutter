@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/make_group/group_create_start_state.dart';
+import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
 
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,18 @@ class GroupCreateStartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: grayScaleGrey900,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 4.0),
+          child: GestureDetector(
+            onTap: () async {
+              Navigator.of(context).pushReplacementNamed(HomeScreen.routeName,);
+            },
+              child: Icon(Icons.close)),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),

@@ -8,7 +8,7 @@ class MoingAppBar extends StatelessWidget implements PreferredSizeWidget{
   final double spacing;
 
   const MoingAppBar({super.key,
-    required this.title,
+    this.title,
     required this.imagePath,
     required this.onTap,
     this.spacing = 32.0,

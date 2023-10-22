@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/board/screen/completed_mission_page.dart';
 import 'package:moing_flutter/board/screen/ongoing_misson_page.dart';
+import 'package:moing_flutter/fcm/fcm_state.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/init/init_page.dart';
@@ -31,6 +32,7 @@ import 'package:moing_flutter/make_group/group_create_success_page.dart';
 
 import 'package:moing_flutter/missions/missions_group_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
+import 'package:provider/provider.dart';
 
 import '../board/screen/board_mission_screen.dart';
 import '../missions/missions_screen.dart';
@@ -58,12 +60,24 @@ class MoingApp extends StatelessWidget {
           ),
           navigatorKey: GetIt.I.get<GlobalKey<NavigatorState>>(),
           title: 'Moing',
-          // initialRoute: InitPage.routeName,
-          initialRoute: OnBoardingFirstPage.routeName,
+          initialRoute: InitPage.routeName,
+          
+          builder: (context, child) {
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (context) => FCMState(
+                    navigatorKey: GetIt.I.get(),
+                    navigationHistory: GetIt.I.get(),
+                  ),
+                ),
+              ],
+              child: child,
+            );
+          },
           routes: {
             /// StateLess 위젯만 필요하다면, 다음과 같이 작성!
             WelcomePage.routeName: (_) => const WelcomePage(),
-
             /// StateFul 위젯이 필요하다면, 다음과 같이 작성!
             LoginPage.routeName: (context) => LoginPage.route(context),
             InitPage.routeName: (context) => InitPage.route(context),

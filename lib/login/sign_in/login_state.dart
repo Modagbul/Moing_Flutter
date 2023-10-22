@@ -108,7 +108,11 @@ class LoginState extends ChangeNotifier {
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
-          String accessToken = await tokenManagement.loadAccessToken();
+          String? accessToken = await tokenManagement.loadAccessToken();
+          if(accessToken == null) {
+            print('accessToken이 존재하지 않습니다..');
+            return null;
+          }
           await sendKakaoTokenToBackend(accessToken);
         }
       }
@@ -187,7 +191,11 @@ class LoginState extends ChangeNotifier {
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
-          String accessToken = await tokenManagement.loadAccessToken();
+          String? accessToken = await tokenManagement.loadAccessToken();
+          if(accessToken == null) {
+            print('accessToken이 존재하지 않습니다..');
+            return null;
+          }
           await appleLoginSendToken(accessToken);
         }
       }

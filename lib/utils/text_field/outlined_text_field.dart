@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../const/color/colors.dart';
@@ -110,10 +109,18 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
             filled: true,
             // 배경색
             fillColor: grayScaleGrey700,
-
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
             // 외각선 색상 - 포커스
             focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: coralGrey200),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
 
             // 삭제 버튼 - 값을 입력할 경우 활성화

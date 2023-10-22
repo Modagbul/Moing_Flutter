@@ -11,7 +11,11 @@ class ApiException implements Exception {
     // 만료된 토큰 -> 토큰 재발급
     if (errorCode == 'J0003') {
       // Refresh 토큰 값 가져오기
-      String refreshToken = await tokenManagement.loadRefreshToken();
+      String? refreshToken = await tokenManagement.loadRefreshToken();
+      if(refreshToken == null) {
+        print('refreshToken값이 존재하지 않습니다..');
+        return ;
+      }
       // 토큰 재발급 받기
       await tokenManagement.getNewToken(refreshToken);
       return ;
@@ -51,8 +55,23 @@ class ApiException implements Exception {
       case 'J0008':
         msg = '유효하지 않은 refreshToken입니다.';
         break;
+      case 'U0001':
+        msg = '해당 유저는 존재하지 않습니다.';
+        break;
+      case 'AU0001':
+        msg = '이미 다른 소셜 플랫폼으로 가입하셨습니다.';
+        break;
+      case 'AU0002':
+        msg = '입력 토큰이 유효하지 않습니다.';
+        break;
+      case 'AU0003':
+        msg = '애플 아이디가 유효하지 않습니다.';
+        break;
+      case 'AU0004':
+        msg = '닉네임이 중복됩니다.';
+        break;
     }
 
-    throw HttpException(errorCode + ' : ' + msg);
+    throw Exception(errorCode + ' : ' + msg);
   }
 }

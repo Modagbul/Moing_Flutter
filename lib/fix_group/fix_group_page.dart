@@ -36,7 +36,7 @@ class FixGroupPage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 20.0, top: 10),
             child: GestureDetector(
               /// 목표보드로 이동
-              onTap: (){},
+              onTap: () {},
               child: Text(
                 '저장',
                 style: buttonTextStyle.copyWith(
@@ -91,12 +91,14 @@ class FixGroupPage extends StatelessWidget {
                   height: 72,
                 ),
                 OutlinedTextField(
-                    maxLength: 10,
-                    labelText: '소모임 이름',
-                    onChanged: (value) => context.read<FixGroupState>().updateTextField(),
-                    controller: context.read<FixGroupState>().nameController,
-                    inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
-                    onClearButtonPressed: context.read<FixGroupState>().clearNameTextField,
+                  maxLength: 10,
+                  labelText: '소모임 이름',
+                  onChanged: (value) =>
+                      context.read<FixGroupState>().updateTextField(),
+                  controller: context.read<FixGroupState>().nameController,
+                  inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
+                  onClearButtonPressed:
+                      context.read<FixGroupState>().clearNameTextField,
                 ),
                 SizedBox(
                   height: 48,
@@ -105,11 +107,14 @@ class FixGroupPage extends StatelessWidget {
                   maxLength: 300,
                   maxLines: 10,
                   labelText: '소모임을 소개해주세요',
-                  counterText: '(${context.watch<FixGroupState>().introduceController.text.length}/300)',
-                  onChanged: (value) => context.read<FixGroupState>().updateTextField(),
+                  counterText:
+                      '(${context.watch<FixGroupState>().introduceController.text.length}/300)',
+                  onChanged: (value) =>
+                      context.read<FixGroupState>().updateTextField(),
                   controller: context.read<FixGroupState>().introduceController,
                   inputTextStyle: bodyTextStyle.copyWith(color: grayBlack2),
-                  onClearButtonPressed: context.read<FixGroupState>().clearIntroduceTextField,
+                  onClearButtonPressed:
+                      context.read<FixGroupState>().clearIntroduceTextField,
                 ),
                 SizedBox(
                   height: 40,
@@ -156,6 +161,7 @@ class FixGroupPage extends StatelessWidget {
                   height: 48,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                        elevation: 0,
                         backgroundColor: grayScaleGrey700,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(48),

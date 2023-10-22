@@ -1,13 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class TokenManagement {
+  final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
   /// 토큰 재발급
   Future<void> getNewToken(String refreshToken) async {
-    String refreshToken = await loadRefreshToken();
+    String? refreshToken = await loadRefreshToken();
+    if(refreshToken == null) {
+      print('refreshToken 값이 존재하지 않습니다.');
+      return;
+    }
 
     final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/reissue';
 
@@ -35,28 +41,31 @@ class TokenManagement {
 
   /// 토큰 저장 또는 수정
   Future<void> saveToken(String accessToken, String refreshToken) async {
-    final prefs = await SharedPreferences.getInstance();
-    // 저장 또는 수정
-    prefs.setString('ACCESS_TOKEN', accessToken);
-    prefs.setString('REFRESH_TOKEN', refreshToken);
+    SaveAccessToken(accessToken);
+    SaveRefreshToken(refreshToken);
   }
 
   /// 토큰 삭제
   Future<void> deleteToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove('ACCESS_TOKEN');
-    prefs.remove('REFRESH_TOKEN');
+    sharedPreferencesInfo.removePreferencesData('ACCESS_TOKEN');
+    sharedPreferencesInfo.removePreferencesData('REFRESH_TOKEN');
   }
 
   /// Access Token 값 불러오기
-  Future<String> loadAccessToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('ACCESS_TOKEN')!;
+  Future<String?> loadAccessToken() async {
+    return await sharedPreferencesInfo.loadPreferencesData('ACCESS_TOKEN');
+  }
+
+  Future<void> SaveAccessToken(String accessToken) async {
+    return await sharedPreferencesInfo.savePreferencesData('ACCESS_TOKEN', accessToken);
   }
 
   /// Refresh Token 값 불러오기
-  Future<String> loadRefreshToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('REFRESH_TOKEN')!;
+  Future<String?> loadRefreshToken() async {
+    return await sharedPreferencesInfo.loadPreferencesData('REFRESH_TOKEN');
+  }
+
+  Future<void> SaveRefreshToken(String refreshToken) async {
+    return await sharedPreferencesInfo.savePreferencesData('REFRESH_TOKEN', refreshToken);
   }
 }
