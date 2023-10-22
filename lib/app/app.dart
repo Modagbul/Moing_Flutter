@@ -35,6 +35,7 @@ import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
 
 import '../board/screen/board_mission_screen.dart';
+import '../missions/missions_all_page.dart';
 import '../missions/missions_screen.dart';
 
 import 'package:moing_flutter/post/post_main_page.dart';
@@ -91,6 +92,7 @@ class MoingApp extends StatelessWidget {
             RegisterGuide.routeName: (context) => RegisterGuide.route(context),
             MainPage.routeName: (context) => MainPage.route(context),
             MissionsScreen.routeName: (context) => MissionsScreen.route(context),
+            MissionsAllPage.routeName: (context) => MissionsAllPage.route(context),
             MissionsGroupPage.routeName: (context) => MissionsGroupPage.route(context),
 
             AlarmPage.routeName: (context) => AlarmPage.route(context),

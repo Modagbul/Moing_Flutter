@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../const/color/colors.dart';
 
-class SingleMissionCard extends StatelessWidget {
-  final String teamName;
+class GroupSingleMissionCard extends StatelessWidget {
   final String missionName;
   final String missionTime;
 
-  const SingleMissionCard({super.key,
-    required this.teamName,
+  const GroupSingleMissionCard({super.key,
     required this.missionName,
     required this.missionTime,
   });
@@ -21,7 +19,7 @@ class SingleMissionCard extends StatelessWidget {
         children: [
           Container(
             width: 272,
-            height: 126,
+            height: 118,
             decoration: BoxDecoration(
               color: grayScaleGrey700,
               borderRadius: BorderRadius.circular(16),
@@ -32,18 +30,7 @@ class SingleMissionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Text(
-                      teamName,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: grayScaleGrey400,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
+                    padding: const EdgeInsets.only(top: 14.0),
                     child: Text(
                       missionName,
                       style: const TextStyle(
