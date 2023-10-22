@@ -44,42 +44,45 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>naver.com</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>naver.net</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>카메라를 사용하여 사진을 촬영합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>사진 라이브러리에서 이미지를 선택합니다.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-    <key>naverServiceAppUrlScheme</key>
-    <string>naverloginhyunseok</string>
-        <key>naverConsumerKey</key>
-        <string>5UA2mzoDVvp6SpDo81Ml</string>
-        <key>naverConsumerSecret</key>
-        <string>2WbJ_p8NRI</string>
-        <key>naverServiceAppName</key>
-        <string>naverlogintest</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>fetch</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-	<key>NSAppTransportSecurity</key>
-        <dict>
-           <key>NSAllowsArbitraryLoads</key>
-           <true/>
-           <key>NSExceptionDomains</key>
-           <dict>
-              <key>naver.com</key>
-              <dict>
-                 <key>NSExceptionRequiresForwardSecrecy</key>
-                 <false/>
-                 <key>NSIncludesSubdomains</key>
-                 <true/>
-              </dict>
-              <key>naver.net</key>
-              <dict>
-                 <key>NSExceptionRequiresForwardSecrecy</key>
-                 <false/>
-                 <key>NSIncludesSubdomains</key>
-                 <true/>
-              </dict>
-            </dict>
-        </dict>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -95,9 +98,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-    <string>카메라를 사용하여 사진을 촬영합니다.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>사진 라이브러리에서 이미지를 선택합니다.</string>
+	<key>naverConsumerKey</key>
+	<string>5UA2mzoDVvp6SpDo81Ml</string>
+	<key>naverConsumerSecret</key>
+	<string>2WbJ_p8NRI</string>
+	<key>naverServiceAppName</key>
+	<string>naverlogintest</string>
+	<key>naverServiceAppUrlScheme</key>
+	<string>naverloginhyunseok</string>
 </dict>
 </plist>
