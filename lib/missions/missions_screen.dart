@@ -5,11 +5,10 @@ import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
 import '../home/component/home_appbar.dart';
-import 'component/repeat_mission_card.dart';
-import 'component/single_mission_card.dart';
+import 'missions_all_page.dart';
 import 'missions_group_state.dart';
 
-class MissionsScreen extends StatelessWidget {
+class MissionsScreen extends StatefulWidget {
   static const routeName = '/missons';
 
   const MissionsScreen({
@@ -28,11 +27,24 @@ class MissionsScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final missonsState = Provider.of<MissionsState>(context);
+  State<MissionsScreen> createState() => _MissionsScreenState();
+}
 
+class _MissionsScreenState extends State<MissionsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    /// length?
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -46,38 +58,117 @@ class MissionsScreen extends StatelessWidget {
               const SizedBox(
                 height: 32.0,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start, // 버튼 중앙 정렬
+              Stack(
                 children: [
-                  AllMissionsButton(),
-                  const SizedBox(width: 5),
-                  GroupMissionsButton(),
-                  const SizedBox(width: 5),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 1.0, // 원하는 높이 설정
+                      color: grayScaleGrey550, // 회색으로 설정
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 210), // 오른쪽에 여백 주기
+                    child: TabBar(
+                      controller: _tabController,
+                      indicatorColor: grayScaleGrey200,
+                      labelColor: grayScaleGrey200,
+                      unselectedLabelColor: grayScaleGrey550,
+                      tabs: [
+                        _customTab(text: '전체 미션'),
+                        _customTab(text: '모임별 미션'),
+                      ],
+                      labelPadding: EdgeInsets.zero, // 탭바 내부의 기본 패딩 제거
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(
-                height: 52.0,
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: const [
+                    MissionsAllPage(),
+                    MissionsGroupPage(),
+                  ],
+                ),
               ),
-              _Title(mainText: '한번 미션', countText: '1'),
-              const SizedBox(
-                height: 12.0,
-              ),
-              SingleMissionCard(),
-              const SizedBox(
-                height: 40.0,
-              ),
-              _Title(mainText: '반복 미션', countText: '1'),
-              const SizedBox(
-                height: 12.0,
-              ),
-              RepeatMissionCard(),
             ],
           ),
         ),
       ),
     );
   }
+
+  Tab _customTab({required String text}) {
+    return Tab(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8), // 텍스트 크기에 따라 여백 조정
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 }
+
+
+//       /// 원본
+//       Scaffold(
+//       backgroundColor: Colors.black,
+//       body: SafeArea(
+//         child: Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 20.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               HomeAppBar(
+//                 notificationCount: '3',
+//                 onTap: context.watch<MissionsState>().alarmPressed,
+//               ),
+//               const SizedBox(
+//                 height: 32.0,
+//               ),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.start, // 버튼 중앙 정렬
+//                 children: [
+//                   AllMissionsButton(),
+//                   const SizedBox(width: 5),
+//                   GroupMissionsButton(),
+//                   const SizedBox(width: 5),
+//                 ],
+//               ),
+//               const SizedBox(
+//                 height: 52.0,
+//               ),
+//               _Title(mainText: '한번 미션', countText: '1'),
+//               const SizedBox(
+//                 height: 12.0,
+//               ),
+//               SingleMissionCard(),
+//               const SizedBox(
+//                 height: 40.0,
+//               ),
+//               _Title(mainText: '반복 미션', countText: '1'),
+//               const SizedBox(
+//                 height: 12.0,
+//               ),
+//               RepeatMissionCard(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class AllMissionsButton extends StatelessWidget {
   @override
@@ -128,9 +219,9 @@ class GroupMissionsButton extends StatelessWidget {
             PageRouteBuilder(
               pageBuilder: (context, animation1, animation2) =>
                   ChangeNotifierProvider(
-                    create: (_) => MissionsGroupState(context: context),
-                    child: MissionsGroupPage(),
-                  ),
+                create: (_) => MissionsGroupState(),
+                child: MissionsGroupPage(),
+              ),
               transitionsBuilder: (context, animation1, animation2, child) {
                 return child; // 애니메이션 없이 바로 child 위젯을 반환
               },
@@ -183,43 +274,6 @@ class _MyDropdownState extends State<MyDropdown> {
           _selectedValue = newValue;
         });
       },
-    );
-  }
-}
-
-class _Title extends StatelessWidget {
-  final String mainText;
-  final String countText;
-
-  _Title({
-    required this.mainText,
-    required this.countText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          mainText,
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w600,
-            color: grayScaleGrey100,
-          ),
-        ),
-        const SizedBox(
-          width: 4.0,
-        ),
-        Text(
-          countText,
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w600,
-            color: grayScaleGrey400,
-          ),
-        ),
-      ],
     );
   }
 }

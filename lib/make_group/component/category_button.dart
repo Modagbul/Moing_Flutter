@@ -31,27 +31,30 @@ class _CategoryButtonState extends State<CategoryButton> {
   @override
   Widget build(BuildContext context) {
     final categoryState = Provider.of<GroupCreateCategoryState>(context);
+    bool isClicked = categoryState.categoryStatus[widget.buttonText] ?? false;
 
-    bool isButtonDisabled = categoryState.isCategorySelected() &&
-        categoryState.selectedCategory != widget.buttonText;
+    String currentImagePath;
+
+    if (categoryState.selectedCategory == widget.buttonText) {
+      // 현재 선택된 카테고리의 이미지 경로 업데이트
+      currentImagePath = widget.imagePath.replaceAll('.png', '_col.png');
+    } else {
+      // 다른 카테고리의 이미지 경로 업데이트
+      currentImagePath = widget.imagePath.replaceAll('_col.png', '.png');
+    }
 
     return GestureDetector(
-      onTap: isButtonDisabled
-          ? null
-          : () {
-              setState(() {
-                if (!isClicked) {
-                  categoryState.selectCategory(widget.buttonText);
-                  isClicked = true;
-                  currentImagePath =
-                      widget.imagePath.replaceAll('.png', '_col.png');
-                } else {
-                  categoryState.deselectCategory(); // 추가: 카테고리 선택 해제
-                  isClicked = false;
-                  currentImagePath = widget.imagePath;
-                }
-              });
-            },
+      onTap: () {
+        setState(() {
+          if (categoryState.selectedCategory == widget.buttonText) {
+            // 이미 선택된 카테고리를 클릭한 경우, 선택 해제
+            categoryState.deselectCategory();
+          } else {
+            // 다른 카테고리를 클릭한 경우, 선택
+            categoryState.selectCategory(widget.buttonText);
+          }
+        });
+      },
       child: Container(
         width: 353,
         height: 64,

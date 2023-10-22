@@ -68,7 +68,7 @@ class WarningDialog extends StatelessWidget {
                 height: 55,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: grayScaleGrey700,
+                    backgroundColor: grayScaleGrey600,
                     textStyle: const TextStyle(
                       color: grayScaleGrey550,
                       fontSize: 16.0,
@@ -81,6 +81,7 @@ class WarningDialog extends StatelessWidget {
                         color: Color(0xff353538),
                       ),
                     ),
+                    elevation: 0.0,
                   ),
                   onPressed: onCanceled,
                   child: const Text('나가기'),
@@ -100,6 +101,7 @@ class WarningDialog extends StatelessWidget {
                         color: Color(0xff353538),
                       ),
                     ),
+                    elevation: 0.0,
                   ),
                   onPressed: onConfirm,
                   child: const Text(

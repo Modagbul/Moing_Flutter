@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/make_group/component/category_button.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/make_group/group_create_category_state.dart';
 import 'package:moing_flutter/make_group/group_create_info_page.dart';
 import 'package:provider/provider.dart';
 import '../const/color/colors.dart';
+import '../home/home_screen.dart';
+import 'group_create_start_page.dart';
+import 'group_create_start_state.dart';
 
 class GroupCreateCategoryPage extends StatelessWidget {
   static const routeName = '/catagory';
@@ -29,11 +33,6 @@ class GroupCreateCategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoryState = Provider.of<GroupCreateCategoryState>(context);
 
-    Color nextButtonColor =
-        categoryState.isCategorySelected() ? grayScaleWhite : grayScaleGrey700;
-    Color nextButtonTextColor =
-        categoryState.isCategorySelected() ? grayScaleBlack : grayScaleGrey500;
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -53,7 +52,9 @@ class GroupCreateCategoryPage extends StatelessWidget {
                         Navigator.of(context).pop(true);
                       },
                       onCanceled: () {
-                        Navigator.of(context).pop(true);
+                        Navigator.of(context).pushNamed(
+                          MainPage.routeName,
+                        );
                       },
                     ),
                   ],
@@ -122,7 +123,20 @@ class GroupCreateCategoryPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop(true);
+                        /// 버버벅 없앰 --> 시뮬레이터만 그런거 일수도 있어서 나중에 폰으로 봤을 때 괜찮으면 기존 간단 코드로 수정
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation1, animation2) =>
+                                ChangeNotifierProvider(
+                                  create: (_) => GroupCreateStartState(context: context),
+                                  child: GroupCreateStartPage(),
+                                ),
+                            transitionsBuilder: (context, animation1, animation2, child) {
+                              return child; // 애니메이션 없이 바로 child 위젯을 반환
+                            },
+                            transitionDuration: Duration(milliseconds: 0), // 전환 시간을 0으로 설정
+                          ),
+                        );
                       },
                       child: const Text('이전으로'),
                     ),
@@ -133,7 +147,7 @@ class GroupCreateCategoryPage extends StatelessWidget {
                     height: 62,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: nextButtonColor,
+                        backgroundColor: categoryState.getNextButtonColor(),
                         padding: const EdgeInsets.all(16.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
@@ -149,7 +163,7 @@ class GroupCreateCategoryPage extends StatelessWidget {
                       child: Text(
                         '다음으로',
                         style: TextStyle(
-                          color: nextButtonTextColor,
+                          color: categoryState.getNextButtonTextColor(),
                           fontSize: 16.0,
                           fontWeight: FontWeight.w600,
                         ),
