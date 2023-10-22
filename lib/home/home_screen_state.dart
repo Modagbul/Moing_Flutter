@@ -13,6 +13,7 @@ class HomeScreenState extends ChangeNotifier {
   final BuildContext context;
   final TokenManagement tokenManagement = TokenManagement();
   final APICall call = APICall();
+  String? newCreated;
   String nickname = '';
 
   TeamData? futureData;
@@ -23,7 +24,7 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  HomeScreenState({required this.context}) {
+  HomeScreenState({required this.context, this.newCreated}) {
     log('Instance "HomeScreenState" has been created');
     loadTeamData();
   }
@@ -50,6 +51,7 @@ class HomeScreenState extends ChangeNotifier {
       }
       else {
         if(apiResponse.errorCode == 'J0003') {
+          print('재실행합니다.');
           fetchApiData();
         }
       }

@@ -29,6 +29,7 @@ class GroupCreateSuccessState extends ChangeNotifier {
       context,
       MainPage.routeName,
           (route) => false,
+        arguments: 'new',
     );
   }
 }
