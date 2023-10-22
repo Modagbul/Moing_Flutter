@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class TokenManagement {
   final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
   /// 토큰 재발급
-  Future<void> getNewToken(String refreshToken) async {
+  Future<void> getNewToken() async {
     String? refreshToken = await loadRefreshToken();
     if(refreshToken == null) {
       print('refreshToken 값이 존재하지 않습니다.');
@@ -17,14 +17,12 @@ class TokenManagement {
 
     final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/reissue';
 
-    final response = await http.post(
+    final response = await http.get(
       Uri.parse(apiUrl),
       headers: {
         'Content-Type': 'application/json;charset=UTF-8', // 요청 헤더 설정
+        "RefreshToken": refreshToken,
       },
-      body: jsonEncode(<String, String>{
-        'token': refreshToken, // POST 요청 본문에 들어갈 토큰
-      }),
     );
 
     Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -37,6 +35,7 @@ class TokenManagement {
       await saveToken(accessToken, refreshToken);
     }
 
+    print('액세스 토큰 갱신 실패 : ${response.statusCode}');
     return;
   }
 

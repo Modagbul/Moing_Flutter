@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:http/http.dart' as http;
-import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/utils/api/api_error.dart';

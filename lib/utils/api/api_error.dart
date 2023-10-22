@@ -5,20 +5,13 @@ import 'package:moing_flutter/utils/api/refresh_token.dart';
 class ApiException implements Exception {
   TokenManagement tokenManagement = TokenManagement();
 
-  void throwErrorMessage(String errorCode) async {
+  Future<void> throwErrorMessage(String errorCode) async {
     String msg='';
 
     // 만료된 토큰 -> 토큰 재발급
     if (errorCode == 'J0003') {
-      // Refresh 토큰 값 가져오기
-      String? refreshToken = await tokenManagement.loadRefreshToken();
-      if(refreshToken == null) {
-        print('refreshToken값이 존재하지 않습니다..');
-        return ;
-      }
       // 토큰 재발급 받기
-      await tokenManagement.getNewToken(refreshToken);
-      return ;
+      return await tokenManagement.getNewToken();
     }
 
     switch (errorCode) {

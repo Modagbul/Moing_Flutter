@@ -52,17 +52,7 @@ class APICall {
       if(response.statusCode == 200) {
         return ApiResponse.fromJson(responseBody, fromJson);
       } else {
-        exception.throwErrorMessage(responseBody['errorCode']);
-
-        // 토큰 만료
-        if (responseBody['errorCode'] == 'J0003') {
-          print('토큰 재발급을 수행합니다.');
-          String? refreshToken = await tokenManagement.loadRefreshToken();
-          if(refreshToken == null) {
-            throw Exception('리프레시 토큰이 존재하지 않습니다.');
-          }
-          await tokenManagement.getNewToken(refreshToken);
-        }
+        await exception.throwErrorMessage(responseBody['errorCode']);
         // errorCode가 담긴 body 그대로 반환
         return ApiResponse.fromJson(responseBody, fromJson);
       }

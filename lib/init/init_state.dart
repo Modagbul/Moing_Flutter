@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
+import 'package:moing_flutter/main/main_page.dart';
+import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 
 class InitState extends ChangeNotifier {
   BuildContext context;
   final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
+  final TokenManagement tokenManagement = TokenManagement();
 
   InitState({required this.context}) {
     print('Instance "InitState" has been created');
@@ -24,19 +27,31 @@ class InitState extends ChangeNotifier {
   /// 테스트 용도로 처음에는 무조건 로그인 페이지로 이동하도록 함
   void initStart() async {
     await Future.delayed(
-        Duration(
-            seconds: 1,
-            milliseconds: 0,
-        ),
+      const Duration(
+        seconds: 1,
+        milliseconds: 0,
+      ),
     );
 
     String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
     /// 이전에 가입한 적 있는 유저
-    oldUser == 'true'
-    ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
-    : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
-    return ;
+    if (oldUser == 'true') {
+      String? accessToken = await tokenManagement.loadAccessToken();
+      if (accessToken != null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, MainPage.routeName, (route) => false);
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+            context, LoginPage.routeName, (route) => false);
+      }
+    } else {
+      Navigator.pushNamedAndRemoveUntil(
+          context, OnBoardingFirstPage.routeName, (route) => false);
+    }
+    // oldUser == 'true'
+    // ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
+    // : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
   }
 
   /// 유저의 메인 화면으로 갈 수 있는지 여부 등 확인

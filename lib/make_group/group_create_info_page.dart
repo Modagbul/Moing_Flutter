@@ -13,10 +13,11 @@ class GroupCreateInfoPage extends StatelessWidget {
   const GroupCreateInfoPage({super.key});
 
   static route(BuildContext context) {
+    final String category = ModalRoute.of(context)?.settings.arguments as String;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => GroupCreateInfoState(context: context)),
+            create: (_) => GroupCreateInfoState(category: category, context: context)),
       ],
       builder: (context, _) {
         return const GroupCreateInfoPage();

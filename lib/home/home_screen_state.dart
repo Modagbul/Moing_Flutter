@@ -59,32 +59,6 @@ class HomeScreenState extends ChangeNotifier {
       return null;
     }
   }
-  // Future<ApiResponse<TeamData>> fetchApiData(String url, String accessToken) async {
-  //   print('액세스 토큰 : Bearer ${accessToken}');
-  //   final response = await http.get(
-  //     Uri.parse(apiUrl),
-  //     headers: {
-  //       "Content-Type": "application/json;charset=UTF-8",
-  //       "Authorization": "Bearer $accessToken",
-  //     },
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     print('홈 화면 연동 성공!');
-  //
-  //     ApiResponse<TeamData> apiResponse = ApiResponse.fromJson(
-  //       jsonDecode(utf8.decode(response.bodyBytes)),
-  //         (data) => TeamData.fromJson(data),
-  //     );
-  //     print('${apiResponse.data?.memberNickName}');
-  //     print('${apiResponse.data?.numOfTeam}');
-  //     return ApiResponse<TeamData>.fromJson(
-  //         jsonDecode(utf8.decode(response.bodyBytes)),
-  //             (dynamic data) => TeamData.fromJson(data as Map<String, dynamic>));
-  //   } else {
-  //     throw Exception('Failed to load data');
-  //   }
-  // }
 
   void alarmPressed() {
     Navigator.of(context).pushNamed(

@@ -52,8 +52,10 @@ class GroupCreateCategoryPage extends StatelessWidget {
                         Navigator.of(context).pop(true);
                       },
                       onCanceled: () {
-                        Navigator.of(context).pushNamed(
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
                           MainPage.routeName,
+                              (route) => false,
                         );
                       },
                     ),
@@ -100,7 +102,7 @@ class GroupCreateCategoryPage extends StatelessWidget {
               const SizedBox(height: 8.0),
               const CategoryButton(
                 imagePath: 'asset/image/icon_etc.png', // 이미지 경로
-                buttonText: '그외 자기개발', // 버튼 텍스트
+                buttonText: '그외 자기계발', // 버튼 텍스트
               ),
               const SizedBox(height: 32.0),
               Row(
@@ -156,8 +158,7 @@ class GroupCreateCategoryPage extends StatelessWidget {
                       onPressed: categoryState.isCategorySelected()
                           ? () {
                               // 임시로 **
-                              Navigator.of(context)
-                                  .pushNamed(GroupCreateInfoPage.routeName);
+                              categoryState.moveInfoPage();
                             }
                           : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
                       child: Text(
