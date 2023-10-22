@@ -33,6 +33,7 @@ class TokenManagement {
       final String refreshToken = responseBody['data']['refreshToken'];
 
       // sharedPreferences를 이용하여 accessToken, refreshToken 저장
+      print('액세스 토큰, 리프레시 토큰이 갱신되었습니다!');
       await saveToken(accessToken, refreshToken);
     }
 

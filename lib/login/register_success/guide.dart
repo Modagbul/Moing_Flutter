@@ -83,7 +83,7 @@ class RegisterGuide extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onPressed: myMoingPressed,
+                  onPressed: context.read<RegisterGuideState>().makeTeam,
               ),
               const SizedBox(height: 12.0,),
               Padding(
@@ -119,10 +119,5 @@ class RegisterGuide extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  /// 나만의 소모임 만들기 클릭
-  myMoingPressed() {
-
   }
 }

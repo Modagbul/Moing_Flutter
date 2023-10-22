@@ -3,19 +3,24 @@ import 'package:flutter/material.dart';
 class ApiResponse<T> {
   bool isSuccess;
   String message;
-  T data;
+  String? errorCode;
+  T? data;
 
-  ApiResponse({
-    required this.isSuccess,
-    required this.message,
-    required this.data});
+  ApiResponse(
+      {required this.isSuccess,
+      required this.message,
+      this.errorCode,
+      this.data});
 
   factory ApiResponse.fromJson(
-      Map<String, dynamic> json, T Function(Map<String, dynamic>) fromJsonT) {
+    Map<String, dynamic> json,
+    T Function(dynamic) fromJson,
+  ) {
     return ApiResponse(
       isSuccess: json['isSuccess'],
       message: json['message'],
-      data: fromJsonT(json['data']),
+      errorCode: json['errorCode'],
+      data: fromJson(json['data']),
     );
   }
 }

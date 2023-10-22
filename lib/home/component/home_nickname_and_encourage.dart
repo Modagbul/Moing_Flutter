@@ -22,11 +22,11 @@ class HomeText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-            '모닥불님,',
+          nickName,
           style: ts,
         ),
         Text(
-            '오늘도 모잉이 응원해요 !',
+            '오늘도 모잉이 응원해요 🔥',
           style: ts,
         ),
       ],

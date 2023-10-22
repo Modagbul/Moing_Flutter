@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
@@ -34,18 +33,9 @@ class InitState extends ChangeNotifier {
     String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
     /// 이전에 가입한 적 있는 유저
-    if(oldUser == 'true') {
-      Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName,
-          // false 값은 넣어도 되고 안 넣어도 됨 -> 검색 고고
-              (route) => false
-      );
-    }
-    else {
-      Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName,
-          // false 값은 넣어도 되고 안 넣어도 됨 -> 검색 고고
-              (route) => false
-      );
-    }
+    oldUser == 'true'
+    ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
+    : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
     return ;
   }
 
@@ -125,59 +115,6 @@ class InitState extends ChangeNotifier {
 //   finally {
 //     EasyLoading.dismiss();
 //   }
-// }
-
-/// 로그인 상태 확인 후 로그인 화면 혹은 메인 화면으로 이동 -> 우리 코드 쓸 것 같아서 넣어놓습니다..
-// _goNextPage(String? userId) async {
-//   // 유저 아이디 없으면 로그인 화면으로 이동
-//   if (userId == null) {
-//     Navigator.pushNamedAndRemoveUntil(
-//         context,
-//         LoginPage.routeName,
-//             (route) => false);
-//     return;
-//   }
-//
-//   bool isRegistered = false;
-//
-//   // 유저 정보 확인해서 회원가입이 완료된 회원인지 확인해서 페이지 이동
-//   final userDocument = await FirebaseFirestore.instance.collection('users').doc(userId).get();
-//
-//   final userData = userDocument.data();
-//
-//   if (!userDocument.exists || userData == null) {
-//     // 존재하지 않는 회원이거나 회원 정보가 없는 경우 인증 정보 초기화 후 로그인 화면으로 이동
-//     await FirebaseAuth.instance.signOut();
-//     Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
-//     return;
-//   }
-//
-//   final appUser = model.User.fromJson({'id': userId, ...userData});
-//   isRegistered = appUser.registered == true;
-//
-//   if (!isRegistered) {
-//     // 등록 되어 있지 않은 회원의 경우 로그인 화면으로 이동
-//     await FirebaseAuth.instance.signOut();
-//     Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
-//     return;
-//   }
-//
-//   if ((appUser.isCounselor??false) && !(appUser.isCounselorCertificated??false)) {
-//     // 승인되지 않은 상담사의 경우 로그인 화면으로 이동
-//     // 올바르게 가입된 회원인 경우 자동으로 메인 화면으로 이동
-//     Navigator.pushNamedAndRemoveUntil(context, MainPage.routeName, (route) => false);
-//   }
-//
-//   // Request Permission
-//   await Future.microtask(() async {
-//     final fcmState = context.read<FCMState>();
-//
-//     await fcmState.requestPermission();
-//     await fcmState.updateToken();
-//   });
-//
-//   // 올바르게 가입된 회원인 경우 자동으로 메인 화면으로 이동
-//   Navigator.pushNamedAndRemoveUntil(context, MainPage.routeName, (route) => false);
 // }
 
 // Future<void> _checkUpdate() async {

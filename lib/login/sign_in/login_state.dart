@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:http/http.dart' as http;
+import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
+import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/utils/api/api_error.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'dart:io';
@@ -100,6 +102,7 @@ class LoginState extends ChangeNotifier {
         await tokenManagement.saveToken(accessToken, refreshToken);
 
         _isRegistered = responseBody['data']['registrationStatus'];
+        print('카카오 회원가입 여부 : $_isRegistered');
         checkRegister(_isRegistered!);
       }
       /// 에러 처리
@@ -208,7 +211,9 @@ class LoginState extends ChangeNotifier {
   void checkRegister(bool isRegistered) {
     // 회원가입이 되어있는 경우
     if(isRegistered) {
-      // TODO: 메인 화면으로 이동 (구현 예정)
+      Navigator.of(context).pushNamed(
+        MainPage.routeName,
+      );
     }
     // 회원가입 되어있지 않은 경우
     else {
