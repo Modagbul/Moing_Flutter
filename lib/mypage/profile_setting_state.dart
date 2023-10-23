@@ -40,4 +40,8 @@ class ProfileSettingState extends ChangeNotifier {
   void updateTextField() {
     notifyListeners();
   }
+
+  void pressCloseButton() {
+    Navigator.pop(context);
+  }
 }
