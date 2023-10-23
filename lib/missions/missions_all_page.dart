@@ -42,7 +42,7 @@ class MissionsAllPage extends StatelessWidget {
             const SizedBox(
               height: 12.0,
             ),
-            SingleMissionCard(teamName: '모닥모닥불', missionName: '작업한 내용 인증하기', missionTime: '13시간 11분 후 종료'),
+            const SingleMissionCard(teamName: '모닥모닥불', missionName: '작업한 내용 인증하기', missionTime: '13시간 11분 후 종료'),
             const SizedBox(
               height: 40.0,
             ),
@@ -50,7 +50,7 @@ class MissionsAllPage extends StatelessWidget {
             const SizedBox(
               height: 12.0,
             ),
-            RepeatMissionCard(),
+            const RepeatMissionCard(teamName: '미라모닝', missionTitle: '평일 오전 7시 기상', totalNum: '2', doneNum: '5'),
           ],
         ),
       ),
@@ -74,7 +74,7 @@ class _Title extends StatelessWidget {
       children: [
         Text(
           mainText,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w600,
             color: grayScaleGrey100,
@@ -85,7 +85,7 @@ class _Title extends StatelessWidget {
         ),
         Text(
           countText,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w600,
             color: grayScaleGrey400,
