@@ -20,7 +20,7 @@ class ApiResponse<T> {
       isSuccess: json['isSuccess'],
       message: json['message'],
       errorCode: json['errorCode'],
-      data: fromJson(json['data']),
+      data: json['data'] != null ? fromJson(json['data']) : null,
     );
   }
 }
