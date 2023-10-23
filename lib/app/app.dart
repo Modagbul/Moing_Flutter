@@ -28,22 +28,14 @@ import 'package:moing_flutter/make_group/group_create_info_page.dart';
 import 'package:moing_flutter/make_group/group_create_photo_page.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
-
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
-
-import 'package:moing_flutter/missions/missions_group_page.dart';
-import 'package:moing_flutter/mypage/my_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
-
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
-
 import '../board/screen/board_mission_screen.dart';
 import '../missions/aggregate/missions_all_page.dart';
 import '../missions/aggregate/missions_screen.dart';
-
 import 'package:moing_flutter/post/post_main_page.dart';
-
 import '../missions/create/link_auth_page.dart';
 import '../missions/create/skip_mission_page.dart';
 import '../missions/create/text_auth_page.dart';
