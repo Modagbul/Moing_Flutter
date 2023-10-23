@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 
-import '../main/alarm/alarm.dart';
+import '../../main/alarm/alarm.dart';
 
 class MissionsGroupState extends ChangeNotifier {
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/init/init_state.dart';
-import 'package:moing_flutter/missions/missions_all_state.dart';
+import 'package:moing_flutter/missions/aggregate/missions_all_state.dart';
 import 'package:provider/provider.dart';
 
-import '../const/color/colors.dart';
-import 'component/repeat_mission_card.dart';
-import 'component/single_mission_card.dart';
+import '../../const/color/colors.dart';
+import '../component/repeat_mission_card.dart';
+import '../component/single_mission_card.dart';
 
 class MissionsAllPage extends StatelessWidget {
   static const routeName = '/missons/all';
