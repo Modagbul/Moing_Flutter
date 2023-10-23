@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/missions/missions_group_page.dart';
-import 'package:moing_flutter/missions/missions_state.dart';
+import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
+import 'package:moing_flutter/missions/aggregate/missions_state.dart';
 import 'package:provider/provider.dart';
 
-import '../const/color/colors.dart';
-import '../home/component/home_appbar.dart';
+import '../../const/color/colors.dart';
+import '../../home/component/home_appbar.dart';
 import 'missions_all_page.dart';
 
 class MissionsScreen extends StatefulWidget {

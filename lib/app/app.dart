@@ -29,18 +29,24 @@ import 'package:moing_flutter/make_group/group_create_photo_page.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
 
+import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
+
 import 'package:moing_flutter/missions/missions_group_page.dart';
 import 'package:moing_flutter/mypage/my_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
+
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
 
 import '../board/screen/board_mission_screen.dart';
-import '../missions/missions_all_page.dart';
-import '../missions/missions_screen.dart';
+import '../missions/aggregate/missions_all_page.dart';
+import '../missions/aggregate/missions_screen.dart';
 
 import 'package:moing_flutter/post/post_main_page.dart';
 
+import '../missions/create/link_auth_page.dart';
+import '../missions/create/skip_mission_page.dart';
+import '../missions/create/text_auth_page.dart';
 import '../post/post_create_page.dart';
 import '../post/post_detail_page.dart';
 
@@ -95,6 +101,10 @@ class MoingApp extends StatelessWidget {
             MissionsAllPage.routeName: (context) => MissionsAllPage.route(context),
             MissionsGroupPage.routeName: (context) => MissionsGroupPage.route(context),
 
+            TextAuthPage.routeName:(context) => TextAuthPage.route(context),
+            LinkAuthPage.routeName:(context) => LinkAuthPage.route(context),
+            SkipMissionPage.routeName:(context) => SkipMissionPage.route(context),
+
             AlarmPage.routeName: (context) => AlarmPage.route(context),
             BoardMainPage.routeName: (context) => BoardMainPage.route(context),
             BoardMissionScreen.routeName: (context) => BoardMissionScreen.route(context),
@@ -114,7 +124,9 @@ class MoingApp extends StatelessWidget {
             PostMainPage.routeName:(context) => PostMainPage.route(context),
             PostDetailPage.routeName:(context) => PostDetailPage.route(context),
             PostCreatePage.routeName:(context) => PostCreatePage.route(context),
+
             ProfileSettingPage.routeName:(context) => ProfileSettingPage.route(context),
+
           },
           navigatorObservers: [
             GetIt.I.get<NavigationHistoryObserver>(),

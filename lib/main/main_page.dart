@@ -4,8 +4,8 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
 import 'package:moing_flutter/main/main_state.dart';
-import 'package:moing_flutter/missions/missions_screen.dart';
-import 'package:moing_flutter/missions/missions_state.dart';
+import 'package:moing_flutter/missions/aggregate/missions_screen.dart';
+import 'package:moing_flutter/missions/aggregate/missions_state.dart';
 import 'package:moing_flutter/mypage/my_page.dart';
 import 'package:provider/provider.dart';
 

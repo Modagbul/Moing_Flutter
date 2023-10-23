@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/missions/component/repeat_mission_card.dart';
 import 'package:provider/provider.dart';
 
-import '../const/color/colors.dart';
-import 'component/group_single_mission_card.dart';
+import '../../const/color/colors.dart';
+import '../component/group_single_mission_card.dart';
 import 'missions_group_state.dart';
 import 'missions_state.dart';
 
