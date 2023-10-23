@@ -27,14 +27,17 @@ class ProfileSettingPage extends StatelessWidget {
       appBar: _renderAppBar(context: context),
       backgroundColor: grayBackground,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _Profile(),
-            const _TextFields(),
-            const _SubmitButton(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Profile(),
+              const _TextFields(),
+              const _SubmitButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -50,7 +53,7 @@ class ProfileSettingPage extends StatelessWidget {
         icon: const Icon(
           Icons.close,
         ),
-        onPressed: () {},
+        onPressed: context.read<ProfileSettingState>().pressCloseButton,
       ),
     );
   }
@@ -64,7 +67,7 @@ class _Profile extends StatelessWidget {
   );
 
   final Image editProfileImg = Image.asset(
-    'asset/image/icon_edit_circle.png',
+    'asset/image/icon_gallery.png',
     width: 24.0,
     height: 24.0,
   );
