@@ -6,38 +6,30 @@ import 'package:provider/provider.dart';
 
 class MyPageScreen extends StatelessWidget {
   static const routeName = '/mypage';
-
   const MyPageScreen({Key? key}) : super(key: key);
-
-  static route(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (_) => MyPageState(context: context)),
-      ],
-      builder: (context, _) {
-        return const MyPageScreen();
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: grayBackground,
-      appBar: _renderAppBar(context: context),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 24.0),
-              _Profile(),
-              const SizedBox(height: 24.0),
-              _HashTag(),
-              const SizedBox(height: 52.0),
-              const _GroupList(groupCnt: '1'),
-            ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MyPageState(context: context)),
+      ],
+      child: Scaffold(
+        backgroundColor: grayBackground,
+        appBar: _renderAppBar(context: context),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 24.0),
+                _Profile(),
+                const SizedBox(height: 24.0),
+                _HashTag(),
+                const SizedBox(height: 52.0),
+                const _GroupList(groupCnt: '1'),
+              ],
+            ),
           ),
         ),
       ),
@@ -95,7 +87,7 @@ class _Profile extends StatelessWidget {
     return Row(
       children: [
         GestureDetector(
-          onTap:  context.read<MyPageState>().profilePressed,
+          onTap: context.read<MyPageState>().profilePressed,
           child: Stack(
             children: [
               CircleAvatar(

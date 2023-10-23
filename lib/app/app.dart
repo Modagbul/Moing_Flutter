@@ -114,8 +114,6 @@ class MoingApp extends StatelessWidget {
             PostMainPage.routeName:(context) => PostMainPage.route(context),
             PostDetailPage.routeName:(context) => PostDetailPage.route(context),
             PostCreatePage.routeName:(context) => PostCreatePage.route(context),
-
-            MyPageScreen.routeName:(context) => MyPageScreen.route(context),
             ProfileSettingPage.routeName:(context) => ProfileSettingPage.route(context),
           },
           navigatorObservers: [
