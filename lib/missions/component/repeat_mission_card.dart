@@ -4,7 +4,18 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../const/color/colors.dart';
 
 class RepeatMissionCard extends StatelessWidget {
-  const RepeatMissionCard({super.key});
+  final String teamName;
+  final String missionTitle;
+  final String totalNum;
+  final String doneNum;
+
+  const RepeatMissionCard({
+    super.key,
+    required this.teamName,
+    required this.missionTitle,
+    required this.totalNum,
+    required this.doneNum,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +43,31 @@ class RepeatMissionCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "2",
-                        style: TextStyle(
+                        totalNum,
+                        style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 28.0,
                             color: grayScaleGrey100),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 18.0),
-                        child: Text(
-                          "/5",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                              color: grayScaleGrey400),
+                        padding: const EdgeInsets.only(top: 18.0),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "/",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                  color: grayScaleGrey400),
+                            ),
+                            Text(
+                              doneNum,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                  color: grayScaleGrey400),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -53,8 +75,8 @@ class RepeatMissionCard extends StatelessWidget {
                   footer: Padding(
                     padding: EdgeInsets.only(top: 8.0),
                     child: Text(
-                      '미라모닝',
-                      style: TextStyle(
+                      teamName,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 14.0,
                         color: grayScaleGrey550,
@@ -72,20 +94,21 @@ class RepeatMissionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 12.0, left: 8.0),
+              padding: const EdgeInsets.only(top: 12.0, left: 8.0),
               child: Text(
-                '평일 오전 7시 기상',
-                style: TextStyle(
+                missionTitle,
+                style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w600,
                   color: grayScaleGrey100,
                 ),
               ),
             ),
-            Padding(
+            /// ? 연동 안 하나?
+            const Padding(
               padding: EdgeInsets.only(top: 8.0, left: 8.0),
               child: Text(
-                '주 3회 화 수 금',
+                '주 3회',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 14.0,

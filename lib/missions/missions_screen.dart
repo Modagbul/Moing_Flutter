@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../const/color/colors.dart';
 import '../home/component/home_appbar.dart';
 import 'missions_all_page.dart';
-import 'missions_group_state.dart';
 
 class MissionsScreen extends StatefulWidget {
   static const routeName = '/missons';
@@ -37,8 +36,10 @@ class _MissionsScreenState extends State<MissionsScreen>
   @override
   void initState() {
     super.initState();
-    /// length?
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -58,31 +59,42 @@ class _MissionsScreenState extends State<MissionsScreen>
               const SizedBox(
                 height: 32.0,
               ),
-              Stack(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: 1.0, // 원하는 높이 설정
-                      color: grayScaleGrey550, // 회색으로 설정
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 210), // 오른쪽에 여백 주기
+                  Container(
+                    width: 220,
                     child: TabBar(
                       controller: _tabController,
-                      indicatorColor: grayScaleGrey200,
-                      labelColor: grayScaleGrey200,
-                      unselectedLabelColor: grayScaleGrey550,
+                      labelColor: grayScaleGrey700,
+                      unselectedLabelColor: grayScaleGrey400,
+                      indicator: BoxDecoration(
+                        border: Border(
+                          bottom:
+                              BorderSide(color: Colors.transparent, width: 0),
+                        ),
+                      ),
                       tabs: [
-                        _customTab(text: '전체 미션'),
-                        _customTab(text: '모임별 미션'),
+                        _customTab(
+                            text: '전체 미션',
+                            width: 99,
+                            isSelected: _tabController.index == 0),
+                        _customTab(
+                            text: '모임별 미션',
+                            width: 112,
+                            isSelected: _tabController.index == 1),
                       ],
-                      labelPadding: EdgeInsets.zero, // 탭바 내부의 기본 패딩 제거
+                      labelPadding: EdgeInsets.zero,
+                      onTap: (index) {
+                        setState(() {});
+                      },
+                      overlayColor: MaterialStateProperty.all(
+                          Colors.transparent), // 물결 효과 색상을 투명하게 설정
                     ),
                   ),
+                  Spacer(),
+                  if (_tabController.index == 1) // "모임별 미션" 탭이 선택된 경우
+                    MyDropdown(),
                 ],
               ),
               Expanded(
@@ -101,13 +113,27 @@ class _MissionsScreenState extends State<MissionsScreen>
     );
   }
 
-  Tab _customTab({required String text}) {
+  Tab _customTab(
+      {required String text, required double width, required bool isSelected}) {
     return Tab(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8), // 텍스트 크기에 따라 여백 조정
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+        width: width,
+        height: 43,
+        decoration: BoxDecoration(
+          color: isSelected ? grayScaleGrey100 : grayScaleGrey700,
+          borderRadius: BorderRadius.circular(50),
+        ),
+        padding: EdgeInsets.all(10.0),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: isSelected ? grayScaleGrey700 : grayScaleGrey400,
+            ),
+          ),
         ),
       ),
     );
@@ -117,128 +143,6 @@ class _MissionsScreenState extends State<MissionsScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-}
-
-
-//       /// 원본
-//       Scaffold(
-//       backgroundColor: Colors.black,
-//       body: SafeArea(
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               HomeAppBar(
-//                 notificationCount: '3',
-//                 onTap: context.watch<MissionsState>().alarmPressed,
-//               ),
-//               const SizedBox(
-//                 height: 32.0,
-//               ),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.start, // 버튼 중앙 정렬
-//                 children: [
-//                   AllMissionsButton(),
-//                   const SizedBox(width: 5),
-//                   GroupMissionsButton(),
-//                   const SizedBox(width: 5),
-//                 ],
-//               ),
-//               const SizedBox(
-//                 height: 52.0,
-//               ),
-//               _Title(mainText: '한번 미션', countText: '1'),
-//               const SizedBox(
-//                 height: 12.0,
-//               ),
-//               SingleMissionCard(),
-//               const SizedBox(
-//                 height: 40.0,
-//               ),
-//               _Title(mainText: '반복 미션', countText: '1'),
-//               const SizedBox(
-//                 height: 12.0,
-//               ),
-//               RepeatMissionCard(),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-class AllMissionsButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 99,
-      height: 43,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: grayScaleWhite,
-          padding: const EdgeInsets.all(12.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-        ),
-        onPressed: () {
-          Navigator.of(context).pop(true);
-        },
-        child: Text(
-          '전체미션',
-          style: TextStyle(
-            color: grayScaleGrey700,
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class GroupMissionsButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 112,
-      height: 43,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: grayScaleGrey700,
-          padding: const EdgeInsets.all(12.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-        ),
-        onPressed: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation1, animation2) =>
-                  ChangeNotifierProvider(
-                create: (_) => MissionsGroupState(),
-                child: MissionsGroupPage(),
-              ),
-              transitionsBuilder: (context, animation1, animation2, child) {
-                return child; // 애니메이션 없이 바로 child 위젯을 반환
-              },
-              transitionDuration: Duration(milliseconds: 0), // 전환 시간을 0으로 설정
-            ),
-          );
-        },
-        child: Text(
-          '모임별 미션',
-          style: TextStyle(
-            color: grayScaleGrey400,
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
   }
 }
 
