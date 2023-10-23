@@ -13,9 +13,11 @@ class HomeScreenState extends ChangeNotifier {
   final BuildContext context;
   final TokenManagement tokenManagement = TokenManagement();
   final APICall call = APICall();
+  String? newCreated;
   String nickname = '';
 
   TeamData? futureData;
+  List<TeamBlock> teamList = [];
   /// Test API
   final ApiCode apiCode = ApiCode();
 
@@ -23,7 +25,7 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  HomeScreenState({required this.context}) {
+  HomeScreenState({required this.context, this.newCreated}) {
     log('Instance "HomeScreenState" has been created');
     loadTeamData();
   }
@@ -31,13 +33,15 @@ class HomeScreenState extends ChangeNotifier {
   /// API 데이터 로딩
   void loadTeamData() async {
     futureData = await fetchApiData();
+    if(futureData != null) {
+      teamList = futureData!.teamBlocks;
+    }
     notifyListeners();
   }
 
   Future<TeamData?> fetchApiData() async {
     try {
       apiUrl = '${dotenv.env['MOING_API']}/api/team';
-
       ApiResponse<TeamData> apiResponse = await call.makeRequest<TeamData>(
         url: apiUrl,
         method: 'GET',
@@ -50,7 +54,8 @@ class HomeScreenState extends ChangeNotifier {
       }
       else {
         if(apiResponse.errorCode == 'J0003') {
-          fetchApiData();
+          print('재실행합니다.');
+          return await fetchApiData();
         }
       }
       return null;

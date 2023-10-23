@@ -17,10 +17,11 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   static route(BuildContext context) {
+    final String newCreated = ModalRoute.of(context)?.settings.arguments as String;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => HomeScreenState(context: context)),
+            create: (_) => HomeScreenState(context: context, newCreated: newCreated)),
       ],
       builder: (context, _) {
         return const HomeScreen();

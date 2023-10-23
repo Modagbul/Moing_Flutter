@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -31,6 +30,11 @@ import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
 
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
+
+import 'package:moing_flutter/missions/missions_group_page.dart';
+import 'package:moing_flutter/mypage/my_page.dart';
+import 'package:moing_flutter/mypage/profile_setting_page.dart';
+
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
 
@@ -120,6 +124,8 @@ class MoingApp extends StatelessWidget {
             PostMainPage.routeName:(context) => PostMainPage.route(context),
             PostDetailPage.routeName:(context) => PostDetailPage.route(context),
             PostCreatePage.routeName:(context) => PostCreatePage.route(context),
+
+            ProfileSettingPage.routeName:(context) => ProfileSettingPage.route(context),
 
           },
           navigatorObservers: [

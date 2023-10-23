@@ -14,9 +14,11 @@ class TeamData {
     return TeamData(
       memberNickName: json['memberNickName'],
       numOfTeam: json['numOfTeam'],
-      teamBlocks: (json['teamBlocks'] as List)
+      teamBlocks: json['teamBlocks'] != null
+          ? (json['teamBlocks'] as List)
           .map((item) => TeamBlock.fromJson(item))
-          .toList(),
+          .toList()
+          : [],
     );
   }
 }
