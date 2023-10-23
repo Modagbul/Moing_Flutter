@@ -35,7 +35,9 @@ class TokenManagement {
       await saveToken(accessToken, refreshToken);
     }
 
-    print('액세스 토큰 갱신 실패 : ${response.statusCode}');
+    else {
+      print('액세스 토큰 갱신 실패 : ${response.statusCode}');
+    }
     return;
   }
 

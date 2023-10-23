@@ -17,6 +17,7 @@ class HomeScreenState extends ChangeNotifier {
   String nickname = '';
 
   TeamData? futureData;
+  List<TeamBlock> teamList = [];
   /// Test API
   final ApiCode apiCode = ApiCode();
 
@@ -32,13 +33,15 @@ class HomeScreenState extends ChangeNotifier {
   /// API 데이터 로딩
   void loadTeamData() async {
     futureData = await fetchApiData();
+    if(futureData != null) {
+      teamList = futureData!.teamBlocks;
+    }
     notifyListeners();
   }
 
   Future<TeamData?> fetchApiData() async {
     try {
       apiUrl = '${dotenv.env['MOING_API']}/api/team';
-
       ApiResponse<TeamData> apiResponse = await call.makeRequest<TeamData>(
         url: apiUrl,
         method: 'GET',
@@ -52,7 +55,7 @@ class HomeScreenState extends ChangeNotifier {
       else {
         if(apiResponse.errorCode == 'J0003') {
           print('재실행합니다.');
-          fetchApiData();
+          return await fetchApiData();
         }
       }
       return null;

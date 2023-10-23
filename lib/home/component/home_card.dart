@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/home/home_screen_state.dart';
+import 'package:provider/provider.dart';
+
+import '../../model/response/group_team_response.dart';
 
 class HomeCard extends StatelessWidget {
-  const HomeCard({super.key});
+  const HomeCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
