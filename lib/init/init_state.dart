@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
+import 'package:moing_flutter/missions/create/missions_create_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 
@@ -33,7 +35,10 @@ class InitState extends ChangeNotifier {
       ),
     );
 
-    String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
+    Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
+
+
+    //String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
     /// 이전에 가입한 적 있는 유저
     // if (oldUser == 'true') {
@@ -49,9 +54,10 @@ class InitState extends ChangeNotifier {
     //   Navigator.pushNamedAndRemoveUntil(
     //       context, OnBoardingFirstPage.routeName, (route) => false);
     // }
-    oldUser == 'true'
-    ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
-    : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
+
+    // oldUser == 'true'
+    // ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
+    // : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
   }
 
   /// 유저의 메인 화면으로 갈 수 있는지 여부 등 확인

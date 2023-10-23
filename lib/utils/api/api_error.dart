@@ -1,12 +1,22 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 
 class ApiException implements Exception {
   TokenManagement tokenManagement = TokenManagement();
-
   Future<void> throwErrorMessage(String errorCode) async {
     String msg='';
+
+    print('에러코드 : $errorCode');
+
+    if (errorCode == 'J0008') {
+      print('리프레시 토큰이 만료되어 로그인 페이지로 이동합니다..');
+      GetIt.I.get<GlobalKey<NavigatorState>>().currentState!.pushNamed(LoginPage.routeName);
+      return ;
+    }
 
     // 만료된 토큰 -> 토큰 재발급
     if (errorCode == 'J0003') {
