@@ -30,7 +30,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return AnimatedContainer(
-      height: _isExpanded ? screenHeight * 0.50 : screenHeight * 0.40,
+      height: _isExpanded ? screenHeight * 0.50 : screenHeight * 0.35,
       decoration: const BoxDecoration(
         color: grayScaleGrey600,
         borderRadius: BorderRadius.vertical(
