@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
@@ -65,16 +66,24 @@ class HomeScreenState extends ChangeNotifier {
     }
   }
 
+  // 알람 클릭
   void alarmPressed() {
     Navigator.of(context).pushNamed(
       AlarmPage.routeName,
     );
   }
 
+  // 모임 만들기 클릭
   void makeGroupPressed() {
     Navigator.of(context).pushNamed(
       GroupCreateStartPage.routeName,
     );
+  }
+
+  // 가입한 모임 클릭
+  void teamPressed(int teamId) {
+    /// 목표보드 페이지로 이동
+    Navigator.pushNamed(context, BoardMainPage.routeName, arguments: teamId);
   }
 
   void apiTest() {

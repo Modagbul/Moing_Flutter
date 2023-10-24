@@ -3,6 +3,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/home/component/home_appbar.dart';
 import 'package:moing_flutter/home/component/home_card.dart';
+import 'package:moing_flutter/home/component/home_card_scroll.dart';
 import 'package:moing_flutter/home/component/home_my_meeting.dart';
 import 'package:moing_flutter/home/component/home_nickname_and_encourage.dart';
 import 'package:moing_flutter/home/component/home_no_card.dart';
@@ -55,7 +56,8 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12.0),
               (context.watch<HomeScreenState>().futureData?.numOfTeam ?? 0) > 0
-                  ? const HomeCard()
+                //   ? const HomeCard()
+              ? HomeCardScroll()
                   : HomeNoCard(),
               const Spacer(),
               Row(

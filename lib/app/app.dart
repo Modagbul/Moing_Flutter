@@ -29,6 +29,7 @@ import 'package:moing_flutter/make_group/group_create_photo_page.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
+import 'package:moing_flutter/missions/create/missions_create_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
@@ -92,6 +93,7 @@ class MoingApp extends StatelessWidget {
             MissionsScreen.routeName: (context) => MissionsScreen.route(context),
             MissionsAllPage.routeName: (context) => MissionsAllPage.route(context),
             MissionsGroupPage.routeName: (context) => MissionsGroupPage.route(context),
+            MissionsCreatePage.routeName: (context) => MissionsCreatePage.route(context),
 
             TextAuthPage.routeName:(context) => TextAuthPage.route(context),
             LinkAuthPage.routeName:(context) => LinkAuthPage.route(context),

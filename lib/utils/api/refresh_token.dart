@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 class TokenManagement {
   final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
+  int count = 0;
   /// 토큰 재발급
   Future<void> getNewToken() async {
     String? refreshToken = await loadRefreshToken();
