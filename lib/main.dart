@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
@@ -11,6 +12,8 @@ import 'package:timeago/timeago.dart' as timeago;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  // 화면 세로로 고정
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
   await initializeDefault();
   runApp(const MoingApp());
