@@ -104,6 +104,7 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
             hintStyle: widget.inputTextStyle.copyWith(
               color: grayScaleGrey550,
             ),
+            contentPadding: EdgeInsets.all(16),
 
             // 배경색 활성화
             filled: true,

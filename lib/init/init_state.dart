@@ -36,6 +36,7 @@ class InitState extends ChangeNotifier {
     );
 
     Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
+    //Navigator.pushNamedAndRemoveUntil(context, FixGroupPage.routeName, (route) => false);
 
 
     //String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');

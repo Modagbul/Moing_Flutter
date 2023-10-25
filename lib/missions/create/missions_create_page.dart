@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/missions/create/mission_create/mission_title_content.dart';
+import 'package:moing_flutter/missions/create/mission_create/missions_app_bar.dart';
+import 'package:moing_flutter/missions/create/mission_create/missions_footer.dart';
 import 'package:moing_flutter/missions/create/missions_create_state.dart';
-import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class MissionsCreatePage extends StatelessWidget {
@@ -28,21 +31,59 @@ class MissionsCreatePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: grayBackground,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text('신규미션 만들기', style: buttonTextStyle.copyWith(color: grayScaleGrey300),),
-        elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(Icons.close), // 햄버거버튼 아이콘 생성
-          onPressed: () {},
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0, right: 20),
-            child: Text('만들기',style: buttonTextStyle.copyWith(color: grayScaleGrey500),),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            //FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: FooterLayout(
+            footer: context.watch<MissionCreateState>().isTitleFocused
+                ? MissionsFooter()
+                : null,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MissionAppBar(),
+                    _missionText(),
+                    MissionTitleContent(),
+                    SizedBox(
+                      height: 52,
+                    ),
+                    Text(
+                      '미션 마감일',
+                      style: contentTextStyle.copyWith(
+                          fontWeight: FontWeight.w600, color: grayScaleGrey200),
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Widget _missionText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 34),
+        Text(
+          '미션을 만들어볼까요?',
+          style: headerTextStyle.copyWith(color: grayScaleGrey100),
+        ),
+        SizedBox(height: 52),
+        Text(
+          '미션 제목과 내용',
+          style: contentTextStyle.copyWith(
+              color: grayScaleGrey200, fontWeight: FontWeight.w500),
+        ),
+        SizedBox(height: 24),
+      ],
     );
   }
 }
