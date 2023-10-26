@@ -8,61 +8,52 @@ import 'package:provider/provider.dart';
 class BoardGoalScreen extends StatelessWidget {
   static const routeName = '/board/main/goal';
 
-  const BoardGoalScreen({
-    super.key,
-  });
-
-  static route(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => BoardGoalState(
-            context: context,
-            isExpanded: false,
-          ),
-        ),
-      ],
-      builder: (context, _) {
-        return const BoardGoalScreen();
-      },
-    );
-  }
+  const BoardGoalScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: grayScaleGrey900,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: screenHeight * 0.01),
-                    _buildRandomMessageContainer(),
-                    _buildFireImageContainer(),
-                    SizedBox(height: screenHeight * 0.01),
-                    _buildFireLevelContainer(screenWidth),
-                    SizedBox(height: screenHeight * 0.01),
-                    _buildFireLevelProgressBar(screenWidth),
-                  ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => BoardGoalState(
+            context: context,
+          ),
+        ),
+      ],
+      child: Scaffold(
+        backgroundColor: grayScaleGrey900,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: screenHeight * 0.01),
+                      _buildRandomMessageContainer(),
+                      _buildFireImageContainer(),
+                      SizedBox(height: screenHeight * 0.01),
+                      _buildFireLevelContainer(screenWidth),
+                      SizedBox(height: screenHeight * 0.01),
+                      _buildFireLevelProgressBar(screenWidth),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: BoardGoalBottomSheet(),
-            ),
-          ],
+              const Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: BoardGoalBottomSheet(),
+              ),
+            ],
+          ),
         ),
       ),
     );

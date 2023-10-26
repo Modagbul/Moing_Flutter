@@ -11,7 +11,7 @@ class BoardMainBottomSheet extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: screenHeight * 0.4,
+      height: screenHeight * 0.35,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         child: Column(
