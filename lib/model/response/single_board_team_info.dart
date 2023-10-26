@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:moing_flutter/model/response/single_board_team_member_info.dart';
 
 class TeamInfo {
   final bool isDeleted;
-  final String deletionTime;
+  final String? deletionTime;
   final String teamName;
   final int numOfMember;
   final String category;
@@ -21,12 +23,12 @@ class TeamInfo {
 
   factory TeamInfo.fromJson(Map<String, dynamic> json) {
     return TeamInfo(
-      isDeleted: json['isDeleted'],
-      deletionTime: json['deletionTime'],
-      teamName: json['teamName'],
-      numOfMember: json['numOfMember'],
-      category: json['category'],
-      introduction: json['introduction'],
+      isDeleted: json['isDeleted'] as bool,
+      deletionTime: json['deletionTime'] as String?,
+      teamName: json['teamName'] as String,
+      numOfMember: json['numOfMember'] as int,
+      category: json['category'] as String,
+      introduction: json['introduction'] as String,
       teamMemberInfoList: (json['teamMemberInfoList'] as List)
           .map((i) => TeamMemberInfo.fromJson(i))
           .toList(),

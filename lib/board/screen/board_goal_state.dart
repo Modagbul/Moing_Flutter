@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 
 class BoardGoalState extends ChangeNotifier {
   final BuildContext context;
-  bool isExpanded = false;
 
   BoardGoalState({
     required this.context,
-    required this.isExpanded,
-}) {
+  }) {
     initState();
   }
 
@@ -22,9 +20,4 @@ class BoardGoalState extends ChangeNotifier {
     log('Instance "BoardGoalState" has been removed');
     super.dispose();
   }
-
-  void toggleExpansion(){
-
-  }
-
 }

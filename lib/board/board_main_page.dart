@@ -4,17 +4,22 @@ import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/board_mission_screen.dart';
 import 'package:moing_flutter/board/component/board_main_bottom_sheet.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/model/response/single_board_team_info.dart';
 import 'package:provider/provider.dart';
 
 class BoardMainPage extends StatefulWidget {
   static const routeName = '/board/main';
 
-  const BoardMainPage({Key? key}) : super(key: key);
+  const BoardMainPage({super.key});
 
   static route(BuildContext context) {
+    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
+    final int teamId = arguments as int;
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => BoardMainState(context: context)),
+        ChangeNotifierProvider(
+            create: (_) => BoardMainState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
         return const BoardMainPage();
@@ -41,11 +46,12 @@ class _BoardMainPageState extends State<BoardMainPage>
 
   @override
   Widget build(BuildContext context) {
-    const title = '소모임 이름';
+    final TeamInfo? teamInfo = context.read<BoardMainState>().teamInfo;
+    final String teamName = teamInfo?.teamName ?? '';
 
     return Scaffold(
       backgroundColor: grayScaleGrey900,
-      appBar: renderAppBar(context: context, title: title),
+      appBar: renderAppBar(context: context, title: teamName),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
