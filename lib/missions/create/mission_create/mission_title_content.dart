@@ -46,7 +46,7 @@ class MissionTitleContent extends StatelessWidget {
                       contentTextStyle.copyWith(color: grayScaleGrey550)),
             ),
             Positioned(
-                right: 0,
+                right: 12,
                 bottom: 0,
                 child: Text(
                   '(${context.watch<MissionCreateState>().titleController.text.length}/15)',

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/const/style/text.dart';
 
 class MissionCreateState extends ChangeNotifier {
   final BuildContext context;
@@ -63,6 +65,11 @@ class MissionCreateState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setTitle(String value) {
+    titleController.text = value;
+    notifyListeners();
+  }
+
   // 이름 텍스트 필드 초기화 메소드
   void clearTitleTextField() {
     titleController.clear();
@@ -73,5 +80,81 @@ class MissionCreateState extends ChangeNotifier {
   void clearContentTextField() {
     contentController.clear();
     notifyListeners();
+  }
+
+  void openBottomModal() {
+    TextStyle ts = const TextStyle(
+        fontWeight: FontWeight.w700, fontSize: 20, color: grayScaleGrey100);
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return Container(
+              width: double.infinity,
+              height: 391,
+              decoration: const BoxDecoration(
+                color: grayScaleGrey600,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 34),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('#생활습관을 개선하는', style: ts),
+                        Text(' 인증미션 추천',
+                            style: ts.copyWith(color: grayScaleGrey400)),
+                        const SizedBox(width: 44),
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Icon(Icons.close,
+                                size: 28, color: Colors.white)),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    GridView.builder(
+                        itemCount: textList.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 172 / 46,
+                          mainAxisSpacing: 9,
+                          crossAxisSpacing: 16,
+                        ),
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setTitle(textList[index]);
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(32),
+                                  color: grayScaleGrey500),
+                              child: Text(
+                                textList[index],
+                                style: contentTextStyle.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: grayScaleGrey300,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ],
+                ),
+              ));
+        });
   }
 }

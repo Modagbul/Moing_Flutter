@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/missions/create/mission_create/mission_check_choose.dart';
+import 'package:moing_flutter/missions/create/mission_create/mission_end.dart';
+import 'package:moing_flutter/missions/create/mission_create/mission_rule.dart';
 import 'package:moing_flutter/missions/create/mission_create/mission_title_content.dart';
 import 'package:moing_flutter/missions/create/mission_create/missions_app_bar.dart';
 import 'package:moing_flutter/missions/create/mission_create/missions_footer.dart';
@@ -32,34 +35,34 @@ class MissionsCreatePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: grayBackground,
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            //FocusManager.instance.primaryFocus?.unfocus();
-          },
-          child: FooterLayout(
-            footer: context.watch<MissionCreateState>().isTitleFocused
-                ? MissionsFooter()
-                : null,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MissionAppBar(),
-                    _missionText(),
-                    MissionTitleContent(),
-                    SizedBox(
-                      height: 52,
+        child: FooterLayout(
+          footer: context.watch<MissionCreateState>().isTitleFocused
+              ? MissionsFooter()
+              : null,
+          child: GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        MissionAppBar(),
+                        _missionText(),
+                        MissionTitleContent(),
+                        MissionEndDate(),
+                        MissionChoose(),
+                        MissionRule(),
+                      ],
                     ),
-                    Text(
-                      '미션 마감일',
-                      style: contentTextStyle.copyWith(
-                          fontWeight: FontWeight.w600, color: grayScaleGrey200),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),

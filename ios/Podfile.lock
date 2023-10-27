@@ -729,6 +729,8 @@ PODS:
   - FirebaseMessagingInterop (10.16.0)
   - FirebaseSharedSwift (10.16.0)
   - Flutter (1.0.0)
+  - flutter_keyboard_visibility (0.0.1):
+    - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_naver_login (0.0.1):
@@ -855,6 +857,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_naver_login (from `.symlinks/plugins/flutter_naver_login/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
@@ -908,6 +911,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_keyboard_visibility:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_naver_login:
@@ -948,6 +953,7 @@ SPEC CHECKSUMS:
   FirebaseMessagingInterop: 9399279d03dfdd931c5e90358263d6a16a539a7b
   FirebaseSharedSwift: 82b618801ddd76ea2ab54c5746bcd48854272232
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_naver_login: 1dbf6d21aae5235cdf76a28ac79cf6871899282f
   google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
