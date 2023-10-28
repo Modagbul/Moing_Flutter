@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/request/make_team_request.dart';
-import 'package:moing_flutter/model/request/profile_request.dart';
+import 'package:moing_flutter/model/profile/profile_model.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 
@@ -105,7 +105,29 @@ class ApiCode {
     return null;
   }
 
-  void putMyPageProfileData({required ProfileData profileData}) async {
+  Future<ProfileData?> getProfileData() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
+
+    try {
+      ApiResponse<ProfileData>? apiResponse = await call.makeRequest<ProfileData>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => ProfileData.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        log('프로필 데이터 조회 성공: ${apiResponse.data}');
+        return apiResponse.data!;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('프로필 데이터 조회 실패: $e');
+    }
+    return null;
+  }
+
+  void putProfileData({required ProfileData profileData}) async {
     apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
 
     try {
@@ -116,9 +138,9 @@ class ApiCode {
         body: profileData.toJson(),
         fromJson: (data) => data as Map<String, dynamic>,
       );
-      log('마이페이지 프로필 데이터 수정 성공: ${apiResponse.data}');
+      log('프로필 데이터 수정 성공: ${apiResponse.data}');
     } catch (e) {
-      log('마이페이지 프로필 데이터 수정 실패: $e');
+      log('프로필 데이터 수정 실패: $e');
     }
   }
 

@@ -1,7 +1,7 @@
 class ProfileData {
-  String profileImg;
+  String? profileImg;
   String nickName;
-  String introduction;
+  String? introduction;
 
   ProfileData({
     required this.profileImg,
@@ -14,4 +14,12 @@ class ProfileData {
         'nickName': nickName,
         'introduction': introduction,
       };
+
+  factory ProfileData.fromJson(Map<String, dynamic> json) {
+    return ProfileData(
+      profileImg: json['profileImg'],
+      nickName: json['nickName'],
+      introduction: json['introduction'],
+    );
+  }
 }

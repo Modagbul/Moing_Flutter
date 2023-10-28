@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
-import 'package:moing_flutter/model/request/profile_request.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
 
@@ -31,12 +30,6 @@ class MyPageState extends ChangeNotifier {
   void profilePressed() {
     Navigator.of(context).pushNamed(
       ProfileSettingPage.routeName,
-      arguments: ProfileData(
-        profileImg:
-            myPageData?.profileImage ?? 'asset/image/icon_user_profile.png',
-        nickName: myPageData?.nickName ?? '',
-        introduction: myPageData?.introduction ?? '',
-      ),
     );
   }
 

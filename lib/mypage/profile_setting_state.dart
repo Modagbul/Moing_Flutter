@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
-import 'package:moing_flutter/model/request/profile_request.dart';
+import 'package:moing_flutter/model/profile/profile_model.dart';
 
 class ProfileSettingState extends ChangeNotifier {
   final BuildContext context;
@@ -11,19 +11,17 @@ class ProfileSettingState extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController resolutionController = TextEditingController();
 
-  ProfileData profileData;
+  ProfileData? profileData;
 
   ProfileSettingState({
     required this.context,
-    required this.profileData,
   }) {
     initState();
+    getProfileData();
   }
 
   void initState() {
     log('Instance "ProfileSettingState" has been created');
-    nameController.text = profileData.nickName;
-    resolutionController.text = profileData.introduction;
   }
 
   @override
@@ -32,6 +30,13 @@ class ProfileSettingState extends ChangeNotifier {
     nameController.dispose();
     resolutionController.dispose();
     super.dispose();
+  }
+
+  void getProfileData() async {
+    profileData = await apiCode.getProfileData();
+    nameController.text = profileData?.nickName ?? '';
+    resolutionController.text = profileData?.introduction ?? '';
+    notifyListeners();
   }
 
   // 텍스트 필드 초기화 메소드
@@ -55,7 +60,9 @@ class ProfileSettingState extends ChangeNotifier {
     Navigator.pop(context);
   }
 
-  void pressSubmitButton(){
-    apiCode.putMyPageProfileData(profileData: profileData);
+  void pressSubmitButton() {
+    if(profileData != null){
+      apiCode.putProfileData(profileData: profileData!);
+    }
   }
 }
