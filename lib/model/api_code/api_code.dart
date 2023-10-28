@@ -4,6 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/request/make_team_request.dart';
+import 'package:moing_flutter/model/profile/profile_model.dart';
+import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 
 class ApiCode {
@@ -22,7 +24,8 @@ class ApiCode {
     );
 
     try {
-      ApiResponse<Map<String, dynamic>> apiResponse = await call.makeRequest<Map<String, dynamic>>(
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
         body: data.toJson(),
@@ -30,10 +33,10 @@ class ApiCode {
       );
 
       if (apiResponse.data?['teamId'] != null) {
-        print('소모임 생성 완료! : ${apiResponse.data?['teamId']}');
+        log('소모임 생성 완료! : ${apiResponse.data?['teamId']}');
       }
     } catch (e) {
-      print('소모임 생성 실패: $e');
+      log('소모임 생성 실패: $e');
     }
   }
 
@@ -42,17 +45,18 @@ class ApiCode {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId';
 
     try {
-      ApiResponse<Map<String, dynamic>>? apiResponse = await call.makeRequest<Map<String, dynamic>>(
+      ApiResponse<Map<String, dynamic>>? apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
         fromJson: (json) => json as Map<String, dynamic>,
       );
 
-      if (apiResponse != null && apiResponse.data?['teamId'] != null) {
-        print('소모임 가입 완료! : ${apiResponse.data?['teamId']}');
+      if (apiResponse.data?['teamId'] != null) {
+        log('소모임 가입 완료! : ${apiResponse.data?['teamId']}');
       }
     } catch (e) {
-      print('소모임 생성 실패: $e');
+      log('소모임 생성 실패: $e');
     }
   }
 
@@ -67,17 +71,76 @@ class ApiCode {
         fromJson: (data) => SingleBoardData.fromJson(data),
       );
 
-      if (apiResponse != null) {
-        if (apiResponse.data != null) {
-          return apiResponse.data!;
-        } else {
-          throw Exception('ApiResponse.data is Null');
-        }
+      if (apiResponse.data != null) {
+        log('단일 소모임 데이터 조회 성공: ${apiResponse.data}');
+        return apiResponse.data!;
       } else {
-        throw Exception('ApiResponse is Null');
+        throw Exception('ApiResponse.data is Null');
       }
     } catch (e) {
-      log('소모임 데이터 조회 실패: $e');
+      log('단일 소모임 데이터 조회 실패: $e');
+    }
+    return null;
+  }
+
+  Future<MyPageData?> getMyPageData() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/mypage';
+
+    try {
+      ApiResponse<MyPageData>? apiResponse = await call.makeRequest<MyPageData>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => MyPageData.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        log('마이페이지 데이터 조회 성공: ${apiResponse.data}');
+        return apiResponse.data!;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('마이페이지 데이터 조회 실패: $e');
+    }
+    return null;
+  }
+
+  Future<ProfileData?> getProfileData() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
+
+    try {
+      ApiResponse<ProfileData>? apiResponse = await call.makeRequest<ProfileData>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => ProfileData.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        log('프로필 데이터 조회 성공: ${apiResponse.data}');
+        return apiResponse.data!;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('프로필 데이터 조회 실패: $e');
+    }
+    return null;
+  }
+
+  void putProfileData({required ProfileData profileData}) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'PUT',
+        body: profileData.toJson(),
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+      log('프로필 데이터 수정 성공: ${apiResponse.data}');
+    } catch (e) {
+      log('프로필 데이터 수정 실패: $e');
     }
   }
 

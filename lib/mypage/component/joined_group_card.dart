@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 
 class JoinedGroupCard extends StatelessWidget {
-  const JoinedGroupCard({super.key});
+  final TeamBlock teamBlock;
+
+  const JoinedGroupCard({super.key, required this.teamBlock});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +17,9 @@ class JoinedGroupCard extends StatelessWidget {
           height: 80,
         ),
         const SizedBox(height: 12.0),
-        const Text(
-          '북시즘',
-          style: TextStyle(
+        Text(
+          teamBlock.teamName,
+          style: const TextStyle(
             color: grayScaleWhite,
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
