@@ -1,26 +1,36 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/model/api_code/api_code.dart';
+import 'package:moing_flutter/model/request/profile_request.dart';
 
 class ProfileSettingState extends ChangeNotifier {
   final BuildContext context;
+  final ApiCode apiCode = ApiCode();
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController resolutionController = TextEditingController();
 
+  ProfileData profileData;
+
   ProfileSettingState({
     required this.context,
+    required this.profileData,
   }) {
     initState();
   }
 
   void initState() {
     log('Instance "ProfileSettingState" has been created');
+    nameController.text = profileData.nickName;
+    resolutionController.text = profileData.introduction;
   }
 
   @override
   void dispose() {
     log('Instance "ProfileSettingState" has been removed');
+    nameController.dispose();
+    resolutionController.dispose();
     super.dispose();
   }
 
@@ -43,5 +53,9 @@ class ProfileSettingState extends ChangeNotifier {
 
   void pressCloseButton() {
     Navigator.pop(context);
+  }
+
+  void pressSubmitButton(){
+    apiCode.putMyPageProfileData(profileData: profileData);
   }
 }

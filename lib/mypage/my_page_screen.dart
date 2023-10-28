@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
 import 'package:provider/provider.dart';
 
 class MyPageScreen extends StatelessWidget {
   static const routeName = '/mypage';
+
   const MyPageScreen({Key? key}) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class MyPageScreen extends StatelessWidget {
                 const SizedBox(height: 24.0),
                 _HashTag(),
                 const SizedBox(height: 52.0),
-                const _GroupList(groupCnt: '1'),
+                const _GroupList(),
               ],
             ),
           ),
@@ -70,20 +72,18 @@ class MyPageScreen extends StatelessWidget {
 }
 
 class _Profile extends StatelessWidget {
-  _Profile();
-
-  final AssetImage defaultProfileImg = const AssetImage(
-    'asset/image/icon_user_profile.png',
-  );
-
   final Image editProfileImg = Image.asset(
     'asset/image/icon_edit_circle.png',
     width: 24.0,
     height: 24.0,
   );
 
+  _Profile();
+
   @override
   Widget build(BuildContext context) {
+    MyPageData? myPageData = context.watch<MyPageState>().myPageData;
+
     return Row(
       children: [
         GestureDetector(
@@ -92,7 +92,8 @@ class _Profile extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 40.0,
-                backgroundImage: defaultProfileImg,
+                backgroundImage: AssetImage(myPageData?.profileImage ??
+                    'asset/image/icon_user_profile.png'),
               ),
               Positioned(
                 right: 0,
@@ -103,21 +104,21 @@ class _Profile extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 20.0),
-        const Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '뭉뭉님',
-              style: TextStyle(
+              myPageData?.nickName ?? '',
+              style: const TextStyle(
                 color: grayScaleGrey100,
                 fontSize: 18.0,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 4.0),
+            const SizedBox(height: 4.0),
             Text(
-              '아직 한줄다짐이 없어요',
-              style: TextStyle(
+              myPageData?.introduction ?? '아직 한줄다짐이 없어요',
+              style: const TextStyle(
                 color: grayScaleGrey400,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w500,
@@ -152,6 +153,8 @@ class _HashTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MyPageData? myPageData = context.watch<MyPageState>().myPageData;
+
     return Container(
       decoration: const BoxDecoration(
         color: grayScaleGrey900,
@@ -164,26 +167,46 @@ class _HashTag extends StatelessWidget {
         ),
         child: Row(
           children: [
-            blackFireImg,
+            myPageData?.getMyPageTeamBlocks.isEmpty ?? true
+                ? blackFireImg
+                : whiteFireImg,
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  titleGroupNone,
+                  myPageData?.categories.isEmpty ?? true
+                      ? titleGroupNone
+                      : titleGroupExist,
                   style: const TextStyle(
                       color: grayScaleGrey400,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600),
                 ),
-                Text(
-                  hashTagGroupNone,
-                  style: const TextStyle(
-                    color: grayScaleGrey400,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                myPageData?.categories.isEmpty ?? true
+                    ? Text(
+                        hashTagGroupNone,
+                        style: const TextStyle(
+                          color: grayScaleGrey400,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    : Column(
+                        children: myPageData?.categories
+                            .take(2)
+                            .map(
+                              (category) => Text(
+                                '# $category',
+                                style: const TextStyle(
+                                  color: grayScaleWhite,
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            )
+                            .toList() ?? <Widget>[],
+                      )
               ],
             ),
           ],
@@ -194,14 +217,12 @@ class _HashTag extends StatelessWidget {
 }
 
 class _GroupList extends StatelessWidget {
-  final String groupCnt;
-
-  const _GroupList({
-    required this.groupCnt,
-  });
+  const _GroupList();
 
   @override
   Widget build(BuildContext context) {
+    MyPageData? myPageData = context.watch<MyPageState>().myPageData;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -217,7 +238,7 @@ class _GroupList extends StatelessWidget {
             ),
             const SizedBox(width: 12.0),
             Text(
-              groupCnt,
+              myPageData?.getMyPageTeamBlocks.length.toString() ?? '0',
               style: const TextStyle(
                 color: grayScaleWhite,
                 fontSize: 18.0,
@@ -227,7 +248,7 @@ class _GroupList extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 24.0),
-        groupCnt == '0'
+        myPageData?.getMyPageTeamBlocks.isEmpty ?? true
             ? const Text(
                 '아직 참여한 소모임이 없어요',
                 style: TextStyle(
@@ -236,14 +257,15 @@ class _GroupList extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               )
-            : const SingleChildScrollView(
+            : SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: [
-                    JoinedGroupCard(),
-                    SizedBox(width: 8.0),
-                    JoinedGroupCard(),
-                  ],
+                  children: myPageData?.getMyPageTeamBlocks
+                          .map((teamBlock) => JoinedGroupCard(
+                                teamBlock: teamBlock,
+                              ))
+                          .toList() ??
+                      [],
                 ),
               ),
       ],

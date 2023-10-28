@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/model/request/profile_request.dart';
 import 'package:moing_flutter/mypage/profile_setting_state.dart';
 import 'package:moing_flutter/utils/text_field/outlined_text_field.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +11,16 @@ class ProfileSettingPage extends StatelessWidget {
   static const routeName = '/mypage/setting';
 
   static route(BuildContext context) {
+    ProfileData profileData =
+        ModalRoute.of(context)?.settings.arguments as ProfileData;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => ProfileSettingState(context: context)),
+          create: (_) => ProfileSettingState(
+            context: context,
+            profileData: profileData,
+          ),
+        ),
       ],
       builder: (context, _) {
         return const ProfileSettingPage();
@@ -127,8 +134,6 @@ class _TextFields extends StatelessWidget {
           onChanged: (value) =>
               context.read<ProfileSettingState>().updateTextField(),
           controller: context.read<ProfileSettingState>().resolutionController,
-          onClearButtonPressed: () =>
-              context.read<ProfileSettingState>().clearResolutionTextField(),
         ),
       ],
     );
@@ -156,7 +161,7 @@ class _SubmitButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
         ),
       ),
-      onPressed: () {},
+      onPressed: context.read<ProfileSettingState>().pressSubmitButton,
       child: const Text('수정 완료'),
     );
   }
