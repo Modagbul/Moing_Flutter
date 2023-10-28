@@ -57,7 +57,7 @@ class ApiCode {
   }
 
   Future<SingleBoardData?> getSingleBoard({required int teamId}) async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId';
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/board/$teamId';
 
     try {
       ApiResponse<SingleBoardData>? apiResponse =
