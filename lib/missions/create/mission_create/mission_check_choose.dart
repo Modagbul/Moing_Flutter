@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/missions/create/missions_create_state.dart';
+import 'package:provider/provider.dart';
 
 class MissionChoose extends StatelessWidget {
   const MissionChoose({Key? key}) : super(key: key);
@@ -28,33 +30,39 @@ class MissionChoose extends StatelessWidget {
 
   Widget _missionChooseButton(
       {required BuildContext context, required String imagePath, required String text}) {
-    // final bool isSelected =
-    //     context.watch<SignUpGenderState>().selectedGender == gender;
+    final bool isSelected =
+        context.watch<MissionCreateState>().selectedMethod == text;
 
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        color: grayScaleGrey900,
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Image.asset(
-              imagePath,
-              width: 24, height: 24,
+    return GestureDetector(
+      onTap: () {
+        context.read<MissionCreateState>().setMethod(text);
+      },
+      child: Container(
+        width: double.infinity,
+        height: 56,
+        decoration: BoxDecoration(
+          color: isSelected ? grayScaleGrey100 : grayScaleGrey900,
+        ),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.asset(
+                imagePath,
+                width: 24, height: 24,
+                color: isSelected ? grayScaleGrey900 : grayScaleGrey550,
+              ),
             ),
-          ),
-          const SizedBox(width: 56),
-          Text(
-            text,
-            style: contentTextStyle.copyWith(
-              fontWeight: FontWeight.w600,
-              color: grayScaleGrey550,
-            ),
-          )
-        ],
+            const SizedBox(width: 56),
+            Text(
+              text,
+              style: contentTextStyle.copyWith(
+                fontWeight: FontWeight.w600,
+                color: grayScaleGrey550,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

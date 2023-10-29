@@ -66,7 +66,7 @@ class MissionTitleContent extends StatelessWidget {
           labelText: '미션 내용',
           onChanged: (value) =>
               context.read<MissionCreateState>().updateTextField(),
-          controller: context.read<MissionCreateState>().contentController,
+          controller: context.watch<MissionCreateState>().contentController,
           counterText:
               '(${context.watch<MissionCreateState>().contentController.text.length}/300)',
           inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),

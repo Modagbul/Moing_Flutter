@@ -39,7 +39,7 @@ class InitState extends ChangeNotifier {
 
     /// 이전에 가입한 적 있는 유저
     /// MissionFirePage
-    // Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
     //Navigator.pushNamedAndRemoveUntil(context, MissionFirePage.routeName, (route) => false);
 
     //String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
@@ -61,7 +61,6 @@ class InitState extends ChangeNotifier {
 
     // oldUser == 'true'
     // ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
-    // :
-    Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
+    // : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
   }
 }

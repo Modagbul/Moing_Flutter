@@ -46,7 +46,6 @@ class OnBoardingState extends ChangeNotifier {
 
   void next() {
     pageCount++;
-    print('현재 페이지 : $pageCount');
 
     /// 두 번째 온보딩 페이지로 이동
     if (pageCount == 2) {
@@ -69,7 +68,6 @@ class OnBoardingState extends ChangeNotifier {
     }
     /// 닉네임 설정 페이지로 이동
     else if (pageCount == null || pageCount > 4){
-      print('엥? pageCount : $pageCount');
       Navigator.of(context).pushNamed(
         LoginPage.routeName,
       );

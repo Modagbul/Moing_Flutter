@@ -69,6 +69,8 @@ dependencies:
   keyboard_dismisser: ^3.0.0
   flutter_rounded_progress_bar: ^0.3.2
   lottie: ^2.5.0
+  flutter_localization: ^0.1.14
+  flutter_datetime_picker_plus: ^2.1.0
 
 
 dev_dependencies:
