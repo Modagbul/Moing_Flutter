@@ -24,7 +24,7 @@ class WarningDialog extends StatelessWidget {
     return AlertDialog(
       // 맨 아래에 어떻게 붙이지
       backgroundColor: const Color(0xFF272727),
-      insetPadding: const EdgeInsets.all(15),
+      insetPadding: const EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
@@ -32,7 +32,7 @@ class WarningDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 500,
+            width: MediaQuery.of(context).size.width,
             height: 160,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

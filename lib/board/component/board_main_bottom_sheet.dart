@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/icon_text_button.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
+import 'package:moing_flutter/main/group_exit_and_finish/group_finish_page.dart';
 
 import '../../const/style/elevated_button.dart';
 
@@ -37,7 +38,13 @@ class BoardMainBottomSheet extends StatelessWidget {
               text: '소모임 정보 수정하기',
             ),
             IconTextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(
+                  GroupFinishPage.routeName,
+                  arguments: teamId,
+                );
+              },
               icon: 'asset/image/icon_delete.png',
               text: '소모임 삭제하기',
             ),

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class ProfileSettingPage extends StatelessWidget {
   const ProfileSettingPage({super.key});
 
-  static const routeName = '/mypage/setting';
+  static const routeName = '/mypage/setting/profile';
 
   static route(BuildContext context) {
     return MultiProvider(

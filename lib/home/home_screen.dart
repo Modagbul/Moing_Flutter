@@ -84,18 +84,6 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        FixGroupPage.routeName,
-                      );
-                    },
-                    child: Text('소모임 정보수정'),
-                  ),
-                ],
-              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Align(

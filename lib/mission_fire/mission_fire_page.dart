@@ -28,19 +28,26 @@ class MissionFirePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: grayBackground,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MissionFireAppBar(),
-              MissionFireProgressBar(),
-              MissionFireUser(),
-            ],
-          ),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.only(top: 56),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MissionFireProgressBar(),
+                    MissionFireUser(),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(top: 0, left: 20, right: 20, child: MissionFireAppBar()),
+          ],
         ),
       ),
     );

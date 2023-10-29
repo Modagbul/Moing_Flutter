@@ -14,9 +14,10 @@ class GroupExitPage extends StatelessWidget {
   const GroupExitPage({super.key});
 
   static route(BuildContext context) {
+    final int teamId = ModalRoute.of(context)?.settings.arguments as int;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => GroupFinishExitState(context: context)),
+        ChangeNotifierProvider(create: (_) => GroupFinishExitState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
         return const GroupExitPage();

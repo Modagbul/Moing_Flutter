@@ -8,6 +8,7 @@ class MissionAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: grayBackground,
       height: 56,
       child: Row(
         children: [

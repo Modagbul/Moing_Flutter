@@ -55,6 +55,7 @@ class SignUpDateState extends ChangeNotifier {
 
       await fcmState.requestPermission();
       fcmToken = await fcmState.updateToken();
+      print('update fcm Token : $fcmToken');
     });
 
     if (fcmToken == null) {

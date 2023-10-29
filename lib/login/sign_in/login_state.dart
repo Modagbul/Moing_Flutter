@@ -54,7 +54,7 @@ class LoginState extends ChangeNotifier {
           ? await UserApi.instance.loginWithKakaoTalk()
           : await UserApi.instance.loginWithKakaoAccount();
 
-      print(token);
+      // print(token);
       final url = Uri.https('kapi.kakao.com', '/v2/user/me');
 
       final response = await http.get(
@@ -65,7 +65,7 @@ class LoginState extends ChangeNotifier {
       );
 
       final profileInfo = json.decode(response.body);
-      print(profileInfo.toString());
+      // print(profileInfo.toString());
 
       // 카카오 로그인 후 백엔드에 토큰 전송
       await sendKakaoTokenToBackend(token.accessToken);

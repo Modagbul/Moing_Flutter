@@ -52,7 +52,7 @@ class MissionsCreatePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MissionAppBar(),
+                        SizedBox(height: 56),
                         _missionText(),
                         MissionTitleContent(),
                         MissionEndDate(),
@@ -62,6 +62,12 @@ class MissionsCreatePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                Positioned(
+                  top: 0,
+                  left: 20,
+                  right: 20,
+                  child: MissionAppBar(),
+                )
               ],
             ),
           ),

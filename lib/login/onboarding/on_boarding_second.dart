@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/login/onboarding/component/image_onboard.dart';
 import 'package:moing_flutter/login/onboarding/component/image_phase.dart';
+import 'package:moing_flutter/login/onboarding/component/introduce_text.dart';
 import 'package:moing_flutter/login/onboarding/component/next_button.dart';
+import 'package:moing_flutter/login/onboarding/component/onboarding_graphic.dart';
 import 'package:moing_flutter/login/onboarding/component/skip_button.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_state.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,8 @@ class OnBoardingSecondPage extends StatelessWidget {
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => OnBoardingState(context: context, pageCount: 2)),
+        ChangeNotifierProvider(
+            create: (_) => OnBoardingState(context: context, pageCount: 2)),
       ],
       builder: (context, _) {
         return const OnBoardingSecondPage();
@@ -34,28 +36,17 @@ class OnBoardingSecondPage extends StatelessWidget {
               SkipButton(
                 onTap: context.read<OnBoardingState>().skip,
               ),
-              ImageOnBoard(
-                imagePath: 'asset/image/black.jpeg',
+              IntroduceText(
+                title: '불꽃 키우기',
+                comment: '미션을 인증하면\n우리 모임만의 불꽃이 성장해요',
               ),
-              const SizedBox(
-                height: 32.0,
-              ),
-              const Text(
-                '모잉불과 함께 \n우리 모임을 불태울 수 있어요',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xffF4F6F8),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 88.0,
-              ),
+              OnBoardingGraphic(graphicPath: 'asset/graphic/onboarding_2.json'),
+              const SizedBox(height: 52),
               const ImagePhase(
                   phase1: 'asset/image/onboard_phase2.png',
                   phase2: 'asset/image/onboard_phase1.png',
-                  phase3: 'asset/image/onboard_phase2.png'),
+                  phase3: 'asset/image/onboard_phase2.png',
+                  phase4: 'asset/image/onboard_phase2.png'),
               const Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -68,7 +59,7 @@ class OnBoardingSecondPage extends StatelessWidget {
                         Size(MediaQuery.of(context).size.width, 60),
                       ),
                       backgroundColor:
-                      MaterialStateProperty.all(Colors.transparent),
+                          MaterialStateProperty.all(Colors.transparent),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
