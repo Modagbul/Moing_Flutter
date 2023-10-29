@@ -36,18 +36,6 @@ class GroupCreateInfoState extends ChangeNotifier {
     notifyListeners();
   }
 
-  // 텍스트 필드 초기화 메소드
-  void clearIntroduceTextField() {
-    introduceController.clear();
-    notifyListeners();
-  }
-
-  // 텍스트 필드 초기화 메소드
-  void clearResolutionTextField() {
-    resolutionController.clear();
-    notifyListeners();
-  }
-
   // 텍스트 필드 변경 감지 메소드
   void updateTextField() {
     notifyListeners();

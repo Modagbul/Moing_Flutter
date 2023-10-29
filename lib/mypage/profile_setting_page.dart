@@ -13,7 +13,10 @@ class ProfileSettingPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => ProfileSettingState(context: context)),
+          create: (_) => ProfileSettingState(
+            context: context,
+          ),
+        ),
       ],
       builder: (context, _) {
         return const ProfileSettingPage();
@@ -127,8 +130,6 @@ class _TextFields extends StatelessWidget {
           onChanged: (value) =>
               context.read<ProfileSettingState>().updateTextField(),
           controller: context.read<ProfileSettingState>().resolutionController,
-          onClearButtonPressed: () =>
-              context.read<ProfileSettingState>().clearResolutionTextField(),
         ),
       ],
     );
@@ -156,7 +157,7 @@ class _SubmitButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
         ),
       ),
-      onPressed: () {},
+      onPressed: context.read<ProfileSettingState>().pressSubmitButton,
       child: const Text('수정 완료'),
     );
   }

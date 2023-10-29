@@ -28,10 +28,13 @@ import 'package:moing_flutter/make_group/group_create_info_page.dart';
 import 'package:moing_flutter/make_group/group_create_photo_page.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
+import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
 import 'package:moing_flutter/mypage/alram_setting_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
+import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
+import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
 import '../board/screen/board_mission_screen.dart';
@@ -96,7 +99,7 @@ class MoingApp extends StatelessWidget {
             MissionsAllPage.routeName: (context) => MissionsAllPage.route(context),
             MissionsGroupPage.routeName: (context) => MissionsGroupPage.route(context),
             MissionsCreatePage.routeName: (context) => MissionsCreatePage.route(context),
-
+            MissionFirePage.routeName: (context) => MissionFirePage.route(context),
             TextAuthPage.routeName:(context) => TextAuthPage.route(context),
             LinkAuthPage.routeName:(context) => LinkAuthPage.route(context),
             SkipMissionPage.routeName:(context) => SkipMissionPage.route(context),
@@ -122,8 +125,12 @@ class MoingApp extends StatelessWidget {
             PostCreatePage.routeName:(context) => PostCreatePage.route(context),
 
             ProfileSettingPage.routeName:(context) => ProfileSettingPage.route(context),
+
             SettingPage.routeName:(context) => SettingPage.route(context),
             AlramSettingPage.routeName:(context) => AlramSettingPage.route(context),
+
+
+            MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),
 
           },
           navigatorObservers: [

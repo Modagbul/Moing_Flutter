@@ -37,11 +37,12 @@ class GroupCreateStartPage extends StatelessWidget {
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 4.0),
-          child: GestureDetector(
-            onTap: () async {
-              Navigator.of(context).pushReplacementNamed(HomeScreen.routeName,);
-            },
-              child: Icon(Icons.close)),
+          child: IconButton(
+            icon: const Icon(
+              Icons.close,
+            ),
+            onPressed: context.read<GroupCreateStartState>().pressCloseButton,
+          ),
         ),
       ),
       body: SafeArea(
@@ -82,12 +83,12 @@ class GroupCreateStartPage extends StatelessWidget {
                       pageBuilder: (context, animation1, animation2) =>
                           ChangeNotifierProvider(
                             create: (_) => GroupCreateCategoryState(context: context),
-                            child: GroupCreateCategoryPage(),
+                            child: const GroupCreateCategoryPage(),
                           ),
                       transitionsBuilder: (context, animation1, animation2, child) {
                         return child; // 애니메이션 없이 바로 child 위젯을 반환
                       },
-                      transitionDuration: Duration(milliseconds: 0), // 전환 시간을 0으로 설정
+                      transitionDuration: const Duration(milliseconds: 0), // 전환 시간을 0으로 설정
                     ),
                   );
                 },

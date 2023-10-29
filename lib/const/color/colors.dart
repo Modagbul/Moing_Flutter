@@ -34,3 +34,4 @@ const errorColor = Color(0xffF43A6F);
 const grayBlack2 = Color(0xffFDFDFD);
 const grayBlack3 = Color(0xffF6F6F6);
 const grayBlack8 = Color(0xff66676A);
+const grayBlack7 = Color(0xff959698);

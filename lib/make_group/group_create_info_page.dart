@@ -107,8 +107,6 @@ class _InfoTextFields extends StatelessWidget {
           onChanged: (value) =>
               context.read<GroupCreateInfoState>().updateTextField(),
           controller: context.read<GroupCreateInfoState>().introduceController,
-          onClearButtonPressed: () =>
-              context.read<GroupCreateInfoState>().clearIntroduceTextField(),
         ),
         SizedBox(height: screenHeight * 0.04),
         OutlinedTextField(
@@ -121,8 +119,6 @@ class _InfoTextFields extends StatelessWidget {
           onChanged: (value) =>
               context.read<GroupCreateInfoState>().updateTextField(),
           controller: context.read<GroupCreateInfoState>().resolutionController,
-          onClearButtonPressed: () =>
-              context.read<GroupCreateInfoState>().clearResolutionTextField(),
         ),
         SizedBox(height: screenHeight * 0.04),
       ],
