@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
-import 'package:moing_flutter/main/main_page.dart';
-import 'package:moing_flutter/missions/create/missions_create_page.dart';
+import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
+import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 
@@ -35,11 +34,11 @@ class InitState extends ChangeNotifier {
       ),
     );
 
-    Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
-    //Navigator.pushNamedAndRemoveUntil(context, FixGroupPage.routeName, (route) => false);
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => MyPageRevokePage())
+    );
 
-
-    //String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
+    // String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
     /// 이전에 가입한 적 있는 유저
     // if (oldUser == 'true') {
