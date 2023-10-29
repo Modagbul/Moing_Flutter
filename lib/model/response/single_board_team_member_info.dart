@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 class TeamMemberInfo {
   final int memberId;
   final String nickName;
-  final String profileImage;
-  final String introduction;
+  final String? profileImage;
+  final String? introduction;
   final bool isLeader;
 
   TeamMemberInfo({
@@ -13,13 +15,13 @@ class TeamMemberInfo {
     required this.isLeader,
   });
 
-  factory TeamMemberInfo.fromJson(Map<String, dynamic> json) {
+  factory TeamMemberInfo.fromJson(dynamic json) {
     return TeamMemberInfo(
-      memberId: json['memberId'],
-      nickName: json['nickName'],
-      profileImage: json['profileImage'],
-      introduction: json['introduction'],
-      isLeader: json['isLeader'],
+      memberId: json['memberId'] as int,
+      nickName: json['nickName'] as String,
+      profileImage: json['profileImage'] as String?,
+      introduction: json['introduction'] as String?,
+      isLeader: json['isLeader'] as bool,
     );
   }
 }

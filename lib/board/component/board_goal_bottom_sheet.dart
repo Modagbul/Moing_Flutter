@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/model/response/single_board_team_member_info.dart';
+import 'package:provider/provider.dart';
 
 class BoardGoalBottomSheet extends StatefulWidget {
   const BoardGoalBottomSheet({Key? key}) : super(key: key);
@@ -11,16 +14,6 @@ class BoardGoalBottomSheet extends StatefulWidget {
 }
 
 class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
-  final dummyNameList = [
-    '채연',
-    '챙귤',
-    '으냥이',
-    '윤지니',
-    '승연승연',
-    '현석현석',
-    '승엽승',
-    '지현',
-  ];
 
   bool _isExpanded = false;
 
@@ -30,7 +23,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return AnimatedContainer(
-      height: _isExpanded ? screenHeight * 0.50 : screenHeight * 0.40,
+      height: _isExpanded ? screenHeight * 0.50 : screenHeight * 0.30,
       decoration: const BoxDecoration(
         color: grayScaleGrey600,
         borderRadius: BorderRadius.vertical(
@@ -115,9 +108,9 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                 borderRadius: BorderRadius.circular(10.0),
                 color: grayScaleGrey500,
               ),
-              child: const Text(
-                '2',
-                style: TextStyle(
+              child: Text(
+                '${context.read<BoardMainState>().singleBoardData?.boardNum?? 0}',
+                style: const TextStyle(
                   color: grayScaleGrey100,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600,
@@ -153,6 +146,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               '모닥모닥불',
@@ -175,14 +169,14 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                   ),
                   const SizedBox(width: 4.0),
                   Text(
-                    '9명',
+                    '${context.read<BoardMainState>().singleBoardData?.teamInfo.numOfMember ?? 0}명',
                     style: bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(width: 12.0),
                   Text(
-                    '독서',
+                    context.read<BoardMainState>().singleBoardData?.teamInfo.category ?? '',
                     style: bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
@@ -235,6 +229,8 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
   }
 
   Widget _buildExpandedGridView({required screenWidth}) {
+    List<TeamMemberInfo>? memberList = context.read<BoardMainState>().singleBoardData?.teamInfo.teamMemberInfoList;
+
     return Expanded(
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -245,9 +241,9 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
             spacing: 8.0,
             runSpacing: 8.0,
             children: List.generate(
-              dummyNameList.length,
+              memberList?.length ?? 0,
               (index) {
-                final name = dummyNameList[index];
+                final name = memberList?[index].nickName ?? '';
                 return Container(
                   padding: const EdgeInsets.symmetric(
                     vertical: 4.0,
@@ -276,10 +272,10 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
   }
 
   Widget _buildIntroductionColumn() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           '모임 소개',
           style: TextStyle(
             color: grayScaleGrey100,
@@ -287,13 +283,10 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
         Text(
-          '모잉을 만들기 위한 책읽는 모닥불 모임모잉을 만들기 위한 '
-          '책읽는 모닥불 모임모잉을 만들기 위한 책읽는 모닥불 모임모잉을 '
-          '만들기 위한 책읽는 모닥불 모임모잉을 만들기 위한 책읽는 모닥불 '
-          '모임모잉을 만들기 위한 책읽는 모닥불 모임모잉을 만들기 위한 책읽는 모닥불 모임',
-          style: TextStyle(
+          context.read<BoardMainState>().singleBoardData?.teamInfo.introduction ?? '',
+          style: const TextStyle(
             color: grayScaleGrey400,
             fontSize: 14.0,
             fontWeight: FontWeight.w500,

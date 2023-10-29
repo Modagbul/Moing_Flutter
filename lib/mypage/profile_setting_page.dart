@@ -13,7 +13,10 @@ class ProfileSettingPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => ProfileSettingState(context: context)),
+          create: (_) => ProfileSettingState(
+            context: context,
+          ),
+        ),
       ],
       builder: (context, _) {
         return const ProfileSettingPage();
@@ -27,14 +30,17 @@ class ProfileSettingPage extends StatelessWidget {
       appBar: _renderAppBar(context: context),
       backgroundColor: grayBackground,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _Profile(),
-            const _TextFields(),
-            const _SubmitButton(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Profile(),
+              const _TextFields(),
+              const _SubmitButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -50,7 +56,7 @@ class ProfileSettingPage extends StatelessWidget {
         icon: const Icon(
           Icons.close,
         ),
-        onPressed: () {},
+        onPressed: context.read<ProfileSettingState>().pressCloseButton,
       ),
     );
   }
@@ -64,7 +70,7 @@ class _Profile extends StatelessWidget {
   );
 
   final Image editProfileImg = Image.asset(
-    'asset/image/icon_edit_circle.png',
+    'asset/image/icon_gallery.png',
     width: 24.0,
     height: 24.0,
   );
@@ -124,8 +130,6 @@ class _TextFields extends StatelessWidget {
           onChanged: (value) =>
               context.read<ProfileSettingState>().updateTextField(),
           controller: context.read<ProfileSettingState>().resolutionController,
-          onClearButtonPressed: () =>
-              context.read<ProfileSettingState>().clearResolutionTextField(),
         ),
       ],
     );
@@ -153,7 +157,7 @@ class _SubmitButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
         ),
       ),
-      onPressed: () {},
+      onPressed: context.read<ProfileSettingState>().pressSubmitButton,
       child: const Text('수정 완료'),
     );
   }

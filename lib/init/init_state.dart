@@ -34,13 +34,14 @@ class InitState extends ChangeNotifier {
       ),
     );
 
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => MyPageRevokePage())
-    );
-
     // String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
     /// 이전에 가입한 적 있는 유저
+    // Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
+
+    String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
+
+    //이전에 가입한 적 있는 유저
     // if (oldUser == 'true') {
     //   String? accessToken = await tokenManagement.loadAccessToken();
     //   if (accessToken != null) {
@@ -55,9 +56,9 @@ class InitState extends ChangeNotifier {
     //       context, OnBoardingFirstPage.routeName, (route) => false);
     // }
 
-    // oldUser == 'true'
-    // ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
-    // : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
+    oldUser == 'true'
+    ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
+    : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
   }
 
   /// 유저의 메인 화면으로 갈 수 있는지 여부 등 확인

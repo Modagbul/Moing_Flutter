@@ -7,7 +7,7 @@ class OutlinedTextField extends StatefulWidget {
   final int maxLength;
   final int maxLines;
   final ValueChanged<String> onChanged;
-  final VoidCallback onClearButtonPressed;
+  final VoidCallback? onClearButtonPressed;
   final TextEditingController controller;
   final String labelText;
   final String counterText;
@@ -21,7 +21,7 @@ class OutlinedTextField extends StatefulWidget {
     required this.maxLength,
     required this.onChanged,
     required this.controller,
-    required this.onClearButtonPressed,
+    this.onClearButtonPressed,
     this.maxLines = 1,
     this.labelText = '',
     this.counterText = '',
@@ -111,11 +111,11 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
             filled: true,
             // 배경색
             fillColor: grayScaleGrey700,
-            enabledBorder: OutlineInputBorder(
+            enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.transparent),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-            disabledBorder: OutlineInputBorder(
+            disabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.transparent),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
@@ -126,14 +126,16 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
             ),
 
             // 삭제 버튼 - 값을 입력할 경우 활성화
-            suffixIcon: widget.controller.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.close),
-                    color: grayScaleGrey550,
-                    // 버튼을 누를 경우 - 입력값 삭제
-                    onPressed: widget.onClearButtonPressed,
-                  )
-                : null,
+            suffixIcon: widget.onClearButtonPressed == null
+                ? null
+                : widget.controller.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.close),
+                        color: grayScaleGrey550,
+                        // 버튼을 누를 경우 - 입력값 삭제
+                        onPressed: widget.onClearButtonPressed,
+                      )
+                    : null,
           ),
 
           // 입력 텍스트 스타일
