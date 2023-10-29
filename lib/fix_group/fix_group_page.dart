@@ -63,6 +63,8 @@ class FixGroupPage extends StatelessWidget {
                       onCanceled: () {
                         Navigator.of(context).pop(true);
                       },
+                      leftText: '나가기',
+                      rightText: '계속 진행하기',
                     ),
                   ],
                 );
