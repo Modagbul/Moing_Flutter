@@ -58,6 +58,8 @@ class GroupCreateCategoryPage extends StatelessWidget {
                               (route) => false,
                         );
                       },
+                      leftText: '나가기',
+                      rightText: '계속 진행하기',
                     ),
                   ],
                 );

@@ -31,6 +31,7 @@ import 'package:moing_flutter/make_group/group_create_success_page.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
+import 'package:moing_flutter/mypage/alram_setting_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
@@ -43,6 +44,7 @@ import 'package:moing_flutter/post/post_main_page.dart';
 import '../missions/create/link_auth_page.dart';
 import '../missions/create/skip_mission_page.dart';
 import '../missions/create/text_auth_page.dart';
+import '../mypage/setting_page.dart';
 import '../post/post_create_page.dart';
 import '../post/post_detail_page.dart';
 
@@ -123,7 +125,13 @@ class MoingApp extends StatelessWidget {
             PostCreatePage.routeName:(context) => PostCreatePage.route(context),
 
             ProfileSettingPage.routeName:(context) => ProfileSettingPage.route(context),
+
+            SettingPage.routeName:(context) => SettingPage.route(context),
+            AlramSettingPage.routeName:(context) => AlramSettingPage.route(context),
+
+
             MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),
+
           },
           navigatorObservers: [
             GetIt.I.get<NavigationHistoryObserver>(),

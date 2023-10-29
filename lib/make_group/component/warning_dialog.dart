@@ -5,12 +5,16 @@ import '../../../const/color/colors.dart';
 class WarningDialog extends StatelessWidget {
   final String title;
   final String content;
+  final String leftText;
+  final String rightText;
   final VoidCallback onConfirm;
   final VoidCallback onCanceled;
 
   const WarningDialog({super.key,
     required this.title,
     required this.content,
+    required this.leftText,
+    required this.rightText,
     required this.onConfirm,
     required this.onCanceled,
   });
@@ -84,7 +88,7 @@ class WarningDialog extends StatelessWidget {
                     elevation: 0.0,
                   ),
                   onPressed: onCanceled,
-                  child: const Text('나가기'),
+                  child: Text(leftText),
                 ),
               ),
               const SizedBox(width: 5),
@@ -104,9 +108,9 @@ class WarningDialog extends StatelessWidget {
                     elevation: 0.0,
                   ),
                   onPressed: onConfirm,
-                  child: const Text(
-                    '계속 진행하기',
-                    style: TextStyle(
+                  child: Text(
+                    rightText,
+                    style: const TextStyle(
                       color: grayScaleBlack,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,

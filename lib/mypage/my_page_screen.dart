@@ -3,6 +3,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
+import 'package:moing_flutter/mypage/setting_page.dart';
 import 'package:provider/provider.dart';
 
 class MyPageScreen extends StatelessWidget {
@@ -65,7 +66,15 @@ class MyPageScreen extends StatelessWidget {
       automaticallyImplyLeading: false,
       actions: [
         IconButton(onPressed: () {}, icon: notificationImg),
-        IconButton(onPressed: () {}, icon: settingImg),
+        IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SettingPage()), // SettingPage로 이동
+              );
+            },
+            icon: settingImg),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/missions/component/skip_dialog.dart';
 import 'package:moing_flutter/missions/create/skip_mission_state.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,7 @@ class SkipMissionPage extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: renderAppBar(context: context, title: '미션 건너뛰기'),
       body: const Padding(
-        padding: EdgeInsets.only(left: 10.0),
+        padding: EdgeInsets.only(left: 10.0, right: 10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -88,10 +89,12 @@ class _InfoTextFields extends StatelessWidget {
           maxLength: 1000,
           maxLines: 10,
           labelText: '사유 작성하기',
-          hintText: '이번 미션을 건너뛰는 적절한 사유를 알려주세요. 작성한 사유는 모든 모임원들에게 공개되니 신중하게 작성해주세요!.',
+          hintText:
+              '이번 미션을 건너뛰는 적절한 사유를 알려주세요. 작성한 사유는 모든 모임원들에게 공개되니 신중하게 작성해주세요!.',
           counterText:
-          '(${context.watch<SkipMissionState>().textController.text.length}/50)',
-          onChanged: (value) => context.read<SkipMissionState>().updateTextField(),
+              '(${context.watch<SkipMissionState>().textController.text.length}/50)',
+          onChanged: (value) =>
+              context.read<SkipMissionState>().updateTextField(),
           controller: context.read<SkipMissionState>().textController,
           onClearButtonPressed: () =>
               context.read<SkipMissionState>().clearTextField(),
@@ -100,7 +103,6 @@ class _InfoTextFields extends StatelessWidget {
     );
   }
 }
-
 
 class _NextBtn extends StatelessWidget {
   const _NextBtn({super.key});
@@ -124,10 +126,26 @@ class _NextBtn extends StatelessWidget {
         ),
         onPressed: categoryState.isCategorySelected()
             ? () {
-          // 임시로 **
-          // categoryState.moveInfoPage();
-        }
-            : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SkipDialog(
+                          title: '미션을 건너뛰었어요',
+                          content: '다음엔 꼭 모잉불을 키워주세요!',
+                          onConfirm: () {
+                            /// 수정해야함
+                            Navigator.of(context).pop(true);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            : null,
         child: Text(
           '사유작성 완료하기',
           style: TextStyle(
@@ -140,4 +158,3 @@ class _NextBtn extends StatelessWidget {
     );
   }
 }
-
