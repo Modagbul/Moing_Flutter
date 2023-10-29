@@ -48,10 +48,11 @@ class _BoardMainPageState extends State<BoardMainPage>
   Widget build(BuildContext context) {
     final TeamInfo? teamInfo = context.read<BoardMainState>().teamInfo;
     final String teamName = teamInfo?.teamName ?? '';
+    final int teamId = context.read<BoardMainState>().teamId;
 
     return Scaffold(
       backgroundColor: grayScaleGrey900,
-      appBar: renderAppBar(context: context, title: teamName),
+      appBar: renderAppBar(context: context, title: teamName, teamId: teamId),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -82,6 +83,7 @@ class _BoardMainPageState extends State<BoardMainPage>
   PreferredSizeWidget renderAppBar({
     required BuildContext context,
     required String title,
+    required int teamId,
   }) {
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -98,6 +100,7 @@ class _BoardMainPageState extends State<BoardMainPage>
           onPressed: () {
             showGroupControlBottomSheet(
               context: context,
+              teamId: teamId,
             );
           },
           icon: const Icon(Icons.more_vert),
@@ -108,6 +111,7 @@ class _BoardMainPageState extends State<BoardMainPage>
 
   void showGroupControlBottomSheet({
     required BuildContext context,
+    required int teamId,
   }) {
     showModalBottomSheet(
       backgroundColor: grayScaleGrey600,
@@ -118,7 +122,9 @@ class _BoardMainPageState extends State<BoardMainPage>
         ),
       ),
       builder: (BuildContext context) {
-        return const BoardMainBottomSheet();
+        return BoardMainBottomSheet(
+          teamId : teamId,
+        );
       },
     );
   }

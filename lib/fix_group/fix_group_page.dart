@@ -13,9 +13,11 @@ class FixGroupPage extends StatelessWidget {
   static const routeName = '/group/fix';
 
   static route(BuildContext context) {
+    final int teamId = ModalRoute.of(context)?.settings.arguments as int;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => FixGroupState(context: context)),
+        ChangeNotifierProvider(
+            create: (_) => FixGroupState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
         return FixGroupPage();
@@ -58,10 +60,11 @@ class FixGroupPage extends StatelessWidget {
                       title: '소모임 정보수정을 멈추시겠어요?',
                       content: '나가시면 입력하신 내용을 잃게 됩니다',
                       onConfirm: () {
-                        Navigator.of(context).pop(true);
+                        Navigator.of(context).pop();
                       },
                       onCanceled: () {
-                        Navigator.of(context).pop(true);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                       },
                     ),
                   ],
@@ -135,19 +138,20 @@ class FixGroupPage extends StatelessWidget {
                         height: 255,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(32.0),
-                          child:
-                              context.watch<FixGroupState>().avatarFile == null
-                                  ? Image.asset(
-                                      'asset/image/black.jpeg',
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(context
-                                          .watch<FixGroupState>()
-                                          .avatarFile!
-                                          .path),
-                                      fit: BoxFit.cover,
-                                    ),
+                          child: (context.watch<FixGroupState>().avatarFile ==
+                                      null && context.watch<FixGroupState>().profileImageUrl != null)
+                              ? Image.network(
+                                  context
+                                      .watch<FixGroupState>()
+                                      .profileImageUrl!,
+                                  fit: BoxFit.cover)
+                              : Image.file(
+                                  File(context
+                                      .watch<FixGroupState>()
+                                      .avatarFile!
+                                      .path),
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                     ],
