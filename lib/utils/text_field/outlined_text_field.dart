@@ -95,8 +95,9 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
           decoration: InputDecoration(
             // 카운터 텍스트 - 기본값 == '' (off)
             counterText: widget.counterText,
-            // 카운터 텍스트 스타일
+            // // // // 카운터 텍스트 스타일
             counterStyle: widget.counterTextStyle,
+
             border: InputBorder.none,
             // 힌트 텍스트 - 기본값 == '' (off)
             hintText: widget.hintText,
@@ -104,6 +105,7 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
             hintStyle: widget.inputTextStyle.copyWith(
               color: grayScaleGrey550,
             ),
+            contentPadding: EdgeInsets.all(16),
 
             // 배경색 활성화
             filled: true,
