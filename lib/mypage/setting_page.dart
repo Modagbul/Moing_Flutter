@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/mypage/alram_setting_page.dart';
+import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/setting_state.dart';
 import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +87,12 @@ class SettingPage extends StatelessWidget {
                   ListCustomTile(
                     listName: '회원탈퇴',
                     imagePath: 'asset/image/right_arrow.png',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyPageRevokePage()),
+                      );
+                    },
                   ),
                 ],
               ),
