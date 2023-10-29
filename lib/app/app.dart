@@ -12,6 +12,7 @@ import 'package:moing_flutter/login/date/sign_up_date_page.dart';
 import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_second.dart';
+import 'package:moing_flutter/login/onboarding/on_boarding_last.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_third.dart';
 import 'package:moing_flutter/login/register_success/guide.dart';
 import 'package:moing_flutter/login/register_success/welcome_page.dart';
@@ -89,6 +90,7 @@ class MoingApp extends StatelessWidget {
             OnBoardingFirstPage.routeName: (context) => OnBoardingFirstPage.route(context),
             OnBoardingSecondPage.routeName: (context) => OnBoardingSecondPage.route(context),
             OnBoardingThirdPage.routeName: (context) => OnBoardingThirdPage.route(context),
+            OnBoardingLastPage.routeName: (context) => OnBoardingLastPage.route(context),
             SignUpPage.routeName: (context) => SignUpPage.route(context),
             SignUpGenderPage.routeName: (context) => SignUpGenderPage.route(context),
             SignUpDatePage.routeName: (context) => SignUpDatePage.route(context),

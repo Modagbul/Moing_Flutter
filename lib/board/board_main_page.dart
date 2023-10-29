@@ -4,6 +4,7 @@ import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/board_mission_screen.dart';
 import 'package:moing_flutter/board/component/board_main_bottom_sheet.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
 import 'package:provider/provider.dart';
 
@@ -51,7 +52,7 @@ class _BoardMainPageState extends State<BoardMainPage>
     final int teamId = context.read<BoardMainState>().teamId;
 
     return Scaffold(
-      backgroundColor: grayScaleGrey900,
+      backgroundColor: grayBackground,
       appBar: renderAppBar(context: context, title: teamName, teamId: teamId),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +93,7 @@ class _BoardMainPageState extends State<BoardMainPage>
       leading: IconButton(
         icon: const Icon(Icons.arrow_back), // 뒤로 가기 아이콘
         onPressed: () {
-          Navigator.of(context).pop(); // 뒤로 가기 버튼을 누르면 이전 화면으로 돌아갑니다.
+          Navigator.pushNamedAndRemoveUntil(context, MainPage.routeName, (route) => false);
         },
       ),
       actions: [

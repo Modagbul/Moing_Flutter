@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_second.dart';
+import 'package:moing_flutter/login/onboarding/on_boarding_last.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_third.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
@@ -16,14 +17,14 @@ class OnBoardingState extends ChangeNotifier {
     required this.context,
     required this.pageCount,
   }) {
-    log('Instance "OnBoardingState" has been created');
+    log('Instance "OnBoarding${pageCount}State" has been created');
     initState();
   }
 
   void initState() async {
     String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
     // 최초 진입 유저가 아닌 경우
-    if (pageCount == 4 && oldUser == 'true') {
+    if (pageCount == 5 && oldUser == 'true') {
       /// TODO : 조건 분기 후 회원가입 또는 로그인 진행하여 함. 현재는 로그인으로 진행
       Navigator.of(context).pushNamed(
         LoginPage.routeName,
@@ -45,7 +46,7 @@ class OnBoardingState extends ChangeNotifier {
 
   void next() {
     pageCount++;
-    print(pageCount);
+    print('현재 페이지 : $pageCount');
 
     /// 두 번째 온보딩 페이지로 이동
     if (pageCount == 2) {
@@ -61,8 +62,14 @@ class OnBoardingState extends ChangeNotifier {
       );
     }
 
+    else if (pageCount == 4) {
+      Navigator.of(context).pushNamed(
+        OnBoardingLastPage.routeName,
+      );
+    }
     /// 닉네임 설정 페이지로 이동
-    else {
+    else if (pageCount == null || pageCount > 4){
+      print('엥? pageCount : $pageCount');
       Navigator.of(context).pushNamed(
         LoginPage.routeName,
       );

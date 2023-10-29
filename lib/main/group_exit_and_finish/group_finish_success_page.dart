@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_and_exit_state.dart';
@@ -11,9 +12,10 @@ class GroupFinishSuccessPage extends StatelessWidget {
   const GroupFinishSuccessPage({super.key});
 
   static route(BuildContext context) {
+    final int teamId = ModalRoute.of(context)?.settings.arguments as int;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => GroupFinishExitState(context: context)),
+        ChangeNotifierProvider(create: (_) => GroupFinishExitState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
         return const GroupFinishSuccessPage();
@@ -67,7 +69,7 @@ class GroupFinishSuccessPage extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: WhiteButton(
-                      onPressed: (){},
+                      onPressed: context.read<GroupFinishExitState>().finishSuccessPressed,
                       text: '목표보드로 돌아가기',
                     ),
                   ),

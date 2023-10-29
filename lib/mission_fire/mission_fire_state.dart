@@ -16,8 +16,8 @@ class MissionFireState extends ChangeNotifier {
     '여비',
     '으냥',
     '모닥부리부리',
-    '열정열정',
-    '근육맨',
+    // '열정열정',
+    // '근육맨',
   ];
 
   MissionFireState({

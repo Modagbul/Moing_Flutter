@@ -4,11 +4,13 @@ class ImagePhase extends StatelessWidget {
   final String phase1;
   final String phase2;
   final String phase3;
+  final String phase4;
 
   const ImagePhase({
     required this.phase1,
     required this.phase2,
     required this.phase3,
+    required this.phase4,
     super.key,
 });
 
@@ -27,6 +29,10 @@ class ImagePhase extends StatelessWidget {
         const SizedBox(width: 8.0,),
         Image.asset(
             phase3,
+        ),
+        const SizedBox(width: 8.0,),
+        Image.asset(
+          phase4,
         ),
       ],
     );

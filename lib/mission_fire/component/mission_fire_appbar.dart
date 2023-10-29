@@ -7,19 +7,23 @@ class MissionFireAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Row(
-      children: [
-        GestureDetector(
-          onTap: () {},
-          child: Icon(Icons.close, size: 28, color: Colors.white,),
-        ),
-        const SizedBox(width: 32),
-        Text('불 던지기', style: buttonTextStyle.copyWith(color: grayScaleGrey300)),
-        Spacer(),
-        GestureDetector(
-            onTap: (){},
-            child: Icon(Icons.more_vert, size: 24, color: grayScaleGrey300)),
-      ],
+    return  Container(
+      color: grayBackground,
+      height: 56,
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {},
+            child: Icon(Icons.close, size: 28, color: Colors.white,),
+          ),
+          const SizedBox(width: 32),
+          Text('불 던지기', style: buttonTextStyle.copyWith(color: grayScaleGrey300)),
+          Spacer(),
+          GestureDetector(
+              onTap: (){},
+              child: Icon(Icons.more_vert, size: 24, color: grayScaleGrey300)),
+        ],
+      ),
     );
   }
 }

@@ -109,7 +109,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
                                         .watch<GroupCreatePhotoState>()
                                         .avatarFile!
                                         .path),
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                     ),

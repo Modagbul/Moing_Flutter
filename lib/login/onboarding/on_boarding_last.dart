@@ -7,22 +7,19 @@ import 'package:moing_flutter/login/onboarding/component/skip_button.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_state.dart';
 import 'package:provider/provider.dart';
 
-class OnBoardingFirstPage extends StatelessWidget {
-  static const routeName = '/onboard/first';
+class OnBoardingLastPage extends StatelessWidget {
+  static const routeName = '/onboard/last';
 
-  const OnBoardingFirstPage({super.key});
+  const OnBoardingLastPage({super.key});
 
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => OnBoardingState(
-                  context: context,
-                  pageCount: 1,
-                )),
+            create: (_) => OnBoardingState(context: context, pageCount: 4)),
       ],
       builder: (context, _) {
-        return const OnBoardingFirstPage();
+        return const OnBoardingLastPage();
       },
     );
   }
@@ -34,23 +31,23 @@ class OnBoardingFirstPage extends StatelessWidget {
         color: Colors.black,
         child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SkipButton(
                 onTap: context.read<OnBoardingState>().skip,
               ),
               IntroduceText(
-                title: '인증하기',
-                comment: '친구들과 함께 자기계발을 꾸준히 인증해보세요',
+                title: '소통하기',
+                comment: '중요한 공지를 확인하고\n게시글로 친구들과 소통해요',
               ),
-              OnBoardingGraphic(graphicPath: 'asset/graphic/onboarding_1.json'),
+              OnBoardingGraphic(graphicPath: 'asset/graphic/onboarding_4.json'),
               const SizedBox(height: 52),
               const ImagePhase(
-                  phase1: 'asset/image/onboard_phase1.png',
+                  phase1: 'asset/image/onboard_phase2.png',
                   phase2: 'asset/image/onboard_phase2.png',
                   phase3: 'asset/image/onboard_phase2.png',
-                  phase4: 'asset/image/onboard_phase2.png'),
-              Spacer(),
+                  phase4: 'asset/image/onboard_phase1.png'),
+              const Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -61,8 +58,7 @@ class OnBoardingFirstPage extends StatelessWidget {
                       fixedSize: MaterialStateProperty.all(
                         Size(MediaQuery.of(context).size.width, 60),
                       ),
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.transparent),
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
@@ -72,11 +68,11 @@ class OnBoardingFirstPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    text: '다음으로',
+                    text: '시작하기',
                     textStyle: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xffF1F1F1),
+                      color: Color(0xff1C1B1B),
                     ),
                   ),
                 ),

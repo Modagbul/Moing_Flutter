@@ -38,7 +38,7 @@ class FixGroupPage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 20.0, top: 10),
             child: GestureDetector(
               /// 목표보드로 이동
-              onTap: () {},
+              onTap: context.read<FixGroupState>().savePressed,
               child: Text(
                 '저장',
                 style: buttonTextStyle.copyWith(
@@ -140,20 +140,7 @@ class FixGroupPage extends StatelessWidget {
                         height: 255,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(32.0),
-                          child: (context.watch<FixGroupState>().avatarFile ==
-                                      null && context.watch<FixGroupState>().profileImageUrl != null)
-                              ? Image.network(
-                                  context
-                                      .watch<FixGroupState>()
-                                      .profileImageUrl!,
-                                  fit: BoxFit.cover)
-                              : Image.file(
-                                  File(context
-                                      .watch<FixGroupState>()
-                                      .avatarFile!
-                                      .path),
-                                  fit: BoxFit.cover,
-                                ),
+                          child: _buildImage(context),
                         ),
                       ),
                     ],
@@ -199,5 +186,28 @@ class FixGroupPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    if (context.watch<FixGroupState>().avatarFile == null &&
+        context.watch<FixGroupState>().getProfileImageUrl != null) {
+      return Image.network(context.watch<FixGroupState>().getProfileImageUrl!,
+          fit: BoxFit.cover);
+    } else if (context.watch<FixGroupState>().avatarFile != null) {
+      return Image.file(
+        File(context.watch<FixGroupState>().avatarFile!.path),
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Center(
+        child: Text(
+          '이미지를 업로드해주세요.',
+          style: contentTextStyle.copyWith(
+            fontWeight: FontWeight.w600,
+            color: grayScaleGrey100,
+          ),
+        ),
+      );
+    }
   }
 }
