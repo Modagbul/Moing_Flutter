@@ -1,3 +1,4 @@
+// BoardMissionScreen.dart
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:provider/provider.dart';
@@ -5,23 +6,33 @@ import 'package:provider/provider.dart';
 import 'board_mission_state.dart';
 import 'completed_mission_page.dart';
 import 'ongoing_misson_page.dart';
+import 'ongoing_misson_state.dart';
 
 class BoardMissionScreen extends StatefulWidget {
-  static const routeName = '/board/mission';
+  // static const routeName = '/board/mission';
 
   const BoardMissionScreen({Key? key}) : super(key: key);
 
-  static route(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (_) => BoardMissionState(context: context)),
-      ],
-      builder: (context, _) {
-        return const BoardMissionScreen();
-      },
-    );
-  }
+  // static route(BuildContext context) {
+  //   // final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
+  //   // final int teamId = arguments as int;
+  //
+  //   return MultiProvider(
+  //     providers: [
+  //       ChangeNotifierProvider(
+  //         create: (_) => BoardMissionState(context: context),
+  //       ),
+  //       // OngoingMissionState 프로바이더를 추가합니다.
+  //       // ChangeNotifierProvider(
+  //       //   create: (_) => OngoingMissionState(context: context, teamId: teamId),
+  //       // ),
+  //     ],
+  //     builder: (context, _) {
+  //       return const BoardMissionScreen();
+  //     },
+  //   );
+  // }
+
 
   @override
   State<BoardMissionScreen> createState() => _BoardMissionScreenState();
@@ -73,7 +84,7 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: const [
+              children: [
                 OngoingMissionPage(),
                 CompletedMissionPage(),
               ],

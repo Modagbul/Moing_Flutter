@@ -1,32 +1,36 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/model/api_code/api_code.dart';
 
-import '../../make_group/group_create_start_page.dart';
+import '../../model/response/board_repeat_mission_response.dart';
 
-class OngoingMissonState extends ChangeNotifier {
-
+class OngoingMissionState extends ChangeNotifier {
+  final ApiCode apiCode = ApiCode();
   final BuildContext context;
+  int teamId;
+  RepeatMissionStatusResponse? repeatMissionStatus;
 
-  OngoingMissonState({required this.context}) {
-    log('Instance "CompletedMissionState" has been created');
+  OngoingMissionState({
+    required this.context,
+    required this.teamId,
+  }) {
     initState();
+    getRepeatMissionStatus();
+  }
+
+  void initState() async {
+    log('Instance "OngoingMissionState" has been created');
   }
 
   @override
   void dispose() {
-    log('Instance "CompletedMissionState" has been removed');
+    log('Instance "OngoingMissionState" has been removed');
     super.dispose();
   }
 
-  void initState() {
+  void getRepeatMissionStatus() async {
+    repeatMissionStatus = await apiCode.getRepeatMissionStatus(teamId: teamId);
+    notifyListeners();
   }
-
-  // 아 왜 오류 ㅡㅡ
-  // void makeGroupPressed() {
-  //   Navigator.of(context).pushNamed(
-  //     // 임시
-  //     GroupCreateStartPage.routeName,
-  //   );
-  // }
-
 }

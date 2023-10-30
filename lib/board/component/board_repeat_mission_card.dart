@@ -4,7 +4,18 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../const/color/colors.dart';
 
 class BoardRepeatMissionCard extends StatelessWidget {
-  const BoardRepeatMissionCard({super.key});
+  final String title;
+  final String dueTo;
+  final int done;
+  final int number;
+
+  const BoardRepeatMissionCard({
+    super.key,
+    required this.title,
+    required this.dueTo,
+    required this.done,
+    required this.number,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +45,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "2",
+                            done.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 28.0,
@@ -42,12 +53,23 @@ class BoardRepeatMissionCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 18.0),
-                            child: Text(
-                              "/2",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16.0,
-                                  color: grayScaleGrey400),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "/",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16.0,
+                                      color: grayScaleGrey400),
+                                ),
+                                Text(
+                                  number.toString(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16.0,
+                                      color: grayScaleGrey400),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -65,7 +87,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(top: 12.0, left: 8.0),
                   child: Text(
-                    '독서기록 쓰기',
+                    title,
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w600,
@@ -76,7 +98,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(top: 8.0, left: 8.0),
                   child: Text(
-                    '주 2회',
+                    dueTo,
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14.0,

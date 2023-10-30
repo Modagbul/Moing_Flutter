@@ -8,6 +8,8 @@ import 'package:moing_flutter/model/profile/profile_model.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 
+import '../response/board_repeat_mission_response.dart';
+
 class ApiCode {
   final APICall call = APICall();
   String apiUrl = '';
@@ -142,6 +144,29 @@ class ApiCode {
     } catch (e) {
       log('프로필 데이터 수정 실패: $e');
     }
+  }
+
+  Future<RepeatMissionStatusResponse?> getRepeatMissionStatus({required int teamId}) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/board/repeat';
+
+    try {
+      ApiResponse<RepeatMissionStatusResponse>? apiResponse =
+      await call.makeRequest<RepeatMissionStatusResponse>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => RepeatMissionStatusResponse.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        log('반복 미션 상태 조회 성공: ${apiResponse.data}');
+        return apiResponse.data!;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('반복 미션 상태 조회 실패: $e');
+    }
+    return null;
   }
 
 // void makeMissionAPI() async {
