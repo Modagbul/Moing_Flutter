@@ -52,7 +52,7 @@ class _BoardMainPageState extends State<BoardMainPage>
     final int teamId = context.read<BoardMainState>().teamId;
 
     return Scaffold(
-      backgroundColor: grayBackground,
+      backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: teamName, teamId: teamId),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

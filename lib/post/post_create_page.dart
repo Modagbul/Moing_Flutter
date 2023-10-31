@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
@@ -11,10 +12,13 @@ class PostCreatePage extends StatelessWidget {
   const PostCreatePage({Key? key}) : super(key: key);
 
   static route(BuildContext context) {
+    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
+    final int teamId = arguments as int;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => PostCreateState(context: context)),
+            create: (_) => PostCreateState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
         return const PostCreatePage();
@@ -92,7 +96,7 @@ class _PostInfoTextFields extends StatelessWidget {
           labelText: '제목',
           hintText: '15자 이내의 제목을 적어주세요',
           counterText:
-          '(${context.watch<PostCreateState>().titleController.text.length}/15)',
+              '(${context.watch<PostCreateState>().titleController.text.length}/15)',
           onChanged: (value) =>
               context.read<PostCreateState>().updateTextField(),
           controller: context.read<PostCreateState>().titleController,
@@ -107,12 +111,10 @@ class _PostInfoTextFields extends StatelessWidget {
           labelText: '내용',
           hintText: '공지할 내용을 적어주세요',
           counterText:
-          '(${context.watch<PostCreateState>().contentController.text.length}/300)',
+              '(${context.watch<PostCreateState>().contentController.text.length}/300)',
           onChanged: (value) =>
               context.read<PostCreateState>().updateTextField(),
           controller: context.read<PostCreateState>().contentController,
-          onClearButtonPressed: () =>
-              context.read<PostCreateState>().clearContentTextField(),
           inputTextStyle: inputTextFieldStyle.copyWith(fontSize: 16.0),
         ),
       ],
@@ -125,7 +127,6 @@ class _NoticeCheckContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       decoration: BoxDecoration(
         color: grayScaleGrey600,
@@ -138,15 +139,13 @@ class _NoticeCheckContainer extends StatelessWidget {
         children: [
           IconButton(
             icon: Image.asset(
-              context.watch<PostCreateState>().isChecked
-                  ? 'asset/image/icon_check_box_default.png'
-                  : 'asset/image/icon_check_box_active.png',
+              context.watch<PostCreateState>().isCheckedNotice
+                  ? 'asset/image/icon_check_box_active.png'
+                  : 'asset/image/icon_check_box_default.png',
               width: 24.0,
               height: 24.0,
             ),
-            onPressed: () {
-              context.read<PostCreateState>().toggleChecked();
-            },
+            onPressed: context.read<PostCreateState>().toggleCheckedNotice,
           ),
           const Text(
             '공지사항으로 변경하기',
@@ -168,7 +167,9 @@ class _PostCreateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: context.watch<PostCreateState>().isButtonEnabled
+          ? context.read<PostCreateState>().requestCreatePost
+          : null,
       style: ElevatedButton.styleFrom(
         backgroundColor: grayScaleWhite,
         foregroundColor: grayScaleGrey900,

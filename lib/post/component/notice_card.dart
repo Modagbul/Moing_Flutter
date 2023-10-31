@@ -5,7 +5,7 @@ class NoticeCard extends StatelessWidget {
   final String nickName;
   final String title;
   final String content;
-  final String commentNum;
+  final int commentNum;
 
   const NoticeCard({
     super.key,
@@ -102,7 +102,7 @@ class NoticeCard extends StatelessWidget {
     );
   }
 
-  Widget _renderNoticeCardFooter({required String commentNum}) {
+  Widget _renderNoticeCardFooter({required int commentNum}) {
     return Row(
       children: [
         Image.asset(
@@ -112,7 +112,7 @@ class NoticeCard extends StatelessWidget {
         ),
         const SizedBox(width: 4.0),
         Text(
-          commentNum,
+          '$commentNum',
           style: const TextStyle(
             color: grayScaleGrey400,
             fontSize: 14.0,

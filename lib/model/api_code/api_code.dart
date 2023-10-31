@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/request/create_post_request.dart';
 import 'package:moing_flutter/model/request/make_team_request.dart';
 import 'package:moing_flutter/model/profile/profile_model.dart';
+import 'package:moing_flutter/model/response/get_all_posts_response.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 
@@ -109,7 +111,8 @@ class ApiCode {
     apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
 
     try {
-      ApiResponse<ProfileData>? apiResponse = await call.makeRequest<ProfileData>(
+      ApiResponse<ProfileData>? apiResponse =
+          await call.makeRequest<ProfileData>(
         url: apiUrl,
         method: 'GET',
         fromJson: (data) => ProfileData.fromJson(data),
@@ -142,6 +145,54 @@ class ApiCode {
     } catch (e) {
       log('프로필 데이터 수정 실패: $e');
     }
+  }
+
+  Future<NoticeData?> getAllPostData({required int teamId}) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/board';
+
+    try {
+      ApiResponse<NoticeData>? apiResponse = await call.makeRequest<NoticeData>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => NoticeData.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        log('모든 공지, 게시글 데이터 조회 성공: ${apiResponse.data}');
+        return apiResponse.data!;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('모든 공지, 게시글 데이터 조회 실패: $e');
+    }
+    return null;
+  }
+
+  void postCreatePostOrNotice({
+    required int teamId,
+    required CreatePostData createPostData,
+  }) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/board';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'POST',
+        body: createPostData.toJson(),
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        log('게시글/공지 생성 성공: ${apiResponse.data}');
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('게시글/공지 생성 실패: $e');
+    }
+    return null;
   }
 
 // void makeMissionAPI() async {
