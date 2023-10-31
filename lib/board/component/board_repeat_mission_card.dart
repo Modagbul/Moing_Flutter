@@ -29,7 +29,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
       child: Stack(
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: 170,
@@ -53,16 +53,16 @@ class BoardRepeatMissionCard extends StatelessWidget {
                           children: [
                             Text(
                               done.toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 28.0,
                                   color: grayScaleGrey100),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 18.0),
+                              padding: const EdgeInsets.only(top: 18.0),
                               child: Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     "/",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
@@ -71,7 +71,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                                   ),
                                   Text(
                                     number.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16.0,
                                         color: grayScaleGrey400),
@@ -92,10 +92,10 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 12.0, left: 8.0),
+                    padding: const EdgeInsets.only(top: 12.0, left: 8.0),
                     child: Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w600,
                         color: grayScaleGrey100,
@@ -103,21 +103,25 @@ class BoardRepeatMissionCard extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 8.0, left: 8.0),
-                    child: Text(
-                      dueTo,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14.0,
-                        color: grayScaleGrey550,
-                      ),
+                    padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          '주 ${number}회',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0,
+                            color: grayScaleGrey550,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ],
           ),
-          Positioned(
+          const Positioned(
             bottom: 70,
             left: 10.0,
             child: _Tag(),

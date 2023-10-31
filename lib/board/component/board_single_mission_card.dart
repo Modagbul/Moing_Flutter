@@ -79,8 +79,8 @@ class BoardSingleMissionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Spacer(),
-                status == 'SKIP' ? SkipButton() : CompleteButton(),
+                const Spacer(),
+                status == 'SKIP' ? _SkipButton() : _CompleteButton(),
               ],
             ),
           ),
@@ -91,7 +91,7 @@ class BoardSingleMissionCard extends StatelessWidget {
 }
 
 
-class CompleteButton extends StatelessWidget {
+class _CompleteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -122,7 +122,7 @@ class CompleteButton extends StatelessWidget {
   }
 }
 
-class SkipButton extends StatelessWidget {
+class _SkipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

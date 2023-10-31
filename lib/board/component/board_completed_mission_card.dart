@@ -108,7 +108,7 @@ class BoardCompletedMissionCard extends StatelessWidget {
 
 
 class _MissionTag extends StatelessWidget {
-  final String missionType; // 여기 추가
+  final String missionType;
 
   const _MissionTag({super.key, required this.missionType}); // 여기 수정
 

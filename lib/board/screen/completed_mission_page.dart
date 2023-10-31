@@ -5,6 +5,7 @@ import 'package:moing_flutter/board/component/board_completed_mission_card.dart'
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
+import '../../missions/create/missions_create_page.dart';
 import 'completed_mission_state.dart';
 
 class CompletedMissionPage extends StatelessWidget {
@@ -84,7 +85,7 @@ class CompletedMissionPage extends StatelessWidget {
                 ),
               ),
             const Spacer(),
-            _BottomButton(),
+            const _BottomButton(),
           ],
         ),
       ),
@@ -102,13 +103,22 @@ class _BottomButton extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: ElevatedButton(
-          onPressed: () {}, // 임시
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MissionsCreatePage.route(context),
+              ),
+            );
+          },
           style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all<Size>(const Size(137, 51)),
+            minimumSize: MaterialStateProperty.all<Size>(
+              const Size(137, 51),
+            ),
             backgroundColor: MaterialStateProperty.all<Color>(grayScaleGrey100),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32.0), // borderRadius 설정
+                borderRadius: BorderRadius.circular(32.0),
               ),
             ),
           ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
+import '../../missions/create/missions_create_page.dart';
 import '../component/board_repeat_mission_card.dart';
 import '../component/board_single_mission_card.dart';
 import 'ongoing_misson_state.dart';
@@ -25,7 +26,7 @@ class OngoingMissionPage extends StatelessWidget {
                 OngoingMissionState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
-        return OngoingMissionPage();
+        return const OngoingMissionPage();
       },
     );
   }
@@ -147,7 +148,7 @@ class OngoingMissionPage extends StatelessWidget {
                   ),
                 ),
               const Spacer(),
-              _BottomButton(),
+              const _BottomButton(),
             ],
           ),
         ),
@@ -171,7 +172,7 @@ class _Title extends StatelessWidget {
       children: [
         Text(
           mainText,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w600,
             color: grayScaleGrey100,
@@ -182,7 +183,7 @@ class _Title extends StatelessWidget {
         ),
         Text(
           countText,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w600,
             color: grayScaleGrey400,
@@ -203,7 +204,14 @@ class _BottomButton extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MissionsCreatePage.route(context),
+              ),
+            );
+          },
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all<Size>(
               const Size(137, 51),
