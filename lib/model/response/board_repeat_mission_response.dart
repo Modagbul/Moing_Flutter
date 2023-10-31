@@ -13,7 +13,9 @@ class RepeatMissionStatusResponse {
     return RepeatMissionStatusResponse(
       isSuccess: json['isSuccess'],
       message: json['message'],
-      data: (json['data'] as List)
+      data: json['data'] == null
+          ? [] // data가 null인 경우 빈 리스트를 반환
+          : (json['data'] as List)
           .map((item) => RepeatMission.fromJson(item))
           .toList(),
     );

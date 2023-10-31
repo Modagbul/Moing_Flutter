@@ -1,38 +1,34 @@
-// BoardMissionScreen.dart
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/screen/ongoing_misson_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:provider/provider.dart';
 
 import 'board_mission_state.dart';
 import 'completed_mission_page.dart';
 import 'ongoing_misson_page.dart';
-import 'ongoing_misson_state.dart';
 
 class BoardMissionScreen extends StatefulWidget {
-  // static const routeName = '/board/mission';
+  static const routeName = '/board/mission';
 
-  const BoardMissionScreen({Key? key}) : super(key: key);
+  const BoardMissionScreen({super.key});
 
-  // static route(BuildContext context) {
-  //   // final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
-  //   // final int teamId = arguments as int;
-  //
-  //   return MultiProvider(
-  //     providers: [
-  //       ChangeNotifierProvider(
-  //         create: (_) => BoardMissionState(context: context),
-  //       ),
-  //       // OngoingMissionState 프로바이더를 추가합니다.
-  //       // ChangeNotifierProvider(
-  //       //   create: (_) => OngoingMissionState(context: context, teamId: teamId),
-  //       // ),
-  //     ],
-  //     builder: (context, _) {
-  //       return const BoardMissionScreen();
-  //     },
-  //   );
-  // }
+  static route(BuildContext context) {
+    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
+    final int teamId = arguments as int;
 
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) => BoardMissionState(context: context)),
+        ChangeNotifierProvider(
+            create: (_) =>
+                OngoingMissionState(context: context, teamId: teamId)),
+      ],
+      builder: (context, _) {
+        return const BoardMissionScreen();
+      },
+    );
+  }
 
   @override
   State<BoardMissionScreen> createState() => _BoardMissionScreenState();
@@ -40,16 +36,23 @@ class BoardMissionScreen extends StatefulWidget {
 
 class _BoardMissionScreenState extends State<BoardMissionScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BoardMissionState>().initTabController(
+        tabController: TabController(
+          length: 2,
+          vsync: this,
+        ),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final tabController = context.read<BoardMissionState>().tabController;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
@@ -68,7 +71,7 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
               Padding(
                 padding: EdgeInsets.only(right: 210), // 오른쪽에 여백 주기
                 child: TabBar(
-                  controller: _tabController,
+                  controller: tabController,
                   indicatorColor: grayScaleGrey200,
                   labelColor: grayScaleGrey200,
                   unselectedLabelColor: grayScaleGrey550,
@@ -83,9 +86,9 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
           ),
           Expanded(
             child: TabBarView(
-              controller: _tabController,
+              controller: tabController,
               children: [
-                OngoingMissionPage(),
+                OngoingMissionPage.route(context), // 변경
                 CompletedMissionPage(),
               ],
             ),
@@ -101,15 +104,12 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
         padding: EdgeInsets.symmetric(horizontal: 8), // 텍스트 크기에 따라 여백 조정
         child: Text(
           text,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 }

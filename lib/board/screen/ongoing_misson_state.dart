@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 
 import '../../model/response/board_repeat_mission_response.dart';
+import '../../model/response/board_single_mission_response.dart';
 
 class OngoingMissionState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
   int teamId;
   RepeatMissionStatusResponse? repeatMissionStatus;
+  BoardSingleMissionResponse? singleMissionStatus;
 
   OngoingMissionState({
     required this.context,
@@ -17,6 +19,7 @@ class OngoingMissionState extends ChangeNotifier {
   }) {
     initState();
     getRepeatMissionStatus();
+    getSingleMissionStatus(); // 이 부분 추가
   }
 
   void initState() async {
@@ -31,6 +34,11 @@ class OngoingMissionState extends ChangeNotifier {
 
   void getRepeatMissionStatus() async {
     repeatMissionStatus = await apiCode.getRepeatMissionStatus(teamId: teamId);
+    notifyListeners();
+  }
+
+  Future<void> getSingleMissionStatus() async { // 이 부분 변경
+    singleMissionStatus = await apiCode.getSingleMissionStatus(teamId: teamId);
     notifyListeners();
   }
 }
