@@ -6,6 +6,7 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
+import 'package:moing_flutter/missions/create/const/mission_create_text_list.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 
 class MissionCreateState extends ChangeNotifier {
@@ -15,8 +16,10 @@ class MissionCreateState extends ChangeNotifier {
   final ruleController = TextEditingController();
   final FocusNode titleFocusNode = FocusNode();
   late FixedExtentScrollController scrollController;
+  late FixedExtentScrollController timeScrollController;
 
   int missionCountIndex = 1;
+  int timeCountIndex = 12;
 
   TextStyle ts = const TextStyle(
       fontWeight: FontWeight.w700, fontSize: 20, color: grayScaleGrey100);
@@ -38,15 +41,6 @@ class MissionCreateState extends ChangeNotifier {
     '하루 계획 세우기',
     '일어나자마자 양치하기',
     '휴대폰 6시간 이하 쓰기',
-  ];
-
-  final List<String> missionCountList = [
-    '주 2회',
-    '주 3회',
-    '주 4회',
-    '주 5회',
-    '주 6회',
-    '주 7회',
   ];
 
   String title = '';
@@ -74,6 +68,8 @@ class MissionCreateState extends ChangeNotifier {
     ruleController.addListener(_onRuleTextChanged);
     scrollController =
         FixedExtentScrollController(initialItem: missionCountIndex);
+    timeScrollController =
+        FixedExtentScrollController(initialItem: timeCountIndex);
   }
 
   @override
@@ -88,6 +84,7 @@ class MissionCreateState extends ChangeNotifier {
     contentController.dispose();
     ruleController.dispose();
     scrollController.dispose();
+    timeScrollController.dispose();
     super.dispose();
   }
 
@@ -272,7 +269,7 @@ class MissionCreateState extends ChangeNotifier {
     );
   }
 
-  // 마감 날짜 선택 시 IOS 날짜 선택 모달
+  /// 마감 날짜 선택 시 IOS 날짜 선택 모달
   void datePicker() {
     DatePicker.showDatePicker(context,
         showTitleActions: true,
@@ -285,18 +282,71 @@ class MissionCreateState extends ChangeNotifier {
     }, currentTime: DateTime.now(), locale: LocaleType.ko);
   }
 
+  /// 마감 시간 선택 시 IOS 시간 선택 모달
   void timePicker() {
-    DatePicker.showTimePicker(
-      context,
-      showTitleActions: true,
-      onConfirm: (time) {
-        formattedTime = '${time.hour.toString().padLeft(2, '0')}:00';
-        notifyListeners();
-      },
-      currentTime: DateTime.now(),
-      locale: LocaleType.ko,
+    timeScrollController.dispose();
+    timeScrollController =
+        FixedExtentScrollController(initialItem: timeCountIndex);
+
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => Container(
+        color: Colors.white,
+        height: 300,  // 높이를 약간 조절하여 버튼에 공간을 확보
+        child: Column(
+          children: [
+            Container(
+              color: Colors.grey[200],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CupertinoButton(
+                    child: Text('취소'),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Picker 닫기
+                    },
+                  ),
+                  CupertinoButton(
+                    child: Text('확인'),
+                    onPressed: () {
+                      formattedTime = timeCountList[timeCountIndex].replaceAll("시", ":00");
+                      notifyListeners();
+                      Navigator.of(context).pop(); // Picker 닫기
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: CupertinoPicker(
+                scrollController: timeScrollController,
+                looping: true,
+                itemExtent: 48,
+                onSelectedItemChanged: (int index) {
+                  timeCountIndex = index;
+                  notifyListeners();
+                },
+                children: timeCountList
+                    .map(
+                      (item) => Center(
+                    child: Text(
+                      item,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                )
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
+
 
   /// 미션 제목 시 생기는 바텀 모달
   void openBottomModal() {

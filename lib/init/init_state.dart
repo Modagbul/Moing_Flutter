@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
@@ -35,14 +36,14 @@ class InitState extends ChangeNotifier {
       ),
     );
 
-    //String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
+    String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
     /// 이전에 가입한 적 있는 유저
-    /// MissionFirePage
-    Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
+    //Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, MissionProvePage.routeName, (route) => false);
     //Navigator.pushNamedAndRemoveUntil(context, MissionFirePage.routeName, (route) => false);
 
-    //String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
+    // String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
     //이전에 가입한 적 있는 유저
     // if (oldUser == 'true') {
@@ -61,6 +62,6 @@ class InitState extends ChangeNotifier {
 
     // oldUser == 'true'
     // ? Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false)
-    // : Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
+    // :Navigator.pushNamedAndRemoveUntil(context, OnBoardingFirstPage.routeName, (route) => false);
   }
 }
