@@ -24,6 +24,7 @@ class BoardMainState extends ChangeNotifier {
 
   void initState() {
     log('Instance "BoardMainState" has been created');
+    print('teamId : $teamId');
     getSingleBoard(teamId: teamId);
   }
 

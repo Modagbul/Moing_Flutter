@@ -3,14 +3,20 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/missions/create/const/mission_create_text_list.dart';
+import 'package:moing_flutter/model/api_generic.dart';
+import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/request/make_mission_request.dart';
+import 'package:moing_flutter/model/request/make_team_request.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 
 class MissionCreateState extends ChangeNotifier {
   final BuildContext context;
+  final int teamId;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   final ruleController = TextEditingController();
@@ -56,12 +62,14 @@ class MissionCreateState extends ChangeNotifier {
 
   MissionCreateState({
     required this.context,
+    required this.teamId,
   }) {
     initState();
   }
 
   void initState() {
     log('Instance "MissionCreateState" has been created');
+    print('teamId : $teamId');
     titleController.addListener(_onTitleTextChanged);
     titleFocusNode.addListener(onTitleFocusChanged);
     contentController.addListener(_onContentTextChanged);
@@ -160,11 +168,8 @@ class MissionCreateState extends ChangeNotifier {
                 Navigator.of(context).pop(true);
               },
               onCanceled: () {
-                // Navigator.pushNamedAndRemoveUntil(
-                //   context,
-                //   MainPage.routeName,
-                //       (route) => false,
-                // );
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               leftText: '나가기',
               rightText: '계속 진행하기',
@@ -431,7 +436,50 @@ class MissionCreateState extends ChangeNotifier {
       print('미션 제목 : $title');
       print('미션 내용 : $content');
       print('인증 규칙 : $rule');
-      print('마감 날짜 : $formattedDate');
+
+      String way = '';
+      switch(selectedMethod) {
+        case '텍스트로 인증하기':
+          way = 'TEXT';
+          break;
+        case '사진으로 인증하기':
+          way = 'PHOTO';
+          break;
+        case '하이퍼링크로 인증하기':
+          way = 'LINK';
+          break;
+      }
+
+      String dueTo = '$formattedDate $formattedTime:00.000';
+      print('인증 방법 : $way');
+      print('마감 시간 : $dueTo');
+      Navigator.of(context).pop();
+      final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';
+      final APICall call = APICall();
+
+      // 단일 미션 시
+      MakeMissionData data = MakeMissionData(
+          title: title,
+          dueTo: dueTo,
+          rule: rule,
+          content: content,
+          number: 1,
+          type: 'ONCE',
+          way: way);
+
+      try {
+        ApiResponse<Map<String, dynamic>> apiResponse =
+        await call.makeRequest<Map<String, dynamic>>(
+          url: apiUrl,
+          method: 'POST',
+          body: data.toJson(),
+          fromJson: (data) => data as Map<String, dynamic>,
+        );
+        log('미션 생성 성공: ${apiResponse.data}');
+        // Navigator.of(context).pop();
+      } catch (e) {
+        log('미션 생성 실패: $e');
+      }
     }
   }
 }

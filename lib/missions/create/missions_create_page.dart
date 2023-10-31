@@ -17,10 +17,13 @@ class MissionsCreatePage extends StatelessWidget {
   const MissionsCreatePage({super.key});
 
   static route(BuildContext context) {
+    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
+    final int teamId = arguments as int;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => MissionCreateState(context: context),
+          create: (context) => MissionCreateState(context: context, teamId: teamId),
           lazy: false,
         ),
       ],

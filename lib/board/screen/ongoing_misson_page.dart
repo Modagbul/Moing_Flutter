@@ -205,11 +205,9 @@ class _BottomButton extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         child: ElevatedButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MissionsCreatePage.route(context),
-              ),
+            Navigator.of(context).pushNamed(
+              MissionsCreatePage.routeName,
+              arguments: context.read<OngoingMissionState>().teamId,
             );
           },
           style: ButtonStyle(
