@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class BoardMissionState extends ChangeNotifier {
-
   final BuildContext context;
   TabController? tabController;
 
@@ -22,7 +21,5 @@ class BoardMissionState extends ChangeNotifier {
     super.dispose();
   }
 
-  void initState() {
-  }
-
+  void initState() {}
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/board_completed_mission_card.dart';
 import 'package:provider/provider.dart';
@@ -6,16 +8,19 @@ import '../../const/color/colors.dart';
 import 'completed_mission_state.dart';
 
 class CompletedMissionPage extends StatelessWidget {
-
   static const routeName = '/board/mission/completed';
 
   const CompletedMissionPage({super.key});
 
   static route(BuildContext context) {
+    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
+    final int teamId = arguments as int;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => CompletedMissionState(context: context)),
+            create: (_) =>
+                CompletedMissionState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
         return const CompletedMissionPage();
@@ -25,8 +30,19 @@ class CompletedMissionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<CompletedMissionState>();
+
+    final data = state.completedMissionStatus?.data;
+    if (data == null) {
+      log('data is null');
+    } else if (data.isEmpty) {
+      log('data is empty');
+    } else {
+      log('data is not empty: $data');
+    }
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: grayScaleGrey900,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +50,39 @@ class CompletedMissionPage extends StatelessWidget {
             const SizedBox(
               height: 40.0,
             ),
-            BoardCompletedMissionCard(),
+            if (state.completedMissionStatus?.data.isNotEmpty ?? false)
+              ...state.completedMissionStatus!.data
+                  .map(
+                    (e) => // ...
+                        BoardCompletedMissionCard(
+                      title: e.title,
+                      status: e.status,
+                      dueTo: e.dueTo,
+                      missionType: e.missionType,
+                      missionId: e.missionId,
+                      onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => MissionDetailPage(missionId: e.missionId),
+                        //   ),
+                        // );
+                      },
+                    ),
+                  )
+                  .toList()
+            else
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    '아직 미션이 없어요.',
+                    style: TextStyle(
+                      color: grayScaleGrey400,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ),
+              ),
             const Spacer(),
             _BottomButton(),
           ],
@@ -56,15 +104,11 @@ class _BottomButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {}, // 임시
           style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all<Size>(
-                const Size(137, 51)),
-            backgroundColor:
-            MaterialStateProperty.all<Color>(grayScaleGrey100),
-            shape:
-            MaterialStateProperty.all<RoundedRectangleBorder>(
+            minimumSize: MaterialStateProperty.all<Size>(const Size(137, 51)),
+            backgroundColor: MaterialStateProperty.all<Color>(grayScaleGrey100),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
-                borderRadius:
-                BorderRadius.circular(32.0), // borderRadius 설정
+                borderRadius: BorderRadius.circular(32.0), // borderRadius 설정
               ),
             ),
           ),

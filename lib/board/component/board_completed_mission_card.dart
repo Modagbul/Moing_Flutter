@@ -3,93 +3,114 @@ import 'package:flutter/material.dart';
 import '../../const/color/colors.dart';
 
 class BoardCompletedMissionCard extends StatelessWidget {
-  const BoardCompletedMissionCard({super.key});
+  final String title;
+  final String status;
+  final String dueTo;
+  final String missionType;
+  final int missionId;
+  final VoidCallback onTap;
+
+  const BoardCompletedMissionCard({
+    super.key,
+    required this.title,
+    required this.status,
+    required this.dueTo,
+    required this.missionType,
+    required this.missionId,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 124,
-          decoration: BoxDecoration(
-            color: grayScaleGrey700,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, top: 14, bottom: 20),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _MissionTag(),
-                    Padding(
-                      padding: EdgeInsets.only(top: 12.0),
-                      child: Text(
-                        '2차 작업물 공유하기',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w600,
-                          color: grayScaleGrey100,
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: Row(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width - 40,
+            height: 124,
+            decoration: BoxDecoration(
+              color: grayScaleGrey700,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0, top: 14, bottom: 20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _MissionTag(missionType: missionType),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: grayScaleGrey100,
+                            ),
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                status == 'SUCCESS' ? '성공' : '실패',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0,
+                                  color: grayScaleGrey400,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 6.0,
+                              ),
+                              Image.asset(
+                                'asset/image/clock.png',
+                              ),
+                              const SizedBox(
+                                width: 4.0,
+                              ),
+                              Text(
+                                dueTo,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0,
+                                  color: grayScaleGrey550,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 12.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            '성공',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.0,
-                              color: grayScaleGrey400,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 6.0,
-                          ),
-                          Image.asset(
-                            'asset/image/clock.png',
-                          ),
-                          const SizedBox(
-                            width: 4.0,
-                          ),
-                          const Text(
-                            '2023.08.10 종료',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.0,
-                              color: grayScaleGrey550,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Image.asset(
-                    'asset/image/plus_btn.png',
-                    width: 48.0,
-                    height: 48.0,
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Image.asset(
+                      'asset/image/plus_btn.png',
+                      width: 48.0,
+                      height: 48.0,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
 
 class _MissionTag extends StatelessWidget {
-  const _MissionTag({super.key});
+  final String missionType; // 여기 추가
+
+  const _MissionTag({super.key, required this.missionType}); // 여기 수정
 
   @override
   Widget build(BuildContext context) {
@@ -110,8 +131,8 @@ class _MissionTag extends StatelessWidget {
                   width: 5.0,
                 ),
                 Text(
-                  '반복미션',
-                  style: TextStyle(
+                  missionType == 'ONCE' ? '한번미션' : '반복미션',
+                  style: const TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w600,
                     color: grayScaleGrey400,

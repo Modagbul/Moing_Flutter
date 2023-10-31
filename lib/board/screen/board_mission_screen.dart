@@ -51,7 +51,13 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
 
   @override
   Widget build(BuildContext context) {
-    final tabController = context.read<BoardMissionState>().tabController;
+    final tabController = context.select<BoardMissionState, TabController?>(
+          (state) => state.tabController,
+    );
+
+    if (tabController == null) {
+      return Container();
+    }
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -65,21 +71,24 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
                 right: 0,
                 child: Container(
                   height: 1.0, // 원하는 높이 설정
-                  color: grayScaleGrey550, // 회색으로 설정
+                  color: grayScaleGrey600, // 회색으로 설정
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 210), // 오른쪽에 여백 주기
-                child: TabBar(
-                  controller: tabController,
-                  indicatorColor: grayScaleGrey200,
-                  labelColor: grayScaleGrey200,
-                  unselectedLabelColor: grayScaleGrey550,
-                  tabs: [
-                    _customTab(text: '진행중 미션'),
-                    _customTab(text: '종료된 미션'),
-                  ],
-                  labelPadding: EdgeInsets.zero, // 탭바 내부의 기본 패딩 제거
+                padding: EdgeInsets.only(right:170), // 오른쪽에 여백 주기
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: TabBar(
+                    controller: tabController,
+                    indicatorColor: grayScaleGrey200,
+                    labelColor: grayScaleGrey200,
+                    unselectedLabelColor: grayScaleGrey550,
+                    tabs: [
+                      _customTab(text: '진행중 미션'),
+                      _customTab(text: '종료된 미션'),
+                    ],
+                    labelPadding: EdgeInsets.zero, // 탭바 내부의 기본 패딩 제거
+                  ),
                 ),
               ),
             ],
@@ -89,7 +98,7 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
               controller: tabController,
               children: [
                 OngoingMissionPage.route(context), // 변경
-                CompletedMissionPage(),
+                CompletedMissionPage.route(context), // 변경
               ],
             ),
           ),

@@ -19,7 +19,7 @@ class OngoingMissionState extends ChangeNotifier {
   }) {
     initState();
     getRepeatMissionStatus();
-    getSingleMissionStatus(); // 이 부분 추가
+    getSingleMissionStatus();
   }
 
   void initState() async {
@@ -37,7 +37,7 @@ class OngoingMissionState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getSingleMissionStatus() async { // 이 부분 변경
+  void getSingleMissionStatus() async {
     singleMissionStatus = await apiCode.getSingleMissionStatus(teamId: teamId);
     notifyListeners();
   }

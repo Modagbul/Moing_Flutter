@@ -53,100 +53,103 @@ class OngoingMissionPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 40.0,
-            ),
-            _Title(
-              mainText: '반복 미션',
-              countText:
-                  '${context.watch<OngoingMissionState>().repeatMissionStatus?.data.length ?? 0}',
-            ),
-            const SizedBox(
-              height: 12.0,
-            ),
-            if (state.repeatMissionStatus?.data.isNotEmpty ?? false)
-              ...state.repeatMissionStatus!.data
-                  .map(
-                    (e) => // ...
-                        BoardRepeatMissionCard(
-                      title: e.title,
-                      dueTo: e.dueTo,
-                      done: e.done,
-                      number: e.number,
-                      missionId: e.missionId,
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => MissionDetailPage(missionId: e.missionId),
-                        //   ),
-                        // );
-                      },
-                    ),
-                  )
-                  .toList()
-            else
-              const Expanded(
-                child: Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 40.0,
+              ),
+              _Title(
+                mainText: '반복 미션',
+                countText:
+                    '${context.watch<OngoingMissionState>().repeatMissionStatus?.data.length ?? 0}',
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              if (state.repeatMissionStatus?.data.isNotEmpty ?? false)
+                ...state.repeatMissionStatus!.data
+                    .map(
+                      (e) => // ...
+                          BoardRepeatMissionCard(
+                        title: e.title,
+                        dueTo: e.dueTo,
+                        done: e.done,
+                        number: e.number,
+                        missionId: e.missionId,
+                        onTap: () {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => MissionDetailPage(missionId: e.missionId),
+                          //   ),
+                          // );
+                        },
+                      ),
+                    )
+                    .toList()
+              else
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      '아직 미션이 없어요.',
+                      style: TextStyle(
+                        color: grayScaleGrey400,
+                        fontSize: 14.0,
+                      ),
                     ),
                   ),
                 ),
+              const SizedBox(
+                height: 40.0,
               ),
-            const SizedBox(
-              height: 40.0,
-            ),
-            _Title(
-              mainText: '한번 미션',
-              countText:
-                  '${context.watch<OngoingMissionState>().singleMissionStatus?.data.length ?? 0}',
-            ),
-            const SizedBox(
-              height: 12.0,
-            ),
-            if (state.singleMissionStatus?.data.isNotEmpty ?? false)
-              ...state.singleMissionStatus!.data
-                  .map(
-                    (e) => // ...
-                        BoardSingleMissionCard(
-                      title: e.title,
-                      status: e.status,
-                      dueTo: e.dueTo,
-                      missionType: e.missionType,
-                      missionId: e.missionId,
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => MissionDetailPage(missionId: e.missionId),
-                        //   ),
-                        // );
-                      },
-                    ),
-                  )
-                  .toList()
-            else
-              const Expanded(
-                child: Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
+              _Title(
+                mainText: '한번 미션',
+                countText:
+                    '${context.watch<OngoingMissionState>().singleMissionStatus?.data.length ?? 0}',
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              if (state.singleMissionStatus?.data.isNotEmpty ?? false)
+                ...state.singleMissionStatus!.data
+                    .map(
+                      (e) => // ...
+                          BoardSingleMissionCard(
+                        title: e.title,
+                        status: e.status,
+                        dueTo: e.dueTo,
+                        missionType: e.missionType,
+                        missionId: e.missionId,
+                        onTap: () {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => MissionDetailPage(missionId: e.missionId),
+                          //   ),
+                          // );
+                        },
+                      ),
+                    )
+                    .toList()
+              else
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      '아직 미션이 없어요.',
+                      style: TextStyle(
+                        color: grayScaleGrey400,
+                        fontSize: 14.0,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            const Spacer(),
-            _BottomButton(),
-          ],
+              const Spacer(),
+              _BottomButton(),
+            ],
+          ),
         ),
       ),
     );

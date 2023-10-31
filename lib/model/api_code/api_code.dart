@@ -8,6 +8,7 @@ import 'package:moing_flutter/model/profile/profile_model.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 
+import '../response/board_completed_mission_response.dart';
 import '../response/board_repeat_mission_response.dart';
 import '../response/board_single_mission_response.dart';
 
@@ -180,7 +181,7 @@ class ApiCode {
     required int teamId,
   }) async {
     String apiUrl =
-        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/board/single'; // API URL을 확인해주세요.
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/board/single';
 
     try {
       ApiResponse<BoardSingleMissionResponse>? apiResponse =
@@ -201,6 +202,35 @@ class ApiCode {
       }
     } catch (e) {
       log('한번 미션 상태 조회 실패: $e');
+    }
+    return null;
+  }
+
+  Future<BoardCompletedMissionResponse?> getCompletedMissionStatus({
+    required int teamId,
+  }) async {
+    String apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/board/finish';
+
+    try {
+      ApiResponse<BoardCompletedMissionResponse>? apiResponse =
+      await call.makeRequest<BoardCompletedMissionResponse>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) {
+          log('Server response: $data'); // 서버 응답 로그 출력
+          return BoardCompletedMissionResponse.fromJson(data);
+        },
+      );
+
+      if (apiResponse.data != null) {
+        log('완료된 미션 상태 조회 성공: ${apiResponse.data}');
+        return apiResponse.data!;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('완료된 미션 상태 조회 실패: $e');
     }
     return null;
   }
