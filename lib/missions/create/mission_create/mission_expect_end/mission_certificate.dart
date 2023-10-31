@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/missions/create/const/mission_create_text_list.dart';
 import 'package:moing_flutter/missions/create/missions_create_state.dart';
 import 'package:provider/provider.dart';
 
@@ -53,12 +54,7 @@ class MissionCertificate extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            context
-                                    .watch<MissionCreateState>()
-                                    .missionCountList[
-                                context
-                                    .watch<MissionCreateState>()
-                                    .missionCountIndex],
+                            missionCountList[context.watch<MissionCreateState>().missionCountIndex],
                             style: buttonTextStyle.copyWith(
                                 color: grayScaleGrey200),
                           ),
@@ -124,7 +120,7 @@ class MissionCertificate extends StatelessWidget {
               child: Text(
     context.watch<MissionCreateState>().formattedTime.length > 1
     ? context.watch<MissionCreateState>().formattedTime
-        : '10:00',
+        : '12:00',
                 style: contentTextStyle.copyWith(color: grayScaleGrey100),
               ),
             ),

@@ -30,6 +30,7 @@ import 'package:moing_flutter/make_group/group_create_photo_page.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
 import 'package:moing_flutter/mypage/alram_setting_page.dart';
@@ -102,6 +103,7 @@ class MoingApp extends StatelessWidget {
             MissionsGroupPage.routeName: (context) => MissionsGroupPage.route(context),
             MissionsCreatePage.routeName: (context) => MissionsCreatePage.route(context),
             MissionFirePage.routeName: (context) => MissionFirePage.route(context),
+            MissionProvePage.routeName: (context) => MissionProvePage.route(context),
             TextAuthPage.routeName:(context) => TextAuthPage.route(context),
             LinkAuthPage.routeName:(context) => LinkAuthPage.route(context),
             SkipMissionPage.routeName:(context) => SkipMissionPage.route(context),
