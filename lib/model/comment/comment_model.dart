@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class CommentData {
   final int boardCommentId;
   final String content;
@@ -18,6 +20,7 @@ class CommentData {
   });
 
   factory CommentData.fromJson(Map<String, dynamic> json) {
+    log(json.toString());
     return CommentData(
       boardCommentId: json['boardCommentId'] as int,
       content: json['content'] as String,

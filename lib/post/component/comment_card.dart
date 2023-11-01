@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
+import 'package:moing_flutter/post/post_detail_state.dart';
+import 'package:provider/provider.dart';
 
 class CommentCard extends StatelessWidget {
   final CommentData commentData;
@@ -62,7 +64,11 @@ class _Header extends StatelessWidget {
         const Spacer(),
         if (commentData.isWriter)
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              context
+                  .read<PostDetailState>()
+                  .deleteComment(boardCommentId: commentData.boardCommentId);
+            },
             child: const Text(
               '삭제',
               style: TextStyle(

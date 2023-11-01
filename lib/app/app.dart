@@ -34,8 +34,8 @@ import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
 import 'package:moing_flutter/mypage/alram_setting_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
-import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
+import 'package:moing_flutter/post/post_update_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
 import '../board/screen/board_mission_screen.dart';
@@ -125,6 +125,7 @@ class MoingApp extends StatelessWidget {
             PostMainPage.routeName:(context) => PostMainPage.route(context),
             PostDetailPage.routeName:(context) => PostDetailPage.route(context),
             PostCreatePage.routeName:(context) => PostCreatePage.route(context),
+            PostUpdatePage.routeName:(context) => PostUpdatePage.route(context),
 
             ProfileSettingPage.routeName:(context) => ProfileSettingPage.route(context),
 

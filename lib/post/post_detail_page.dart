@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/component/icon_text_button.dart';
+import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/response/get_all_comments_response.dart';
 import 'package:moing_flutter/post/component/comment_card.dart';
 import 'package:moing_flutter/post/post_detail_state.dart';
+
 import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
@@ -172,6 +175,63 @@ class PostDetailPage extends StatelessWidget {
           Navigator.of(context).pop();
         },
       ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            showPostControlBottomSheet(context: context);
+          },
+          icon: const Icon(Icons.more_vert),
+        )
+      ],
+    );
+  }
+
+  void showPostControlBottomSheet({
+    required BuildContext context,
+  }) {
+    showModalBottomSheet(
+      backgroundColor: grayScaleGrey600,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24.0),
+        ),
+      ),
+      builder: (_) {
+        final screenHeight = MediaQuery.of(context).size.height;
+        return SizedBox(
+          height: screenHeight * 0.30,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                IconTextButton(
+                  onPressed: () {
+                    context.read<PostDetailState>().navigatePostUpdatePage();
+                  },
+                  icon: 'asset/image/icon_edit.png',
+                  text: '게시글 수정하기',
+                ),
+                IconTextButton(
+                  onPressed: () {
+                    context.read<PostDetailState>().deletePost();
+                  },
+                  icon: 'asset/image/icon_delete.png',
+                  text: '게시글 삭제하기',
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: defaultButtonStyle,
+                  child: const Text('닫기'),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -179,7 +239,6 @@ class PostDetailPage extends StatelessWidget {
     AllCommentData? allCommentData =
         context.watch<PostDetailState>().allCommentData;
     List<CommentData> commentList = allCommentData?.commentBlocks ?? [];
-
 
     return SingleChildScrollView(
       child: Padding(

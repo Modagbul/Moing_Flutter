@@ -276,6 +276,83 @@ class ApiCode {
     return null;
   }
 
+  void deleteComment({
+    required int teamId,
+    required int boardId,
+    required int boardCommentId,
+  }) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/$boardId/comment/$boardCommentId';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        log('게시글 댓글 삭제 성공: ${apiResponse.data}');
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('게시글 댓글 삭제 실패: $e');
+    }
+    return null;
+  }
+
+  void deletePost({
+    required int teamId,
+    required int boardId,
+  }) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/board/$boardId';
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        log('게시글 삭제 성공: ${apiResponse.message}');
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('게시글 삭제 실패: $e');
+    }
+    return null;
+  }
+
+  void putUpdatePostOrNotice({
+    required int teamId,
+    required int boardId,
+    required CreatePostData createPostData,
+  }) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/board/$boardId';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'PUT',
+        body: createPostData.toJson(),
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        log('게시글/공지 수정 성공: ${apiResponse.data}');
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('게시글/공지 수정 실패: $e');
+    }
+    return null;
+  }
+
 // void makeMissionAPI() async {
 //   var teamId = 6;
 //   apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';

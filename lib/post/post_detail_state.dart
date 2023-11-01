@@ -5,6 +5,7 @@ import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/request/create_comment_request.dart';
 import 'package:moing_flutter/model/response/get_all_comments_response.dart';
+import 'package:moing_flutter/post/post_update_page.dart';
 
 class PostDetailState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
@@ -69,7 +70,29 @@ class PostDetailState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteComment(){
+  void deleteComment({required int boardCommentId}){
+    apiCode.deleteComment(teamId: teamId, boardId: boardId, boardCommentId: boardCommentId);
+    allCommentData?.commentBlocks.removeWhere((commentBlock) {
+      return commentBlock.boardCommentId == boardCommentId;
+    });
+    notifyListeners();
+  }
 
+  void deletePost(){
+    apiCode.deletePost(teamId: teamId, boardId: boardId);
+    notifyListeners();
+    Navigator.pop(context);
+    Navigator.pop(context);
+  }
+
+  void navigatePostUpdatePage(){
+    Navigator.pushNamed(
+      context,
+      PostUpdatePage.routeName,
+      arguments: {
+        'teamId': teamId,
+        'boardId': boardId,
+      },
+    );
   }
 }
