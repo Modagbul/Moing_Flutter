@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
+import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/post/post_create_state.dart';
 import 'package:moing_flutter/utils/text_field/outlined_text_field.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +65,29 @@ class PostCreatePage extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.close),
         onPressed: () {
-          Navigator.of(context).pop();
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  WarningDialog(
+                    title: '게시글 작성을 멈추시겠어요?',
+                    content: '나가시면 입력하신 내용을 잃게 됩니다',
+                    onConfirm: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    onCanceled: () {
+                      Navigator.of(context).popUntil(
+                          (route) => route.settings.name == '/post/main');
+                    },
+                    leftText: '나가기',
+                    rightText: '계속 진행하기',
+                  ),
+                ],
+              );
+            },
+          );
         },
       ),
     );

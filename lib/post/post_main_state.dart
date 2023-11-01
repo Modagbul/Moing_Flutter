@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
 import 'package:moing_flutter/post/post_create_page.dart';
+import 'package:moing_flutter/post/post_detail_page.dart';
 
 class PostMainState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
   final int teamId;
 
-  NoticeData? postData;
+  AllPostData? allPostData;
 
   PostMainState({
     required this.context,
@@ -31,11 +32,22 @@ class PostMainState extends ChangeNotifier {
   }
 
   void getAllPost() async {
-    postData = await apiCode.getAllPostData(teamId: teamId);
+    allPostData = await apiCode.getAllPostData(teamId: teamId);
     notifyListeners();
   }
 
   void navigatePostCreatePage() {
     Navigator.pushNamed(context, PostCreatePage.routeName, arguments: teamId);
+  }
+
+  void navigatePostDetailPage({required int boardId}) {
+    Navigator.pushNamed(
+      context,
+      PostDetailPage.routeName,
+      arguments: {
+        'teamId': teamId,
+        'boardId': boardId,
+      },
+    );
   }
 }

@@ -7,7 +7,7 @@ import 'package:moing_flutter/post/component/post_card.dart';
 import 'package:moing_flutter/post/post_main_state.dart';
 import 'package:provider/provider.dart';
 
-class PostMainPage extends StatelessWidget {
+class PostMainPage extends StatefulWidget {
   static const routeName = '/post/main';
 
   const PostMainPage({super.key});
@@ -32,8 +32,25 @@ class PostMainPage extends StatelessWidget {
   }
 
   @override
+  State<PostMainPage> createState() => _PostMainPageState();
+}
+
+class _PostMainPageState extends State<PostMainPage> {
+
+  @override
+  void initState() {
+    context.read<PostMainState>().getAllPost();
+    super.initState();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    context.read<PostMainState>().getAllPost();
+    super.setState(fn);
+  }
+  @override
   Widget build(BuildContext context) {
-    NoticeData? postData = context.watch<PostMainState>().postData;
+    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
 
     return Scaffold(
       backgroundColor: grayScaleGrey900,
@@ -41,7 +58,7 @@ class PostMainPage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            (postData?.noticeNum == 0 && postData?.notNoticeNum == 0)
+            (allPostData?.noticeNum == 0 && allPostData?.postNum == 0)
                 ? const Center(
                     child: Text(
                       '아직 게시글이 없어요,\n첫 게시글을 올려보세요!',
@@ -105,7 +122,7 @@ class _Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    NoticeData? postData = context.watch<PostMainState>().postData;
+    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
 
     return Column(
       children: [
@@ -114,7 +131,7 @@ class _Notice extends StatelessWidget {
             horizontal: 20.0,
             vertical: 5.0,
           ),
-          child: _renderNoticeHeader(noticeNum: postData?.noticeNum ?? 0),
+          child: _renderNoticeHeader(noticeNum: allPostData?.noticeNum ?? 0),
         ),
         const SizedBox(height: 8.0),
         Padding(
@@ -147,17 +164,24 @@ class _Notice extends StatelessWidget {
   }
 
   Widget _renderNoticeScrollBody({required BuildContext context}) {
-    NoticeData? postData = context.read<PostMainState>().postData;
+    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: postData?.noticeBlocks
-                .map((notice) => NoticeCard(
-                      commentNum: notice.commentNum,
-                      content: notice.content,
-                      nickName: notice.writerNickName,
-                      title: notice.title,
+        children: allPostData?.noticeBlocks
+                .map((notice) => GestureDetector(
+                      onTap: () {
+                        context
+                            .read<PostMainState>()
+                            .navigatePostDetailPage(boardId: notice.boardId);
+                      },
+                      child: NoticeCard(
+                        commentNum: notice.commentNum,
+                        content: notice.content,
+                        nickName: notice.writerNickName,
+                        title: notice.title,
+                      ),
                     ))
                 .toList() ??
             [],
@@ -209,20 +233,24 @@ class _Post extends StatelessWidget {
   }
 
   Widget _renderPostScrollBody({required BuildContext context}) {
-    NoticeData? postData = context.watch<PostMainState>().postData;
+    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
     return ListView.builder(
-      itemCount: postData?.notNoticeBlocks.length ?? 0,
+      itemCount: allPostData?.postBlocks.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
-        return Column(
-          children: postData?.notNoticeBlocks
-                  .map((post) => PostCard(
-                        commentNum: post.commentNum,
-                        content: post.content,
-                        nickName: post.writerNickName,
-                        title: post.title,
-                      ))
-                  .toList() ??
-              [],
+        final post = allPostData!.postBlocks[index];
+
+        return GestureDetector(
+          onTap: () {
+            context
+                .read<PostMainState>()
+                .navigatePostDetailPage(boardId: post.boardId);
+          },
+          child: PostCard(
+            commentNum: post.commentNum,
+            content: post.content,
+            nickName: post.writerNickName,
+            title: post.title,
+          ),
         );
       },
     );

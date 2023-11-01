@@ -17,8 +17,9 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: MediaQuery.of(context).size.width * 0.9,
+      decoration: const BoxDecoration(color: Colors.transparent),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
