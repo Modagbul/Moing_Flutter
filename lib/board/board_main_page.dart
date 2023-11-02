@@ -3,6 +3,7 @@ import 'package:moing_flutter/board/screen/board_goal_screen.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/board_mission_screen.dart';
 import 'package:moing_flutter/board/component/board_main_bottom_sheet.dart';
+import 'package:moing_flutter/board/screen/board_mission_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
@@ -21,6 +22,9 @@ class BoardMainPage extends StatefulWidget {
       providers: [
         ChangeNotifierProvider(
             create: (_) => BoardMainState(context: context, teamId: teamId)),
+        ChangeNotifierProvider(
+            create: (_) =>
+                BoardMissionState(context: context)),
       ],
       builder: (context, _) {
         return const BoardMainPage();
@@ -124,7 +128,7 @@ class _BoardMainPageState extends State<BoardMainPage>
       ),
       builder: (BuildContext context) {
         return BoardMainBottomSheet(
-          teamId : teamId,
+          teamId: teamId,
         );
       },
     );

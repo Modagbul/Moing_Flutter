@@ -52,6 +52,7 @@ class APICall {
       if(response.statusCode == 200) {
         return ApiResponse.fromJson(responseBody, fromJson);
       } else {
+        print('에러코드 : ${response.statusCode}');
         await exception.throwErrorMessage(responseBody['errorCode']);
         // errorCode가 담긴 body 그대로 반환
         return ApiResponse.fromJson(responseBody, fromJson);

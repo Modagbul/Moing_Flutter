@@ -3,7 +3,22 @@ import 'package:flutter/material.dart';
 import '../../const/color/colors.dart';
 
 class BoardSingleMissionCard extends StatelessWidget {
-  const BoardSingleMissionCard({super.key});
+  final String title;
+  final String status;
+  final String dueTo;
+  final String missionType;
+  final int missionId;
+  final VoidCallback onTap;
+
+  const BoardSingleMissionCard({
+    super.key,
+    required this.title,
+    required this.status,
+    required this.dueTo,
+    required this.missionType,
+    required this.missionId,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +36,9 @@ class BoardSingleMissionCard extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  'asset/image/board_nopass.png',
+                  status == 'SKIP'
+                      ? 'asset/image/board_icon_nopass.png'
+                      : 'asset/image/board_icon_pass.png',
                   width: 36.0,
                   height: 36.0,
                 ),
@@ -39,9 +56,9 @@ class BoardSingleMissionCard extends StatelessWidget {
                         const SizedBox(
                           width: 4.0,
                         ),
-                        const Text(
-                          '13시간 11분 후 종료',
-                          style: TextStyle(
+                        Text(
+                          dueTo,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0,
                             color: grayScaleGrey550,
@@ -50,10 +67,10 @@ class BoardSingleMissionCard extends StatelessWidget {
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 12.0),
+                      padding: const EdgeInsets.only(top: 12.0),
                       child: Text(
-                        '작업한 내용 인증하기',
-                        style: TextStyle(
+                        title,
+                        style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.w600,
                           color: grayScaleGrey100,
@@ -62,8 +79,8 @@ class BoardSingleMissionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Spacer(),
-                CompleteButton(),
+                const Spacer(),
+                status == 'SKIP' ? _SkipButton() : _CompleteButton(),
               ],
             ),
           ),
@@ -73,7 +90,8 @@ class BoardSingleMissionCard extends StatelessWidget {
   }
 }
 
-class CompleteButton extends StatelessWidget {
+
+class _CompleteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -91,10 +109,41 @@ class CompleteButton extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).pop(true);
         },
-        child: Text(
+        child: const Text(
           '완료하기',
           style: TextStyle(
             color: grayScaleGrey700,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SkipButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 87,
+      height: 43,
+      margin: const EdgeInsets.only(right: 16.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: grayScaleGrey500,
+          padding: const EdgeInsets.all(12.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+        ),
+        onPressed: () {
+          Navigator.of(context).pop(true);
+        },
+        child: const Text(
+          '현황보기',
+          style: TextStyle(
+            color: grayScaleGrey300,
             fontSize: 16.0,
             fontWeight: FontWeight.w600,
           ),

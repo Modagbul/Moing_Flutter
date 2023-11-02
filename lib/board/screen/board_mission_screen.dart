@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/screen/ongoing_misson_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -9,13 +10,19 @@ import 'ongoing_misson_page.dart';
 class BoardMissionScreen extends StatefulWidget {
   static const routeName = '/board/mission';
 
-  const BoardMissionScreen({Key? key}) : super(key: key);
+  const BoardMissionScreen({super.key});
 
   static route(BuildContext context) {
+    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
+    final int teamId = arguments as int;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (_) => BoardMissionState(context: context)),
+        ChangeNotifierProvider(
+            create: (_) =>
+                OngoingMissionState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
         return const BoardMissionScreen();
@@ -29,16 +36,29 @@ class BoardMissionScreen extends StatefulWidget {
 
 class _BoardMissionScreenState extends State<BoardMissionScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BoardMissionState>().initTabController(
+        tabController: TabController(
+          length: 2,
+          vsync: this,
+        ),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final tabController = context.select<BoardMissionState, TabController?>(
+          (state) => state.tabController,
+    );
+
+    if (tabController == null) {
+      return Container();
+    }
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
@@ -51,31 +71,34 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
                 right: 0,
                 child: Container(
                   height: 1.0, // 원하는 높이 설정
-                  color: grayScaleGrey550, // 회색으로 설정
+                  color: grayScaleGrey600, // 회색으로 설정
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 210), // 오른쪽에 여백 주기
-                child: TabBar(
-                  controller: _tabController,
-                  indicatorColor: grayScaleGrey200,
-                  labelColor: grayScaleGrey200,
-                  unselectedLabelColor: grayScaleGrey550,
-                  tabs: [
-                    _customTab(text: '진행중 미션'),
-                    _customTab(text: '종료된 미션'),
-                  ],
-                  labelPadding: EdgeInsets.zero, // 탭바 내부의 기본 패딩 제거
+                padding: const EdgeInsets.only(right:170), // 오른쪽에 여백 주기
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: TabBar(
+                    controller: tabController,
+                    indicatorColor: grayScaleGrey200,
+                    labelColor: grayScaleGrey200,
+                    unselectedLabelColor: grayScaleGrey550,
+                    tabs: [
+                      _customTab(text: '진행중 미션'),
+                      _customTab(text: '종료된 미션'),
+                    ],
+                    labelPadding: EdgeInsets.zero,
+                  ),
                 ),
               ),
             ],
           ),
           Expanded(
             child: TabBarView(
-              controller: _tabController,
-              children: const [
-                OngoingMissionPage(),
-                CompletedMissionPage(),
+              controller: tabController,
+              children: [
+                OngoingMissionPage.route(context),
+                CompletedMissionPage.route(context),
               ],
             ),
           ),
@@ -87,18 +110,15 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
   Tab _customTab({required String text}) {
     return Tab(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8), // 텍스트 크기에 따라 여백 조정
+        padding: const EdgeInsets.symmetric(horizontal: 8), // 텍스트 크기에 따라 여백 조정
         child: Text(
           text,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 }

@@ -25,3 +25,9 @@ const TextStyle buttonTextStyle = TextStyle(
   fontSize: 18.0,
   fontWeight: FontWeight.w600,
 );
+
+const TextStyle middleTextStyle = TextStyle(
+  color: grayScaleGrey200,
+  fontSize: 20,
+  fontWeight: FontWeight.w600,
+);

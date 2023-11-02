@@ -3,20 +3,29 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
+import 'package:moing_flutter/missions/create/const/mission_create_text_list.dart';
+import 'package:moing_flutter/model/api_generic.dart';
+import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/request/make_mission_request.dart';
+import 'package:moing_flutter/model/request/make_team_request.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 
 class MissionCreateState extends ChangeNotifier {
   final BuildContext context;
+  final int teamId;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   final ruleController = TextEditingController();
   final FocusNode titleFocusNode = FocusNode();
   late FixedExtentScrollController scrollController;
+  late FixedExtentScrollController timeScrollController;
 
   int missionCountIndex = 1;
+  int timeCountIndex = 12;
 
   TextStyle ts = const TextStyle(
       fontWeight: FontWeight.w700, fontSize: 20, color: grayScaleGrey100);
@@ -40,15 +49,6 @@ class MissionCreateState extends ChangeNotifier {
     '휴대폰 6시간 이하 쓰기',
   ];
 
-  final List<String> missionCountList = [
-    '주 2회',
-    '주 3회',
-    '주 4회',
-    '주 5회',
-    '주 6회',
-    '주 7회',
-  ];
-
   String title = '';
   String content = '';
   String rule = '';
@@ -62,18 +62,22 @@ class MissionCreateState extends ChangeNotifier {
 
   MissionCreateState({
     required this.context,
+    required this.teamId,
   }) {
     initState();
   }
 
   void initState() {
     log('Instance "MissionCreateState" has been created');
+    print('teamId : $teamId');
     titleController.addListener(_onTitleTextChanged);
     titleFocusNode.addListener(onTitleFocusChanged);
     contentController.addListener(_onContentTextChanged);
     ruleController.addListener(_onRuleTextChanged);
     scrollController =
         FixedExtentScrollController(initialItem: missionCountIndex);
+    timeScrollController =
+        FixedExtentScrollController(initialItem: timeCountIndex);
   }
 
   @override
@@ -88,6 +92,7 @@ class MissionCreateState extends ChangeNotifier {
     contentController.dispose();
     ruleController.dispose();
     scrollController.dispose();
+    timeScrollController.dispose();
     super.dispose();
   }
 
@@ -163,11 +168,8 @@ class MissionCreateState extends ChangeNotifier {
                 Navigator.of(context).pop(true);
               },
               onCanceled: () {
-                // Navigator.pushNamedAndRemoveUntil(
-                //   context,
-                //   MainPage.routeName,
-                //       (route) => false,
-                // );
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               leftText: '나가기',
               rightText: '계속 진행하기',
@@ -272,7 +274,7 @@ class MissionCreateState extends ChangeNotifier {
     );
   }
 
-  // 마감 날짜 선택 시 IOS 날짜 선택 모달
+  /// 마감 날짜 선택 시 IOS 날짜 선택 모달
   void datePicker() {
     DatePicker.showDatePicker(context,
         showTitleActions: true,
@@ -285,18 +287,71 @@ class MissionCreateState extends ChangeNotifier {
     }, currentTime: DateTime.now(), locale: LocaleType.ko);
   }
 
+  /// 마감 시간 선택 시 IOS 시간 선택 모달
   void timePicker() {
-    DatePicker.showTimePicker(
-      context,
-      showTitleActions: true,
-      onConfirm: (time) {
-        formattedTime = '${time.hour.toString().padLeft(2, '0')}:00';
-        notifyListeners();
-      },
-      currentTime: DateTime.now(),
-      locale: LocaleType.ko,
+    timeScrollController.dispose();
+    timeScrollController =
+        FixedExtentScrollController(initialItem: timeCountIndex);
+
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => Container(
+        color: Colors.white,
+        height: 300,  // 높이를 약간 조절하여 버튼에 공간을 확보
+        child: Column(
+          children: [
+            Container(
+              color: Colors.grey[200],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CupertinoButton(
+                    child: Text('취소'),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Picker 닫기
+                    },
+                  ),
+                  CupertinoButton(
+                    child: Text('확인'),
+                    onPressed: () {
+                      formattedTime = timeCountList[timeCountIndex].replaceAll("시", ":00");
+                      notifyListeners();
+                      Navigator.of(context).pop(); // Picker 닫기
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: CupertinoPicker(
+                scrollController: timeScrollController,
+                looping: true,
+                itemExtent: 48,
+                onSelectedItemChanged: (int index) {
+                  timeCountIndex = index;
+                  notifyListeners();
+                },
+                children: timeCountList
+                    .map(
+                      (item) => Center(
+                    child: Text(
+                      item,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                )
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
+
 
   /// 미션 제목 시 생기는 바텀 모달
   void openBottomModal() {
@@ -381,7 +436,50 @@ class MissionCreateState extends ChangeNotifier {
       print('미션 제목 : $title');
       print('미션 내용 : $content');
       print('인증 규칙 : $rule');
-      print('마감 날짜 : $formattedDate');
+
+      String way = '';
+      switch(selectedMethod) {
+        case '텍스트로 인증하기':
+          way = 'TEXT';
+          break;
+        case '사진으로 인증하기':
+          way = 'PHOTO';
+          break;
+        case '하이퍼링크로 인증하기':
+          way = 'LINK';
+          break;
+      }
+
+      String dueTo = '$formattedDate $formattedTime:00.000';
+      print('인증 방법 : $way');
+      print('마감 시간 : $dueTo');
+      Navigator.of(context).pop();
+      final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';
+      final APICall call = APICall();
+
+      // 단일 미션 시
+      MakeMissionData data = MakeMissionData(
+          title: title,
+          dueTo: dueTo,
+          rule: rule,
+          content: content,
+          number: 1,
+          type: 'ONCE',
+          way: way);
+
+      try {
+        ApiResponse<Map<String, dynamic>> apiResponse =
+        await call.makeRequest<Map<String, dynamic>>(
+          url: apiUrl,
+          method: 'POST',
+          body: data.toJson(),
+          fromJson: (data) => data as Map<String, dynamic>,
+        );
+        log('미션 생성 성공: ${apiResponse.data}');
+        // Navigator.of(context).pop();
+      } catch (e) {
+        log('미션 생성 실패: $e');
+      }
     }
   }
 }
