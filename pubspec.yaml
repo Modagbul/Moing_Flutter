@@ -71,6 +71,7 @@ dependencies:
   lottie: ^2.5.0
   flutter_localization: ^0.1.14
   flutter_datetime_picker_plus: ^2.1.0
+  speech_balloon: ^0.0.4
 
 
 dev_dependencies:

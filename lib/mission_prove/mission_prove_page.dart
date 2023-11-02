@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/component/mission_current_situation.dart';
-import 'package:moing_flutter/mission_prove/component/mission_prove_app_bar.dart';
-import 'package:moing_flutter/mission_prove/component/mission_prove_tabbar.dart';
+import 'package:moing_flutter/mission_prove/component/prove_button/mission_prove_button.dart';
+import 'package:moing_flutter/mission_prove/component/single_my_mission_not_prove.dart';
+import 'package:moing_flutter/mission_prove/component/single_my_mission_prove.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:moing_flutter/mission_prove/sliver/mission_sliver_appbar.dart';
 import 'package:moing_flutter/mission_prove/sliver/mission_sliver_tabbar_header.dart';
@@ -48,46 +49,31 @@ class _MissionProvePageState extends State<MissionProvePage>
     return Scaffold(
       backgroundColor: grayBackground,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            MissionSliverAppBar(),
-            MissionCurrentSituation(),
-            MissionSliverPersistentHeader(),
-            sliverSizedBox(height: 20),
-            SliverToBoxAdapter(
-              child: Container(
-                color: Colors.white,
-                height: 300,
-              ),
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                MissionSliverAppBar(),
+                MissionCurrentSituation(),
+                MissionSliverPersistentHeader(),
+                sliverSizedBox(height: 20),
+                /// 나의 인증이면서 아직 인증 안한 경우
+                if(context.watch<MissionProveState>().isMeOrEveryProved &&
+                context.watch<MissionProveState>().myMissionList != null &&
+                    !context.watch<MissionProveState>().isMeProved)
+                SingleMyMissionNotProved(),
+                /// 나의 인증이면서 인증 한 경우
+                if(context.watch<MissionProveState>().isMeOrEveryProved &&
+                    context.watch<MissionProveState>().myMissionList != null &&
+                    context.watch<MissionProveState>().isMeProved)
+                SingleMyMissionProved(),
+              ],
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                color: Colors.red,
-                height: 300,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                color: Colors.blue,
-                height: 300,
-              ),
-            ),
-            // Column(
-            //   children: [
-            //     SingleChildScrollView(
-            //       child: Column(
-            //         children: [
-            //           MissionProveTabBar(),
-            //           // Container(
-            //           //   width: double.infinity,
-            //           //   height: 300,
-            //           //   color: Colors.red,
-            //           // ),
-            //         ],
-            //       )
-            //     )
-            //   ],
-            // ),
+
+            /// 인증 안한 경우
+            // MissionNotProveButton(),
+            /// 인증 한 경우
+            MissionProveButton(),
           ],
         ),
       ),

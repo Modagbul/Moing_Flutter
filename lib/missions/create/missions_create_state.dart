@@ -433,11 +433,9 @@ class MissionCreateState extends ChangeNotifier {
         titleController.text.isNotEmpty &&
         contentController.text.isNotEmpty &&
         ruleController.text.isNotEmpty) {
-      print('미션 제목 : $title');
-      print('미션 내용 : $content');
-      print('인증 규칙 : $rule');
-
+      int repeatMission;
       String way = '';
+      String dueTo = '';
       switch(selectedMethod) {
         case '텍스트로 인증하기':
           way = 'TEXT';
@@ -450,10 +448,20 @@ class MissionCreateState extends ChangeNotifier {
           break;
       }
 
-      String dueTo = '$formattedDate $formattedTime:00.000';
-      print('인증 방법 : $way');
-      print('마감 시간 : $dueTo');
-      Navigator.of(context).pop();
+      // 반복 미션 변경한 경우
+      if(isRepeatSelected) {
+        repeatMission = missionCountIndex + 2;
+        dueTo = '2099-12-31 00:00:00.000';
+      } else {
+        if(formattedDate.length < 1) {
+          print('날짜를 선택해주세요...');
+        } else if (formattedTime.length < 1) {
+          print('시간을 선택해주세요...');
+        }
+        repeatMission = 1;
+        dueTo = '$formattedDate $formattedTime:00.000';
+      }
+
       final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';
       final APICall call = APICall();
 
@@ -463,9 +471,15 @@ class MissionCreateState extends ChangeNotifier {
           dueTo: dueTo,
           rule: rule,
           content: content,
-          number: 1,
-          type: 'ONCE',
+          number: repeatMission,
+          type: isRepeatSelected == true ? 'REPEAT' : 'ONCE',
           way: way);
+
+      print('------ 미션 생성 -----');
+      print('repeatMission : $repeatMission');
+      print('인증 방법 : $way');
+      print('마감 시간 : $dueTo');
+      print('타입 : ${data.type}');
 
       try {
         ApiResponse<Map<String, dynamic>> apiResponse =
@@ -476,7 +490,7 @@ class MissionCreateState extends ChangeNotifier {
           fromJson: (data) => data as Map<String, dynamic>,
         );
         log('미션 생성 성공: ${apiResponse.data}');
-        // Navigator.of(context).pop();
+        Navigator.of(context).pop();
       } catch (e) {
         log('미션 생성 실패: $e');
       }
