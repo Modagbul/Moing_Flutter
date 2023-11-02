@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/request/create_post_request.dart';
 
-class PostCreateState extends ChangeNotifier {
+class PostUpdateState extends ChangeNotifier {
   ApiCode apiCode = ApiCode();
 
   final BuildContext context;
   final int teamId;
+  final int boardId;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
@@ -16,22 +17,23 @@ class PostCreateState extends ChangeNotifier {
   bool isCheckedNotice = false;
   bool isButtonEnabled = false;
 
-  PostCreateState({
+  PostUpdateState({
     required this.teamId,
+    required this.boardId,
     required this.context,
   }) {
     initState();
   }
 
   void initState() {
-    log('Instance "PostCreateState" has been created');
+    log('Instance "PostUpdateState" has been created');
   }
 
   @override
   void dispose() {
     titleController.dispose();
     contentController.dispose();
-    log('Instance "PostCreateState" has been removed');
+    log('Instance "PostUpdateState" has been removed');
     super.dispose();
   }
 
@@ -56,9 +58,10 @@ class PostCreateState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void requestCreatePost() {
-    apiCode.postCreatePostOrNotice(
+  void requestUpdatePost() {
+    apiCode.putUpdatePostOrNotice(
       teamId: teamId,
+      boardId: boardId,
       createPostData: CreatePostData(
         title: titleController.value.text,
         content: contentController.value.text,

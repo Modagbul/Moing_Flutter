@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
+import 'package:moing_flutter/post/post_main_page.dart';
 
 class BoardMainState extends ChangeNotifier {
   final BuildContext context;
@@ -19,7 +20,7 @@ class BoardMainState extends ChangeNotifier {
     required this.teamId,
   }) {
     initState();
-
+    getSingleBoard(teamId: teamId);
   }
 
   void initState() {
@@ -42,5 +43,10 @@ class BoardMainState extends ChangeNotifier {
   void getSingleBoard({required int teamId}) async {
     singleBoardData = await apiCode.getSingleBoard(teamId: teamId);
     teamInfo = singleBoardData?.teamInfo;
+    notifyListeners();
+  }
+
+  void navigatePostMainPage(){
+    Navigator.pushNamed(context, PostMainPage.routeName, arguments: teamId);
   }
 }

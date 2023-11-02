@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
+import 'package:moing_flutter/model/response/get_all_posts_response.dart';
 import 'package:moing_flutter/post/component/notice_card.dart';
 import 'package:moing_flutter/post/component/post_card.dart';
 import 'package:moing_flutter/post/post_main_state.dart';
 import 'package:provider/provider.dart';
 
-class PostMainPage extends StatelessWidget {
+class PostMainPage extends StatefulWidget {
   static const routeName = '/post/main';
 
-  const PostMainPage({Key? key}) : super(key: key);
+  const PostMainPage({super.key});
 
   static route(BuildContext context) {
+    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
+    final int teamId = arguments as int;
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PostMainState(context: context)),
+        ChangeNotifierProvider(
+          create: (_) => PostMainState(
+            context: context,
+            teamId: teamId,
+          ),
+        ),
       ],
       builder: (context, _) {
         return const PostMainPage();
@@ -23,26 +32,56 @@ class PostMainPage extends StatelessWidget {
   }
 
   @override
+  State<PostMainPage> createState() => _PostMainPageState();
+}
+
+class _PostMainPageState extends State<PostMainPage> {
+
+  @override
+  void initState() {
+    context.read<PostMainState>().getAllPost();
+    super.initState();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    context.read<PostMainState>().getAllPost();
+    super.setState(fn);
+  }
+  @override
   Widget build(BuildContext context) {
+    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
+
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context),
       body: SafeArea(
         child: Stack(
           children: [
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 12.0),
-                _Notice(),
-                SizedBox(height: 32.0),
-                Expanded(child: _Post()),
-              ],
-            ),
+            (allPostData?.noticeNum == 0 && allPostData?.postNum == 0)
+                ? const Center(
+                    child: Text(
+                      '아직 게시글이 없어요,\n첫 게시글을 올려보세요!',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                        color: grayScaleGrey400,
+                      ),
+                    ),
+                  )
+                : const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 12.0),
+                      _Notice(),
+                      SizedBox(height: 32.0),
+                      Expanded(child: _Post()),
+                    ],
+                  ),
             Align(
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: context.read<PostMainState>().navigatePostCreatePage,
                 style: brightButtonStyle.copyWith(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
@@ -83,7 +122,7 @@ class _Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const noticeNum = 1;
+    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
 
     return Column(
       children: [
@@ -92,7 +131,7 @@ class _Notice extends StatelessWidget {
             horizontal: 20.0,
             vertical: 5.0,
           ),
-          child: _renderNoticeHeader(noticeNum: noticeNum),
+          child: _renderNoticeHeader(noticeNum: allPostData?.noticeNum ?? 0),
         ),
         const SizedBox(height: 8.0),
         Padding(
@@ -103,7 +142,7 @@ class _Notice extends StatelessWidget {
     );
   }
 
-  Widget _renderNoticeHeader({required noticeNum}) {
+  Widget _renderNoticeHeader({required int noticeNum}) {
     return Row(
       children: [
         Image.asset(
@@ -124,25 +163,28 @@ class _Notice extends StatelessWidget {
     );
   }
 
-  Widget _renderNoticeScrollBody({required context}) {
-    return const SingleChildScrollView(
+  Widget _renderNoticeScrollBody({required BuildContext context}) {
+    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
+
+    return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: [
-          NoticeCard(
-            nickName: 'nickName',
-            title: 'title',
-            content: 'content',
-            commentNum: '1',
-          ),
-          SizedBox(width: 8.0),
-          NoticeCard(
-            commentNum: '1',
-            nickName: 'nickName',
-            title: 'title',
-            content: 'content',
-          ),
-        ],
+        children: allPostData?.noticeBlocks
+                .map((notice) => GestureDetector(
+                      onTap: () {
+                        context
+                            .read<PostMainState>()
+                            .navigatePostDetailPage(boardId: notice.boardId);
+                      },
+                      child: NoticeCard(
+                        commentNum: notice.commentNum,
+                        content: notice.content,
+                        nickName: notice.writerNickName,
+                        title: notice.title,
+                      ),
+                    ))
+                .toList() ??
+            [],
       ),
     );
   }
@@ -159,38 +201,56 @@ class _Post extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _renderPostHeader(),
-          const SizedBox(height: 12.0),
-          Expanded(child: _renderPostScrollBody()),
+          const SizedBox(height: 24.0),
+          Expanded(child: _renderPostScrollBody(context: context)),
         ],
       ),
     );
   }
 
   Widget _renderPostHeader() {
-    return const Text(
-      '게시글',
-      style: TextStyle(
-        color: grayScaleGrey400,
-        fontSize: 16.0,
-        fontWeight: FontWeight.w600,
-      ),
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '게시글',
+          style: TextStyle(
+            color: grayScaleGrey400,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Text(
+          '날짜순',
+          style: TextStyle(
+            color: grayScaleGrey400,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _renderPostScrollBody() {
+  Widget _renderPostScrollBody({required BuildContext context}) {
+    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
     return ListView.builder(
-      itemCount: 6,
+      itemCount: allPostData?.postBlocks.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
-        return const Column(
-          children: [
-            SizedBox(width: 12.0),
-            PostCard(
-              nickName: 'nickName',
-              title: 'title',
-              content: 'content',
-              commentNum: '1',
-            ),
-          ],
+        final post = allPostData!.postBlocks[index];
+
+        return GestureDetector(
+          onTap: () {
+            context
+                .read<PostMainState>()
+                .navigatePostDetailPage(boardId: post.boardId);
+          },
+          child: PostCard(
+            commentNum: post.commentNum,
+            content: post.content,
+            nickName: post.writerNickName,
+            title: post.title,
+          ),
         );
       },
     );

@@ -109,7 +109,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                 color: grayScaleGrey500,
               ),
               child: Text(
-                '${context.read<BoardMainState>().singleBoardData?.boardNum?? 0}',
+                '${context.watch<BoardMainState>().singleBoardData?.boardNum?? 100}',
                 style: const TextStyle(
                   color: grayScaleGrey100,
                   fontSize: 16.0,
@@ -120,7 +120,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
           ],
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: context.watch<BoardMainState>().navigatePostMainPage,
           style: defaultButtonStyle.copyWith(
             padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
               const EdgeInsets.symmetric(
@@ -169,14 +169,14 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                   ),
                   const SizedBox(width: 4.0),
                   Text(
-                    '${context.read<BoardMainState>().singleBoardData?.teamInfo.numOfMember ?? 0}명',
+                    '${context.watch<BoardMainState>().singleBoardData?.teamInfo.numOfMember ?? 0}명',
                     style: bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(width: 12.0),
                   Text(
-                    context.read<BoardMainState>().singleBoardData?.teamInfo.category ?? '',
+                    context.watch<BoardMainState>().singleBoardData?.teamInfo.category ?? '',
                     style: bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
@@ -229,7 +229,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
   }
 
   Widget _buildExpandedGridView({required screenWidth}) {
-    List<TeamMemberInfo>? memberList = context.read<BoardMainState>().singleBoardData?.teamInfo.teamMemberInfoList;
+    List<TeamMemberInfo>? memberList = context.watch<BoardMainState>().singleBoardData?.teamInfo.teamMemberInfoList;
 
     return Expanded(
       child: GridView.builder(
@@ -285,7 +285,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
         ),
         const SizedBox(height: 8.0),
         Text(
-          context.read<BoardMainState>().singleBoardData?.teamInfo.introduction ?? '',
+          context.watch<BoardMainState>().singleBoardData?.teamInfo.introduction ?? '',
           style: const TextStyle(
             color: grayScaleGrey400,
             fontSize: 14.0,

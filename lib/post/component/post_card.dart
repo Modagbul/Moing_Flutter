@@ -5,7 +5,7 @@ class PostCard extends StatelessWidget {
   final String nickName;
   final String title;
   final String content;
-  final String commentNum;
+  final int commentNum;
 
   const PostCard({
     super.key,
@@ -17,8 +17,9 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: MediaQuery.of(context).size.width * 0.9,
+      decoration: const BoxDecoration(color: Colors.transparent),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -95,7 +96,7 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget _renderNoticeCardFooter({required String commentNum}) {
+  Widget _renderNoticeCardFooter({required int commentNum}) {
     return Row(
       children: [
         Image.asset(
@@ -105,7 +106,7 @@ class PostCard extends StatelessWidget {
         ),
         const SizedBox(width: 4.0),
         Text(
-          commentNum,
+          '$commentNum',
           style: const TextStyle(
             color: grayScaleGrey400,
             fontSize: 14.0,
