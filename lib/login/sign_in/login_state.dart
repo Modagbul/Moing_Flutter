@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:http/http.dart' as http;
+import 'package:moing_flutter/fcm/fcm_state.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/utils/api/api_error.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -80,6 +82,11 @@ class LoginState extends ChangeNotifier {
   /// 카카오 토큰을 백엔드에 전송하는 함수
   Future<void> sendKakaoTokenToBackend(String token) async {
     try {
+      String? fcmToken = await getFCMToken();
+      if(fcmToken == null) {
+        return ;
+      }
+
       final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signIn/kakao';
 
       final response = await http.post(
@@ -88,7 +95,8 @@ class LoginState extends ChangeNotifier {
           'Content-Type': 'application/json;charset=UTF-8', // 요청 헤더 설정
         },
         body: jsonEncode(<String, String>{
-          'token': token, // POST 요청 본문에 들어갈 토큰
+          'socialToken': token,
+          'fcmToken': fcmToken,
         }),
       );
 
@@ -122,6 +130,21 @@ class LoginState extends ChangeNotifier {
       print('카카오 - 백엔드 연동 간 에러 발생 : ${e.toString()}');
     }
   }
+
+  Future<String?> getFCMToken() async {
+    String? fcmToken;
+
+    await Future.microtask(() async {
+      final fcmState = context.read<FCMState>();
+
+      await fcmState.requestPermission();
+      fcmToken = await fcmState.updateToken();
+      print('update fcm Token : $fcmToken');
+    });
+
+    return fcmToken;
+  }
+
 
   /// IOS 13 버전 앱 로그인
   Future<void> signInWithApple() async {
@@ -164,6 +187,11 @@ class LoginState extends ChangeNotifier {
   /// 애플 소셜 로그인 요청 API
   Future<void> appleLoginSendToken(String token) async {
     try {
+      String? fcmToken = await getFCMToken();
+      if(fcmToken == null) {
+        return ;
+      }
+
       final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signIn/apple';
 
       final response = await http.post(
@@ -172,7 +200,8 @@ class LoginState extends ChangeNotifier {
           'Content-Type': 'application/json;charset=UTF-8', // 요청 헤더 설정
         },
         body: jsonEncode(<String, String>{
-          'token': token, // POST 요청 본문에 들어갈 토큰
+          'socialToken': token,
+          'fcmToken': fcmToken,
         }),
       );
 
