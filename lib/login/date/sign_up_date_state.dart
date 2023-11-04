@@ -48,20 +48,6 @@ class SignUpDateState extends ChangeNotifier {
   }
 
   Future<bool?> signUp(String birthDate) async {
-    String? fcmToken;
-
-    await Future.microtask(() async {
-      final fcmState = context.read<FCMState>();
-
-      await fcmState.requestPermission();
-      fcmToken = await fcmState.updateToken();
-      print('update fcm Token : $fcmToken');
-    });
-
-    if (fcmToken == null) {
-      print('fcmToken값을 가져올 수 없습니다..');
-      return null;
-    }
     final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signUp';
 
     switch (gender) {
@@ -80,7 +66,6 @@ class SignUpDateState extends ChangeNotifier {
       nickName: nickname,
       gender: gender,
       birthDate: birthDate,
-      fcmToken: fcmToken!,
     );
 
     try {

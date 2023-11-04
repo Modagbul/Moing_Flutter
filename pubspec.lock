@@ -1026,6 +1026,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  speech_balloon:
+    dependency: "direct main"
+    description:
+      name: speech_balloon
+      sha256: "83f4ffa854a1e912c9e1611f221fad61dfbcd16d2a21c19c31b61a31c20feaa9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   stack_trace:
     dependency: transitive
     description:

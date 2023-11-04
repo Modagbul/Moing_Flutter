@@ -79,8 +79,8 @@ class HomeScreen extends StatelessWidget {
                     child: Text('탈퇴 테스트'),
                   ),
                   ElevatedButton(
-                    onPressed: context.read<HomeScreenState>().apiTest,
-                    child: Text('API 테스트 버튼'),
+                    onPressed: context.read<HomeScreenState>().moveMyMission,
+                    child: Text('나의 미션 조회'),
                   ),
                 ],
               ),

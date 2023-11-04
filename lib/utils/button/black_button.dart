@@ -5,10 +5,12 @@ import 'package:moing_flutter/const/style/text.dart';
 class BlackButton extends StatelessWidget {
   final void Function() onPressed;
   final String text;
+  final bool borderSide;
 
   const BlackButton({
     required this.onPressed,
     required this.text,
+    this.borderSide = true,
     super.key});
 
   @override
@@ -18,10 +20,10 @@ class BlackButton extends StatelessWidget {
       height: 62,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            side: BorderSide(
+            side: borderSide == true ? BorderSide(
               color: grayScaleGrey400,
               width: 1.0,
-            ),
+            ) : null,
             backgroundColor: Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
@@ -84,6 +85,11 @@ class HomeScreenState extends ChangeNotifier {
   void teamPressed(int teamId) {
     /// 목표보드 페이지로 이동
     Navigator.pushNamed(context, BoardMainPage.routeName, arguments: teamId);
+  }
+
+  void moveMyMission() {
+   // 미션 조회 페이지로 이동
+    Navigator.pushNamed(context, MissionProvePage.routeName);
   }
 
   void apiTest() {
