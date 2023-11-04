@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../const/color/colors.dart';
 
+import 'package:intl/intl.dart';
+
+
 class BoardCompletedMissionCard extends StatelessWidget {
   final String title;
   final String status;
@@ -75,7 +78,7 @@ class BoardCompletedMissionCard extends StatelessWidget {
                                 width: 4.0,
                               ),
                               Text(
-                                dueTo,
+                                formatDate(dueTo),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.0,
@@ -145,4 +148,9 @@ class _MissionTag extends StatelessWidget {
       ],
     );
   }
+}
+
+String formatDate(String dueTo) {
+  DateTime dueDate = DateTime.parse(dueTo);
+  return DateFormat('yyyy.MM.dd').format(dueDate) + ' 종료'; // "yyyy.MM.dd" 형식으로 변환
 }

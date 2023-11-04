@@ -1,7 +1,5 @@
-// board_repeat_mission_card.dart
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-
 import '../../const/color/colors.dart';
 
 class BoardRepeatMissionCard extends StatelessWidget {
@@ -47,7 +45,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                         radius: 60.0,
                         lineWidth: 3.0,
                         animation: true,
-                        percent: 1,
+                        percent: done / number,
                         center: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -88,41 +86,32 @@ class BoardRepeatMissionCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.0, left: 8.0),
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600,
-                        color: grayScaleGrey100,
-                      ),
-                    ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
+                    color: grayScaleGrey100,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          '주 ${number}회',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.0,
-                            color: grayScaleGrey550,
-                          ),
-                        ),
-                      ],
-                    ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: Text(
+                  '주 ${number}회',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.0,
+                    color: grayScaleGrey550,
                   ),
-                ],
+                ),
               ),
             ],
           ),
           const Positioned(
-            bottom: 70,
+            bottom: 10,
             left: 10.0,
             child: _Tag(),
           ),

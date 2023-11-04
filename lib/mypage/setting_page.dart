@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
 import '../make_group/component/warning_dialog.dart';
+import '../model/response/sign_out_response.dart';
+import '../utils/shared_preferences/shared_preferences.dart';
 import 'component/list_custom_tile.dart';
 
 class SettingPage extends StatelessWidget {
@@ -69,11 +71,35 @@ class SettingPage extends StatelessWidget {
                                 title: '정말 로그아웃하시겠어요?',
                                 content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
                                 onConfirm: () async {
-                                  Navigator.of(context).pop(); // 다이얼로그를 닫음
-                                  // 로그아웃 로직을 수행하세요. 예를 들면, 사용자 세션을 삭제하고 로그인 화면으로 이동하는 코드
+                                  Navigator.of(context).pop();
+                                  // // SharedPreferences에서 사용자 ID를 불러옴
+                                  // SharedPreferencesInfo prefsInfo = SharedPreferencesInfo();
+                                  //
+                                  // String? userIdString = await prefsInfo.loadPreferencesData('userId');
+                                  // int? userId;
+                                  // if (userIdString != null) {
+                                  //   userId = int.tryParse(userIdString);
+                                  // }
+                                  //
+                                  // // 사용자 ID가 null이 아니면 로그아웃 함수 호출
+                                  // if (userId != null) {
+                                  //   // 로그아웃 로직을 수행
+                                  //   SignOutResponse? response = await signOut(userId: userId);
+                                  //   if (response != null && response.isSuccess) {
+                                  //     // 로그아웃 성공 로직
+                                  //     print('로그아웃 성공: ${response.message}');
+                                  //     // 로그인 화면으로 이동하는 코드
+                                  //   } else {
+                                  //     // 로그아웃 실패 로직
+                                  //     print('로그아웃 실패: ${response?.message ?? 'Unknown error'}');
+                                  //   }
+                                  // } else {
+                                  //   // 사용자 ID가 null인 경우 오류 메시지 출력
+                                  //   print('로그아웃 실패: 사용자 ID가 없습니다.');
+                                  // }
                                 },
                                 onCanceled: () {
-                                  Navigator.of(context).pop(); // 다이얼로그를 닫음
+                                  Navigator.of(context).pop();
                                 },
                                 leftText: '로그아웃',
                                 rightText: '남아있기',

@@ -105,6 +105,9 @@ class LoginState extends ChangeNotifier {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
 
+        print('Access Token: $accessToken');
+        print('Refresh Token: $refreshToken');
+
         // sharedPreferences를 이용하여 accessToken, refreshToken 저장
         await tokenManagement.saveToken(accessToken, refreshToken);
         print('카카오JWT : $accessToken');
