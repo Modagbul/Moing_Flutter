@@ -11,6 +11,7 @@ import 'package:moing_flutter/model/response/get_single_board.dart';
 import '../response/board_completed_mission_response.dart';
 import '../response/board_repeat_mission_response.dart';
 import '../response/board_single_mission_response.dart';
+import '../response/sign_out_response.dart';
 
 class ApiCode {
   final APICall call = APICall();
@@ -152,22 +153,24 @@ class ApiCode {
   Future<RepeatMissionStatusResponse?> getRepeatMissionStatus(
       {required int teamId}) async {
     apiUrl =
-        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/board/repeat';
+    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/board/repeat';
 
     try {
-      ApiResponse<RepeatMissionStatusResponse>? apiResponse =
-          await call.makeRequest<RepeatMissionStatusResponse>(
+      ApiResponse<List<RepeatMission>>? apiResponse =
+      await call.makeRequest<List<RepeatMission>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
-          log('Server response: $data'); // 서버 응답 로그 출력
-          return RepeatMissionStatusResponse.fromJson(data);
+          log('반복 미션 Server response: $data');
+          return (data as List<dynamic>).map((item) =>
+              RepeatMission.fromJson(item as Map<String, dynamic>)).toList();
         },
       );
 
       if (apiResponse.data != null) {
         log('반복 미션 상태 조회 성공: ${apiResponse.data}');
-        return apiResponse.data!;
+        return RepeatMissionStatusResponse(
+            isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
         throw Exception('ApiResponse.data is Null');
       }
@@ -184,19 +187,19 @@ class ApiCode {
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/board/single';
 
     try {
-      ApiResponse<BoardSingleMissionResponse>? apiResponse =
-      await call.makeRequest<BoardSingleMissionResponse>(
+      ApiResponse<List<Mission>>? apiResponse =
+      await call.makeRequest<List<Mission>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
-          log('Server response: $data'); // 서버 응답 로그 출력
-          return BoardSingleMissionResponse.fromJson(data);
+          log('한번 미션 Server response: $data');
+          return (data as List<dynamic>).map((item) => Mission.fromJson(item as Map<String, dynamic>)).toList();
         },
       );
 
       if (apiResponse.data != null) {
         log('한번 미션 상태 조회 성공: ${apiResponse.data}');
-        return apiResponse.data!;
+        return BoardSingleMissionResponse(isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
         throw Exception('ApiResponse.data is Null');
       }
@@ -213,19 +216,19 @@ class ApiCode {
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/board/finish';
 
     try {
-      ApiResponse<BoardCompletedMissionResponse>? apiResponse =
-      await call.makeRequest<BoardCompletedMissionResponse>(
+      ApiResponse<List<EndedMission>>? apiResponse =
+      await call.makeRequest<List<EndedMission>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
-          log('Server response: $data'); // 서버 응답 로그 출력
-          return BoardCompletedMissionResponse.fromJson(data);
+          log('종료된 미션 Server response: $data');
+          return (data as List<dynamic>).map((item) => EndedMission.fromJson(item as Map<String, dynamic>)).toList();
         },
       );
 
       if (apiResponse.data != null) {
         log('완료된 미션 상태 조회 성공: ${apiResponse.data}');
-        return apiResponse.data!;
+        return BoardCompletedMissionResponse(isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
         throw Exception('ApiResponse.data is Null');
       }
@@ -234,6 +237,35 @@ class ApiCode {
     }
     return null;
   }
+
+  Future<SignOutResponse?> signOut({
+    required int userId,
+  }) async {
+    String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/signOut';
+
+    try {
+      ApiResponse<SignOutResponse>? apiResponse =
+      await call.makeRequest<SignOutResponse>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) {
+          log('Server response: $data'); // 서버 응답 로그 출력
+          return SignOutResponse.fromJson(data);
+        },
+      );
+
+      if (apiResponse.data != null) {
+        log('로그아웃 성공: ${apiResponse.data}');
+        return apiResponse.data!;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('로그아웃 실패: $e');
+    }
+    return null;
+  }
+
 
 // void makeMissionAPI() async {
 //   var teamId = 6;

@@ -13,11 +13,12 @@ class BoardSingleMissionResponse {
     return BoardSingleMissionResponse(
       isSuccess: json['isSuccess'],
       message: json['message'],
-      data: (json['data'] as List)
-          .map((item) => Mission.fromJson(item))
+      data: (json['data'] as List<dynamic>)
+          .map((item) => Mission.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }
+
 }
 
 class Mission {

@@ -104,7 +104,6 @@ class RepeatMissionCard extends StatelessWidget {
                 ),
               ),
             ),
-            /// ? 연동 안 하나?
             const Padding(
               padding: EdgeInsets.only(top: 8.0, left: 8.0),
               child: Text(

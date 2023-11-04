@@ -52,107 +52,114 @@ class OngoingMissionPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: grayScaleGrey900,
+      backgroundColor: grayBackground,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 40.0,
-              ),
-              _Title(
-                mainText: '반복 미션',
-                countText:
-                    '${context.watch<OngoingMissionState>().repeatMissionStatus?.data.length ?? 0}',
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              if (state.repeatMissionStatus?.data.isNotEmpty ?? false)
-                ...state.repeatMissionStatus!.data
-                    .map(
-                      (e) => // ...
-                          BoardRepeatMissionCard(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 40.0,
+                ),
+                _Title(
+                  mainText: '반복 미션',
+                  countText:
+                      '${context.watch<OngoingMissionState>().repeatMissionStatus?.data.length ?? 0}',
+                ),
+                const SizedBox(
+                  height: 12.0,
+                ),
+                if (state.repeatMissionStatus?.data.isNotEmpty ?? false)
+                  GridView.builder(
+                    shrinkWrap: true, // GridView가 SingleChildScrollView 내부에 있기 때문에 필요합니다.
+                    physics: NeverScrollableScrollPhysics(), // 부모 스크롤과 충돌을 피하기 위해 사용합니다.
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.0, // 카드 사이의 가로 간격
+                      mainAxisSpacing: 70.0, // 카드 사이의 세로 간격
+                    ),
+                    itemCount: state.repeatMissionStatus!.data.length,
+                    itemBuilder: (context, index) {
+                      final e = state.repeatMissionStatus!.data[index];
+                      return BoardRepeatMissionCard(
                         title: e.title,
                         dueTo: e.dueTo,
                         done: e.done,
                         number: e.number,
                         missionId: e.missionId,
                         onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => MissionDetailPage(missionId: e.missionId),
-                          //   ),
-                          // );
+                          // ...
                         },
-                      ),
-                    )
-                    .toList()
-              else
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      '아직 미션이 없어요.',
-                      style: TextStyle(
-                        color: grayScaleGrey400,
-                        fontSize: 14.0,
+                      );
+                    },
+                  )
+                else
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        '아직 미션이 없어요.',
+                        style: TextStyle(
+                          color: grayScaleGrey400,
+                          fontSize: 14.0,
+                        ),
                       ),
                     ),
                   ),
+                const SizedBox(height: 120.0),
+                _Title(
+                  mainText: '한번 미션',
+                  countText:
+                      '${context.watch<OngoingMissionState>().singleMissionStatus?.data.length ?? 0}',
                 ),
-              const SizedBox(
-                height: 40.0,
-              ),
-              _Title(
-                mainText: '한번 미션',
-                countText:
-                    '${context.watch<OngoingMissionState>().singleMissionStatus?.data.length ?? 0}',
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              if (state.singleMissionStatus?.data.isNotEmpty ?? false)
-                ...state.singleMissionStatus!.data
-                    .map(
-                      (e) => // ...
-                          BoardSingleMissionCard(
-                        title: e.title,
-                        status: e.status,
-                        dueTo: e.dueTo,
-                        missionType: e.missionType,
-                        missionId: e.missionId,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => MissionDetailPage(missionId: e.missionId),
-                          //   ),
-                          // );
-                        },
-                      ),
-                    )
-                    .toList()
-              else
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      '아직 미션이 없어요.',
-                      style: TextStyle(
-                        color: grayScaleGrey400,
-                        fontSize: 14.0,
+                const SizedBox(
+                  height: 12.0,
+                ),
+                if (state.singleMissionStatus?.data.isNotEmpty ?? false)
+                  ...state.singleMissionStatus!.data
+                      .map(
+                        (e) => // ...
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: BoardSingleMissionCard(
+                          title: e.title,
+                          status: e.status,
+                          dueTo: e.dueTo,
+                          missionType: e.missionType,
+                          missionId: e.missionId,
+                          onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => MissionDetailPage(missionId: e.missionId),
+                              //   ),
+                              // );
+                          },
+                        ),
+                            ),
+                      )
+                      .toList()
+                else
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        '아직 미션이 없어요.',
+                        style: TextStyle(
+                          color: grayScaleGrey400,
+                          fontSize: 14.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              const Spacer(),
-              const _BottomButton(),
-            ],
+                const SizedBox(height: 100.0),
+              ],
+            ),
           ),
         ),
       ),
+      floatingActionButton: const _BottomButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
@@ -199,36 +206,23 @@ class _BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(
-              MissionsCreatePage.routeName,
-              arguments: context.read<OngoingMissionState>().teamId,
-            );
-          },
-          style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all<Size>(
-              const Size(137, 51),
-            ),
-            backgroundColor: MaterialStateProperty.all<Color>(grayScaleGrey100),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32.0),
-              ),
-            ),
-          ),
-          child: const Text(
-            '만들기 +',
-            style: TextStyle(
-              color: grayScaleGrey700,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
+    return FloatingActionButton.extended(  // FloatingActionButton으로 변경
+      onPressed: () {
+        Navigator.of(context).pushNamed(
+          MissionsCreatePage.routeName,
+          arguments: context.read<OngoingMissionState>().teamId,
+        );
+      },
+      backgroundColor: grayScaleGrey100,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(32.0),
+      ),
+      label: const Text(
+        '만들기 +',
+        style: TextStyle(
+          color: grayScaleGrey700,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
         ),
       ),
     );

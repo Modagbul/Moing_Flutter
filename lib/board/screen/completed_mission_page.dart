@@ -43,52 +43,57 @@ class CompletedMissionPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: grayScaleGrey900,
+      backgroundColor: grayBackground,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 40.0,
-            ),
-            if (state.completedMissionStatus?.data.isNotEmpty ?? false)
-              ...state.completedMissionStatus!.data
-                  .map(
-                    (e) => // ...
-                        BoardCompletedMissionCard(
-                      title: e.title,
-                      status: e.status,
-                      dueTo: e.dueTo,
-                      missionType: e.missionType,
-                      missionId: e.missionId,
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => MissionDetailPage(missionId: e.missionId),
-                        //   ),
-                        // );
-                      },
-                    ),
-                  )
-                  .toList()
-            else
-              const Expanded(
-                child: Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 40.0,
+              ),
+              if (state.completedMissionStatus?.data.isNotEmpty ?? false)
+                ...state.completedMissionStatus!.data
+                    .map(
+                      (e) => // ...
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: BoardCompletedMissionCard(
+                        title: e.title,
+                        status: e.status,
+                        dueTo: e.dueTo,
+                        missionType: e.missionType,
+                        missionId: e.missionId,
+                        onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => MissionDetailPage(missionId: e.missionId),
+                            //   ),
+                            // );
+                        },
+                      ),
+                          ),
+                    )
+                    .toList()
+              else
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      '아직 미션이 없어요.',
+                      style: TextStyle(
+                        color: grayScaleGrey400,
+                        fontSize: 14.0,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            const Spacer(),
-            const _BottomButton(),
-          ],
+            ],
+          ),
         ),
       ),
+      floatingActionButton: const _BottomButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
@@ -98,36 +103,23 @@ class _BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(
-              MissionsCreatePage.routeName,
-              arguments: context.read<CompletedMissionState>().teamId,
-            );
-          },
-          style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all<Size>(
-              const Size(137, 51),
-            ),
-            backgroundColor: MaterialStateProperty.all<Color>(grayScaleGrey100),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32.0),
-              ),
-            ),
-          ),
-          child: const Text(
-            '만들기 +',
-            style: TextStyle(
-              color: grayScaleGrey700,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
+    return FloatingActionButton.extended(  // FloatingActionButton으로 변경
+      onPressed: () {
+        Navigator.of(context).pushNamed(
+          MissionsCreatePage.routeName,
+          arguments: context.read<CompletedMissionState>().teamId,
+        );
+      },
+      backgroundColor: grayScaleGrey100,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(32.0),
+      ),
+      label: const Text(
+        '만들기 +',
+        style: TextStyle(
+          color: grayScaleGrey700,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
         ),
       ),
     );

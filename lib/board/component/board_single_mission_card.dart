@@ -25,7 +25,7 @@ class BoardSingleMissionCard extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.of(context).size.width-40,
           height: 95,
           decoration: BoxDecoration(
             color: grayScaleGrey700,
@@ -36,9 +36,9 @@ class BoardSingleMissionCard extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  status == 'SKIP'
-                      ? 'asset/image/board_icon_nopass.png'
-                      : 'asset/image/board_icon_pass.png',
+                  status == 'SKIP' || status == 'COMPLETE'
+                      ? 'asset/image/board_icon_pass.png'
+                      : 'asset/image/board_icon_nopass.png', // default_image는 원하는 기본 이미지 경로로 변경하세요.
                   width: 36.0,
                   height: 36.0,
                 ),
@@ -57,7 +57,7 @@ class BoardSingleMissionCard extends StatelessWidget {
                           width: 4.0,
                         ),
                         Text(
-                          dueTo,
+                          formatDueTo(dueTo),
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0,
@@ -79,8 +79,8 @@ class BoardSingleMissionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Spacer(),
-                status == 'SKIP' ? _SkipButton() : _CompleteButton(),
+                Spacer(),
+                status == 'SKIP' || status == 'COMPLETE' ? _SkipButton() : _CompleteButton(),
               ],
             ),
           ),
@@ -151,4 +151,16 @@ class _SkipButton extends StatelessWidget {
       ),
     );
   }
+}
+
+String formatDueTo(String dueTo) {
+  DateTime dueDate = DateTime.parse(dueTo);
+  DateTime now = DateTime.now();
+
+  Duration difference = dueDate.difference(now);
+
+  int hours = difference.inHours;
+  int minutes = difference.inMinutes - hours * 60;
+
+  return '$hours시간 $minutes분 후 종료';
 }
