@@ -87,7 +87,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.only(left: 8, top: 12),
                 child: Text(
                   title,
                   style: const TextStyle(
@@ -98,7 +98,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.only(left: 8, top: 4),
                 child: Text(
                   '주 ${number}회',
                   style: const TextStyle(

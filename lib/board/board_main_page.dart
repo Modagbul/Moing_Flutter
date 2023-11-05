@@ -93,6 +93,7 @@ class _BoardMainPageState extends State<BoardMainPage>
   }) {
     return AppBar(
       backgroundColor: Colors.transparent,
+      elevation: 0,
       title: Text(title),
       centerTitle: false,
       leading: IconButton(

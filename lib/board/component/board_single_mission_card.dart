@@ -80,7 +80,7 @@ class BoardSingleMissionCard extends StatelessWidget {
                   ],
                 ),
                 Spacer(),
-                status == 'SKIP' || status == 'COMPLETE' ? _SkipButton() : _CompleteButton(),
+                status == 'SKIP' || status == 'COMPLETE' ? _SkipButton(onTap: onTap,) : _CompleteButton(onTap: onTap),
               ],
             ),
           ),
@@ -92,6 +92,12 @@ class BoardSingleMissionCard extends StatelessWidget {
 
 
 class _CompleteButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  _CompleteButton({
+    required this.onTap,
+});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,9 +112,7 @@ class _CompleteButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
         ),
-        onPressed: () {
-          Navigator.of(context).pop(true);
-        },
+        onPressed: onTap,
         child: const Text(
           '완료하기',
           style: TextStyle(
@@ -123,6 +127,12 @@ class _CompleteButton extends StatelessWidget {
 }
 
 class _SkipButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  _SkipButton({
+    required this.onTap,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -137,9 +147,7 @@ class _SkipButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
         ),
-        onPressed: () {
-          Navigator.of(context).pop(true);
-        },
+        onPressed: onTap,
         child: const Text(
           '현황보기',
           style: TextStyle(

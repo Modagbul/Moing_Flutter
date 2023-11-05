@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
@@ -71,14 +72,18 @@ class OngoingMissionPage extends StatelessWidget {
                 const SizedBox(
                   height: 12.0,
                 ),
-                if (state.repeatMissionStatus?.data.isNotEmpty ?? false)
+                if (state.repeatMissionStatus?.data != null &&
+                    state.repeatMissionStatus!.data.isNotEmpty)
                   GridView.builder(
-                    shrinkWrap: true, // GridView가 SingleChildScrollView 내부에 있기 때문에 필요합니다.
-                    physics: NeverScrollableScrollPhysics(), // 부모 스크롤과 충돌을 피하기 위해 사용합니다.
+                    shrinkWrap: true,
+                    // GridView가 SingleChildScrollView 내부에 있기 때문에 필요합니다.
+                    physics: NeverScrollableScrollPhysics(),
+                    // 부모 스크롤과 충돌을 피하기 위해 사용합니다.
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10.0, // 카드 사이의 가로 간격
                       mainAxisSpacing: 70.0, // 카드 사이의 세로 간격
+                      childAspectRatio: 170 / 237,
                     ),
                     itemCount: state.repeatMissionStatus!.data.length,
                     itemBuilder: (context, index) {
@@ -90,20 +95,25 @@ class OngoingMissionPage extends StatelessWidget {
                         number: e.number,
                         missionId: e.missionId,
                         onTap: () {
-                          // ...
+                          Navigator.of(context).pushNamed(
+                              MissionProvePage.routeName,
+                              arguments: {
+                                'isRepeated': true,
+                                'teamId':
+                                    context.read<OngoingMissionState>().teamId,
+                                'missionId': e.missionId,
+                              });
                         },
                       );
                     },
                   )
                 else
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        '아직 미션이 없어요.',
-                        style: TextStyle(
-                          color: grayScaleGrey400,
-                          fontSize: 14.0,
-                        ),
+                  Center(
+                    child: Text(
+                      '아직 미션이 없어요.',
+                      style: TextStyle(
+                        color: grayScaleGrey400,
+                        fontSize: 14.0,
                       ),
                     ),
                   ),
@@ -116,39 +126,42 @@ class OngoingMissionPage extends StatelessWidget {
                 const SizedBox(
                   height: 12.0,
                 ),
-                if (state.singleMissionStatus?.data.isNotEmpty ?? false)
+                if (state.singleMissionStatus?.data != null &&
+                    state.singleMissionStatus!.data.isNotEmpty)
                   ...state.singleMissionStatus!.data
                       .map(
                         (e) => // ...
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: BoardSingleMissionCard(
-                          title: e.title,
-                          status: e.status,
-                          dueTo: e.dueTo,
-                          missionType: e.missionType,
-                          missionId: e.missionId,
-                          onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => MissionDetailPage(missionId: e.missionId),
-                              //   ),
-                              // );
-                          },
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: BoardSingleMissionCard(
+                            title: e.title,
+                            status: e.status,
+                            dueTo: e.dueTo,
+                            missionType: e.missionType,
+                            missionId: e.missionId,
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                  MissionProvePage.routeName,
+                                  arguments: {
+                                    'isRepeated': false,
+                                    'teamId': context
+                                        .read<OngoingMissionState>()
+                                        .teamId,
+                                    'missionId': e.missionId,
+                                    // 'way': e.way,
+                                  });
+                            },
+                          ),
                         ),
-                            ),
                       )
                       .toList()
                 else
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        '아직 미션이 없어요.',
-                        style: TextStyle(
-                          color: grayScaleGrey400,
-                          fontSize: 14.0,
-                        ),
+                  Center(
+                    child: Text(
+                      '아직 미션이 없어요.',
+                      style: TextStyle(
+                        color: grayScaleGrey400,
+                        fontSize: 14.0,
                       ),
                     ),
                   ),
@@ -206,7 +219,8 @@ class _BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.extended(  // FloatingActionButton으로 변경
+    return FloatingActionButton.extended(
+      // FloatingActionButton으로 변경
       onPressed: () {
         Navigator.of(context).pushNamed(
           MissionsCreatePage.routeName,
