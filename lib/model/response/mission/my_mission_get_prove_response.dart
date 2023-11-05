@@ -26,6 +26,6 @@ class MyMissionProveData {
 
   @override
   String toString() {
-    return 'MyMissionProveData(archiveId: $archiveId, archive: $archive, createdDate: $createdDate, status: $status, count: $count, heartStatus: $heartStatus, hearts: $hearts)';
+    return 'MyMissionProveData(archiveId: $archiveId, archive: $archive, way: $way, createdDate: $createdDate, status: $status, count: $count, heartStatus: $heartStatus, hearts: $hearts)';
   }
 }
