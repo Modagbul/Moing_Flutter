@@ -6,6 +6,9 @@ import '../../const/color/colors.dart';
 
 class SkipMissionState extends ChangeNotifier {
   final BuildContext context;
+  final int teamId;
+  final int missionId;
+
   String? selectedCategory;
   bool isSelected = false;
 
@@ -13,6 +16,8 @@ class SkipMissionState extends ChangeNotifier {
 
   SkipMissionState({
     required this.context,
+    required this.teamId,
+    required this.missionId,
   }) {
     initState();
   }

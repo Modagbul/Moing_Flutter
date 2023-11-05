@@ -13,10 +13,13 @@ class SkipMissionPage extends StatelessWidget {
   const SkipMissionPage({super.key});
 
   static route(BuildContext context) {
+    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final int teamId = data['teamId'] as int;
+    final int missionId = data['missionId'] as int;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => SkipMissionState(context: context),
+          create: (context) => SkipMissionState(context: context, teamId: teamId, missionId: missionId),
           lazy: false,
         ),
       ],
@@ -137,6 +140,7 @@ class _NextBtn extends StatelessWidget {
                           content: '다음엔 꼭 모잉불을 키워주세요!',
                           onConfirm: () {
                             /// 수정해야함
+                            Navigator.of(context).pop(true);
                             Navigator.of(context).pop(true);
                           },
                         ),

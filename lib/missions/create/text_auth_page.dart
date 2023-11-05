@@ -11,10 +11,13 @@ class TextAuthPage extends StatelessWidget {
   const TextAuthPage({super.key});
 
   static route(BuildContext context) {
+    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final int teamId = data['teamId'] as int;
+    final int missionId = data['missionId'] as int;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => TextAuthState(context: context),
+          create: (context) => TextAuthState(context: context, teamId: teamId, missionId: missionId),
           lazy: false,
         ),
       ],
@@ -123,8 +126,7 @@ class _NextBtn extends StatelessWidget {
         ),
         onPressed: categoryState.isCategorySelected()
             ? () {
-          // 임시로 **
-          // categoryState.moveInfoPage();
+          categoryState.submit();
         }
             : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
         child: Text(

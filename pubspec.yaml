@@ -72,6 +72,9 @@ dependencies:
   flutter_localization: ^0.1.14
   flutter_datetime_picker_plus: ^2.1.0
   speech_balloon: ^0.0.4
+  intl: ^0.18.0
+  webview_flutter: ^4.4.2
+  url_launcher: ^6.1.14
 
 
 dev_dependencies:

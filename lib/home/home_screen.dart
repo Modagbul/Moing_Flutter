@@ -60,30 +60,6 @@ class HomeScreen extends StatelessWidget {
               ? HomeCardScroll()
                   : HomeNoCard(),
               const Spacer(),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        GroupFinishPage.routeName,
-                      );
-                    },
-                    child: Text('강제종료 테스트'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        GroupExitPage.routeName,
-                      );
-                    },
-                    child: Text('탈퇴 테스트'),
-                  ),
-                  ElevatedButton(
-                    onPressed: context.read<HomeScreenState>().moveMyMission,
-                    child: Text('나의 미션 조회'),
-                  ),
-                ],
-              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Align(

@@ -87,11 +87,6 @@ class HomeScreenState extends ChangeNotifier {
     Navigator.pushNamed(context, BoardMainPage.routeName, arguments: teamId);
   }
 
-  void moveMyMission() {
-   // 미션 조회 페이지로 이동
-    Navigator.pushNamed(context, MissionProvePage.routeName);
-  }
-
   void apiTest() {
     /// Team 소모임 개설
     // apiCode.makeTeamAPI();

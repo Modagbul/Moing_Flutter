@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
+import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 
 class MissionProveButton extends StatefulWidget {
@@ -89,6 +91,7 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
                         ],
                       ),
                     ),
+                    if(context.watch<MissionProveState>().missionWay.contains('사진'))
                     ElevatedButton(
                       onPressed: () {},
                       style: ButtonStyle(
@@ -135,10 +138,10 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
                       '불 던지러 가기',
                       style: buttonTextStyle,
                     ),
-                    SizedBox(width: 8), // 이미지와 텍스트 사이의 간격
+                    SizedBox(width: 8),
                     Image.asset(
-                      'asset/image/icon_fire_black.png', // 이미지 파일 경로
-                      height: 20, // 이미지 크기 설정
+                      'asset/image/icon_fire_black.png',
+                      height: 20,
                       width: 20,
                     ),
                   ],

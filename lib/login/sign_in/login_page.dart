@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/login/sign_in/component/custom_login_button.dart';
 import 'package:moing_flutter/login/sign_in/login_state.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:provider/provider.dart';
+import 'package:speech_balloon/speech_balloon.dart';
 
 class LoginPage extends StatelessWidget {
   static const routeName = '/sign/in';
@@ -31,12 +35,30 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 25.0),
-                  Image.asset(
-                    'asset/image/moing_icon_sign.png',
-                    width: 393,
-                    height: 403,
-                    fit: BoxFit.contain,
+                  const SizedBox(height: 80.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 64.0),
+                    child: SpeechBalloon(
+                      color: grayScaleGrey600,
+                      width: double.infinity,
+                      height: 118,
+                      borderRadius: 16,
+                      nipLocation: NipLocation.bottom,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          '열정 없는 자기계발 모임,\n오늘부터는 끝!',
+                          textAlign: TextAlign.center,
+                          style: headerTextStyle.copyWith(color: coralGrey100, fontWeight: FontWeight.w700,height: 1.4),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  Lottie.asset(
+                      'asset/graphic/big.json',
+                      width: 260,
+                      height: 260,
                   ),
                   const Spacer(),
                   CustomButton(

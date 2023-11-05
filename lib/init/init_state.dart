@@ -36,14 +36,8 @@ class InitState extends ChangeNotifier {
       ),
     );
 
-    String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
-
     /// 이전에 가입한 적 있는 유저
-    //Navigator.pushNamedAndRemoveUntil(context, MissionsCreatePage.routeName, (route) => false);
-    // Navigator.pushNamedAndRemoveUntil(context, MissionProvePage.routeName, (route) => false);
-    //Navigator.pushNamedAndRemoveUntil(context, MissionFirePage.routeName, (route) => false);
-
-    // String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
+    String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 
     //이전에 가입한 적 있는 유저
     // if (oldUser == 'true') {

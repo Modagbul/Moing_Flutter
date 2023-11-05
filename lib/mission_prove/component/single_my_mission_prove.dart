@@ -21,9 +21,20 @@ class SingleMyMissionProved extends StatelessWidget {
                 color: grayScaleGrey700,
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: Image.asset(
-                'asset/image/black.jpeg',
-              ),
+              child: context.watch<MissionProveState>().missionWay != null &&
+                  context.watch<MissionProveState>().missionWay.contains('사진')
+                  ? Image.network(
+                context.watch<MissionProveState>().myMissionList![0].archive,
+                fit: BoxFit.cover,
+              )
+                  : context.watch<MissionProveState>().missionWay != null &&
+                  context.watch<MissionProveState>().missionWay.contains('텍스트')
+                  ? Padding(
+                    padding: const EdgeInsets.only(left: 16.0, top: 60, bottom: 24, right: 32),
+                    child: Text(context.watch<MissionProveState>().myMissionList![0].archive,
+                    style: contentTextStyle.copyWith(color: grayScaleGrey200),),
+                  )
+                  : Text('아니'),
             ),
             Positioned(
               top: 0,

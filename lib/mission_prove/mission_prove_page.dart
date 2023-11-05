@@ -95,9 +95,11 @@ class _MissionProvePageState extends State<MissionProvePage>
             ),
 
             /// 인증 안한 경우
+            if(!context.watch<MissionProveState>().isMeProved || context.watch<MissionProveState>().isRepeated)
              MissionNotProveButton(),
             /// 인증 한 경우
-            //MissionProveButton(),
+            if(context.watch<MissionProveState>().isMeProved && !context.watch<MissionProveState>().isMeProved)
+            MissionProveButton(),
           ],
         ),
       ),

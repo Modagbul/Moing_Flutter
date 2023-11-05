@@ -1,11 +1,16 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:moing_flutter/model/api_generic.dart';
+import 'package:moing_flutter/model/api_response.dart';
 
 import '../../const/color/colors.dart';
 
 class LinkAuthState extends ChangeNotifier {
   final BuildContext context;
+  final int teamId;
+  final int missionId;
   String? selectedCategory;
   bool isSelected = false;
 
@@ -13,6 +18,8 @@ class LinkAuthState extends ChangeNotifier {
 
   LinkAuthState({
     required this.context,
+    required this.teamId,
+    required this.missionId,
   }) {
     initState();
   }
@@ -49,6 +56,31 @@ class LinkAuthState extends ChangeNotifier {
 
   Color getNextButtonTextColor() {
     return isCategorySelected() ? grayScaleGrey700 : grayScaleGrey500;
+  }
+
+  void submit() async {
+    print(textController.text);
+
+    final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
+    final APICall call = APICall();
+    Map<String, dynamic> data = {"status": 'COMPLETE', "archive": textController.text};
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'POST',
+        body: data,
+        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
+      );
+
+      notifyListeners();
+      if(apiResponse.data != null) {
+        Navigator.of(context).pop(true);
+      }
+    } catch (e) {
+      log('링크 인증 실패: $e');
+    }
   }
 
 // 사진 업로드 화면으로 이동

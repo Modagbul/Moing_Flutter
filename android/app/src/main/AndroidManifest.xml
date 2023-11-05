@@ -11,7 +11,8 @@
     <application
         android:label="모잉"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <!-- 안드로이드 APPLE LOGIN Redirect를 위한 Activity -->
         <activity
             android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
