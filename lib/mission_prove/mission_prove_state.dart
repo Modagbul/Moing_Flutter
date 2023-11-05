@@ -81,6 +81,7 @@ class MissionProveState with ChangeNotifier {
       }
       notifyListeners();
       print('내가 인증했나 ? $isMeProved');
+      print(myMissionList?.isEmpty);
     } catch (e) {
       log('나의 인증 조회 실패: $e');
     }
