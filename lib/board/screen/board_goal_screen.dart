@@ -24,7 +24,7 @@ class BoardGoalScreen extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        backgroundColor: grayBackground,
+        backgroundColor: grayScaleGrey900,
         body: SafeArea(
           child: Stack(
             children: [

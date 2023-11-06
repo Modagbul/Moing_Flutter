@@ -51,7 +51,7 @@ class MissionsAllPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: grayBackground,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

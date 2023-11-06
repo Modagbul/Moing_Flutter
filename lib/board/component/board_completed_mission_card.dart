@@ -33,7 +33,7 @@ class BoardCompletedMissionCard extends StatelessWidget {
             width: MediaQuery.of(context).size.width - 40,
             height: 124,
             decoration: BoxDecoration(
-              color: grayScaleGrey700,
+              color: grayScaleGrey600,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(

@@ -91,7 +91,7 @@ class MainPage extends StatelessWidget {
               onTap: (index) {
                 context.read<AppState>().mainIndex = index;
               },
-              backgroundColor: Colors.black,
+              backgroundColor: grayBackground,
               type: BottomNavigationBarType.fixed,
               unselectedItemColor: grayScaleGrey550,
               selectedItemColor: grayScaleGrey100,

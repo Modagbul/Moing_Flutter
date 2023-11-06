@@ -70,40 +70,6 @@ class MissionFireUser extends StatelessWidget {
                 ),
               );
             }),
-        const SizedBox(height: 62),
-        Container(
-          width: 190,
-          height: 62,
-          child: ElevatedButton(
-            onPressed: context.read<MissionFireState>().firePressed,
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(grayScaleGrey100),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32.0), // borderRadius 설정
-                ),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '불 던지기',
-                  style: buttonTextStyle.copyWith(
-                    color: grayScaleGrey900,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Image.asset(
-                  'asset/image/icon_fire_black.png',
-                  width: 24,
-                  height: 24,
-                )
-              ],
-            ),
-          ),
-        )
       ],
     );
   }

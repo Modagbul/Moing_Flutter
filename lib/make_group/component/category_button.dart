@@ -56,7 +56,7 @@ class _CategoryButtonState extends State<CategoryButton> {
         });
       },
       child: Container(
-        width: 353,
+        width: double.infinity,
         height: 64,
         child: ElevatedButton(
           style: ButtonStyle(

@@ -53,7 +53,7 @@ class MissionsGroupPage extends StatelessWidget {
       log('singleMissionData is not empty: $singleMissionData');
     }
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: grayBackground,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

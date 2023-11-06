@@ -33,7 +33,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 width: 170,
                 height: 170,
                 decoration: BoxDecoration(
-                  color: grayScaleGrey700,
+                  color: grayScaleGrey600,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -41,7 +41,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                   children: [
                     Center(
                       child: CircularPercentIndicator(
-                        backgroundColor: grayScaleGrey600,
+                        backgroundColor: grayScaleGrey500,
                         radius: 60.0,
                         lineWidth: 3.0,
                         animation: true,

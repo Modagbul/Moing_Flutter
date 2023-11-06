@@ -53,7 +53,7 @@ class OngoingMissionPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: grayBackground,
+      backgroundColor: grayScaleGrey900,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),

@@ -72,108 +72,123 @@ class GroupCreateCategoryPage extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
+          child: Stack(
             children: [
-              const SizedBox(height: 34.0),
-              const _Title(),
-              const SizedBox(height: 76.0),
-              const CategoryButton(
-                imagePath: 'asset/image/icon_sport.png', // 이미지 경로
-                buttonText: '스포츠/운동', // 버튼 텍스트
+              const SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: 160),
+                child: Column(
+                  children: [
+                    SizedBox(height: 34.0),
+                    _Title(),
+                    SizedBox(height: 76.0),
+                    CategoryButton(
+                      imagePath: 'asset/image/icon_sport.png', // 이미지 경로
+                      buttonText: '스포츠/운동', // 버튼 텍스트
+                    ),
+                    SizedBox(height: 8.0),
+                    CategoryButton(
+                      imagePath: 'asset/image/icon_life.png', // 이미지 경로
+                      buttonText: '생활습관 개선', // 버튼 텍스트
+                    ),
+                    SizedBox(height: 8.0),
+                    CategoryButton(
+                      imagePath: 'asset/image/icon_test.png', // 이미지 경로
+                      buttonText: '시험/취업준비', // 버튼 텍스트
+                    ),
+                    SizedBox(height: 8.0),
+                    CategoryButton(
+                      imagePath: 'asset/image/icon_study.png', // 이미지 경로
+                      buttonText: '스터디/공부', // 버튼 텍스트
+                    ),
+                    SizedBox(height: 8.0),
+                    CategoryButton(
+                      imagePath: 'asset/image/icon_read.png', // 이미지 경로
+                      buttonText: '독서', // 버튼 텍스트
+                    ),
+                    SizedBox(height: 8.0),
+                    CategoryButton(
+                      imagePath: 'asset/image/icon_etc.png', // 이미지 경로
+                      buttonText: '그외 자기계발', // 버튼 텍스트
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 8.0),
-              const CategoryButton(
-                imagePath: 'asset/image/icon_life.png', // 이미지 경로
-                buttonText: '생활습관 개선', // 버튼 텍스트
-              ),
-              const SizedBox(height: 8.0),
-              const CategoryButton(
-                imagePath: 'asset/image/icon_test.png', // 이미지 경로
-                buttonText: '시험/취업준비', // 버튼 텍스트
-              ),
-              const SizedBox(height: 8.0),
-              const CategoryButton(
-                imagePath: 'asset/image/icon_study.png', // 이미지 경로
-                buttonText: '스터디/공부', // 버튼 텍스트
-              ),
-              const SizedBox(height: 8.0),
-              const CategoryButton(
-                imagePath: 'asset/image/icon_read.png', // 이미지 경로
-                buttonText: '독서', // 버튼 텍스트
-              ),
-              const SizedBox(height: 8.0),
-              const CategoryButton(
-                imagePath: 'asset/image/icon_etc.png', // 이미지 경로
-                buttonText: '그외 자기계발', // 버튼 텍스트
-              ),
-              const SizedBox(height: 32.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
-                children: [
-                  Container(
-                    width: 172,
-                    height: 62,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: grayScaleGrey700,
-                        textStyle: const TextStyle(
-                          color: grayScaleGrey550,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        padding: const EdgeInsets.all(16.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        /// 버버벅 없앰 --> 시뮬레이터만 그런거 일수도 있어서 나중에 폰으로 봤을 때 괜찮으면 기존 간단 코드로 수정
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) =>
-                                ChangeNotifierProvider(
-                                  create: (_) => GroupCreateStartState(context: context),
-                                  child: GroupCreateStartPage(),
-                                ),
-                            transitionsBuilder: (context, animation1, animation2, child) {
-                              return child; // 애니메이션 없이 바로 child 위젯을 반환
-                            },
-                            transitionDuration: Duration(milliseconds: 0), // 전환 시간을 0으로 설정
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: 172,
+                        height: 62,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: grayScaleGrey700,
+                            textStyle: const TextStyle(
+                              color: grayScaleGrey550,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            padding: const EdgeInsets.all(16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
-                        );
-                      },
-                      child: const Text('이전으로'),
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Container(
-                    width: 172,
-                    height: 62,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: categoryState.getNextButtonColor(),
-                        padding: const EdgeInsets.all(16.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                      onPressed: categoryState.isCategorySelected()
-                          ? () {
-                              // 임시로 **
-                              categoryState.moveInfoPage();
-                            }
-                          : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
-                      child: Text(
-                        '다음으로',
-                        style: TextStyle(
-                          color: categoryState.getNextButtonTextColor(),
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
+                          onPressed: () {
+                            /// 버버벅 없앰 --> 시뮬레이터만 그런거 일수도 있어서 나중에 폰으로 봤을 때 괜찮으면 기존 간단 코드로 수정
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation1, animation2) =>
+                                    ChangeNotifierProvider(
+                                      create: (_) => GroupCreateStartState(context: context),
+                                      child: GroupCreateStartPage(),
+                                    ),
+                                transitionsBuilder: (context, animation1, animation2, child) {
+                                  return child; // 애니메이션 없이 바로 child 위젯을 반환
+                                },
+                                transitionDuration: Duration(milliseconds: 0), // 전환 시간을 0으로 설정
+                              ),
+                            );
+                          },
+                          child: const Text('이전으로'),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Container(
+                        width: 172,
+                        height: 62,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: categoryState.getNextButtonColor(),
+                            padding: const EdgeInsets.all(16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          onPressed: categoryState.isCategorySelected()
+                              ? () {
+                            // 임시로 **
+                            categoryState.moveInfoPage();
+                          }
+                              : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
+                          child: Text(
+                            '다음으로',
+                            style: TextStyle(
+                              color: categoryState.getNextButtonTextColor(),
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

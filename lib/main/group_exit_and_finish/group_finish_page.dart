@@ -17,7 +17,9 @@ class GroupFinishPage extends StatelessWidget {
     final int teamId = ModalRoute.of(context)?.settings.arguments as int;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => GroupFinishExitState(context: context, teamId: teamId)),
+        ChangeNotifierProvider(
+            create: (_) =>
+                GroupFinishExitState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
         return const GroupFinishPage();
@@ -29,13 +31,6 @@ class GroupFinishPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: grayScaleGrey900,
-      appBar: MoingAppBar(
-        title: '소모임 강제종료',
-        imagePath: 'asset/image/icon_exit.png',
-        onTap: () {
-          Navigator.of(context).pop();
-        },
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -43,6 +38,28 @@ class GroupFinishPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Container(
+                  width: double.infinity,
+                  height: 56,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: grayScaleGrey100,
+                          )),
+                      SizedBox(width: 40),
+                      Text(
+                        '소모임 강제종료',
+                        style:
+                            buttonTextStyle.copyWith(color: grayScaleGrey300),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(
                   height: 44,
                 ),
@@ -54,7 +71,9 @@ class GroupFinishPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 62,),
+                SizedBox(
+                  height: 62,
+                ),
                 Stack(
                   children: [
                     Container(
@@ -70,23 +89,24 @@ class GroupFinishPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if(context.watch<GroupFinishExitState>().finishCount == 0)
-                    Positioned(
-                      top: 101,
-                      left: 0,
-                      right: 0,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 137,
-                        child: ExitCard(
-                          number: '9',
-                          time: '245',
-                          missionClear: '78',
-                          level: 'Lv.8',
+                    if (context.watch<GroupFinishExitState>().finishCount == 0 &&
+                        context.watch<GroupFinishExitState>().teamInfo != null)
+                      Positioned(
+                        top: 101,
+                        left: 0,
+                        right: 0,
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 137,
+                          child: ExitCard(
+                            number: context.watch<GroupFinishExitState>().teamInfo!.numOfMember.toString(),
+                            time: context.watch<GroupFinishExitState>().teamInfo!.duration.toString(),
+                            missionClear: context.watch<GroupFinishExitState>().teamInfo!.numOfMission.toString(),
+                            level: 'Lv.${context.watch<GroupFinishExitState>().teamInfo!.levelOfFire}',
+                          ),
                         ),
                       ),
-                    )
-                    else
+                    if (context.watch<GroupFinishExitState>().finishCount != 0)
                       Positioned(
                         top: 101,
                         left: 0,
@@ -99,7 +119,9 @@ class GroupFinishPage extends StatelessWidget {
                       ),
                   ],
                 ),
-                SizedBox(height: 144,),
+                SizedBox(
+                  height: 144,
+                ),
                 Text(
                   '강제 종료 절차가 시작되면 그간의 데이터를\n복구할 수 없으니 신중하게 고민해주세요.',
                   style: bodyTextStyle.copyWith(
@@ -113,8 +135,13 @@ class GroupFinishPage extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: BlackButton(
-                        onPressed: context.read<GroupFinishExitState>().finishPressed,
-                        text: context.watch<GroupFinishExitState>().finishButtonText,),
+                      color: grayScaleGrey900,
+                      onPressed:
+                          context.read<GroupFinishExitState>().finishPressed,
+                      text: context
+                          .watch<GroupFinishExitState>()
+                          .finishButtonText,
+                    ),
                   ),
                 ),
                 Padding(
@@ -122,7 +149,7 @@ class GroupFinishPage extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: WhiteButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.of(context).pop();
                       },
                       text: '다시 생각해볼게요',
