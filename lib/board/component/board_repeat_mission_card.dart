@@ -87,7 +87,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 8, top: 12),
+                padding: const EdgeInsets.only(left: 8, top: 12),
                 child: Text(
                   title,
                   style: const TextStyle(
@@ -98,7 +98,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 8, top: 4),
+                padding: const EdgeInsets.only(left: 8, top: 4),
                 child: Text(
                   '주 ${number}회',
                   style: const TextStyle(
@@ -111,7 +111,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
             ],
           ),
           const Positioned(
-            bottom: 10,
+            bottom: 85,
             left: 10.0,
             child: _Tag(),
           ),
@@ -146,7 +146,7 @@ class _Tag extends StatelessWidget {
                   height: 16.0,
                 ),
                 const SizedBox(width: 1.0),
-                Text(
+                const Text(
                   '내일 리셋',
                   style: TextStyle(
                     fontSize: 14.0,

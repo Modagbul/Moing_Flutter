@@ -62,13 +62,13 @@ class _MissionsScreenState extends State<MissionsScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 220,
                     child: TabBar(
                       controller: _tabController,
                       labelColor: grayScaleGrey700,
                       unselectedLabelColor: grayScaleGrey400,
-                      indicator: BoxDecoration(
+                      indicator: const BoxDecoration(
                         border: Border(
                           bottom:
                               BorderSide(color: Colors.transparent, width: 0),
@@ -92,17 +92,17 @@ class _MissionsScreenState extends State<MissionsScreen>
                           Colors.transparent), // 물결 효과 색상을 투명하게 설정
                     ),
                   ),
-                  Spacer(),
-                  if (_tabController.index == 1) // "모임별 미션" 탭이 선택된 경우
-                    MyDropdown(),
+                  const Spacer(),
+                  // if (_tabController.index == 1) // "모임별 미션" 탭이 선택된 경우
+                  //   MyDropdown(),
                 ],
               ),
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
-                  children: const [
-                    MissionsAllPage(),
-                    MissionsGroupPage(),
+                  children: [
+                    MissionsAllPage.route(context),
+                    MissionsGroupPage.route(context),
                   ],
                 ),
               ),
@@ -123,7 +123,7 @@ class _MissionsScreenState extends State<MissionsScreen>
           color: isSelected ? grayScaleGrey100 : grayScaleGrey700,
           borderRadius: BorderRadius.circular(50),
         ),
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         child: Align(
           alignment: Alignment.center,
           child: Text(
@@ -147,6 +147,15 @@ class _MissionsScreenState extends State<MissionsScreen>
 }
 
 class MyDropdown extends StatefulWidget {
+  final String teamName;
+  final int teamId;
+
+  const MyDropdown({
+    super.key,
+    required this.teamId,
+    required this.teamName,
+  });
+
   @override
   _MyDropdownState createState() => _MyDropdownState();
 }
@@ -167,9 +176,11 @@ class _MyDropdownState extends State<MyDropdown> {
       items: <String>['모닥모닥불', '두번째모임', '세번째모임'].map((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(
-            value,
-            style: TextStyle(color: grayScaleGrey100),
+          child: Container(
+            child: Text(
+              value,
+              style: TextStyle(color: grayScaleGrey100),
+            ),
           ),
         );
       }).toList(),

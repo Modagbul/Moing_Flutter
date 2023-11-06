@@ -5,6 +5,7 @@ import 'package:moing_flutter/board/component/board_completed_mission_card.dart'
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
+import '../../mission_prove/mission_prove_page.dart';
 import '../../missions/create/missions_create_page.dart';
 import 'completed_mission_state.dart';
 
@@ -35,7 +36,7 @@ class CompletedMissionPage extends StatelessWidget {
 
     final data = state.completedMissionStatus?.data;
     if (data == null) {
-      log('data is null');
+      log('completed is null');
     } else if (data.isEmpty) {
       log('data is empty');
     } else {
@@ -65,26 +66,26 @@ class CompletedMissionPage extends StatelessWidget {
                         missionType: e.missionType,
                         missionId: e.missionId,
                         onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => MissionDetailPage(missionId: e.missionId),
-                            //   ),
-                            // );
+                          Navigator.of(context).pushNamed(
+                              MissionProvePage.routeName,
+                              arguments: {
+                                'isRepeated': true,
+                                'teamId':
+                                context.read<CompletedMissionState>().teamId,
+                                'missionId': e.missionId,
+                              });
                         },
                       ),
                           ),
                     )
                     .toList()
               else
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      '아직 미션이 없어요.',
-                      style: TextStyle(
-                        color: grayScaleGrey400,
-                        fontSize: 14.0,
-                      ),
+                const Center(
+                  child: Text(
+                    '아직 미션이 없어요.',
+                    style: TextStyle(
+                      color: grayScaleGrey400,
+                      fontSize: 14.0,
                     ),
                   ),
                 ),
