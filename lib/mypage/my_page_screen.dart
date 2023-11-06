@@ -25,9 +25,9 @@ class MyPageScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                const SizedBox(height: 24.0),
+                const SizedBox(height: 64.0),
                 _Profile(),
-                const SizedBox(height: 24.0),
+                const SizedBox(height: 36.0),
                 _HashTag(),
                 const SizedBox(height: 52.0),
                 const _GroupList(),
@@ -202,19 +202,21 @@ class _HashTag extends StatelessWidget {
                         ),
                       )
                     : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: myPageData?.categories
-                            .take(2)
-                            .map(
-                              (category) => Text(
-                                '# $category',
-                                style: const TextStyle(
-                                  color: grayScaleWhite,
-                                  fontSize: 28.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            )
-                            .toList() ?? <Widget>[],
+                                .take(2)
+                                .map(
+                                  (category) => Text(
+                                    '# $category',
+                                    style: const TextStyle(
+                                      color: grayScaleWhite,
+                                      fontSize: 28.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                )
+                                .toList() ??
+                            <Widget>[],
                       )
               ],
             ),
@@ -270,8 +272,13 @@ class _GroupList extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: myPageData?.getMyPageTeamBlocks
-                          .map((teamBlock) => JoinedGroupCard(
-                                teamBlock: teamBlock,
+                          .map((teamBlock) => Container(
+                                margin: const EdgeInsets.only(
+                                  right: 8.0,
+                                ), // 8.0 간격 추가
+                                child: JoinedGroupCard(
+                                  teamBlock: teamBlock,
+                                ),
                               ))
                           .toList() ??
                       [],

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
 class ApiResponse<T> {
   bool isSuccess;
@@ -16,6 +16,7 @@ class ApiResponse<T> {
     Map<String, dynamic> json,
     T Function(dynamic) fromJson,
   ) {
+    log(json.toString());
     return ApiResponse(
       isSuccess: json['isSuccess'],
       message: json['message'],

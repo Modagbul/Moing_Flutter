@@ -24,7 +24,7 @@ class BoardGoalScreen extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        backgroundColor: grayBackground,
+        backgroundColor: grayScaleGrey900,
         body: SafeArea(
           child: Stack(
             children: [
@@ -32,17 +32,20 @@ class BoardGoalScreen extends StatelessWidget {
                 top: 0,
                 left: 0,
                 right: 0,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: screenHeight * 0.01),
-                      _buildRandomMessageContainer(),
-                      _buildFireImageContainer(),
-                      SizedBox(height: screenHeight * 0.01),
-                      _buildFireLevelContainer(screenWidth),
-                      SizedBox(height: screenHeight * 0.01),
-                      _buildFireLevelProgressBar(screenWidth),
-                    ],
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 48.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: screenHeight * 0.01),
+                        _buildRandomMessageContainer(),
+                        _buildFireImageContainer(),
+                        SizedBox(height: screenHeight * 0.01),
+                        _buildFireLevelContainer(screenWidth),
+                        SizedBox(height: screenHeight * 0.01),
+                        _buildFireLevelProgressBar(screenWidth),
+                      ],
+                    ),
                   ),
                 ),
               ),
