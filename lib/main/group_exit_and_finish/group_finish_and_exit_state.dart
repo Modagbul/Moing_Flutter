@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_exit_success_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_success_page.dart';
+import 'package:moing_flutter/model/api_generic.dart';
+import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/response/exit_teem_info.dart';
 
 class GroupFinishExitState extends ChangeNotifier {
   final BuildContext context;
@@ -12,9 +18,36 @@ class GroupFinishExitState extends ChangeNotifier {
   String finishButtonText = '소모임 강제종료하기';
   String exitButtonText = '소모임 탈퇴하기';
 
+  String apiUrl = '';
+  APICall call = APICall();
+  ExitTeamInfo? teamInfo;
+
   GroupFinishExitState({required this.context, required this.teamId}) {
     print('Instance "GroupFinishExitState" has been created');
-    print('팀ID : $teamId');
+    loadExitData();
+  }
+
+  /// 삭제 전 조회 API
+  void loadExitData() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/review';
+
+    try {
+      ApiResponse<ExitTeamInfo> apiResponse =
+      await call.makeRequest<ExitTeamInfo>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (dataJson) => ExitTeamInfo.fromJson(dataJson),
+      );
+
+      if (apiResponse.data != null) {
+        teamInfo = apiResponse.data;
+        print('삭제 전 조회 성공!');
+        }
+
+      notifyListeners();
+    } catch (e) {
+      log('나의 성공 횟수 조회 실패: $e');
+    }
   }
 
   /// 소모임 강제종료하기 버튼 클릭 시

@@ -36,6 +36,9 @@ class InitState extends ChangeNotifier {
       ),
     );
 
+    // Navigator.of(context).pushNamed(
+    //     MissionFirePage.routeName,
+    // );
     /// 이전에 가입한 적 있는 유저
     String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
 

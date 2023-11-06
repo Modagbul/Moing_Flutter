@@ -22,7 +22,7 @@ class MissionsGroupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: grayBackground,
       body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

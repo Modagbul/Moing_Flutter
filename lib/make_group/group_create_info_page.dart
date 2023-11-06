@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
+import 'package:moing_flutter/main/main_page.dart';
+import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/make_group/group_create_info_state.dart';
 import 'package:provider/provider.dart';
 
@@ -33,6 +35,39 @@ class GroupCreateInfoPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        leading: GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    WarningDialog(
+                      title: '모임 만들기를 끝내시겠어요?',
+                      content: '나가시면 입력하신 내용을 잃게 됩니다',
+                      onConfirm: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      onCanceled: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          MainPage.routeName,
+                              (route) => false,
+                        );
+                      },
+                      leftText: '나가기',
+                      rightText: '계속 진행하기',
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: Icon(
+            Icons.close,
+          ),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -62,6 +97,7 @@ class _Title extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        SizedBox(height: 34),
         Text(
           '어떤 소모임을 만드시나요?',
           style: headerTextStyle,

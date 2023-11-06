@@ -6,11 +6,13 @@ class BlackButton extends StatelessWidget {
   final void Function() onPressed;
   final String text;
   final bool borderSide;
+  final Color color;
 
   const BlackButton({
     required this.onPressed,
     required this.text,
     this.borderSide = true,
+    this.color = Colors.black,
     super.key});
 
   @override
@@ -24,7 +26,7 @@ class BlackButton extends StatelessWidget {
               color: grayScaleGrey400,
               width: 1.0,
             ) : null,
-            backgroundColor: Colors.black,
+            backgroundColor: color,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             )
