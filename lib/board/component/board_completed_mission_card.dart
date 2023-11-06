@@ -93,10 +93,13 @@ class BoardCompletedMissionCard extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
-                    child: Image.asset(
-                      'asset/image/plus_btn.png',
-                      width: 48.0,
-                      height: 48.0,
+                    child: GestureDetector(
+                      onTap: onTap,  // Use the onTap callback passed to the BoardCompletedMissionCard
+                      child: Image.asset(
+                        'asset/image/plus_btn.png',
+                        width: 48.0,
+                        height: 48.0,
+                      ),
                     ),
                   ),
                 ],

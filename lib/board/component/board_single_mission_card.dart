@@ -79,7 +79,7 @@ class BoardSingleMissionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 status == 'SKIP' || status == 'COMPLETE' ? _SkipButton(onTap: onTap,) : _CompleteButton(onTap: onTap),
               ],
             ),

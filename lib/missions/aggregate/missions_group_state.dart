@@ -2,31 +2,52 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import '../../main/alarm/alarm.dart';
+import '../../model/api_code/api_code.dart';
+import '../../model/response/aggregate_repeat_mission_response.dart';
+import '../../model/response/aggregate_single_mission_response.dart';
 
 class MissionsGroupState extends ChangeNotifier {
+  final ApiCode apiCode = ApiCode();
+
+  AggregateSingleMissionResponse? aggregateSingleMissionStatus;
+  AggregateRepeatMissionStatusResponse? aggregateRepeatMissionStatus;
 
   // 알림 여부
   bool isNotification = false;
 
-  MissionsGroupState() {
-    log('Instance "MissionsGroupState" has been created');
+  final BuildContext context;
+
+  MissionsGroupState({
+    required this.context,
+  }) {
     initState();
+    getAggregateSingleMissionStatus();
+    getAggregateRepeatMissionStatus();
   }
 
   @override
   void dispose() {
-    log('Instance "MissionsGroupState" has been removed');
+    log('Instance "MissionsAllState" has been removed');
     super.dispose();
   }
 
-  void initState() {
-    // 초기화 로직
-  }
+  void initState() {}
 
-  void alarmPressed(BuildContext context) {
+  void alarmPressed() {
     Navigator.of(context).pushNamed(
       AlarmPage.routeName,
     );
   }
 
+  void getAggregateRepeatMissionStatus() async {
+    aggregateRepeatMissionStatus =
+        await apiCode.getAggregateRepeatMissionStatus();
+    notifyListeners();
+  }
+
+  void getAggregateSingleMissionStatus() async {
+    aggregateSingleMissionStatus =
+        await apiCode.getAggregateSingleMissionStatus();
+    notifyListeners();
+  }
 }

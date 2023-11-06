@@ -38,7 +38,7 @@ class OngoingMissionPage extends StatelessWidget {
 
     final data = state.repeatMissionStatus?.data;
     if (data == null) {
-      log('data is null');
+      log('repeatMissionData is null');
     } else if (data.isEmpty) {
       log('data is empty');
     } else {
@@ -76,14 +76,12 @@ class OngoingMissionPage extends StatelessWidget {
                     state.repeatMissionStatus!.data.isNotEmpty)
                   GridView.builder(
                     shrinkWrap: true,
-                    // GridView가 SingleChildScrollView 내부에 있기 때문에 필요합니다.
-                    physics: NeverScrollableScrollPhysics(),
-                    // 부모 스크롤과 충돌을 피하기 위해 사용합니다.
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 10.0, // 카드 사이의 가로 간격
-                      mainAxisSpacing: 70.0, // 카드 사이의 세로 간격
-                      childAspectRatio: 170 / 237,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                      childAspectRatio: 170 / 245,
                     ),
                     itemCount: state.repeatMissionStatus!.data.length,
                     itemBuilder: (context, index) {
@@ -108,7 +106,7 @@ class OngoingMissionPage extends StatelessWidget {
                     },
                   )
                 else
-                  Center(
+                  const Center(
                     child: Text(
                       '아직 미션이 없어요.',
                       style: TextStyle(
@@ -117,7 +115,7 @@ class OngoingMissionPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                const SizedBox(height: 120.0),
+                const SizedBox(height: 24.0),
                 _Title(
                   mainText: '한번 미션',
                   countText:
@@ -156,7 +154,7 @@ class OngoingMissionPage extends StatelessWidget {
                       )
                       .toList()
                 else
-                  Center(
+                  const Center(
                     child: Text(
                       '아직 미션이 없어요.',
                       style: TextStyle(

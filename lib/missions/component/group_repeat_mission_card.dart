@@ -3,18 +3,18 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../const/color/colors.dart';
 
-class RepeatMissionCard extends StatelessWidget {
+class GroupRepeatMissionCard extends StatelessWidget {
   final int missionId;
-  final String teamName;
+  final int teamId;
   final String missionTitle;
   final String totalNum;
   final String doneNum;
   final VoidCallback onTap;
 
-  const RepeatMissionCard({
+  const GroupRepeatMissionCard({
     super.key,
     required this.missionId,
-    required this.teamName,
+    required this.teamId,
     required this.missionTitle,
     required this.totalNum,
     required this.doneNum,
@@ -24,7 +24,7 @@ class RepeatMissionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int done = int.tryParse(doneNum) ?? 0;
-    int total = int.tryParse(totalNum) ?? 1; // 0으로 나누는 것을 방지하기 위해 기본값을 1로 설정
+    int total = int.tryParse(totalNum) ?? 1;
 
     double percent = (total > 0) ? done / total : 0.0;
 
@@ -82,17 +82,6 @@ class RepeatMissionCard extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),
-                    footer: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        teamName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14.0,
-                          color: grayScaleGrey550,
-                        ),
-                      ),
                     ),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor: coralGrey500,

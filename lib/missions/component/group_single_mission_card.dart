@@ -3,21 +3,28 @@ import 'package:flutter/material.dart';
 import '../../const/color/colors.dart';
 
 class GroupSingleMissionCard extends StatelessWidget {
-  final String missionName;
-  final String missionTime;
+  final int missionId;
+  final int teamId;
+  final String missionTitle;
+  final String dueTo;
+  final VoidCallback onTap;
 
-  const GroupSingleMissionCard({super.key,
-    required this.missionName,
-    required this.missionTime,
+  const GroupSingleMissionCard({
+    super.key,
+    required this.missionId,
+    required this.teamId,
+    required this.missionTitle,
+    required this.dueTo,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          Container(
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
             width: 272,
             height: 118,
             decoration: BoxDecoration(
@@ -32,7 +39,7 @@ class GroupSingleMissionCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 14.0),
                     child: Text(
-                      missionName,
+                      missionTitle,
                       style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w600,
@@ -51,7 +58,7 @@ class GroupSingleMissionCard extends StatelessWidget {
                           width: 4.0,
                         ),
                         Text(
-                          missionTime,
+                          formatDueTo(dueTo),
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0,
@@ -65,8 +72,20 @@ class GroupSingleMissionCard extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
+}
+
+String formatDueTo(String dueTo) {
+  DateTime dueDate = DateTime.parse(dueTo);
+  DateTime now = DateTime.now();
+
+  Duration difference = dueDate.difference(now);
+
+  int hours = difference.inHours;
+  int minutes = difference.inMinutes - hours * 60;
+
+  return '$hours시간 $minutes분 후 종료';
 }
