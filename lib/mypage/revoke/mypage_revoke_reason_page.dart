@@ -34,7 +34,9 @@ class MyPageRevokeReasonPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                     child: Image.asset(
                       'asset/image/arrow_left.png',
                     ),

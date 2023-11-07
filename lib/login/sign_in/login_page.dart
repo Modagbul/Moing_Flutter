@@ -55,11 +55,11 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 40),
-                  // Lottie.asset(
-                  //     'asset/graphic/big.json',
-                  //     width: 260,
-                  //     height: 260,
-                  // ),
+                  Lottie.asset(
+                      'asset/graphic/big.json',
+                      width: 260,
+                      height: 260,
+                  ),
                   const Spacer(),
                   CustomButton(
                     onPressed: context.read<LoginState>().signInWithApple,

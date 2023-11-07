@@ -8,6 +8,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/missions/create/const/mission_create_text_list.dart';
+import 'package:moing_flutter/missions/create/const/mission_modal_text_list.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/request/make_mission_request.dart';
@@ -17,6 +18,9 @@ import 'package:moing_flutter/utils/button/white_button.dart';
 class MissionCreateState extends ChangeNotifier {
   final BuildContext context;
   final int teamId;
+  final int repeatMissions;
+
+  final APICall call = APICall();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   final ruleController = TextEditingController();
@@ -26,6 +30,7 @@ class MissionCreateState extends ChangeNotifier {
 
   int missionCountIndex = 1;
   int timeCountIndex = 12;
+  String apiUrl = '';
 
   TextStyle ts = const TextStyle(
       fontWeight: FontWeight.w700, fontSize: 20, color: grayScaleGrey100);
@@ -39,15 +44,10 @@ class MissionCreateState extends ChangeNotifier {
   // 인증방식 선택 여부
   bool isMethodSelected = false;
 
-  final List<String> textList = [
-    '매일 물 2L 마시기',
-    '매일 아침 이불정리하기',
-    '오전 7시 기상 인증하기',
-    '모닝페이지 작성하기',
-    '하루 계획 세우기',
-    '일어나자마자 양치하기',
-    '휴대폰 6시간 이하 쓰기',
-  ];
+  // 미션 추천 문구 리스트
+  List<String> textList = [];
+  // 미션 추천 문구
+  String recommendText = '';
 
   String title = '';
   String content = '';
@@ -57,19 +57,19 @@ class MissionCreateState extends ChangeNotifier {
   String formattedTime = '';
   DateTime today = DateTime.now();
 
-  /// TODO : 수정 예정
-  int repeatMission = 1;
-
   MissionCreateState({
     required this.context,
     required this.teamId,
+    required this.repeatMissions,
   }) {
     initState();
   }
 
   void initState() {
     log('Instance "MissionCreateState" has been created');
-    print('teamId : $teamId');
+    print('teamId : $teamId, repeatMissions : $repeatMissions');
+    getMissionRecommend();
+
     titleController.addListener(_onTitleTextChanged);
     titleFocusNode.addListener(onTitleFocusChanged);
     contentController.addListener(_onContentTextChanged);
@@ -154,6 +154,53 @@ class MissionCreateState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 미션 추천 API
+  void getMissionRecommend() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/recommend';
+
+    try {
+      ApiResponse<String> apiResponse =
+      await call.makeRequest<String>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (dataJson) => dataJson as String,
+      );
+
+      if (apiResponse.data != null) {
+        print('mission 추천: ${apiResponse.data!}');
+        switch(apiResponse.data!) {
+          case 'SPORTS':
+            textList = sportsList;
+            recommendText = '건강한 몸을 만드는';
+            break;
+          case 'HABIT':
+            textList = habitList;
+            recommendText = '생활습관을 개선하는';
+            break;
+          case 'TEST':
+            textList = testList;
+            recommendText = '내일의 꿈을 위한';
+            break;
+          case 'STUDY':
+            textList = studyList;
+            recommendText = '좋은 학습을 도와주는';
+            break;
+          case 'READING':
+            textList = readingList;
+            recommendText = '좋은 독서를 도와주는';
+            break;
+          case 'ETC':
+            textList = etcList;
+            recommendText = '자기계발을 도와주는';
+            break;
+        }
+      }
+      notifyListeners();
+    } catch (e) {
+      log('나의 성공 횟수 조회 실패: $e');
+    }
+  }
+
   void showWarningDialog() {
     showDialog(
       context: context,
@@ -162,7 +209,7 @@ class MissionCreateState extends ChangeNotifier {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             WarningDialog(
-              title: '미션 만들기를 끝내시겠어요?',
+              title: '미션 만들기를 멈추시겠어요?',
               content: '나가시면 입력하신 내용을 잃게 됩니다',
               onConfirm: () {
                 Navigator.of(context).pop(true);
@@ -377,7 +424,7 @@ class MissionCreateState extends ChangeNotifier {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('#생활습관을 개선하는', style: ts),
+                        Text('#$recommendText', style: ts),
                         Text(' 인증미션 추천',
                             style: ts.copyWith(color: grayScaleGrey400)),
                         const SizedBox(width: 44),
@@ -455,15 +502,16 @@ class MissionCreateState extends ChangeNotifier {
       } else {
         if(formattedDate.length < 1) {
           print('날짜를 선택해주세요...');
+          return ;
         } else if (formattedTime.length < 1) {
-          print('시간을 선택해주세요...');
+          formattedTime = '12:00';
         }
         repeatMission = 1;
         dueTo = '$formattedDate $formattedTime:00.000';
       }
 
-      final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';
-      final APICall call = APICall();
+      apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';
+
 
       // 단일 미션 시
       MakeMissionData data = MakeMissionData(

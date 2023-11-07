@@ -127,29 +127,7 @@ class _NextBtn extends StatelessWidget {
             borderRadius: BorderRadius.circular(15.0),
           ),
         ),
-        onPressed: categoryState.isCategorySelected()
-            ? () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SkipDialog(
-                          title: '미션을 건너뛰었어요',
-                          content: '다음엔 꼭 모잉불을 키워주세요!',
-                          onConfirm: () {
-                            /// 수정해야함
-                            Navigator.of(context).pop(true);
-                            Navigator.of(context).pop(true);
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            : null,
+        onPressed: categoryState.submit,
         child: Text(
           '사유작성 완료하기',
           style: TextStyle(

@@ -10,6 +10,7 @@ import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/utils/api/api_error.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
+import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 
@@ -20,6 +21,7 @@ class LoginState extends ChangeNotifier {
   final BuildContext context;
   bool? _isRegistered;
   TokenManagement tokenManagement = TokenManagement();
+  SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
   ApiException apiException = ApiException();
 
   bool onLoading = false;
@@ -112,11 +114,13 @@ class LoginState extends ChangeNotifier {
         await tokenManagement.saveToken(accessToken, refreshToken);
         print('카카오JWT : $accessToken');
         _isRegistered = responseBody['data']['registrationStatus'];
+        sharedPreferencesInfo.savePreferencesData('sign', 'kakao');
         print('카카오 회원가입 여부 : $_isRegistered');
         checkRegister(_isRegistered!);
       }
       /// 에러 처리
       else {
+        print('에러 코드 : ${response.statusCode}');
         apiException.throwErrorMessage(responseBody['errorCode']);
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
@@ -218,6 +222,7 @@ class LoginState extends ChangeNotifier {
 
         _isRegistered = responseBody['data']['registrationStatus'];
         checkRegister(_isRegistered!);
+        sharedPreferencesInfo.savePreferencesData('sign', 'apple');
       }
       /// 에러 처리
       else {
@@ -240,7 +245,8 @@ class LoginState extends ChangeNotifier {
 
   /// 회원가입 여부 판단
   void checkRegister(bool isRegistered) {
-    // 회원가입이 되어있는 경우
+    print('연동 성공!');
+    // 가입되어 있는 경우
     if(isRegistered) {
       Navigator.of(context).pushNamed(
         MainPage.routeName,

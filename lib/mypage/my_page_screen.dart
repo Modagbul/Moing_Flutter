@@ -66,15 +66,14 @@ class MyPageScreen extends StatelessWidget {
       automaticallyImplyLeading: false,
       actions: [
         IconButton(onPressed: () {}, icon: notificationImg),
-        IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SettingPage()), // SettingPage로 이동
-              );
-            },
-            icon: settingImg),
+        Builder(
+          builder: (newContext) {
+            return IconButton(
+              onPressed: newContext.read<MyPageState>().settingPressed,
+              icon: settingImg,
+            );
+          },
+        ),
       ],
     );
   }

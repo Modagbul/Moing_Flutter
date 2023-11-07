@@ -1,4 +1,4 @@
-const List<String> lifeList = [
+const List<String> habitList = [
 '매일 물 2L 마시기',
 '매일 아침 이불정리하기',
 '오전 7시 기상 인증하기',
@@ -18,7 +18,7 @@ const List<String> sportsList = [
   '5km 러닝 인증하기',
 ];
 
-const List<String> dreamList = [
+const List<String> testList = [
   '오늘 공부 계획 공유하기',
   '플래너 공유하기',
   '하루 한 곳 지원하기',
@@ -47,7 +47,7 @@ const List<String> readingList = [
   '오늘 읽은 내용 소개하기'
 ];
 
-const List<String> meList = [
+const List<String> etcList = [
   '기상 인증하기',
   '30분 이상 운동하기',
   '하루 30분 독서하기',

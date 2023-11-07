@@ -4,7 +4,7 @@ import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 
 class MyPageRevokePage extends StatelessWidget {
-  const MyPageRevokePage({super.key});
+  const MyPageRevokePage({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,9 @@ class MyPageRevokePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                     child: Image.asset(
                       'asset/image/arrow_left.png',
                     ),
@@ -65,9 +67,7 @@ class MyPageRevokePage extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 24.0),
                 child: ElevatedButton(
                   onPressed: (){
-                    Navigator.of(context).pushNamed(
-                      MyPageRevokeReasonPage.routeName,
-                    );
+                    Navigator.of(context).pop();
                   },
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all<Size>(

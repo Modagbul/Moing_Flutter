@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 class SettingState extends ChangeNotifier {
   final BuildContext context;
+  final int teamCount;
 
   SettingState({
     required this.context,
+    required this.teamCount,
   }) {
     initState();
   }
@@ -20,5 +22,4 @@ class SettingState extends ChangeNotifier {
     log('Instance "SettingState" has been removed');
     super.dispose();
   }
-
 }
