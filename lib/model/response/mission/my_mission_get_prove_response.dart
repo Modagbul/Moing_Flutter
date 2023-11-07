@@ -1,3 +1,22 @@
+class MyMissionProveAllData {
+  final bool today;
+  final List<MyMissionProveData> archives;
+
+  MyMissionProveAllData({
+    required this.today,
+    required this.archives,
+  });
+
+  factory MyMissionProveAllData.fromJson(Map<String, dynamic> json) {
+    return MyMissionProveAllData(
+      today: json['today'].toString().toLowerCase() == 'true',
+      archives: (json['archives'] as List)
+          .map((archiveJson) => MyMissionProveData.fromJson(archiveJson))
+          .toList(),
+    );
+  }
+}
+
 class MyMissionProveData {
   final int archiveId;
   final String archive;

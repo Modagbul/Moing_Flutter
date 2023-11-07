@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/mypage/alram_setting_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
+import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/mypage/setting_state.dart';
 import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +18,10 @@ class SettingPage extends StatelessWidget {
   static const routeName = '/mypage/setting';
 
   static route(BuildContext context) {
+    final int teamCount = ModalRoute.of(context)?.settings.arguments as int;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SettingState(context: context)),
+        ChangeNotifierProvider(create: (_) => SettingState(context: context, teamCount: teamCount)),
       ],
       builder: (context, _) {
         return const SettingPage();
@@ -114,10 +116,18 @@ class SettingPage extends StatelessWidget {
                     listName: '회원탈퇴',
                     imagePath: 'asset/image/right_arrow.png',
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MyPageRevokePage()),
-                      );
+                      int teamCount = Provider.of<SettingState>(context, listen: false).teamCount;
+                      if(teamCount != 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyPageRevokePage()),
+                        );
+                      }
+                      else {
+                        Navigator.of(context).pushNamed(
+                            MyPageRevokeReasonPage.routeName,
+                        );
+                      }
                     },
                   ),
                 ],

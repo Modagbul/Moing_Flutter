@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
+import 'package:moing_flutter/mypage/setting_page.dart';
 
 class MyPageState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
@@ -36,5 +37,13 @@ class MyPageState extends ChangeNotifier {
   void getMyPageData() async {
     myPageData = await apiCode.getMyPageData();
     notifyListeners();
+  }
+
+  void settingPressed() {
+    int teamCount = myPageData?.getMyPageTeamBlocks.length ?? 0;
+    Navigator.of(context).pushNamed(
+      SettingPage.routeName,
+      arguments: teamCount,
+    );
   }
 }

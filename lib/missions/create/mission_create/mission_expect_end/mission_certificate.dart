@@ -11,7 +11,7 @@ class MissionCertificate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.watch<MissionCreateState>().repeatMission < 2 &&
+    if (context.watch<MissionCreateState>().repeatMissions < 2 &&
         context.watch<MissionCreateState>().isRepeatSelected == true) {
       return Stack(
         children: [

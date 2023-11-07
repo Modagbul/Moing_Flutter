@@ -11,7 +11,7 @@ class MissionExpectEnd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 미션 반복 개수가 2개 이상인 경우
-    if (context.watch<MissionCreateState>().repeatMission > 1) {
+    if (context.watch<MissionCreateState>().repeatMissions > 1) {
       return Container(
         width: double.infinity,
         height: 48,

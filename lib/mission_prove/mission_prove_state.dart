@@ -24,11 +24,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class MissionProveState with ChangeNotifier {
   final BuildContext context;
-
-  // 반복 미션 여부
-  final bool isRepeated;
   final int teamId;
   final int missionId;
+  final bool isRepeated; // 반복 미션 여부
 
   late TabController tabController;
   WebViewController webViewController = WebViewController();
@@ -38,6 +36,8 @@ class MissionProveState with ChangeNotifier {
 
   String apiUrl = '';
   String imageUrl = '';
+  // 사진 업로드
+  XFile? avatarFile;
 
   // 미션 제목
   String missionTitle = '';
@@ -45,57 +45,60 @@ class MissionProveState with ChangeNotifier {
   String missionContent = '';
   // 미션 규칙
   String missionRule = '';
+
   // 미션 방법(텍스트, 사진, 링크)
   String missionWay = '';
   // 반복인증 시 나의 성공 횟수
   int repeatMissionMyCount = 0;
   // 반복인증 시 전체 성공 횟수
   int repeatMissionTotalCount = 0;
+
   // 한번인증 시 현재 성공 횟수
   int singleMissionMyCount = 0;
   // 한번인증 시 전체 성공 횟수
   int singleMissionTotalCount = 0;
+
   // 남은 시간 반환
   String missionRemainTime = '';
 
-  // 나의 인증인 경우
+  // 내가 당일에 인증한 경우 T/F 값
   bool isMeProved = false;
 
-  // 나의 인증이면 true, 아니면 false
+  // 나의 인증이면 true, 모두의 인증이면 false
   bool isMeOrEveryProved = true;
 
   // 인증 후 더보기 버튼 클릭했을 때
   String missionMoreButton = '';
 
-  // 나의 인증 리스트
+  // 나의 인증 조회 시 받아오는 리스트
+  MyMissionProveAllData? myMissionData;
   List<MyMissionProveData>? myMissionList;
-  /// 사진 업로드
-  XFile? avatarFile;
 
   MissionProveState(
       {required this.context,
       required this.isRepeated,
       required this.teamId,
       required this.missionId}) {
-     initState();
+    initState();
   }
 
   void initState() async {
     log('Instance "MissionProveState" has been created');
     print('isRepeated : $isRepeated, teamId : $teamId, missionId: $missionId');
 
-    // 미션 내용, 규칙 조회
+    // 나의 인증 현황 조회하기
+    loadMissionData();
+    // 미션 내용, 규칙 조회 --> 미션 제목, 기한, 규칙, 내용, 반복 or 한번 미션, 인증 방식(텍스트, 링크, 사진) 리턴
     getMissionContent();
     // 반복 미션인 경우, 나의 성공횟수 조회
     if (isRepeated) {
       loadMyMissionProveCount();
     }
     // 한번 미션인 경우,
-    if(!isRepeated) {
+    if (!isRepeated) {
       // 모임원 성공횟수 조회
       loadTeamMissionProveCount();
     }
-    loadMissionData();
   }
 
   // 남은 시간 조회
@@ -129,17 +132,17 @@ class MissionProveState with ChangeNotifier {
   /// 모임원 미션 인증 성공 인원 조회 API
   void loadTeamMissionProveCount() async {
     apiUrl =
-    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/status';
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/status';
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (dataJson) => dataJson as Map<String, dynamic>,
       );
 
-      if(apiResponse.data != null) {
+      if (apiResponse.data != null) {
         singleMissionMyCount = int.parse(apiResponse.data?['done']);
         singleMissionTotalCount = int.parse(apiResponse.data?['total']);
       }
@@ -162,7 +165,7 @@ class MissionProveState with ChangeNotifier {
         fromJson: (dataJson) => dataJson as Map<String, dynamic>,
       );
 
-      if(apiResponse.data != null) {
+      if (apiResponse.data != null) {
         repeatMissionMyCount = int.parse(apiResponse.data?['done']);
         repeatMissionTotalCount = int.parse(apiResponse.data?['total']);
       }
@@ -199,24 +202,22 @@ class MissionProveState with ChangeNotifier {
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
 
     try {
-      ApiResponse<List<MyMissionProveData>> apiResponse =
-          await call.makeRequest<List<MyMissionProveData>>(
+      ApiResponse<MyMissionProveAllData> apiResponse =
+          await call.makeRequest<MyMissionProveAllData>(
         url: apiUrl,
         method: 'GET',
-        fromJson: (dataJson) => List<MyMissionProveData>.from(
-          (dataJson as List).map(
-            (item) => MyMissionProveData.fromJson(item as Map<String, dynamic>),
-          ),
-        ),
+        fromJson: (dataJson) => MyMissionProveAllData.fromJson(dataJson),
       );
 
-      isMeProved = (apiResponse.data!.isEmpty) ? false : true;
-      if (isMeProved) {
-        myMissionList = apiResponse.data;
+      if(apiResponse.data != null) {
+        isMeProved = apiResponse.data?.today as bool;
+        if(isMeProved) {
+          myMissionList = apiResponse.data!.archives;
+          print('myMissionList Data : ${apiResponse.data!.archives.toString()}');
+        }
+        notifyListeners();
+        print('내가 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
       }
-      print('myMissionList Data : ${apiResponse.data?.toString()}');
-      notifyListeners();
-      print('내가 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
     } catch (e) {
       log('나의 인증 조회 실패: $e');
     }
@@ -253,7 +254,7 @@ class MissionProveState with ChangeNotifier {
         missionContent = apiResponse.data?['content'];
         missionRule = apiResponse.data?['rule'];
         missionWay = apiResponse.data?['way'];
-        switch(apiResponse.data?['way']) {
+        switch (apiResponse.data?['way']) {
           case 'TEXT':
             missionWay = '텍스트인증';
             break;
@@ -277,12 +278,13 @@ class MissionProveState with ChangeNotifier {
 
   /// 미션 인증 API
   Future<void> submitMission(String url) async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
     Map<String, dynamic> data = {"status": 'COMPLETE', "archive": url};
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
         body: data,
@@ -290,7 +292,7 @@ class MissionProveState with ChangeNotifier {
       );
 
       notifyListeners();
-      if(apiResponse.data != null) {
+      if (apiResponse.data != null) {
         print('인증 성공!');
       }
     } catch (e) {
@@ -299,28 +301,28 @@ class MissionProveState with ChangeNotifier {
   }
 
   // 미션 스킵 화면으로 이동
-  void missionSkip() {
-    Navigator.of(context).pushNamed(
-        SkipMissionPage.routeName,
-        arguments: {
-          'teamId': teamId,
-          'missionId': missionId,
-        }
-    );
+  void missionSkip() async {
+    var result = await Navigator.of(context)
+        .pushNamed(SkipMissionPage.routeName, arguments: {
+      'teamId': teamId,
+      'missionId': missionId,
+    });
+
+    if(result != null && result == true) {
+      initState();
+    }
   }
 
   // 미션 인증하기 버튼 클릭
   void submit() async {
     // 텍스트 인증 시
-    if(missionWay.contains('텍스트')) {
-      var result = await Navigator.of(context).pushNamed(
-          TextAuthPage.routeName,
-        arguments: {
-            'teamId' : teamId,
-          'missionId': missionId,
-        }
-      );
-      if(result != null && result is bool && result) {
+    if (missionWay.contains('텍스트')) {
+      var result = await Navigator.of(context)
+          .pushNamed(TextAuthPage.routeName, arguments: {
+        'teamId': teamId,
+        'missionId': missionId,
+      });
+      if (result != null && result is bool && result) {
         // 미션 인증 성공 모달
         showMissionSuccessDialog();
         initState();
@@ -328,14 +330,12 @@ class MissionProveState with ChangeNotifier {
     }
     // 링크 인증 시
     else if (missionWay.contains('링크')) {
-      var result = await Navigator.of(context).pushNamed(
-        LinkAuthPage.routeName,
-          arguments: {
-            'teamId' : teamId,
-            'missionId': missionId,
-          }
-      );
-      if(result != null && result is bool && result) {
+      var result = await Navigator.of(context)
+          .pushNamed(LinkAuthPage.routeName, arguments: {
+        'teamId': teamId,
+        'missionId': missionId,
+      });
+      if (result != null && result is bool && result) {
         // 미션 인증 성공 모달
         showMissionSuccessDialog();
         initState();
@@ -346,15 +346,17 @@ class MissionProveState with ChangeNotifier {
       print('사진 인증 시작!');
       await Permission.photos.request();
       final XFile? assetFile =
-      await ImagePicker().pickImage(source: ImageSource.gallery);
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       avatarFile = assetFile;
       if (avatarFile != null) {
         String extension = imageUpload.getFileExtension(avatarFile!);
-        String? tmpUrl = await imageUpload.getPresignedUrl(extension, avatarFile!);
+        String? tmpUrl =
+            await imageUpload.getPresignedUrl(extension, avatarFile!);
+
         /// 이미지 url 받기
         imageUrl = tmpUrl ?? '';
         // presigned url 발급 성공 시
-        if(imageUrl.isNotEmpty) {
+        if (imageUrl.isNotEmpty) {
           await submitMission(imageUrl);
           showMissionSuccessDialog();
           initState();
@@ -373,50 +375,57 @@ class MissionProveState with ChangeNotifier {
           backgroundColor: Colors.transparent,
           insetPadding: EdgeInsets.symmetric(horizontal: 20),
           child: Container(
-            width: double.infinity,
-            height: 455,
-            decoration: BoxDecoration(
-              color: grayScaleGrey600,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 32),
-                Image.asset(
-                  'asset/image/moing_flower.png',
-                  width: 254,
-                  height: 254,
-                ),
-                SizedBox(height: 16),
-                Text('모잉불이 기뻐해요!', style: middleTextStyle.copyWith(color: grayScaleGrey100),),
-                SizedBox(height: 8),
-                Text('덕분에 모잉불이 쑥쑥 커지고 있어요',
-                  style: bodyTextStyle.copyWith(fontWeight: FontWeight.w500, color: grayScaleGrey400),),
-                SizedBox(height: 28),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: RoundedProgressBar(
-                    milliseconds: 1000,
-                    borderRadius: BorderRadius.circular(24),
-                    childLeft: Text(
-                        '${singleMissionMyCount+1}/$singleMissionTotalCount명 인증성공',
-                      style: bodyTextStyle.copyWith(color: grayScaleGrey100),
-                    ),
-                    percent: singleMissionMyCount < singleMissionTotalCount
-                        ? (singleMissionMyCount+1)*100 / singleMissionTotalCount
-                    : 100,
-                    style: RoundedProgressBarStyle(
-                      colorBorder: Colors.transparent,
-                      colorProgress: coralGrey500,
-                      backgroundProgress: grayScaleGrey500,
-                      widthShadow: 0,
+              width: double.infinity,
+              height: 455,
+              decoration: BoxDecoration(
+                color: grayScaleGrey600,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 32),
+                  Image.asset(
+                    'asset/image/moing_flower.png',
+                    width: 254,
+                    height: 254,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    '모잉불이 기뻐해요!',
+                    style: middleTextStyle.copyWith(color: grayScaleGrey100),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    '덕분에 모잉불이 쑥쑥 커지고 있어요',
+                    style: bodyTextStyle.copyWith(
+                        fontWeight: FontWeight.w500, color: grayScaleGrey400),
+                  ),
+                  SizedBox(height: 28),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: RoundedProgressBar(
+                      milliseconds: 1000,
+                      borderRadius: BorderRadius.circular(24),
+                      childLeft: Text(
+                        '${singleMissionMyCount + 1}/$singleMissionTotalCount명 인증성공',
+                        style: bodyTextStyle.copyWith(color: grayScaleGrey100),
+                      ),
+                      percent: singleMissionMyCount < singleMissionTotalCount
+                          ? (singleMissionMyCount + 1) *
+                              100 /
+                              singleMissionTotalCount
+                          : 100,
+                      style: RoundedProgressBarStyle(
+                        colorBorder: Colors.transparent,
+                        colorProgress: coralGrey500,
+                        backgroundProgress: grayScaleGrey500,
+                        widthShadow: 0,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-          ),
+                ],
+              )),
         );
       },
     );
@@ -465,73 +474,81 @@ class MissionProveState with ChangeNotifier {
                     ),
                     SizedBox(width: 12),
                     Text(
-                      DateFormat('yy.MM.dd').format(DateTime.parse(myMissionList![index].createdDate)),
-                      style: bodyTextStyle.copyWith(color: grayScaleGrey300, fontWeight: FontWeight.w500),
+                      DateFormat('yy.MM.dd').format(
+                          DateTime.parse(myMissionList![index].createdDate)),
+                      style: bodyTextStyle.copyWith(
+                          color: grayScaleGrey300, fontWeight: FontWeight.w500),
                     ),
                     SizedBox(width: 12),
                     Text(
-                      DateFormat('HH:mm').format(DateTime.parse(myMissionList![index].createdDate)),
-                      style: bodyTextStyle.copyWith(color: grayScaleGrey300, fontWeight: FontWeight.w500),
+                      DateFormat('HH:mm').format(
+                          DateTime.parse(myMissionList![index].createdDate)),
+                      style: bodyTextStyle.copyWith(
+                          color: grayScaleGrey300, fontWeight: FontWeight.w500),
                     ),
                     Spacer(),
                     GestureDetector(
-                      onTap: () {
-                        print('... 클릭');
-                      },
-                        child: Icon(Icons.more_vert_outlined, color: grayScaleGrey300,)),
+                        onTap: () {
+                          print('... 클릭');
+                        },
+                        child: Icon(
+                          Icons.more_vert_outlined,
+                          color: grayScaleGrey300,
+                        )),
                   ],
                 ),
                 SizedBox(height: 16),
+
                 /// 사진 텍스트 링크 중 선택
-                if(missionWay.contains('사진'))
-                  Container(
-                    width: double.infinity,
-                    height: 265,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.network(
-                        myMissionList![index].archive,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  ),
-                if(missionWay.contains('링크'))
+                if (missionWay.contains('사진'))
                   Container(
                       width: double.infinity,
                       height: 265,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: WebViewWidget(
-                        controller: webViewController..setJavaScriptMode(JavaScriptMode.unrestricted)
-                        ..loadRequest(Uri.parse('https://${myMissionList![index].archive}')),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.network(
+                          myMissionList![index].archive,
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                if (missionWay.contains('링크'))
+                  Container(
+                    width: double.infinity,
+                    height: 265,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: WebViewWidget(
+                      controller: webViewController
+                        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                        ..loadRequest(Uri.parse(
+                            'https://${myMissionList![index].archive}')),
+                    ),
+                  ),
+                if (missionWay.contains('텍스트'))
+                  Container(
+                    width: double.infinity,
+                    height: 265,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: grayScaleGrey500, width: 1),
+                    ),
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        myMissionList![index].archive,
+                        style:
+                            contentTextStyle.copyWith(color: grayScaleGrey200),
                       ),
-                  ),
-                if(missionWay.contains('텍스트'))
-                Container(
-                  width: double.infinity,
-                  height: 265,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: grayScaleGrey500,
-                      width: 1
                     ),
                   ),
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      myMissionList![index].archive,
-                      style: contentTextStyle.copyWith(color: grayScaleGrey200),
-                    ),
-                  ),
-                ),
                 Spacer(),
+
                 /// 아래는 버튼 구현
-                if(missionWay.contains('사진'))
+                if (missionWay.contains('사진'))
                   Padding(
                       padding: const EdgeInsets.only(bottom: 40.0),
                       child: Row(
@@ -550,11 +567,18 @@ class MissionProveState with ChangeNotifier {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text('좋아요 ',
-                                      style: contentTextStyle.copyWith(color: grayScaleGrey100, fontWeight: FontWeight.w600),),
+                                    Text(
+                                      '좋아요 ',
+                                      style: contentTextStyle.copyWith(
+                                          color: grayScaleGrey100,
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                     SizedBox(width: 4),
-                                    Text('6',
-                                      style: contentTextStyle.copyWith(color: coralGrey500),),
+                                    Text(
+                                      '6',
+                                      style: contentTextStyle.copyWith(
+                                          color: coralGrey500),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -570,44 +594,53 @@ class MissionProveState with ChangeNotifier {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text('공유하기',
-                                      style: contentTextStyle.copyWith(color: grayScaleGrey100, fontWeight: FontWeight.w600),),
+                                    Text(
+                                      '공유하기',
+                                      style: contentTextStyle.copyWith(
+                                          color: grayScaleGrey100,
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                   ],
                                 ),
                               ),
                             ],
                           ),
                         ],
-                      )
-                  ),
-                if(missionWay.contains('텍스트') || missionWay.contains('링크'))
+                      )),
+                if (missionWay.contains('텍스트') || missionWay.contains('링크'))
                   Padding(
-                  padding: const EdgeInsets.only(bottom: 40.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 138,
-                        height: 51,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: grayScaleGrey500,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('좋아요 ',
-                            style: contentTextStyle.copyWith(color: grayScaleGrey100, fontWeight: FontWeight.w600),),
-                            SizedBox(width: 4),
-                            Text('6',
-                              style: contentTextStyle.copyWith(color: coralGrey500),),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ),
+                      padding: const EdgeInsets.only(bottom: 40.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 138,
+                            height: 51,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: grayScaleGrey500,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '좋아요 ',
+                                  style: contentTextStyle.copyWith(
+                                      color: grayScaleGrey100,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  '6',
+                                  style: contentTextStyle.copyWith(
+                                      color: coralGrey500),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
               ],
             ),
           ),
