@@ -54,7 +54,6 @@ class _BoardMainPageState extends State<BoardMainPage>
     final TeamInfo? teamInfo = context.read<BoardMainState>().teamInfo;
     final String teamName = teamInfo?.teamName ?? '';
     final int teamId = context.read<BoardMainState>().teamId;
-    print('Team ID: $teamId');
 
     return Scaffold(
       backgroundColor: grayScaleGrey900,
