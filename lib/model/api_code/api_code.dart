@@ -12,6 +12,7 @@ import 'package:moing_flutter/model/response/get_all_comments_response.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
+import 'package:moing_flutter/model/team/team_fire_level_models.dart';
 
 import '../response/aggregate_repeat_mission_response.dart';
 import '../response/aggregate_single_mission_response.dart';
@@ -549,20 +550,18 @@ class ApiCode {
     return null;
   }
 
-  Future<TeamListResponse?>
-  getTeamListStatus() async {
+  Future<TeamListResponse?> getTeamListStatus() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/my-teamList';
 
     try {
       ApiResponse<List<TeamList>>? apiResponse =
-      await call.makeRequest<List<TeamList>>(
+          await call.makeRequest<List<TeamList>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
           log('팀 리스트 Server response: $data');
           return (data as List<dynamic>)
-              .map((item) =>
-              TeamList.fromJson(item as Map<String, dynamic>))
+              .map((item) => TeamList.fromJson(item as Map<String, dynamic>))
               .toList();
         },
       );
@@ -576,6 +575,28 @@ class ApiCode {
       }
     } catch (e) {
       log('팀 리스트 조회 실패: $e');
+    }
+    return null;
+  }
+
+  Future<TeamFireLevelData?> getTeamFireLevel({required int teamId}) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/my-fire';
+
+    try {
+      ApiResponse<TeamFireLevelData>? apiResponse =
+          await call.makeRequest<TeamFireLevelData>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => TeamFireLevelData.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        return apiResponse.data;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('팀별 불 레벨 경험치 조회: $e');
     }
     return null;
   }

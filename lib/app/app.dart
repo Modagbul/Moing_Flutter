@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/board/screen/completed_mission_page.dart';
 import 'package:moing_flutter/board/screen/ongoing_misson_page.dart';
+import 'package:moing_flutter/board/screen/team_member_list_page.dart';
 import 'package:moing_flutter/fcm/fcm_state.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/home/home_screen.dart';
@@ -136,6 +137,8 @@ class MoingApp extends StatelessWidget {
 
 
             MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),
+
+            TeamMemberListPage.routeName:(context) => TeamMemberListPage.route(context),
 
           },
           navigatorObservers: [

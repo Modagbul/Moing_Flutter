@@ -14,7 +14,6 @@ class BoardGoalBottomSheet extends StatefulWidget {
 }
 
 class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
-
   bool _isExpanded = false;
 
   @override
@@ -41,6 +40,40 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
             if (!_isExpanded) _buildAnnouncementRow(),
             _buildGroupInfoRow(context: context),
             SizedBox(height: screenHeight * 0.02),
+            if (_isExpanded)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 13.0),
+                    child: Text(
+                      '모임원 소개',
+                      style: TextStyle(
+                        color: grayScaleGrey100,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 14.0),
+                    child: GestureDetector(
+                      onTap: context
+                          .read<BoardMainState>()
+                          .navigateTeamMemberListPage,
+                      child: const Text(
+                        '전체보기',
+                        style: TextStyle(
+                          color: grayScaleGrey100,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             if (_isExpanded) _buildExpandedGridView(screenWidth: screenWidth),
             if (_isExpanded) SizedBox(height: screenHeight * 0.03),
             if (_isExpanded) _buildIntroductionColumn(),
@@ -109,7 +142,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                 color: grayScaleGrey500,
               ),
               child: Text(
-                '${context.watch<BoardMainState>().singleBoardData?.boardNum?? 100}',
+                '${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 100}',
                 style: const TextStyle(
                   color: grayScaleGrey100,
                   fontSize: 16.0,
@@ -176,7 +209,12 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                   ),
                   const SizedBox(width: 12.0),
                   Text(
-                    context.watch<BoardMainState>().singleBoardData?.teamInfo.category ?? '',
+                    context
+                            .watch<BoardMainState>()
+                            .singleBoardData
+                            ?.teamInfo
+                            .category ??
+                        '',
                     style: bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
@@ -229,10 +267,17 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
   }
 
   Widget _buildExpandedGridView({required screenWidth}) {
-    List<TeamMemberInfo>? memberList = context.watch<BoardMainState>().singleBoardData?.teamInfo.teamMemberInfoList;
+    List<TeamMemberInfo>? memberList = context
+        .watch<BoardMainState>()
+        .singleBoardData
+        ?.teamInfo
+        .teamMemberInfoList;
+    const maxItems = 6;
+    final remainingItems = (memberList?.length ?? 0) - maxItems;
 
     return Expanded(
       child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: screenWidth,
         ),
@@ -241,28 +286,52 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
             spacing: 8.0,
             runSpacing: 8.0,
             children: List.generate(
-              memberList?.length ?? 0,
+              (memberList?.length ?? 0) < maxItems
+                  ? (memberList?.length ?? 0)
+                  : maxItems + 1,
               (index) {
-                final name = memberList?[index].nickName ?? '';
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 4.0,
-                    horizontal: 8.0,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24.0),
-                    color: grayScaleGrey500,
-                  ),
-                  child: Text(
-                    name,
-                    maxLines: 1,
-                    style: const TextStyle(
-                      color: grayScaleGrey100,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600,
+                if (index < maxItems) {
+                  final name = memberList?[index].nickName ?? '';
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4.0,
+                      horizontal: 8.0,
                     ),
-                  ),
-                );
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24.0),
+                      color: grayScaleGrey500,
+                    ),
+                    child: Text(
+                      name,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        color: grayScaleGrey100,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4.0,
+                      horizontal: 8.0,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24.0),
+                      color: grayScaleGrey500,
+                    ),
+                    child: Text(
+                      '+$remainingItems', // 남은 아이템 개수 표시
+                      maxLines: 1,
+                      style: const TextStyle(
+                        color: grayScaleGrey100,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  );
+                }
               },
             ),
           );
@@ -285,7 +354,12 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
         ),
         const SizedBox(height: 8.0),
         Text(
-          context.watch<BoardMainState>().singleBoardData?.teamInfo.introduction ?? '',
+          context
+                  .watch<BoardMainState>()
+                  .singleBoardData
+                  ?.teamInfo
+                  .introduction ??
+              '',
           style: const TextStyle(
             color: grayScaleGrey400,
             fontSize: 14.0,
