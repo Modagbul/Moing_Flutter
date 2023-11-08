@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
@@ -15,14 +13,14 @@ class PostUpdatePage extends StatelessWidget {
 
   static route(BuildContext context) {
     final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
-    log(arguments?['teamId'].toString() ?? 'dssvdds');
     final int teamId = arguments?['teamId'];
     final int boardId = arguments?['boardId'];
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => PostUpdateState(context: context, teamId: teamId, boardId: boardId)),
+            create: (_) => PostUpdateState(
+                context: context, teamId: teamId, boardId: boardId)),
       ],
       builder: (context, _) {
         return const PostUpdatePage();
@@ -83,7 +81,7 @@ class PostUpdatePage extends StatelessWidget {
                     },
                     onCanceled: () {
                       Navigator.of(context).popUntil(
-                              (route) => route.settings.name == '/post/main');
+                          (route) => route.settings.name == '/post/main');
                     },
                     leftText: '나가기',
                     rightText: '계속 진행하기',
@@ -120,10 +118,9 @@ class _PostInfoTextFields extends StatelessWidget {
         OutlinedTextField(
           maxLength: 15,
           labelText: '제목',
-          hintText:
-          '15자 이내의 제목을 적어주세요',
+          hintText: '15자 이내의 제목을 적어주세요',
           counterText:
-          '(${context.watch<PostUpdateState>().titleController.text.length}/15)',
+              '(${context.watch<PostUpdateState>().titleController.text.length}/15)',
           onChanged: (value) =>
               context.read<PostUpdateState>().updateTextField(),
           controller: context.read<PostUpdateState>().titleController,
@@ -138,7 +135,7 @@ class _PostInfoTextFields extends StatelessWidget {
           labelText: '내용',
           hintText: '공지할 내용을 적어주세요',
           counterText:
-          '(${context.watch<PostUpdateState>().contentController.text.length}/300)',
+              '(${context.watch<PostUpdateState>().contentController.text.length}/300)',
           onChanged: (value) =>
               context.read<PostUpdateState>().updateTextField(),
           controller: context.read<PostUpdateState>().contentController,
