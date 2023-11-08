@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/component/board_main_bottom_sheet.dart';
 import 'package:moing_flutter/board/screen/board_goal_screen.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/board_mission_screen.dart';
-import 'package:moing_flutter/board/component/board_main_bottom_sheet.dart';
+import 'package:moing_flutter/board/component/board_main_bottom_sheet_leader.dart';
 import 'package:moing_flutter/board/screen/board_mission_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/main/main_page.dart';
@@ -23,8 +24,7 @@ class BoardMainPage extends StatefulWidget {
         ChangeNotifierProvider(
             create: (_) => BoardMainState(context: context, teamId: teamId)),
         ChangeNotifierProvider(
-            create: (_) =>
-                BoardMissionState(context: context)),
+            create: (_) => BoardMissionState(context: context)),
       ],
       builder: (context, _) {
         return const BoardMainPage();
@@ -98,7 +98,8 @@ class _BoardMainPageState extends State<BoardMainPage>
       leading: IconButton(
         icon: const Icon(Icons.arrow_back), // 뒤로 가기 아이콘
         onPressed: () {
-          Navigator.pushNamedAndRemoveUntil(context, MainPage.routeName, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, MainPage.routeName, (route) => false);
         },
       ),
       actions: [
@@ -119,6 +120,13 @@ class _BoardMainPageState extends State<BoardMainPage>
     required BuildContext context,
     required int teamId,
   }) {
+    final bool isLeader = context
+            .read<BoardMainState>()
+            .teamInfo
+            ?.teamMemberInfoList[0]
+            .isLeader ??
+        false;
+
     showModalBottomSheet(
       backgroundColor: grayScaleGrey600,
       context: context,
@@ -128,9 +136,13 @@ class _BoardMainPageState extends State<BoardMainPage>
         ),
       ),
       builder: (BuildContext context) {
-        return BoardMainBottomSheet(
-          teamId: teamId,
-        );
+        return isLeader
+            ? BoardMainBottomSheetLeader(
+                teamId: teamId,
+              )
+            : BoardMainBottomSheet(
+                teamId: teamId,
+              );
       },
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/screen/team_member_list_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
@@ -54,5 +55,13 @@ class BoardMainState extends ChangeNotifier {
   void getTeamFireLevel() async {
     teamFireLevelData = await apiCode.getTeamFireLevel(teamId: teamId);
     notifyListeners();
+  }
+
+  void navigateTeamMemberListPage() {
+    Navigator.pushNamed(
+      context,
+      TeamMemberListPage.routeName,
+      arguments: teamInfo?.teamMemberInfoList,
+    );
   }
 }
