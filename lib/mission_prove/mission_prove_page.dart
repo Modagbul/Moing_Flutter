@@ -72,12 +72,14 @@ class _MissionProvePageState extends State<MissionProvePage>
                 sliverSizedBox(height: 20),
                 /// isMeOrEveryProved : true -> 나의 인증, false -> 모두의 인증
                 /// myMissionList : 미션 인증 시 가져오는 리스트
-                /// isMeProved : 나의 인증 여부
+                /// isMeProved : 나의 오늘 인증 여부
 
                 /// 나의 인증이면서 아직 인증 안한 경우
-                if(context.watch<MissionProveState>().isMeOrEveryProved &&
-                    context.watch<MissionProveState>().myMissionList == null &&
-                    !context.watch<MissionProveState>().isMeProved)
+                if(context.watch<MissionProveState>().myMissionList == null ||
+                    (context.watch<MissionProveState>().isMeOrEveryProved &&
+                    context.watch<MissionProveState>().myMissionList != null &&
+                    context.watch<MissionProveState>().myMissionList!.isEmpty &&
+                    !context.watch<MissionProveState>().isMeProved))
                   SingleMyMissionNotProved(),
                 /// 나의 인증이면서 반복 미션에서 인증한 경우
                 if (context.watch<MissionProveState>().isMeOrEveryProved &&
@@ -91,14 +93,20 @@ class _MissionProvePageState extends State<MissionProvePage>
                     context.watch<MissionProveState>().myMissionList != null &&
                     context.watch<MissionProveState>().isMeProved)
                 SingleMyMissionProved(),
+                /// 모두의 인증이면서 한번 미션에서 인증 안한 경우
+                if(context.watch<MissionProveState>().myMissionList == null ||
+                    (!context.watch<MissionProveState>().isMeOrEveryProved &&
+                        context.watch<MissionProveState>().everyMissionList != null &&
+                        context.watch<MissionProveState>().everyMissionList!.isEmpty))
+                  SingleMyMissionNotProved(),
               ],
             ),
 
             /// 인증 안한 경우
-            if(!context.watch<MissionProveState>().isMeProved || context.watch<MissionProveState>().isRepeated)
+            if(!context.watch<MissionProveState>().isMeProved)
              MissionNotProveButton(),
             /// 인증 한 경우
-            if(context.watch<MissionProveState>().isMeProved && !context.watch<MissionProveState>().isMeProved)
+            if(context.watch<MissionProveState>().isMeProved)
             MissionProveButton(),
           ],
         ),

@@ -16,6 +16,7 @@ import 'package:moing_flutter/missions/create/text_auth_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/response/mission/my_mission_get_prove_response.dart';
+import 'package:moing_flutter/model/response/mission/other_mission_get_prove_response.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 import 'package:moing_flutter/utils/image_upload/image_upload.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -64,6 +65,9 @@ class MissionProveState with ChangeNotifier {
   // 내가 당일에 인증한 경우 T/F 값
   bool isMeProved = false;
 
+  // 미션 인증시 알림 독려 여부
+  bool isFireText = false;
+
   // 나의 인증이면 true, 모두의 인증이면 false
   bool isMeOrEveryProved = true;
 
@@ -73,6 +77,11 @@ class MissionProveState with ChangeNotifier {
   // 나의 인증 조회 시 받아오는 리스트
   MyMissionProveAllData? myMissionData;
   List<MyMissionProveData>? myMissionList;
+
+  // 모두의 인증 조회 시 받아오는 리스트
+  List<EveryMissionProveData>? everyMissionList;
+
+  String nobodyText = '데이터를 불러오는 중입니다...';
 
   MissionProveState(
       {required this.context,
@@ -88,6 +97,8 @@ class MissionProveState with ChangeNotifier {
 
     // 나의 인증 현황 조회하기
     loadMissionData();
+    // 모두의 인증 현황 조회하기
+    loadEveryMissionData();
     // 미션 내용, 규칙 조회 --> 미션 제목, 기한, 규칙, 내용, 반복 or 한번 미션, 인증 방식(텍스트, 링크, 사진) 리턴
     getMissionContent();
     // 반복 미션인 경우, 나의 성공횟수 조회
@@ -184,7 +195,12 @@ class MissionProveState with ChangeNotifier {
   void _onTabChanged() {
     if (!tabController.indexIsChanging) {
       isMeOrEveryProved = tabController.index == 0 ? true : false;
-      print('탭 : ${tabController.index}, 나의 인증 : $isMeOrEveryProved');
+      if(!isMeOrEveryProved && everyMissionList != null && everyMissionList!.isEmpty) {
+        nobodyText = '아직 아무도\n인증하지 않았어요';
+      }
+      else if(isMeOrEveryProved && myMissionList != null && myMissionList!.isEmpty) {
+        nobodyText = '아직 인증하지 않았어요';
+      }
       notifyListeners();
     }
   }
@@ -210,13 +226,44 @@ class MissionProveState with ChangeNotifier {
       );
 
       if(apiResponse.data != null) {
+        // 오늘 미션 인증했는지 조회
         isMeProved = apiResponse.data?.today as bool;
-        if(isMeProved) {
-          myMissionList = apiResponse.data!.archives;
-          print('myMissionList Data : ${apiResponse.data!.archives.toString()}');
+        myMissionList = apiResponse.data!.archives;
+        if(myMissionList != null && myMissionList!.isEmpty) {
+          nobodyText = '아직 인증하지 않았어요';
         }
+        print('myMissionList Data : ${apiResponse.data!.archives.toString()}');
         notifyListeners();
         print('내가 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
+      }
+    } catch (e) {
+      log('나의 인증 조회 실패: $e');
+    }
+  }
+
+  /// 모인원 미션 인증 조회
+  void loadEveryMissionData() async {
+    apiUrl =
+    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/others';
+
+    try {
+      ApiResponse<List<EveryMissionProveData>> apiResponse =
+      await call.makeRequest<List<EveryMissionProveData>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (dataJson) => List<EveryMissionProveData>.from(
+          (dataJson as List).map(
+                (item) => EveryMissionProveData.fromJson(item as Map<String, dynamic>),
+          ),
+        ),
+      );
+
+      if(apiResponse.isSuccess == true) {
+        print('모두의 인증 조회 : ${apiResponse.data?.toString()}');
+        everyMissionList = apiResponse.data;
+        print('everyMissonList : ${everyMissionList.toString()}');
+
+
       }
     } catch (e) {
       log('나의 인증 조회 실패: $e');
@@ -431,7 +478,9 @@ class MissionProveState with ChangeNotifier {
     );
 
     Future.delayed(Duration(milliseconds: 1000), () {
+      isFireText = true;
       Navigator.of(context).pop();
+      notifyListeners();
     });
   }
 

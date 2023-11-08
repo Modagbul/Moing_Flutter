@@ -149,6 +149,7 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
               )
             ],
           ),
+          if(context.watch<MissionProveState>().isFireText)
           Positioned(
             top: 20,
             left: 20,

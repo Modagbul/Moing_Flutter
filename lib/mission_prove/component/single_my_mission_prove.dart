@@ -16,25 +16,79 @@ class SingleMyMissionProved extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: 300,
+              height: (context.watch<MissionProveState>().missionWay.length > 1 &&
+                  context.watch<MissionProveState>().missionWay.contains('링크') &&
+                  context.watch<MissionProveState>().myMissionList![0].status == 'COMPLETE')
+              ? 192 : 300,
               decoration: BoxDecoration(
                 color: grayScaleGrey700,
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: context.watch<MissionProveState>().missionWay != null &&
-                  context.watch<MissionProveState>().missionWay.contains('사진')
+              child:
+              /// 건너뛰기 한 경우
+              context.watch<MissionProveState>().myMissionList![0].status == 'SKIP'
+            ? Padding(
+              padding: const EdgeInsets.only(top: 68.0, left: 16),
+              child: Text('건너뛰기했지롱~', style: contentTextStyle.copyWith(color: Colors.white)),
+            )
+              /// 사진 인증
+              : context.watch<MissionProveState>().missionWay.length > 1 &&
+                  context.watch<MissionProveState>().missionWay.contains('사진') &&
+                  context.watch<MissionProveState>().myMissionList![0].status == 'COMPLETE'
                   ? Image.network(
                 context.watch<MissionProveState>().myMissionList![0].archive,
                 fit: BoxFit.cover,
               )
-                  : context.watch<MissionProveState>().missionWay != null &&
-                  context.watch<MissionProveState>().missionWay.contains('텍스트')
+              /// 텍스트 인증
+                  : context.watch<MissionProveState>().missionWay.length > 1 &&
+                  context.watch<MissionProveState>().missionWay.contains('텍스트') &&
+                  context.watch<MissionProveState>().myMissionList![0].status == 'COMPLETE'
                   ? Padding(
                     padding: const EdgeInsets.only(left: 16.0, top: 60, bottom: 24, right: 32),
                     child: Text(context.watch<MissionProveState>().myMissionList![0].archive,
                     style: contentTextStyle.copyWith(color: grayScaleGrey200),),
                   )
-                  : Text('아니'),
+              /// 링크 인증
+                  : Padding(
+                    padding: const EdgeInsets.only(top: 80.0, left: 16, right: 16, bottom: 24),
+                    child: Container(
+                      width: double.infinity,
+                      height: 88,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: grayScaleGrey600,
+                      ),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0, right: 12, top: 34, bottom: 34),
+                            child: Image.asset(
+                              'asset/image/icon_hyperlink.png',
+                              color: grayScaleGrey400,
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16.0, top: 25.5, bottom: 4),
+                                child: Text('링크 바로가기', style: contentTextStyle.copyWith(color: grayScaleGrey100),),
+                              ),
+                              Text(
+                                context.watch<MissionProveState>().myMissionList![0].archive,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: grayScaleGrey400,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+              ),
+                  )
             ),
             Positioned(
               top: 0,

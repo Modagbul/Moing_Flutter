@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
+import 'package:provider/provider.dart';
 
 class SingleMyMissionNotProved extends StatelessWidget {
   const SingleMyMissionNotProved({Key? key}) : super(key: key);
@@ -19,8 +21,9 @@ class SingleMyMissionNotProved extends StatelessWidget {
           ),
           child: Center(
               child: Text(
-                '아직 인증하지 않았어요',
-                style: contentTextStyle,
+                context.watch<MissionProveState>().nobodyText,
+                style: contentTextStyle.copyWith(height: 1.4),
+                textAlign: TextAlign.center,
               )),
         ),
       ),
