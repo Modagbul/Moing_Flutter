@@ -8,6 +8,7 @@ import 'package:moing_flutter/board/screen/board_mission_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
+import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:provider/provider.dart';
 
 class BoardMainPage extends StatefulWidget {
@@ -16,13 +17,16 @@ class BoardMainPage extends StatefulWidget {
   const BoardMainPage({super.key});
 
   static route(BuildContext context) {
-    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
-    final int teamId = arguments as int;
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final int teamId = arguments['teamId'];
+    bool isSuccess = arguments['isSuccess'] ?? false;
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => BoardMainState(context: context, teamId: teamId)),
+            create: (_) => BoardMainState(
+                context: context, teamId: teamId, isSuccess: isSuccess)),
         ChangeNotifierProvider(
             create: (_) => BoardMissionState(context: context)),
       ],
@@ -47,6 +51,15 @@ class _BoardMainPageState extends State<BoardMainPage>
             vsync: this,
           ),
         );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.read<BoardMainState>().isSuccess) {
+        ViewUtil().showSnackBar(
+          context: context,
+          message: '소모임 정보 수정이 완료되었어요',
+        );
+      }
+    });
   }
 
   @override

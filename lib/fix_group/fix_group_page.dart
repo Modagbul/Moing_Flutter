@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/fix_group/fix_group_state.dart';
@@ -12,6 +11,8 @@ import 'package:provider/provider.dart';
 class FixGroupPage extends StatelessWidget {
   static const routeName = '/group/fix';
 
+  const FixGroupPage({super.key});
+
   static route(BuildContext context) {
     final int teamId = ModalRoute.of(context)?.settings.arguments as int;
     return MultiProvider(
@@ -20,7 +21,7 @@ class FixGroupPage extends StatelessWidget {
             create: (_) => FixGroupState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
-        return FixGroupPage();
+        return const FixGroupPage();
       },
     );
   }
@@ -84,7 +85,7 @@ class FixGroupPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 34,
                 ),
                 Text(
@@ -92,7 +93,7 @@ class FixGroupPage extends StatelessWidget {
                   style: headerTextStyle.copyWith(
                       color: grayScaleGrey100, height: 1.3),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 72,
                 ),
                 OutlinedTextField(
@@ -105,7 +106,7 @@ class FixGroupPage extends StatelessWidget {
                   onClearButtonPressed:
                       context.read<FixGroupState>().clearNameTextField,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 48,
                 ),
                 OutlinedTextField(
@@ -121,7 +122,7 @@ class FixGroupPage extends StatelessWidget {
                   onClearButtonPressed:
                       context.read<FixGroupState>().clearIntroduceTextField,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 GestureDetector(
@@ -146,7 +147,7 @@ class FixGroupPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Container(
@@ -170,14 +171,14 @@ class FixGroupPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 24,
                 ),
                 Text(
                   '소모임의 대표 사진은 홈 화면에서의 썸네일로 적용되어요.',
                   style: bodyTextStyle.copyWith(color: grayBlack8),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 124,
                 ),
               ],
