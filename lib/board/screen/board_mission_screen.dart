@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/ongoing_misson_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +16,12 @@ class BoardMissionScreen extends StatefulWidget {
   const BoardMissionScreen({super.key});
 
   static route(BuildContext context) {
-    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
-    final int teamId = arguments as int;
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+
+    log(arguments.runtimeType.toString());
+    log(arguments['teamId'].runtimeType.toString());
+    final int teamId = arguments['teamId'];
 
     return MultiProvider(
       providers: [
@@ -41,68 +48,78 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BoardMissionState>().initTabController(
-        tabController: TabController(
-          length: 2,
-          vsync: this,
-        ),
-      );
+            tabController: TabController(
+              length: 2,
+              vsync: this,
+            ),
+          );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final tabController = context.select<BoardMissionState, TabController?>(
-          (state) => state.tabController,
+      (state) => state.tabController,
     );
 
     if (tabController == null) {
       return Container();
     }
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Column(
-        children: [
-          Stack(
-            children: [
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 1.0, // 원하는 높이 설정
-                  color: grayScaleGrey600, // 회색으로 설정
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right:170), // 오른쪽에 여백 주기
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: TabBar(
-                    controller: tabController,
-                    indicatorColor: grayScaleGrey200,
-                    labelColor: grayScaleGrey200,
-                    unselectedLabelColor: grayScaleGrey550,
-                    tabs: [
-                      _customTab(text: '진행중 미션'),
-                      _customTab(text: '종료된 미션'),
-                    ],
-                    labelPadding: EdgeInsets.zero,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => OngoingMissionState(
+            context: context,
+            teamId: context.watch<BoardMainState>().teamId,
+          ),
+        ),
+      ],
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Column(
+          children: [
+            Stack(
+              children: [
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 1.0, // 원하는 높이 설정
+                    color: grayScaleGrey600, // 회색으로 설정
                   ),
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: tabController,
-              children: [
-                OngoingMissionPage.route(context),
-                CompletedMissionPage.route(context),
+                Padding(
+                  padding: const EdgeInsets.only(right: 170), // 오른쪽에 여백 주기
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: TabBar(
+                      controller: tabController,
+                      indicatorColor: grayScaleGrey200,
+                      labelColor: grayScaleGrey200,
+                      unselectedLabelColor: grayScaleGrey550,
+                      tabs: [
+                        _customTab(text: '진행중 미션'),
+                        _customTab(text: '종료된 미션'),
+                      ],
+                      labelPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+            Expanded(
+              child: TabBarView(
+                controller: tabController,
+                children: [
+                  OngoingMissionPage.route(context),
+                  CompletedMissionPage.route(context),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

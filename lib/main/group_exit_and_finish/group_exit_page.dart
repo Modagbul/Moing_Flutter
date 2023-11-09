@@ -43,7 +43,7 @@ class GroupExitPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 44,
                 ),
                 Text(
@@ -54,7 +54,7 @@ class GroupExitPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 62,),
+                const SizedBox(height: 62,),
                 Stack(
                   children: [
                     Container(
@@ -71,7 +71,7 @@ class GroupExitPage extends StatelessWidget {
                       ),
                     ),
                     if(context.watch<GroupFinishExitState>().exitCount == 0)
-                      Positioned(
+                      const Positioned(
                         top: 101,
                         left: 0,
                         right: 0,
@@ -87,7 +87,7 @@ class GroupExitPage extends StatelessWidget {
                         ),
                       )
                     else
-                      Positioned(
+                      const Positioned(
                         top: 101,
                         left: 0,
                         right: 0,
@@ -99,7 +99,7 @@ class GroupExitPage extends StatelessWidget {
                       ),
                   ],
                 ),
-                SizedBox(height: 144,),
+                const SizedBox(height: 144,),
                 Text(
                   '강제 종료 절차가 시작되면 그간의 데이터를\n복구할 수 없으니 신중하게 고민해주세요.',
                   style: bodyTextStyle.copyWith(
@@ -107,7 +107,7 @@ class GroupExitPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Align(

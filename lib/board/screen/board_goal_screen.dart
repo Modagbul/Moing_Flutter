@@ -24,6 +24,15 @@ class BoardGoalScreen extends StatelessWidget {
         context.watch<BoardMainState>().teamFireLevelData?.score ?? 0;
     final String category =
         (context.watch<BoardMainState>().teamInfo?.category ?? '');
+    final bool isDeleted =
+        context.watch<BoardMainState>().teamInfo?.isDeleted ?? false;
+    DateTime deletionTime =
+        DateTime.parse(context.watch<BoardMainState>().teamInfo!.deletionTime!);
+    DateTime threeDaysLater = deletionTime.add(const Duration(days: 3));
+    DateTime now = DateTime.now();
+    Duration difference = threeDaysLater.difference(now);
+    int daysRemaining = difference.inDays;
+    int hoursRemaining = difference.inHours % 24;
 
     return MultiProvider(
       providers: [
@@ -47,7 +56,33 @@ class BoardGoalScreen extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        SizedBox(height: screenHeight * 0.01),
+                        isDeleted
+                            ? Column(
+                              children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'asset/image/icon_warning_circle.png',
+                                        width: 20.0,
+                                        height: 20.0,
+                                      ),
+                                      const SizedBox(width: 10.0),
+                                      Text(
+                                        '소모임 종료까지 $daysRemaining일 $hoursRemaining시간',
+                                        style: const TextStyle(
+                                          color: errorColor,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                const SizedBox(height: 12.0),
+                              ],
+                            )
+                            : SizedBox(height: screenHeight * 0.01),
                         _buildRandomMessageContainer(
                           level: level,
                           category: category,
