@@ -601,6 +601,28 @@ class ApiCode {
     return null;
   }
 
+  Future<int> deleteTeam({required int teamId}) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/disband';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        return apiResponse.data!['teamId'];
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('팀별 불 레벨 경험치 조회: $e');
+    }
+    return 0;
+  }
+
 // void makeMissionAPI() async {
 //   var teamId = 6;
 //   apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';

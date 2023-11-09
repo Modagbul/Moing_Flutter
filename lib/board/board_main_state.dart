@@ -13,14 +13,16 @@ class BoardMainState extends ChangeNotifier {
   late TabController tabController;
   final ApiCode apiCode = ApiCode();
   final int teamId;
+  final bool isSuccess;
 
   SingleBoardData? singleBoardData;
   TeamFireLevelData? teamFireLevelData;
   TeamInfo? teamInfo;
 
-  BoardMainState({
+  BoardMainState( {
     required this.context,
     required this.teamId,
+    required this.isSuccess,
   }) {
     initState();
   }

@@ -28,12 +28,12 @@ class GroupExitApplyPage extends StatelessWidget {
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Spacer(),
+                const Spacer(),
                 Text(
                   '소모임 탈퇴가 완료되었어요.',
                   style: headerTextStyle.copyWith(
@@ -42,11 +42,11 @@ class GroupExitApplyPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 16,),
-                Text('다음에 또 만나요!',
+                const SizedBox(height: 16,),
+                const Text('다음에 또 만나요!',
                   style: contentTextStyle,
                 ),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 24.0),
                   child: Align(
@@ -65,6 +65,6 @@ class GroupExitApplyPage extends StatelessWidget {
           ),
         ),
       ),
-    );;
+    );
   }
 }

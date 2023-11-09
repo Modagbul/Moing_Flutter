@@ -48,4 +48,37 @@ class ViewUtil {
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
+  // SnackBar 메세지 출력
+  void showSnackBar({
+    required BuildContext context,
+    required String message,
+  }) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final snackBar = SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(width: 10),
+          Text(
+            message,
+            style: const TextStyle(
+              fontSize: 16,
+              color: grayScaleGrey700,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+      duration: const Duration(seconds: 2),
+      backgroundColor: grayScaleWhite,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      margin: EdgeInsets.only(bottom: screenHeight * 0.73),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 }

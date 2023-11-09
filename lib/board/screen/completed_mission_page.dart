@@ -16,7 +16,7 @@ class CompletedMissionPage extends StatelessWidget {
 
   static route(BuildContext context) {
     final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
-    final int teamId = arguments as int;
+    final int teamId = arguments['teamId'] as int;
 
     return MultiProvider(
       providers: [
@@ -100,7 +100,7 @@ class CompletedMissionPage extends StatelessWidget {
 }
 
 class _BottomButton extends StatelessWidget {
-  const _BottomButton({super.key});
+  const _BottomButton();
 
   @override
   Widget build(BuildContext context) {
