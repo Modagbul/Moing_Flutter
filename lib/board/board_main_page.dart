@@ -133,12 +133,14 @@ class _BoardMainPageState extends State<BoardMainPage>
     required BuildContext context,
     required int teamId,
   }) {
-    final bool isLeader = context
-            .read<BoardMainState>()
-            .teamInfo
-            ?.teamMemberInfoList[0]
-            .isLeader ??
-        false;
+    final int currentUserId =
+        context.read<BoardMainState>().teamInfo?.currentUserId ?? 0;
+    final currentUserInfo = context
+        .read<BoardMainState>()
+        .teamInfo
+        ?.teamMemberInfoList
+        .firstWhere((element) => element.memberId == currentUserId);
+    final bool isLeader = currentUserInfo?.isLeader ?? false;
 
     showModalBottomSheet(
       backgroundColor: grayScaleGrey600,
