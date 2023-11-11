@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:moing_flutter/model/response/single_board_team_member_info.dart';
 
 class TeamInfo {
@@ -9,6 +7,7 @@ class TeamInfo {
   final int numOfMember;
   final String category;
   final String introduction;
+  final int currentUserId;
   final List<TeamMemberInfo> teamMemberInfoList;
 
   TeamInfo({
@@ -18,6 +17,7 @@ class TeamInfo {
     required this.numOfMember,
     required this.category,
     required this.introduction,
+    required this.currentUserId,
     required this.teamMemberInfoList,
   });
 
@@ -29,6 +29,7 @@ class TeamInfo {
       numOfMember: json['numOfMember'] as int,
       category: json['category'] as String,
       introduction: json['introduction'] as String,
+      currentUserId: json['currentUserId'] as int,
       teamMemberInfoList: (json['teamMemberInfoList'] as List)
           .map((i) => TeamMemberInfo.fromJson(i))
           .toList(),

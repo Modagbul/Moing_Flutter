@@ -47,7 +47,6 @@ class BoardMainState extends ChangeNotifier {
   void getSingleBoard() async {
     singleBoardData = await apiCode.getSingleBoard(teamId: teamId);
     teamInfo = singleBoardData?.teamInfo;
-    print('카테고리 : ${teamInfo?.category}');
     notifyListeners();
   }
 

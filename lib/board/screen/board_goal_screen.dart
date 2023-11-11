@@ -18,6 +18,7 @@ class BoardGoalScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
+
     final int level =
         context.watch<BoardMainState>().teamFireLevelData?.level ?? 0;
     final int score =
@@ -26,13 +27,19 @@ class BoardGoalScreen extends StatelessWidget {
         (context.watch<BoardMainState>().teamInfo?.category ?? '');
     final bool isDeleted =
         context.watch<BoardMainState>().teamInfo?.isDeleted ?? false;
-    DateTime deletionTime =
-        DateTime.parse(context.watch<BoardMainState>().teamInfo!.deletionTime!);
-    DateTime threeDaysLater = deletionTime.add(const Duration(days: 3));
-    DateTime now = DateTime.now();
-    Duration difference = threeDaysLater.difference(now);
-    int daysRemaining = difference.inDays;
-    int hoursRemaining = difference.inHours % 24;
+    int daysRemaining = 0;
+    int hoursRemaining = 0;
+
+    if(isDeleted){
+      DateTime deletionTime =
+      DateTime.parse(context.watch<BoardMainState>().teamInfo!.deletionTime!);
+      DateTime threeDaysLater = deletionTime.add(const Duration(days: 3));
+      DateTime now = DateTime.now();
+      Duration difference = threeDaysLater.difference(now);
+      daysRemaining = difference.inDays;
+      hoursRemaining = difference.inHours % 24;
+    }
+
 
     return MultiProvider(
       providers: [
