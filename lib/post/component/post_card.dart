@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/model/post/post_model.dart';
 
 class PostCard extends StatelessWidget {
-  final String nickName;
-  final String title;
-  final String content;
-  final int commentNum;
+  final PostData postData;
 
   const PostCard({
     super.key,
-    required this.commentNum,
-    required this.nickName,
-    required this.title,
-    required this.content,
+    required this.postData,
   });
 
   @override
@@ -23,11 +18,12 @@ class PostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _renderNoticeCardHeader(nickName: nickName),
+          _renderNoticeCardHeader(nickName: postData.writerNickName),
           const SizedBox(height: 8.0),
-          _renderNoticeCardBody(title: title, content: content),
+          _renderNoticeCardBody(
+              title: postData.title, content: postData.content),
           const SizedBox(height: 12.0),
-          _renderNoticeCardFooter(commentNum: commentNum),
+          _renderNoticeCardFooter(commentNum: postData.commentNum),
         ],
       ),
     );
@@ -54,11 +50,12 @@ class PostCard extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 4.0),
-        Image.asset(
-          'asset/image/icon_crown.png',
-          width: 14.0,
-          height: 14.0,
-        ),
+        if (postData.writerIsLeader)
+          Image.asset(
+            'asset/image/icon_crown.png',
+            width: 14.0,
+            height: 14.0,
+          ),
         const Spacer(),
         IconButton(
           onPressed: () {},

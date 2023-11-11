@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
+import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/request/create_post_request.dart';
 
 class PostUpdateState extends ChangeNotifier {
@@ -10,6 +11,7 @@ class PostUpdateState extends ChangeNotifier {
   final BuildContext context;
   final int teamId;
   final int boardId;
+  final PostDetailData postData;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
@@ -21,11 +23,14 @@ class PostUpdateState extends ChangeNotifier {
     required this.teamId,
     required this.boardId,
     required this.context,
+    required this.postData,
   }) {
     initState();
   }
 
   void initState() {
+    titleController.text = postData.title;
+    contentController.text = postData.content;
     log('Instance "PostUpdateState" has been created');
   }
 
@@ -58,8 +63,8 @@ class PostUpdateState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void requestUpdatePost() {
-    apiCode.putUpdatePostOrNotice(
+  void requestUpdatePost() async {
+    await apiCode.putUpdatePostOrNotice(
       teamId: teamId,
       boardId: boardId,
       createPostData: CreatePostData(
@@ -68,6 +73,6 @@ class PostUpdateState extends ChangeNotifier {
         isNotice: isCheckedNotice,
       ),
     );
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 }

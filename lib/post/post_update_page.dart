@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
+import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/post/post_update_state.dart';
 import 'package:moing_flutter/utils/text_field/outlined_text_field.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +16,13 @@ class PostUpdatePage extends StatelessWidget {
     final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
     final int teamId = arguments?['teamId'];
     final int boardId = arguments?['boardId'];
+    final PostDetailData postData = arguments?['postData'];
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (_) => PostUpdateState(
-                context: context, teamId: teamId, boardId: boardId)),
+                context: context, teamId: teamId, boardId: boardId, postData: postData)),
       ],
       builder: (context, _) {
         return const PostUpdatePage();
