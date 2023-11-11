@@ -214,7 +214,7 @@ class ApiCode {
     return null;
   }
 
-  void postCreatePostOrNotice({
+  Future<void> postCreatePostOrNotice({
     required int teamId,
     required CreatePostData createPostData,
   }) async {
@@ -237,7 +237,7 @@ class ApiCode {
     } catch (e) {
       log('게시글/공지 생성 실패: $e');
     }
-    return null;
+    return;
   }
 
   Future<PostDetailData?> getDetailPostData(
@@ -355,7 +355,7 @@ class ApiCode {
     return null;
   }
 
-  void postCreateComment({
+  Future<void> postCreateComment({
     required int teamId,
     required int boardId,
     required CreateCommentData createCommentData,
@@ -379,7 +379,7 @@ class ApiCode {
     } catch (e) {
       log('게시글 댓글 생성 실패: $e');
     }
-    return null;
+    return;
   }
 
   void deleteComment({
@@ -391,25 +391,20 @@ class ApiCode {
         '${dotenv.env['MOING_API']}/api/$teamId/$boardId/comment/$boardCommentId';
 
     try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-          await call.makeRequest<Map<String, dynamic>>(
+      await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'DELETE',
         fromJson: (data) => data as Map<String, dynamic>,
       );
 
-      if (apiResponse.data != null) {
-        log('게시글 댓글 삭제 성공: ${apiResponse.data}');
-      } else {
-        throw Exception('ApiResponse.data is Null');
-      }
+      log('게시글 댓글 삭제 성공');
     } catch (e) {
       log('게시글 댓글 삭제 실패: $e');
     }
     return null;
   }
 
-  void deletePost({
+  Future<void> deletePost({
     required int teamId,
     required int boardId,
   }) async {
@@ -430,10 +425,10 @@ class ApiCode {
     } catch (e) {
       log('게시글 삭제 실패: $e');
     }
-    return null;
+    return;
   }
 
-  void putUpdatePostOrNotice({
+  Future<void> putUpdatePostOrNotice({
     required int teamId,
     required int boardId,
     required CreatePostData createPostData,
@@ -457,7 +452,7 @@ class ApiCode {
     } catch (e) {
       log('게시글/공지 수정 실패: $e');
     }
-    return null;
+    return;
   }
 
   Future<SignOutResponse?> signOut({
@@ -606,7 +601,7 @@ class ApiCode {
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'DELETE',
         fromJson: (data) => data as Map<String, dynamic>,

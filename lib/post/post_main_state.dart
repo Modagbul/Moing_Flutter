@@ -31,17 +31,25 @@ class PostMainState extends ChangeNotifier {
     super.dispose();
   }
 
-  void getAllPost() async {
+  Future<void> getAllPost() async {
     allPostData = await apiCode.getAllPostData(teamId: teamId);
     notifyListeners();
   }
 
-  void navigatePostCreatePage() {
-    Navigator.pushNamed(context, PostCreatePage.routeName, arguments: teamId);
+  void navigatePostCreatePage() async {
+    final result = await Navigator.pushNamed(
+      context,
+      PostCreatePage.routeName,
+      arguments: teamId,
+    );
+
+    if (result as bool) {
+      getAllPost();
+    }
   }
 
-  void navigatePostDetailPage({required int boardId}) {
-    Navigator.pushNamed(
+  void navigatePostDetailPage({required int boardId}) async {
+    final result = await Navigator.pushNamed(
       context,
       PostDetailPage.routeName,
       arguments: {
@@ -49,5 +57,9 @@ class PostMainState extends ChangeNotifier {
         'boardId': boardId,
       },
     );
+
+    if (result as bool) {
+      getAllPost();
+    }
   }
 }

@@ -176,12 +176,13 @@ class PostDetailPage extends StatelessWidget {
         },
       ),
       actions: [
-        IconButton(
-          onPressed: () {
-            showPostControlBottomSheet(context: context);
-          },
-          icon: const Icon(Icons.more_vert),
-        )
+        if (context.watch<PostDetailState>().postData?.writerIsLeader ?? false)
+          IconButton(
+            onPressed: () {
+              showPostControlBottomSheet(context: context);
+            },
+            icon: const Icon(Icons.more_vert),
+          )
       ],
     );
   }

@@ -56,8 +56,8 @@ class PostCreateState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void requestCreatePost() {
-    apiCode.postCreatePostOrNotice(
+  void requestCreatePost() async {
+    await apiCode.postCreatePostOrNotice(
       teamId: teamId,
       createPostData: CreatePostData(
         title: titleController.value.text,
@@ -65,6 +65,7 @@ class PostCreateState extends ChangeNotifier {
         isNotice: isCheckedNotice,
       ),
     );
-    Navigator.pop(context);
+
+     Navigator.pop(context, true);
   }
 }

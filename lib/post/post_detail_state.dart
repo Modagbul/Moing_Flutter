@@ -52,47 +52,54 @@ class PostDetailState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getAllCommentData() async {
+  Future<void> getAllCommentData() async {
     allCommentData =
         await apiCode.getAllCommentData(teamId: teamId, boardId: boardId);
     notifyListeners();
   }
 
-  void postCreateComment() {
-    apiCode.postCreateComment(
+  Future<void> postCreateComment() async {
+    await apiCode.postCreateComment(
       teamId: teamId,
       boardId: boardId,
       createCommentData: CreateCommentData(
         content: commentController.value.text,
       ),
     );
+    await getAllCommentData();
     clearNameTextField();
     notifyListeners();
   }
 
-  void deleteComment({required int boardCommentId}){
-    apiCode.deleteComment(teamId: teamId, boardId: boardId, boardCommentId: boardCommentId);
+  void deleteComment({required int boardCommentId}) {
+    apiCode.deleteComment(
+        teamId: teamId, boardId: boardId, boardCommentId: boardCommentId);
     allCommentData?.commentBlocks.removeWhere((commentBlock) {
       return commentBlock.boardCommentId == boardCommentId;
     });
     notifyListeners();
   }
 
-  void deletePost(){
-    apiCode.deletePost(teamId: teamId, boardId: boardId);
+  void deletePost() async {
+    await apiCode.deletePost(teamId: teamId, boardId: boardId);
     notifyListeners();
     Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 
-  void navigatePostUpdatePage(){
-    Navigator.pushNamed(
+  void navigatePostUpdatePage() async {
+    final result = await Navigator.pushNamed(
       context,
       PostUpdatePage.routeName,
       arguments: {
         'teamId': teamId,
         'boardId': boardId,
+        'postData': postData,
       },
     );
+
+    if (result as bool) {
+      getDetailPostData();
+    }
   }
 }
