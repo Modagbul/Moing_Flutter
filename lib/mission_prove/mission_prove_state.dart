@@ -549,7 +549,7 @@ class MissionProveState with ChangeNotifier {
                 SizedBox(height: 16),
 
                 /// 사진 텍스트 링크 중 선택
-                if (missionWay.contains('사진'))
+                if (missionWay.contains('사진') && myMissionList![index].status == 'COMPLETE')
                   Container(
                       width: double.infinity,
                       height: 265,
@@ -563,7 +563,7 @@ class MissionProveState with ChangeNotifier {
                           fit: BoxFit.cover,
                         ),
                       )),
-                if (missionWay.contains('링크'))
+                if (missionWay.contains('링크') && myMissionList![index].status == 'COMPLETE')
                   Container(
                     width: double.infinity,
                     height: 265,
@@ -577,22 +577,35 @@ class MissionProveState with ChangeNotifier {
                             'https://${myMissionList![index].archive}')),
                     ),
                   ),
-                if (missionWay.contains('텍스트'))
-                  Container(
-                    width: double.infinity,
-                    height: 265,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: grayScaleGrey500, width: 1),
-                    ),
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        myMissionList![index].archive,
-                        style:
-                            contentTextStyle.copyWith(color: grayScaleGrey200),
+                if (missionWay.contains('텍스트') || myMissionList![index].status == 'SKIP')
+                  Stack(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 265,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: grayScaleGrey500, width: 1),
+                        ),
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.all(16),
+                          child: Text(
+                            myMissionList![index].archive,
+                            style:
+                                contentTextStyle.copyWith(color: grayScaleGrey200),
+                          ),
+                        ),
                       ),
-                    ),
+                      if(myMissionList![index].status == 'SKIP')
+                      Positioned(
+                        bottom: 16,
+                        left: MediaQuery.of(context).size.width / 3.2,
+                        child: Text(
+                          '미션을 건너뛰었어요',
+                          style: contentTextStyle,
+                        ),
+                      ),
+                    ],
                   ),
                 Spacer(),
 
