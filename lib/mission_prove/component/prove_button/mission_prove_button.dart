@@ -82,7 +82,7 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
                           ),
                           SizedBox(width: 4),
                           Text(
-                            '4',
+                            context.watch<MissionProveState>().myMissionList![0].hearts.toString(),
                             style: contentTextStyle.copyWith(
                               color: coralGrey500,
                               fontWeight: FontWeight.w600,
@@ -93,7 +93,7 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
                     ),
                     if(context.watch<MissionProveState>().missionWay.contains('사진'))
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed:context.read<MissionProveState>().missionShareDialog,
                       style: ButtonStyle(
                         fixedSize: MaterialStateProperty.all(
                           Size(138, 50),

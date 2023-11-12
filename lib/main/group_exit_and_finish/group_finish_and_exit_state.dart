@@ -58,11 +58,7 @@ class GroupFinishExitState extends ChangeNotifier {
 
     /// 한 번 더 누르면 소모임 강제 종료 신청
     if (finishCount >= 2) {
-      Navigator.pushReplacementNamed(
-        context,
-        GroupFinishSuccessPage.routeName,
-        arguments: teamId,
-      );
+      leaderExit();
     }
   }
 
@@ -83,5 +79,31 @@ class GroupFinishExitState extends ChangeNotifier {
   // 강제종료 성공 후 목표보드로 되돌아갈 때
   void finishSuccessPressed() {
     Navigator.pushNamed(context, BoardMainPage.routeName, arguments: teamId);
+  }
+
+  void leaderExit() async {
+    apiUrl =
+    '${dotenv.env['MOING_API']}/api/team/$teamId/disband';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        print('소모임장 강제종료 완료!');
+        Navigator.pushReplacementNamed(
+          context,
+          GroupFinishSuccessPage.routeName,
+          arguments: teamId,
+        );
+      }
+      notifyListeners();
+    } catch (e) {
+      log('소모임장 강제종료 실패: $e');
+    }
   }
 }

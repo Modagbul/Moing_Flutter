@@ -78,20 +78,19 @@ class _MissionProvePageState extends State<MissionProvePage>
                 if(context.watch<MissionProveState>().myMissionList == null ||
                     (context.watch<MissionProveState>().isMeOrEveryProved &&
                     context.watch<MissionProveState>().myMissionList != null &&
-                    context.watch<MissionProveState>().myMissionList!.isEmpty &&
-                    !context.watch<MissionProveState>().isMeProved))
+                    context.watch<MissionProveState>().myMissionList!.isEmpty))
                   SingleMyMissionNotProved(),
                 /// 나의 인증이면서 반복 미션에서 인증한 경우
                 if (context.watch<MissionProveState>().isMeOrEveryProved &&
                     context.watch<MissionProveState>().isRepeated &&
                     context.watch<MissionProveState>().myMissionList != null &&
-                    context.watch<MissionProveState>().isMeProved)
+                    context.watch<MissionProveState>().myMissionList!.isNotEmpty)
                   RepeatMyMissionProved(),
                 /// 나의 인증이면서 한번 미션에서 인증 한 경우
                 if(context.watch<MissionProveState>().isMeOrEveryProved &&
                     !context.watch<MissionProveState>().isRepeated &&
                     context.watch<MissionProveState>().myMissionList != null &&
-                    context.watch<MissionProveState>().isMeProved)
+                    context.watch<MissionProveState>().myMissionList!.isNotEmpty)
                 SingleMyMissionProved(),
                 /// 모두의 인증이면서 한번 미션에서 인증 안한 경우
                 if(context.watch<MissionProveState>().myMissionList == null ||
@@ -103,10 +102,12 @@ class _MissionProvePageState extends State<MissionProvePage>
             ),
 
             /// 인증 안한 경우
-            if(!context.watch<MissionProveState>().isMeProved)
+            if(!context.watch<MissionProveState>().isMeProved ||
+                context.watch<MissionProveState>().isRepeated)
              MissionNotProveButton(),
             /// 인증 한 경우
-            if(context.watch<MissionProveState>().isMeProved)
+            if(context.watch<MissionProveState>().isMeProved &&
+                !context.watch<MissionProveState>().isRepeated)
             MissionProveButton(),
           ],
         ),

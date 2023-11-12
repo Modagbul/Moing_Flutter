@@ -32,12 +32,10 @@ class RepeatMyMissionProved extends StatelessWidget {
     required int index,
     required BuildContext context,
   }) {
-    int initialIndex = 0;
     TextStyle ts = bodyTextStyle.copyWith(
         fontWeight: FontWeight.w500, color: grayScaleGrey200);
 
-    if (context.watch<MissionProveState>().myMissionList![initialIndex].status == 'SKIP') {
-      print(11);
+    if (context.watch<MissionProveState>().myMissionList![index].status == 'SKIP') {
       return GestureDetector(
         onTap: () {
           context.read<MissionProveState>().getMissionDetailContent(index);
@@ -90,11 +88,11 @@ class RepeatMyMissionProved extends StatelessWidget {
         ),
       );
     }
-    if (context.watch<MissionProveState>().myMissionList![initialIndex].way ==
+    if (context.watch<MissionProveState>().myMissionList![index].way ==
             'PHOTO' &&
         context
                 .watch<MissionProveState>()
-                .myMissionList![initialIndex]
+                .myMissionList![index]
                 .status ==
             'COMPLETE') {
       return Stack(
@@ -103,21 +101,17 @@ class RepeatMyMissionProved extends StatelessWidget {
             onTap: () {
               context.read<MissionProveState>().getMissionDetailContent(index);
             },
-            child: Container(
-              width: 172,
-              height: 155,
-              decoration: BoxDecoration(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-              ),
-              child: Image.network(
-                context
-                    .watch<MissionProveState>()
-                    .myMissionList![index]
-                    .archive,
-                fit: BoxFit.cover,
+                child: Image.network(
+                  context
+                      .watch<MissionProveState>()
+                      .myMissionList![index]
+                      .archive,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
           Positioned(
             left: 12,
             top: 12,
@@ -142,12 +136,12 @@ class RepeatMyMissionProved extends StatelessWidget {
     // 텍스트인 경우
     else if (context
                 .watch<MissionProveState>()
-                .myMissionList![initialIndex]
+                .myMissionList![index]
                 .way ==
             'TEXT' &&
         context
                 .watch<MissionProveState>()
-                .myMissionList![initialIndex]
+                .myMissionList![index]
                 .status ==
             'COMPLETE') {
       return GestureDetector(

@@ -22,7 +22,7 @@ class SingleMyMissionProved extends StatelessWidget {
               ? 192 : 300,
               decoration: BoxDecoration(
                 color: grayScaleGrey700,
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(16),
               ),
               child:
               /// 건너뛰기 한 경우
@@ -35,10 +35,35 @@ class SingleMyMissionProved extends StatelessWidget {
               : context.watch<MissionProveState>().missionWay.length > 1 &&
                   context.watch<MissionProveState>().missionWay.contains('사진') &&
                   context.watch<MissionProveState>().myMissionList![0].status == 'COMPLETE'
-                  ? Image.network(
+                  ? Stack(
+                    children: [
+                      ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                        child: Image.network(
                 context.watch<MissionProveState>().myMissionList![0].archive,
+                width: double.infinity,
+                height: double.infinity,
                 fit: BoxFit.cover,
-              )
+              ),
+                      ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          height: 100, // 이 값을 조절하여 scrim의 높이를 조절하세요
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.5), // 상단이 어둡게 처리됨
+                                Colors.transparent,             // 점차 투명해짐
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
               /// 텍스트 인증
                   : context.watch<MissionProveState>().missionWay.length > 1 &&
                   context.watch<MissionProveState>().missionWay.contains('텍스트') &&
@@ -100,7 +125,7 @@ class SingleMyMissionProved extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      '23.08.05',
+                      context.watch<MissionProveState>().myRepeatMissionTime[0][0],
                       style: bodyTextStyle.copyWith(
                         color: grayScaleGrey300,
                         fontWeight: FontWeight.w500,
@@ -108,7 +133,7 @@ class SingleMyMissionProved extends StatelessWidget {
                     ),
                     SizedBox(width: 12),
                     Text(
-                      '21:59',
+                      context.watch<MissionProveState>().myRepeatMissionTime[0][1],
                       style: bodyTextStyle.copyWith(
                         color: grayScaleGrey300,
                         fontWeight: FontWeight.w500,
