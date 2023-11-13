@@ -36,18 +36,6 @@ class PostMainPage extends StatefulWidget {
 }
 
 class _PostMainPageState extends State<PostMainPage> {
-
-  @override
-  void initState() {
-    context.read<PostMainState>().getAllPost();
-    super.initState();
-  }
-
-  @override
-  void setState(VoidCallback fn) {
-    context.read<PostMainState>().getAllPost();
-    super.setState(fn);
-  }
   @override
   Widget build(BuildContext context) {
     AllPostData? allPostData = context.watch<PostMainState>().allPostData;
@@ -246,10 +234,7 @@ class _Post extends StatelessWidget {
                 .navigatePostDetailPage(boardId: post.boardId);
           },
           child: PostCard(
-            commentNum: post.commentNum,
-            content: post.content,
-            nickName: post.writerNickName,
-            title: post.title,
+            postData: post,
           ),
         );
       },

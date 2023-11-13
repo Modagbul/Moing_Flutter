@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/board/component/board_main_bottom_sheet.dart';
 import 'package:moing_flutter/board/screen/board_goal_screen.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/board_mission_screen.dart';
-import 'package:moing_flutter/board/component/board_main_bottom_sheet.dart';
+import 'package:moing_flutter/board/component/board_main_bottom_sheet_leader.dart';
 import 'package:moing_flutter/board/screen/board_mission_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
+import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:provider/provider.dart';
 
 class BoardMainPage extends StatefulWidget {
@@ -15,16 +17,18 @@ class BoardMainPage extends StatefulWidget {
   const BoardMainPage({super.key});
 
   static route(BuildContext context) {
-    final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
-    final int teamId = arguments as int;
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final int teamId = arguments['teamId'];
+    bool isSuccess = arguments['isSuccess'] ?? false;
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => BoardMainState(context: context, teamId: teamId)),
+            create: (_) => BoardMainState(
+                context: context, teamId: teamId, isSuccess: isSuccess)),
         ChangeNotifierProvider(
-            create: (_) =>
-                BoardMissionState(context: context)),
+            create: (_) => BoardMissionState(context: context)),
       ],
       builder: (context, _) {
         return const BoardMainPage();
@@ -47,6 +51,15 @@ class _BoardMainPageState extends State<BoardMainPage>
             vsync: this,
           ),
         );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.read<BoardMainState>().isSuccess) {
+        ViewUtil().showSnackBar(
+          context: context,
+          message: '소모임 정보 수정이 완료되었어요',
+        );
+      }
+    });
   }
 
   @override
@@ -54,7 +67,6 @@ class _BoardMainPageState extends State<BoardMainPage>
     final TeamInfo? teamInfo = context.read<BoardMainState>().teamInfo;
     final String teamName = teamInfo?.teamName ?? '';
     final int teamId = context.read<BoardMainState>().teamId;
-    print('Team ID: $teamId');
 
     return Scaffold(
       backgroundColor: grayScaleGrey900,
@@ -99,7 +111,8 @@ class _BoardMainPageState extends State<BoardMainPage>
       leading: IconButton(
         icon: const Icon(Icons.arrow_back), // 뒤로 가기 아이콘
         onPressed: () {
-          Navigator.pushNamedAndRemoveUntil(context, MainPage.routeName, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, MainPage.routeName, (route) => false);
         },
       ),
       actions: [
@@ -120,6 +133,15 @@ class _BoardMainPageState extends State<BoardMainPage>
     required BuildContext context,
     required int teamId,
   }) {
+    final int currentUserId =
+        context.read<BoardMainState>().teamInfo?.currentUserId ?? 0;
+    final currentUserInfo = context
+        .read<BoardMainState>()
+        .teamInfo
+        ?.teamMemberInfoList
+        .firstWhere((element) => element.memberId == currentUserId);
+    final bool isLeader = currentUserInfo?.isLeader ?? false;
+
     showModalBottomSheet(
       backgroundColor: grayScaleGrey600,
       context: context,
@@ -129,9 +151,13 @@ class _BoardMainPageState extends State<BoardMainPage>
         ),
       ),
       builder: (BuildContext context) {
-        return BoardMainBottomSheet(
-          teamId: teamId,
-        );
+        return isLeader
+            ? BoardMainBottomSheetLeader(
+                teamId: teamId,
+              )
+            : BoardMainBottomSheet(
+                teamId: teamId,
+              );
       },
     );
   }

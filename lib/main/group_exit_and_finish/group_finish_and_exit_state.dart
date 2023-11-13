@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_exit_success_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_success_page.dart';
+import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/response/exit_teem_info.dart';
@@ -12,6 +13,7 @@ import 'package:moing_flutter/model/response/exit_teem_info.dart';
 class GroupFinishExitState extends ChangeNotifier {
   final BuildContext context;
   final int teamId;
+  final ApiCode apiCode = ApiCode();
 
   int finishCount = 0;
   int exitCount = 0;
@@ -23,7 +25,7 @@ class GroupFinishExitState extends ChangeNotifier {
   ExitTeamInfo? teamInfo;
 
   GroupFinishExitState({required this.context, required this.teamId}) {
-    print('Instance "GroupFinishExitState" has been created');
+    log('Instance "GroupFinishExitState" has been created');
     loadExitData();
   }
 
@@ -41,7 +43,7 @@ class GroupFinishExitState extends ChangeNotifier {
 
       if (apiResponse.data != null) {
         teamInfo = apiResponse.data;
-        print('삭제 전 조회 성공!');
+        log('삭제 전 조회 성공!');
         }
 
       notifyListeners();
@@ -51,14 +53,22 @@ class GroupFinishExitState extends ChangeNotifier {
   }
 
   /// 소모임 강제종료하기 버튼 클릭 시
-  void finishPressed() {
+  void finishPressed() async {
     finishCount++;
     finishButtonText = '강제종료 완료하기';
     notifyListeners();
 
     /// 한 번 더 누르면 소모임 강제 종료 신청
     if (finishCount >= 2) {
-      leaderExit();
+      int deleteTeamId = await apiCode.deleteTeam(teamId: teamId);
+
+      if(deleteTeamId == teamId) {
+        Navigator.pushReplacementNamed(
+          context,
+          GroupFinishSuccessPage.routeName,
+          arguments: teamId,
+        );
+      }
     }
   }
 
@@ -78,32 +88,7 @@ class GroupFinishExitState extends ChangeNotifier {
 
   // 강제종료 성공 후 목표보드로 되돌아갈 때
   void finishSuccessPressed() {
-    Navigator.pushNamed(context, BoardMainPage.routeName, arguments: teamId);
-  }
-
-  void leaderExit() async {
-    apiUrl =
-    '${dotenv.env['MOING_API']}/api/team/$teamId/disband';
-
-    try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
-        url: apiUrl,
-        method: 'DELETE',
-        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
-      );
-
-      if (apiResponse.data != null) {
-        print('소모임장 강제종료 완료!');
-        Navigator.pushReplacementNamed(
-          context,
-          GroupFinishSuccessPage.routeName,
-          arguments: teamId,
-        );
-      }
-      notifyListeners();
-    } catch (e) {
-      log('소모임장 강제종료 실패: $e');
-    }
+    log(teamId.toString());
+    Navigator.pushNamed(context, BoardMainPage.routeName, arguments: {'teamId': teamId});
   }
 }

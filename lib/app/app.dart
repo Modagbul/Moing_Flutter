@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/board/screen/completed_mission_page.dart';
 import 'package:moing_flutter/board/screen/ongoing_misson_page.dart';
+import 'package:moing_flutter/board/screen/team_member_list_page.dart';
 import 'package:moing_flutter/fcm/fcm_state.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/home/home_screen.dart';
@@ -39,7 +40,6 @@ import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/post/post_update_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
-import '../board/screen/board_mission_screen.dart';
 import '../missions/aggregate/missions_all_page.dart';
 import '../missions/aggregate/missions_screen.dart';
 import 'package:moing_flutter/post/post_main_page.dart';
@@ -110,7 +110,6 @@ class MoingApp extends StatelessWidget {
 
             AlarmPage.routeName: (context) => AlarmPage.route(context),
             BoardMainPage.routeName: (context) => BoardMainPage.route(context),
-            BoardMissionScreen.routeName: (context) => BoardMissionScreen.route(context),
             CompletedMissionPage.routeName: (context) => CompletedMissionPage.route(context),
             OngoingMissionPage.routeName: (context) => OngoingMissionPage.route(context),
             GroupCreateStartPage.routeName: (context) => GroupCreateStartPage.route(context),
@@ -136,6 +135,8 @@ class MoingApp extends StatelessWidget {
 
 
             MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),
+
+            TeamMemberListPage.routeName:(context) => TeamMemberListPage.route(context),
 
           },
           navigatorObservers: [

@@ -12,6 +12,7 @@ import 'package:moing_flutter/model/response/get_all_comments_response.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
+import 'package:moing_flutter/model/team/team_fire_level_models.dart';
 
 import '../response/aggregate_repeat_mission_response.dart';
 import '../response/aggregate_single_mission_response.dart';
@@ -213,7 +214,7 @@ class ApiCode {
     return null;
   }
 
-  void postCreatePostOrNotice({
+  Future<void> postCreatePostOrNotice({
     required int teamId,
     required CreatePostData createPostData,
   }) async {
@@ -236,7 +237,7 @@ class ApiCode {
     } catch (e) {
       log('게시글/공지 생성 실패: $e');
     }
-    return null;
+    return;
   }
 
   Future<PostDetailData?> getDetailPostData(
@@ -354,7 +355,7 @@ class ApiCode {
     return null;
   }
 
-  void postCreateComment({
+  Future<void> postCreateComment({
     required int teamId,
     required int boardId,
     required CreateCommentData createCommentData,
@@ -378,7 +379,7 @@ class ApiCode {
     } catch (e) {
       log('게시글 댓글 생성 실패: $e');
     }
-    return null;
+    return;
   }
 
   void deleteComment({
@@ -390,25 +391,20 @@ class ApiCode {
         '${dotenv.env['MOING_API']}/api/$teamId/$boardId/comment/$boardCommentId';
 
     try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-          await call.makeRequest<Map<String, dynamic>>(
+      await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'DELETE',
         fromJson: (data) => data as Map<String, dynamic>,
       );
 
-      if (apiResponse.data != null) {
-        log('게시글 댓글 삭제 성공: ${apiResponse.data}');
-      } else {
-        throw Exception('ApiResponse.data is Null');
-      }
+      log('게시글 댓글 삭제 성공');
     } catch (e) {
       log('게시글 댓글 삭제 실패: $e');
     }
     return null;
   }
 
-  void deletePost({
+  Future<void> deletePost({
     required int teamId,
     required int boardId,
   }) async {
@@ -429,10 +425,10 @@ class ApiCode {
     } catch (e) {
       log('게시글 삭제 실패: $e');
     }
-    return null;
+    return;
   }
 
-  void putUpdatePostOrNotice({
+  Future<void> putUpdatePostOrNotice({
     required int teamId,
     required int boardId,
     required CreatePostData createPostData,
@@ -456,7 +452,7 @@ class ApiCode {
     } catch (e) {
       log('게시글/공지 수정 실패: $e');
     }
-    return null;
+    return;
   }
 
   Future<SignOutResponse?> signOut({
@@ -549,20 +545,18 @@ class ApiCode {
     return null;
   }
 
-  Future<TeamListResponse?>
-  getTeamListStatus() async {
+  Future<TeamListResponse?> getTeamListStatus() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/my-teamList';
 
     try {
       ApiResponse<List<TeamList>>? apiResponse =
-      await call.makeRequest<List<TeamList>>(
+          await call.makeRequest<List<TeamList>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
           log('팀 리스트 Server response: $data');
           return (data as List<dynamic>)
-              .map((item) =>
-              TeamList.fromJson(item as Map<String, dynamic>))
+              .map((item) => TeamList.fromJson(item as Map<String, dynamic>))
               .toList();
         },
       );
@@ -578,6 +572,50 @@ class ApiCode {
       log('팀 리스트 조회 실패: $e');
     }
     return null;
+  }
+
+  Future<TeamFireLevelData?> getTeamFireLevel({required int teamId}) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/my-fire';
+
+    try {
+      ApiResponse<TeamFireLevelData>? apiResponse =
+          await call.makeRequest<TeamFireLevelData>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => TeamFireLevelData.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        return apiResponse.data;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('팀별 불 레벨 경험치 조회: $e');
+    }
+    return null;
+  }
+
+  Future<int> deleteTeam({required int teamId}) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/disband';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        return apiResponse.data!['teamId'];
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('팀별 불 레벨 경험치 조회: $e');
+    }
+    return 0;
   }
 
 // void makeMissionAPI() async {

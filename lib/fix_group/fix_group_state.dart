@@ -224,7 +224,7 @@ class FixGroupState extends ChangeNotifier {
           Navigator.pushReplacementNamed(
             context,
             BoardMainPage.routeName,
-            arguments: fixTeamId,
+            arguments: {'teamId': fixTeamId, 'isSuccess': true},
           );
         }
         else {

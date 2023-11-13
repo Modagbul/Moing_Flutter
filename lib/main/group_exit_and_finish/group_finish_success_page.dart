@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_and_exit_state.dart';
@@ -34,7 +33,7 @@ class GroupFinishSuccessPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Spacer(),
+                const Spacer(),
                 Text(
                   '소모임 강제 종료\n신청이 완료되었어요.',
                   style: headerTextStyle.copyWith(
@@ -43,7 +42,7 @@ class GroupFinishSuccessPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -53,17 +52,17 @@ class GroupFinishSuccessPage extends StatelessWidget {
                         color: grayScaleGrey100
                       ),
                     ),
-                    Text(
+                    const Text(
                       ' 소모임원들에게',
                       style: contentTextStyle,
                     ),
                   ],
                 ),
-                SizedBox(height: 4.0,),
-                Text('아쉬운 이별의 소식을 전할게요',
+                const SizedBox(height: 4.0,),
+                const Text('아쉬운 이별의 소식을 전할게요',
                 style: contentTextStyle,
                 ),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 24.0),
                   child: Align(
