@@ -4,14 +4,15 @@ import 'package:moing_flutter/board/component/icon_text_button.dart';
 import '../../const/style/elevated_button.dart';
 
 class BoardMainBottomSheet extends StatelessWidget {
-  const BoardMainBottomSheet({super.key});
+  final int teamId;
+  const BoardMainBottomSheet({required this.teamId, super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: screenHeight * 0.4,
+      height: screenHeight * 0.20,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         child: Column(
@@ -19,19 +20,16 @@ class BoardMainBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             IconTextButton(
-              onPressed: () {},
-              icon: 'asset/image/icon_link.png',
-              text: '소모임 초대 링크 복사하기',
-            ),
-            IconTextButton(
-              onPressed: () {},
-              icon: 'asset/image/icon_edit.png',
-              text: '소모임 정보 수정하기',
-            ),
-            IconTextButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO(): 소모임 탈퇴하기 구현 후 연결
+                // Navigator.of(context).pop();
+                // Navigator.of(context).pushNamed(
+                //   GroupFinishPage.routeName,
+                //   arguments: teamId,
+                // );
+              },
               icon: 'asset/image/icon_delete.png',
-              text: '소모임 삭제하기',
+              text: '소모임 탈퇴하기',
             ),
             ElevatedButton(
               onPressed: () {},

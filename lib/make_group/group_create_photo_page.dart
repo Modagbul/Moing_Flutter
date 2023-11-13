@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/group_create_photo_state.dart';
 import 'package:provider/provider.dart';
 
@@ -11,10 +12,22 @@ class GroupCreatePhotoPage extends StatelessWidget {
   const GroupCreatePhotoPage({super.key});
 
   static route(BuildContext context) {
+    final Map<String, dynamic> data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final String category = data['category'] as String;
+    final String name = data['name'] as String;
+    final String introduce = data['introduce'] as String;
+    final String promise = data['promise'] as String;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => GroupCreatePhotoState(context: context)),
+            create: (_) => GroupCreatePhotoState(
+                category: category,
+                name: name,
+                introduction: introduce,
+                promise: promise,
+                context: context)),
       ],
       builder: (context, _) {
         return const GroupCreatePhotoPage();
@@ -29,8 +42,9 @@ class GroupCreatePhotoPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
             icon: const Icon(Icons.close),
-            onPressed: () {} // Navigator.of(context).pop(),
-            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
         backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
@@ -48,6 +62,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   fontSize: 24,
                   color: grayScaleGrey100,
+                  height: 1.3,
                 ),
               ),
               const SizedBox(
@@ -59,6 +74,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
                   fontSize: 14,
                   color: grayScaleGrey550,
                   fontWeight: FontWeight.w500,
+                  height: 1.7,
                 ),
               ),
               const SizedBox(
@@ -78,11 +94,13 @@ class GroupCreatePhotoPage extends StatelessWidget {
                       ),
                       width: MediaQuery.of(context).size.width,
                       height:
-                          context.watch<GroupCreatePhotoState>().avatarFile == null
+                          context.watch<GroupCreatePhotoState>().avatarFile ==
+                                  null
                               ? 205
                               : 255,
                       child:
-                          context.watch<GroupCreatePhotoState>().avatarFile == null
+                          context.watch<GroupCreatePhotoState>().avatarFile ==
+                                  null
                               ? _ContainerText()
                               : ClipRRect(
                                   borderRadius: BorderRadius.circular(32.0),
@@ -142,7 +160,9 @@ class GroupCreatePhotoPage extends StatelessWidget {
                                   BorderRadius.circular(16), // 버튼의 모서리 둥글게
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                           child: const Text(
                             '이전으로',
                             style: TextStyle(
@@ -161,21 +181,37 @@ class GroupCreatePhotoPage extends StatelessWidget {
                       child: SizedBox(
                         height: 60,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: grayScaleWhite,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(16), // 버튼의 모서리 둥글게
+                          style: ButtonStyle(
+                            overlayColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                            minimumSize: MaterialStateProperty.all<Size>(
+                                Size(double.infinity, 60)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
                             ),
+                            backgroundColor: context
+                                        .watch<GroupCreatePhotoState>()
+                                        .avatarFile !=
+                                    null
+                                ? MaterialStateProperty.all(Colors.white)
+                                : MaterialStateProperty.all(grayScaleGrey700),
                           ),
-                          onPressed: context.read<GroupCreatePhotoState>().makePressed,
-                          child: const Text(
+                          onPressed: () {
+                            context.read<GroupCreatePhotoState>().makePressed();
+                          },
+                          child: Text(
                             '만들기',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: grayScaleGrey900,
-                            ),
+                            style: context
+                                        .watch<GroupCreatePhotoState>()
+                                        .avatarFile !=
+                                    null
+                                ? buttonTextStyle
+                                : buttonTextStyle.copyWith(
+                                    color: grayScaleGrey500,
+                                  ),
                           ),
                         ),
                       ),

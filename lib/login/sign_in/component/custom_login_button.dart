@@ -24,13 +24,21 @@ class CustomButton extends StatelessWidget {
         child: Row(
           children: [
             Padding(
-              padding: imagePath.contains('kakao')
+              padding: imagePath.contains('kakao') || imagePath.contains('google')
                   ? const EdgeInsets.only(left: 12.0)
                   : EdgeInsets.zero,
               child: Image.asset(
                 imagePath,
-                width: imagePath.contains('kakao') ? 30 : 55,
-                height: imagePath.contains('kakao') ? 30 : 55,
+                width: imagePath.contains('kakao')
+                    ? 30
+                    : imagePath.contains('google')
+                    ? 25
+                    : 55,
+                height: imagePath.contains('kakao')
+                    ? 30
+                    : imagePath.contains('google')
+                    ? 25
+                    : 55,
                 fit: BoxFit.cover,
               ),
             ),

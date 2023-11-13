@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+const grayBackground = Color(0xff0F0F0F);
 const grayScaleGrey900 = Color(0xff1C1B1B);
 const grayScaleGrey700 = Color(0xff1F1F1F);
 const grayScaleGrey600 = Color(0xff272727);
@@ -30,3 +31,7 @@ const subDark2 = Color(0xff1B7046);
 const subDark3 = Color(0xff645A07);
 
 const errorColor = Color(0xffF43A6F);
+const grayBlack2 = Color(0xffFDFDFD);
+const grayBlack3 = Color(0xffF6F6F6);
+const grayBlack8 = Color(0xff66676A);
+const grayBlack7 = Color(0xff959698);

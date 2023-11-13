@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/login/onboarding/component/image_onboard.dart';
 import 'package:moing_flutter/login/onboarding/component/image_phase.dart';
+import 'package:moing_flutter/login/onboarding/component/introduce_text.dart';
 import 'package:moing_flutter/login/onboarding/component/next_button.dart';
+import 'package:moing_flutter/login/onboarding/component/onboarding_graphic.dart';
 import 'package:moing_flutter/login/onboarding/component/skip_button.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_state.dart';
 import 'package:provider/provider.dart';
@@ -14,14 +15,18 @@ class OnBoardingFirstPage extends StatelessWidget {
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => OnBoardingState(context: context, pageCount: 1,)),
+        ChangeNotifierProvider(
+            create: (_) => OnBoardingState(
+                  context: context,
+                  pageCount: 1,
+                )),
       ],
       builder: (context, _) {
         return const OnBoardingFirstPage();
       },
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,34 +34,23 @@ class OnBoardingFirstPage extends StatelessWidget {
         color: Colors.black,
         child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SkipButton(
                 onTap: context.read<OnBoardingState>().skip,
               ),
-              ImageOnBoard(
-                imagePath: 'asset/image/black.jpeg',
+              IntroduceText(
+                title: '인증하기',
+                comment: '친구들과 함께 자기계발을 꾸준히 인증해보세요',
               ),
-              const SizedBox(
-                height: 32.0,
-              ),
-              const Text(
-                '모잉불과 함께 \n우리 모임을 불태울 수 있어요',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Color(0xffF4F6F8),
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 88.0,
-              ),
+              OnBoardingGraphic(graphicPath: 'asset/graphic/onboarding_1.json'),
+              const SizedBox(height: 52),
               const ImagePhase(
                   phase1: 'asset/image/onboard_phase1.png',
                   phase2: 'asset/image/onboard_phase2.png',
-                  phase3: 'asset/image/onboard_phase2.png'),
-              const Spacer(),
+                  phase3: 'asset/image/onboard_phase2.png',
+                  phase4: 'asset/image/onboard_phase2.png'),
+              Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(

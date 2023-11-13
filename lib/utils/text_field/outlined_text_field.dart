@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../const/color/colors.dart';
@@ -8,7 +7,7 @@ class OutlinedTextField extends StatefulWidget {
   final int maxLength;
   final int maxLines;
   final ValueChanged<String> onChanged;
-  final VoidCallback onClearButtonPressed;
+  final VoidCallback? onClearButtonPressed;
   final TextEditingController controller;
   final String labelText;
   final String counterText;
@@ -22,7 +21,7 @@ class OutlinedTextField extends StatefulWidget {
     required this.maxLength,
     required this.onChanged,
     required this.controller,
-    required this.onClearButtonPressed,
+    this.onClearButtonPressed,
     this.maxLines = 1,
     this.labelText = '',
     this.counterText = '',
@@ -96,35 +95,47 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
           decoration: InputDecoration(
             // 카운터 텍스트 - 기본값 == '' (off)
             counterText: widget.counterText,
-            // 카운터 텍스트 스타일
+            // // // // 카운터 텍스트 스타일
             counterStyle: widget.counterTextStyle,
 
+            border: InputBorder.none,
             // 힌트 텍스트 - 기본값 == '' (off)
             hintText: widget.hintText,
             // 힌트 텍스트 스타일
             hintStyle: widget.inputTextStyle.copyWith(
               color: grayScaleGrey550,
             ),
+            contentPadding: EdgeInsets.all(16),
 
             // 배경색 활성화
             filled: true,
             // 배경색
             fillColor: grayScaleGrey700,
-
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            disabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
             // 외각선 색상 - 포커스
             focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: coralGrey200),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
 
             // 삭제 버튼 - 값을 입력할 경우 활성화
-            suffixIcon: widget.controller.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.close),
-                    color: grayScaleGrey550,
-                    // 버튼을 누를 경우 - 입력값 삭제
-                    onPressed: widget.onClearButtonPressed,
-                  )
-                : null,
+            suffixIcon: widget.onClearButtonPressed == null
+                ? null
+                : widget.controller.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.close),
+                        color: grayScaleGrey550,
+                        // 버튼을 누를 경우 - 입력값 삭제
+                        onPressed: widget.onClearButtonPressed,
+                      )
+                    : null,
           ),
 
           // 입력 텍스트 스타일

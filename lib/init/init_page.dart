@@ -26,26 +26,38 @@ class InitPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.asset(
+      body: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 68),
+              Image.asset(
                 'asset/image/moing_icon.png',
-                fit: BoxFit.contain,
+                width: double.infinity,
+                height: 430,
+                fit: BoxFit.cover,
               ),
-            SvgPicture.asset(
+              Padding(
+                padding: const EdgeInsets.only(right: 4.0),
+                child: SvgPicture.asset(
+                  'asset/icons/moing_text.svg',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.45,
+            left: MediaQuery.of(context).size.width * 0.25,
+            right: MediaQuery.of(context).size.width * 0.25,
+            child: SvgPicture.asset(
               'asset/icons/moing_logo.svg',
               fit: BoxFit.contain,
             ),
-            SvgPicture.asset(
-              'asset/icons/moing_text.svg',
-              fit: BoxFit.contain,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-
 }

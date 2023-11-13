@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/home/component/home_appbar.dart';
-import 'package:moing_flutter/home/component/home_card.dart';
+import 'package:moing_flutter/home/component/home_card_scroll.dart';
 import 'package:moing_flutter/home/component/home_my_meeting.dart';
 import 'package:moing_flutter/home/component/home_nickname_and_encourage.dart';
+import 'package:moing_flutter/home/component/home_no_card.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
+import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,10 +15,13 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   static route(BuildContext context) {
+    final String newCreated =
+        ModalRoute.of(context)?.settings.arguments as String;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => HomeScreenState(context: context)),
+            create: (_) =>
+                HomeScreenState(context: context, newCreated: newCreated)),
       ],
       builder: (context, _) {
         return const HomeScreen();
@@ -26,8 +31,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const maxTeamBlockLength = 3;
+    final teamBlockLength =
+        context.watch<HomeScreenState>().futureData?.teamBlocks.length ?? 0;
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: grayBackground,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -41,41 +50,58 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 32.0,
               ),
-              const HomeText(nickName: '모닥불', encourage: '오늘도 모잉이 응원해요!'),
+              HomeText(
+                  nickName:
+                      '${context.watch<HomeScreenState>().futureData?.memberNickName ?? '모닥불'}님,',
+                  encourage: '오늘도 모잉이 응원해요!'),
               const SizedBox(height: 40.0),
-              const HomeMyMeeting(
-                meetingCount: '2',
+              HomeMyMeeting(
+                meetingCount: context
+                        .watch<HomeScreenState>()
+                        .futureData
+                        ?.numOfTeam
+                        .toString() ??
+                    '0',
               ),
               const SizedBox(height: 12.0),
-              const HomeCard(),
+              (context.watch<HomeScreenState>().futureData?.numOfTeam ?? 0) > 0
+                  //   ? const HomeCard()
+                  ? const HomeCardScroll()
+                  : const HomeNoCard(),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
-                    onPressed: context.read<HomeScreenState>().makeGroupPressed,
-                    style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all<Size>(
-                            const Size(162, 51)), // 원하는 너비와 높이
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(grayScaleGrey100),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(32.0), // borderRadius 설정
-                          ),
-                        ),
-                    ),
-                    child: const Text(
-                      '모임 만들기',
-                      style: TextStyle(
-                        color: grayScaleGrey700,
+                    onPressed: maxTeamBlockLength < maxTeamBlockLength
+                        ? context.read<HomeScreenState>().makeGroupPressed
+                        : () {
+                            ViewUtil().showErrorSnackBar(
+                              context: context,
+                              message: '모임은 최대 3개까지 들어갈 수 있어요',
+                            );
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: teamBlockLength < maxTeamBlockLength
+                          ? grayScaleWhite
+                          : grayScaleGrey500,
+                      foregroundColor: teamBlockLength < maxTeamBlockLength
+                          ? grayScaleGrey900
+                          : grayScaleGrey700,
+                      textStyle: const TextStyle(
+                        color: grayScaleGrey300,
+                        fontSize: 18.0,
                         fontWeight: FontWeight.w600,
-                        fontSize: 16,
                       ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16.0,
+                        horizontal: 45.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32.0)),
                     ),
+                    child: const Text('모임 만들기'),
                   ),
                 ),
               )

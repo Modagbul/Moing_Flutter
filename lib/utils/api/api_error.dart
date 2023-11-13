@@ -1,20 +1,27 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 
 class ApiException implements Exception {
   TokenManagement tokenManagement = TokenManagement();
-
-  void throwErrorMessage(String errorCode) async {
+  Future<void> throwErrorMessage(String errorCode) async {
     String msg='';
+
+    print('에러코드 : $errorCode');
+
+    if (errorCode == 'J0008') {
+      print('리프레시 토큰이 만료되어 로그인 페이지로 이동합니다..');
+      GetIt.I.get<GlobalKey<NavigatorState>>().currentState!.pushNamed(LoginPage.routeName);
+      return ;
+    }
 
     // 만료된 토큰 -> 토큰 재발급
     if (errorCode == 'J0003') {
-      // Refresh 토큰 값 가져오기
-      String refreshToken = await tokenManagement.loadRefreshToken();
       // 토큰 재발급 받기
-      await tokenManagement.getNewToken(refreshToken);
-      return ;
+      return await tokenManagement.getNewToken();
     }
 
     switch (errorCode) {
@@ -51,8 +58,23 @@ class ApiException implements Exception {
       case 'J0008':
         msg = '유효하지 않은 refreshToken입니다.';
         break;
+      case 'U0001':
+        msg = '해당 유저는 존재하지 않습니다.';
+        break;
+      case 'AU0001':
+        msg = '이미 다른 소셜 플랫폼으로 가입하셨습니다.';
+        break;
+      case 'AU0002':
+        msg = '입력 토큰이 유효하지 않습니다.';
+        break;
+      case 'AU0003':
+        msg = '앱 아이디가 유효하지 않습니다.';
+        break;
+      case 'AU0004':
+        msg = '닉네임이 중복됩니다.';
+        break;
     }
 
-    throw HttpException(errorCode + ' : ' + msg);
+    throw Exception(errorCode + ' : ' + msg);
   }
 }

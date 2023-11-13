@@ -5,12 +5,18 @@ import '../../../const/color/colors.dart';
 class WarningDialog extends StatelessWidget {
   final String title;
   final String content;
+  final String leftText;
+  final String rightText;
   final VoidCallback onConfirm;
+  final VoidCallback onCanceled;
 
   const WarningDialog({super.key,
     required this.title,
     required this.content,
+    required this.leftText,
+    required this.rightText,
     required this.onConfirm,
+    required this.onCanceled,
   });
 
   @override
@@ -18,7 +24,7 @@ class WarningDialog extends StatelessWidget {
     return AlertDialog(
       // 맨 아래에 어떻게 붙이지
       backgroundColor: const Color(0xFF272727),
-      insetPadding: const EdgeInsets.all(15),
+      insetPadding: const EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
@@ -26,7 +32,7 @@ class WarningDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 500,
+            width: MediaQuery.of(context).size.width,
             height: 160,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +72,7 @@ class WarningDialog extends StatelessWidget {
                 height: 55,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: grayScaleGrey700,
+                    backgroundColor: grayScaleGrey600,
                     textStyle: const TextStyle(
                       color: grayScaleGrey550,
                       fontSize: 16.0,
@@ -79,11 +85,10 @@ class WarningDialog extends StatelessWidget {
                         color: Color(0xff353538),
                       ),
                     ),
+                    elevation: 0.0,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: const Text('나가기'),
+                  onPressed: onCanceled,
+                  child: Text(leftText),
                 ),
               ),
               const SizedBox(width: 5),
@@ -100,13 +105,12 @@ class WarningDialog extends StatelessWidget {
                         color: Color(0xff353538),
                       ),
                     ),
+                    elevation: 0.0,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: const Text(
-                    '계속 진행하기',
-                    style: TextStyle(
+                  onPressed: onConfirm,
+                  child: Text(
+                    rightText,
+                    style: const TextStyle(
                       color: grayScaleBlack,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,

@@ -22,7 +22,15 @@
           }
         },
         {
-          "client_id": "78739178434-kv9aqeagvfpmp7t9lgjkb630vg4tjser.apps.googleusercontent.com",
+          "client_id": "78739178434-2lbr3kipej989p2a6m6v1c8bvb3dnned.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moing.moing_team",
+            "certificate_hash": "d1c1736256cc05eecc921874231be32ada24a995"
+          }
+        },
+        {
+          "client_id": "78739178434-1m1v814cgv68in9cc02p5nhova9hucah.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +43,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "78739178434-kv9aqeagvfpmp7t9lgjkb630vg4tjser.apps.googleusercontent.com",
+              "client_id": "78739178434-1m1v814cgv68in9cc02p5nhova9hucah.apps.googleusercontent.com",
               "client_type": 3
             },
             {

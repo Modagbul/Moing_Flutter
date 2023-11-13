@@ -4,9 +4,10 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
 import 'package:moing_flutter/main/main_state.dart';
-import 'package:moing_flutter/missions/missions_screen.dart';
-import 'package:moing_flutter/missions/missions_state.dart';
-import 'package:moing_flutter/mypage/my_page.dart';
+import 'package:moing_flutter/missions/aggregate/missions_group_state.dart';
+import 'package:moing_flutter/missions/aggregate/missions_screen.dart';
+import 'package:moing_flutter/missions/aggregate/missions_state.dart';
+import 'package:moing_flutter/mypage/my_page_screen.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
@@ -26,6 +27,14 @@ class MainPage extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => HomeScreenState(context: context),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MissionsState(context: context), // MissionsState 추가
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MissionsGroupState(context: context), // MissionsState 추가
           lazy: false,
         ),
       ],
@@ -64,7 +73,7 @@ class MainPage extends StatelessWidget {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => MissionState(),
+            create: (_) => MissionsState(context: context),
             lazy: false,
           ),
         ],
@@ -76,10 +85,10 @@ class MainPage extends StatelessWidget {
               IndexedStack(
                 sizing: StackFit.expand,
                 index: context.watch<AppState>().mainIndex,
-                children: const [
+                children: [
                   HomeScreen(),
                   MissionsScreen(),
-                  MyPageScreen(),
+                  MyPageScreen.route(context),
                 ],
               ),
             ],
@@ -91,7 +100,7 @@ class MainPage extends StatelessWidget {
               onTap: (index) {
                 context.read<AppState>().mainIndex = index;
               },
-              backgroundColor: Colors.black,
+              backgroundColor: grayBackground,
               type: BottomNavigationBarType.fixed,
               unselectedItemColor: grayScaleGrey550,
               selectedItemColor: grayScaleGrey100,

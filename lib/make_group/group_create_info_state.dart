@@ -10,8 +10,11 @@ class GroupCreateInfoState extends ChangeNotifier {
   final TextEditingController introduceController = TextEditingController();
   final TextEditingController resolutionController = TextEditingController();
 
+  String category = '';
+
   GroupCreateInfoState({
     required this.context,
+    required this.category,
   }) {
     initState();
   }
@@ -33,18 +36,6 @@ class GroupCreateInfoState extends ChangeNotifier {
     notifyListeners();
   }
 
-  // 텍스트 필드 초기화 메소드
-  void clearIntroduceTextField() {
-    introduceController.clear();
-    notifyListeners();
-  }
-
-  // 텍스트 필드 초기화 메소드
-  void clearResolutionTextField() {
-    resolutionController.clear();
-    notifyListeners();
-  }
-
   // 텍스트 필드 변경 감지 메소드
   void updateTextField() {
     notifyListeners();
@@ -52,9 +43,12 @@ class GroupCreateInfoState extends ChangeNotifier {
 
   // 사진 업로드 화면으로 이동
   void nextPressed() {
-    Navigator.of(context).pushNamed(
-      GroupCreatePhotoPage.routeName,
-    );
+    Navigator.pushNamed(context, GroupCreatePhotoPage.routeName, arguments: {
+      'category': category,
+      'name': nameController.text,
+      'introduce': introduceController.text,
+      'promise': resolutionController.text,
+    });
   }
 
 }

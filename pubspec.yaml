@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.15.1
   firebase_auth: ^4.7.3
+  firebase_messaging: ^14.7.1
   sign_in_with_apple: ^3.0.0
   crypto: ^3.0.3
   http: ^1.1.0
@@ -55,11 +56,29 @@ dependencies:
   image_picker: ^0.8.7+1
   permission_handler: ^10.2.0
   aws_client: ^0.4.1
-
+  percent_indicator: ^4.2.3
   google_sign_in: ^6.1.4
   flutter_naver_login: ^1.8.0
   cloud_firestore: ^4.4.3
   cloud_functions: ^4.0.11
+  badges: ^2.0.3
+  bottom_sheet: ^3.1.1
+  built_collection: ^5.1.1
+  built_value: ^8.3.3
+  keyboard_attachable: ^2.1.0
+  keyboard_dismisser: ^3.0.0
+  flutter_rounded_progress_bar: ^0.3.2
+  lottie: ^2.5.0
+  flutter_localization: ^0.1.14
+  flutter_datetime_picker_plus: ^2.1.0
+  speech_balloon: ^0.0.4
+  intl: ^0.18.0
+  webview_flutter: ^4.4.2
+  url_launcher: ^6.1.14
+  image_gallery_saver: ^2.0.3
+  path_provider: ^2.1.1
+  fluttertoast: ^8.2.4
+
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +100,7 @@ flutter:
     - asset/image/
     - asset/icons/
     - asset/config/.env
+    - asset/graphic/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -23,6 +23,10 @@ class GroupCreateStartState extends ChangeNotifier {
     super.dispose();
   }
 
+  void pressCloseButton() {
+    Navigator.pop(context);
+  }
+
   void navigateCategory(){
     Navigator.pushNamed(context, GroupCreateCategoryPage.routeName);
   }
