@@ -112,5 +112,14 @@
 	<string>naverlogintest</string>
 	<key>naverServiceAppUrlScheme</key>
 	<string>naverloginhyunseok</string>
+	<key>CFBundleURLTypes</key>
+        <array>
+          <dict>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>com.googleusercontent.apps.325197804561-t5cno0jvbl3g65sqv6olv0iuasvb6amr</string>
+          </array>
+          </dict>
+        </array>
 </dict>
 </plist>

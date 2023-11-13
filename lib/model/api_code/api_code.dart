@@ -16,6 +16,10 @@ import 'package:moing_flutter/model/team/team_fire_level_models.dart';
 
 import '../response/aggregate_repeat_mission_response.dart';
 import '../response/aggregate_single_mission_response.dart';
+import '../response/aggregate_team_repeat_mission_response.dart';
+import '../response/aggregate_team_single_mission_response.dart';
+import '../response/alarm_settings_editor_response.dart';
+import '../response/alarm_settings_response.dart';
 import '../response/board_completed_mission_response.dart';
 import '../response/board_repeat_mission_response.dart';
 import '../response/board_single_mission_response.dart';
@@ -514,6 +518,39 @@ class ApiCode {
     return null;
   }
 
+  Future<AggregateTeamSingleMissionResponse?>
+      getAggregateTeamSingleMissionStatus({
+    required int teamId,
+  }) async {
+    String apiUrl = '${dotenv.env['MOING_API']}/api/team/team-once/$teamId';
+
+    try {
+      ApiResponse<List<AggregateTeamMission>>? apiResponse =
+          await call.makeRequest<List<AggregateTeamMission>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) {
+          log('팀별 한번 미션 Server response: $data');
+          return (data as List<dynamic>)
+              .map((item) =>
+                  AggregateTeamMission.fromJson(item as Map<String, dynamic>))
+              .toList();
+        },
+      );
+
+      if (apiResponse.data != null) {
+        log('팀별 한번 미션 상태 조회 성공: ${apiResponse.data}');
+        return AggregateTeamSingleMissionResponse(
+            isSuccess: true, message: '성공', data: apiResponse.data!);
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('팀별 한번 미션 상태 조회 실패: $e');
+    }
+    return null;
+  }
+
   Future<AggregateRepeatMissionStatusResponse?>
       getAggregateRepeatMissionStatus() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/my-repeat';
@@ -541,6 +578,39 @@ class ApiCode {
       }
     } catch (e) {
       log('반복 미션 상태 조회 실패: $e');
+    }
+    return null;
+  }
+
+  Future<AggregateTeamRepeatMissionStatusResponse?>
+      getAggregateTeamRepeatMissionStatus({
+    required int teamId,
+  }) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/team-repeat/$teamId';
+
+    try {
+      ApiResponse<List<AggregateTeamRepeatMission>>? apiResponse =
+          await call.makeRequest<List<AggregateTeamRepeatMission>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) {
+          log('팀별 반복 미션 Server response: $data');
+          return (data as List<dynamic>)
+              .map((item) => AggregateTeamRepeatMission.fromJson(
+                  item as Map<String, dynamic>))
+              .toList();
+        },
+      );
+
+      if (apiResponse.data != null) {
+        log('팀별 반복 미션 상태 조회 성공: ${apiResponse.data}');
+        return AggregateTeamRepeatMissionStatusResponse(
+            isSuccess: true, message: '성공', data: apiResponse.data!);
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('팀별 반복 미션 상태 조회 실패: $e');
     }
     return null;
   }
@@ -616,6 +686,53 @@ class ApiCode {
       log('팀별 불 레벨 경험치 조회: $e');
     }
     return 0;
+  }
+
+  Future<AlarmSettingsResponse?> getAlarmSettings() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/mypage/alarm';
+
+    try {
+      ApiResponse<AlarmSettingsResponse> apiResponse =
+      await call.makeRequest<AlarmSettingsResponse>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => AlarmSettingsResponse.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        log('알람 설정 조회 성공: ${apiResponse.data}');
+        return apiResponse.data;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('알람 설정 조회 실패: $e');
+    }
+    return null;
+  }
+
+  Future<AlarmSettingsEditorResponse?> updateAlarmSettings(AlarmSettingsEditor alarmSettings) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/mypage/alarm';
+
+    try {
+      ApiResponse<AlarmSettingsEditorResponse> apiResponse =
+      await call.makeRequest<AlarmSettingsEditorResponse>(
+        url: apiUrl,
+        method: 'PUT',
+        body: alarmSettings.toJson(),
+        fromJson: (data) => AlarmSettingsEditorResponse.fromJson(data),
+      );
+
+      if (apiResponse.data != null) {
+        log('알람 설정 수정 성공: ${apiResponse.data}');
+        return apiResponse.data;
+      } else {
+        throw Exception('ApiResponse.data is Null');
+      }
+    } catch (e) {
+      log('알람 설정 수정 실패: $e');
+    }
+    return null;
   }
 
 // void makeMissionAPI() async {

@@ -46,6 +46,7 @@ import 'package:moing_flutter/post/post_main_page.dart';
 import '../missions/create/link_auth_page.dart';
 import '../missions/create/skip_mission_page.dart';
 import '../missions/create/text_auth_page.dart';
+import '../mypage/my_page_screen.dart';
 import '../mypage/setting_page.dart';
 import '../post/post_create_page.dart';
 import '../post/post_detail_page.dart';
@@ -133,7 +134,7 @@ class MoingApp extends StatelessWidget {
             SettingPage.routeName:(context) => SettingPage.route(context),
             AlramSettingPage.routeName:(context) => AlramSettingPage.route(context),
 
-
+            MyPageScreen.routeName:(context) => MyPageScreen.route(context),
             MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),
 
             TeamMemberListPage.routeName:(context) => TeamMemberListPage.route(context),

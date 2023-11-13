@@ -1,53 +1,68 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 
-import '../../main/alarm/alarm.dart';
 import '../../model/api_code/api_code.dart';
-import '../../model/response/aggregate_repeat_mission_response.dart';
-import '../../model/response/aggregate_single_mission_response.dart';
+import '../../model/response/aggregate_team_repeat_mission_response.dart';
+import '../../model/response/aggregate_team_single_mission_response.dart';
 
 class MissionsGroupState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
 
-  AggregateSingleMissionResponse? aggregateSingleMissionStatus;
-  AggregateRepeatMissionStatusResponse? aggregateRepeatMissionStatus;
+  AggregateTeamSingleMissionResponse? aggregateTeamSingleMissionStatus;
+  AggregateTeamRepeatMissionStatusResponse? aggregateTeamRepeatMissionStatus;
 
-  // 알림 여부
   bool isNotification = false;
-
+  int? selectedTeamId;
   final BuildContext context;
 
   MissionsGroupState({
     required this.context,
+    this.selectedTeamId,
   }) {
-    initState();
-    getAggregateSingleMissionStatus();
-    getAggregateRepeatMissionStatus();
+    _initState();
   }
 
-  @override
-  void dispose() {
-    log('Instance "MissionsAllState" has been removed');
-    super.dispose();
+  void _initState() {
+    _fetchData();
   }
 
-  void initState() {}
-
-  void alarmPressed() {
-    Navigator.of(context).pushNamed(
-      AlarmPage.routeName,
-    );
+  void updateSelectedTeamId(int newTeamId) async {
+    if (selectedTeamId != newTeamId) {
+      selectedTeamId = newTeamId;
+      await _fetchData();
+      notifyListeners();
+      log('updateSelectedTeamId: $selectedTeamId');
+    }
   }
 
-  void getAggregateRepeatMissionStatus() async {
-    aggregateRepeatMissionStatus =
-        await apiCode.getAggregateRepeatMissionStatus();
-    notifyListeners();
+  Future<void> _fetchData() async {
+    if (selectedTeamId != null) {
+      await getAggregateTeamSingleMissionStatus();
+      await getAggregateTeamRepeatMissionStatus();
+      notifyListeners();
+    } else {
+      log('No team selected for fetching mission status');
+    }
   }
 
-  void getAggregateSingleMissionStatus() async {
-    aggregateSingleMissionStatus =
-        await apiCode.getAggregateSingleMissionStatus();
-    notifyListeners();
+  Future<void> getAggregateTeamRepeatMissionStatus() async {
+    if (selectedTeamId != null) {
+      aggregateTeamRepeatMissionStatus =
+      await apiCode.getAggregateTeamRepeatMissionStatus(teamId: selectedTeamId!);
+      notifyListeners();
+    } else {
+      log('No team selected for fetching repeat mission status');
+    }
   }
+
+  Future<void> getAggregateTeamSingleMissionStatus() async {
+    if (selectedTeamId != null) {
+      aggregateTeamSingleMissionStatus =
+      await apiCode.getAggregateTeamSingleMissionStatus(teamId: selectedTeamId!);
+      notifyListeners();
+    } else {
+      log('No team selected for fetching single mission status');
+    }
+  }
+
 }

@@ -4,7 +4,7 @@ import '../../const/color/colors.dart';
 
 class GroupSingleMissionCard extends StatelessWidget {
   final int missionId;
-  final int teamId;
+  final int? teamId;
   final String missionTitle;
   final String dueTo;
   final VoidCallback onTap;

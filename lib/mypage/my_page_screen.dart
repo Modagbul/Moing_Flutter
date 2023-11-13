@@ -3,7 +3,6 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
-import 'package:moing_flutter/mypage/setting_page.dart';
 import 'package:provider/provider.dart';
 
 class MyPageScreen extends StatelessWidget {
@@ -11,13 +10,20 @@ class MyPageScreen extends StatelessWidget {
 
   const MyPageScreen({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
+  static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MyPageState(context: context)),
       ],
-      child: Scaffold(
+      builder: (context, _) {
+        return const MyPageScreen();
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
         backgroundColor: grayBackground,
         appBar: _renderAppBar(context: context),
         body: SafeArea(
@@ -35,8 +41,7 @@ class MyPageScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   PreferredSizeWidget _renderAppBar({required BuildContext context}) {

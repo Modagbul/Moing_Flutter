@@ -5,7 +5,7 @@ import '../../const/color/colors.dart';
 
 class GroupRepeatMissionCard extends StatelessWidget {
   final int missionId;
-  final int teamId;
+  final int? teamId;
   final String missionTitle;
   final String totalNum;
   final String doneNum;
