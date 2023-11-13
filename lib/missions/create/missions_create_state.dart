@@ -538,7 +538,7 @@ class MissionCreateState extends ChangeNotifier {
           fromJson: (data) => data as Map<String, dynamic>,
         );
         log('미션 생성 성공: ${apiResponse.data}');
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       } catch (e) {
         log('미션 생성 실패: $e');
       }

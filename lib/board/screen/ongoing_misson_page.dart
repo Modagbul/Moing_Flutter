@@ -277,15 +277,20 @@ class _BottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       // FloatingActionButton으로 변경
-      onPressed: () {
+      onPressed: () async {
         final ongoingMissionState =
             Provider.of<OngoingMissionState>(context, listen: false);
-        Navigator.of(context)
+        var result = await Navigator.of(context)
             .pushNamed(MissionsCreatePage.routeName, arguments: {
           'teamId': ongoingMissionState.teamId,
           'repeatMissions':
               ongoingMissionState.repeatMissionStatus?.data.length ?? 0,
         });
+
+        if(result != null && result == true) {
+          print('미션 만들기 성공!!');
+          ongoingMissionState.initState();
+        }
       },
       backgroundColor: grayScaleGrey100,
       shape: RoundedRectangleBorder(
