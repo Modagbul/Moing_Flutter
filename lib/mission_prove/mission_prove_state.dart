@@ -246,12 +246,10 @@ class MissionProveState with ChangeNotifier {
       );
 
       if(apiResponse.data != null) {
-        print('나의 인증 조회중...');
         // 오늘 미션 인증했는지 조회
         isMeProved = apiResponse.data?.today as bool;
         myMissionList = apiResponse.data?.archives;
         if(myMissionList != null && myMissionList!.isNotEmpty) {
-          print('총 길이 : ${myMissionList!.length}');
           for(MyMissionProveData data in myMissionList!) {
             myRepeatMissionTime.add(formatDateTime(data.createdDate));
           }
@@ -259,7 +257,6 @@ class MissionProveState with ChangeNotifier {
         if(myMissionList != null && myMissionList!.isEmpty) {
           nobodyText = '아직 인증하지 않았어요';
         }
-        print('myMissionList Data : ${apiResponse.data!.archives.toString()}');
         print('내가 오늘 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
         notifyListeners();
       }
@@ -286,7 +283,6 @@ class MissionProveState with ChangeNotifier {
       );
 
       if(apiResponse.isSuccess == true) {
-        print('모두의 인증 조회 성공: ${apiResponse.data?.toString()}');
         everyMissionList = apiResponse.data;
       }
     } catch (e) {
@@ -337,7 +333,6 @@ class MissionProveState with ChangeNotifier {
             missionWay = '링크인증';
             break;
         }
-        print('mission 인증 방식 : ${missionWay}');
         // 남은 시간 계산
         calculateTimeLeft(apiResponse.data?['dueTo']);
       }
@@ -350,7 +345,6 @@ class MissionProveState with ChangeNotifier {
 
   /// 미션 인증 API
   Future<void> submitMission({required String url, bool? isFix}) async {
-    print('method : ${isFix == true ? 'PUT' : 'POST'}');
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
     Map<String, dynamic> data = {"status": 'COMPLETE', "archive": url};

@@ -84,6 +84,7 @@ class SingleMyMissionProved extends StatelessWidget {
                         color: grayScaleGrey600,
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(left: 16.0, right: 12, top: 34, bottom: 34),
@@ -93,6 +94,7 @@ class SingleMyMissionProved extends StatelessWidget {
                             ),
                           ),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(right: 16.0, top: 25.5, bottom: 4),
