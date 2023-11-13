@@ -60,8 +60,6 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
               state.updateSelectedTeamId(currentSelectedTeamId);
             }
 
-            final singleMissionData =
-                state.aggregateTeamSingleMissionStatus?.data;
             final repeatMissionData =
                 state.aggregateTeamRepeatMissionStatus?.data;
 
@@ -106,24 +104,24 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                       ),
                       _Title(
                         mainText: '한번 미션',
-                        countText: '${singleMissionData?.length ?? 0}',
+                        countText: '${state.aggregateTeamSingleMissionStatus?.data?.length ?? 0}',
                       ),
                       const SizedBox(
                         height: 12.0,
                       ),
-                      if (singleMissionData != null &&
-                          singleMissionData.isNotEmpty)
+                      if (state.aggregateTeamSingleMissionStatus?.data != null &&
+                          state.aggregateTeamSingleMissionStatus!.data.isNotEmpty)
                         SizedBox(
                           height: 126,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: singleMissionData.length,
+                            itemCount: state.aggregateTeamSingleMissionStatus?.data.length,
                             itemBuilder: (context, index) {
-                              final e = singleMissionData[index];
+                              final e = state.aggregateTeamSingleMissionStatus?.data[index];
                               return Padding(
                                 padding: const EdgeInsets.only(right: 12.0),
                                 child: GroupSingleMissionCard(
-                                  missionId: e.missionId,
+                                  missionId: e!.missionId,
                                   teamId: e.teamId,
                                   missionTitle: e.missionTitle,
                                   dueTo: e.dueTo,
