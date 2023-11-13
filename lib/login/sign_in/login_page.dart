@@ -35,7 +35,23 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 80.0),
+                  // const SizedBox(height: 80.0),
+                  CustomButton(
+                    onPressed: context.read<LoginState>().signInWithGoogle,
+                    text: 'Google로 로그인',
+                    imagePath: 'asset/image/logo_google.png',
+                    buttonStyle: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        Size(MediaQuery.of(context).size.width, 60),
+                      ),
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 64.0),
                     child: SpeechBalloon(

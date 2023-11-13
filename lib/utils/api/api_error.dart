@@ -68,7 +68,7 @@ class ApiException implements Exception {
         msg = '입력 토큰이 유효하지 않습니다.';
         break;
       case 'AU0003':
-        msg = '애플 아이디가 유효하지 않습니다.';
+        msg = '앱 아이디가 유효하지 않습니다.';
         break;
       case 'AU0004':
         msg = '닉네임이 중복됩니다.';

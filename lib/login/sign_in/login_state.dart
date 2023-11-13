@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginState extends ChangeNotifier {
   /// Login Page에서 사용하는 context를 가져옴.
@@ -242,6 +244,92 @@ class LoginState extends ChangeNotifier {
       print('애플 - 백엔드 연동 간 에러 발생 : ${e.toString()}');
     }
   }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        return;
+      }
+
+      final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+
+      // Firebase 사용자 인증
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(
+        GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        ),
+      );
+
+      print("Google ID Token: ${googleAuth?.idToken}");
+
+      // 구글 토큰을 백엔드 서버로 전송
+      if (googleAuth?.idToken != null) {
+        await sendGoogleTokenToBackend(googleAuth!.idToken!);
+      }
+    } catch (e) {
+      print("Google Sign-In Error: $e");
+      // 오류 처리
+    }
+  }
+
+  Future<void> sendGoogleTokenToBackend(String token) async {
+    try {
+      String? fcmToken = await getFCMToken();
+      if (fcmToken == null) {
+        return;
+      }
+
+      final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signIn/google';
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: jsonEncode({
+          'socialToken': token,
+          'fcmToken': fcmToken,
+        }),
+      );
+
+      Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if(responseBody['isSuccess'] == true) {
+        final String accessToken = responseBody['data']['accessToken'];
+        final String refreshToken = responseBody['data']['refreshToken'];
+
+        print('Access Token: $accessToken');
+        print('Refresh Token: $refreshToken');
+
+        await tokenManagement.saveToken(accessToken, refreshToken);
+        print('구글 JWT : $accessToken');
+        _isRegistered = responseBody['data']['registrationStatus'];
+        sharedPreferencesInfo.savePreferencesData('sign', 'google');
+        print('구글 회원가입 여부 : $_isRegistered');
+        checkRegister(_isRegistered!);
+      }
+      /// 에러 처리
+      else {
+        print('에러 코드 : ${response.statusCode}');
+        apiException.throwErrorMessage(responseBody['errorCode']);
+        // 토큰 재발급 처리 완료
+        if (responseBody['errorCode'] == 'J0003') {
+          print('토큰 재발급 처리 수행합니다.');
+          String? accessToken = await tokenManagement.loadAccessToken();
+          if(accessToken == null) {
+            print('accessToken이 존재하지 않습니다..');
+            return null;
+          }
+          await sendKakaoTokenToBackend(accessToken);
+        }
+      }
+    } catch (e) {
+      print('Error sending Google token to backend : ${e.toString()}');
+    }
+  }
+
 
   /// 회원가입 여부 판단
   void checkRegister(bool isRegistered) {

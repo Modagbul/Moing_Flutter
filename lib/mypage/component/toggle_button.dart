@@ -2,12 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 
 class ToggleButton extends StatefulWidget {
+  final ValueChanged<bool> onToggle;  // 상태 변경 콜백
+  final bool initialValue;  // 초기 상태 값
+
+  ToggleButton({super.key, required this.onToggle, required this.initialValue});
+
   @override
   _ToggleButtonState createState() => _ToggleButtonState();
 }
 
 class _ToggleButtonState extends State<ToggleButton> {
-  bool isOn = true;
+  late bool isOn;
+
+  @override
+  void initState() {
+    super.initState();
+    isOn = widget.initialValue;  // 초기 상태 설정
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,4 +83,12 @@ class _ToggleButtonState extends State<ToggleButton> {
       ),
     );
   }
+
+  void _toggle(bool value) {
+    setState(() {
+      isOn = value;
+    });
+    widget.onToggle(isOn);  // 상태 변경 콜백 호출
+  }
+
 }

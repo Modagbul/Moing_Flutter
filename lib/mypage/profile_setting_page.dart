@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/mypage/profile_setting_state.dart';
 import 'package:moing_flutter/utils/text_field/outlined_text_field.dart';
 import 'package:provider/provider.dart';
+
+import '../const/style/text.dart';
 
 class ProfileSettingPage extends StatelessWidget {
   const ProfileSettingPage({super.key});
@@ -34,8 +38,9 @@ class ProfileSettingPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 10),
               _Profile(),
               const _TextFields(),
               const _SubmitButton(),
@@ -78,25 +83,51 @@ class _Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
-      child: Column(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => context.read<ProfileSettingState>().imageUpload(context),
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Stack(
-            children: [
-              CircleAvatar(
-                radius: 40.0,
-                backgroundImage: defaultProfileImg,
+          CircleAvatar(
+            radius: 40.0,
+            backgroundImage: defaultProfileImg,
+          ),
+          CircleAvatar(
+            radius: 40.0,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(40.0),
+                child: _buildImage(context),
               ),
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: editProfileImg,
-              ),
-            ],
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    if (context.watch<ProfileSettingState>().avatarFile == null &&
+        context.watch<ProfileSettingState>().getProfileImageUrl != null) {
+      return Image.network(
+          context.watch<ProfileSettingState>().getProfileImageUrl!,
+          fit: BoxFit.cover,
+          width: 80.0,
+          height: 80.0,
+          );
+    } else if (context.watch<ProfileSettingState>().avatarFile != null) {
+      return Image.file(
+        File(context.watch<ProfileSettingState>().avatarFile!.path),
+        fit: BoxFit.cover,
+        width: 80.0,
+        height: 80.0,
+      );
+    } else {
+      return Image(
+        image: defaultProfileImg,
+        fit: BoxFit.cover,
+        width: 80.0,
+        height: 80.0,
+      );
+    }
   }
 }
 
@@ -117,8 +148,9 @@ class _TextFields extends StatelessWidget {
           onChanged: (value) =>
               context.read<ProfileSettingState>().updateTextField(),
           controller: context.read<ProfileSettingState>().nameController,
-          onClearButtonPressed: () =>
-              context.read<ProfileSettingState>().clearNameTextField(),
+          inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
+          onClearButtonPressed:
+              context.read<ProfileSettingState>().clearNameTextField,
         ),
         OutlinedTextField(
           maxLength: 50,
@@ -126,10 +158,12 @@ class _TextFields extends StatelessWidget {
           labelText: '한줄다짐',
           counterText:
               '(${context.watch<ProfileSettingState>().resolutionController.text.length}/50)',
-          hintText: '마이페이지에서 확인할 수 있어요.',
           onChanged: (value) =>
               context.read<ProfileSettingState>().updateTextField(),
-          controller: context.read<ProfileSettingState>().resolutionController,
+          controller: context.read<ProfileSettingState>().introduceController,
+          inputTextStyle: bodyTextStyle.copyWith(color: grayBlack2),
+          onClearButtonPressed:
+              context.read<ProfileSettingState>().clearIntroduceTextField,
         ),
       ],
     );
@@ -157,7 +191,7 @@ class _SubmitButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
         ),
       ),
-      onPressed: context.read<ProfileSettingState>().pressSubmitButton,
+      onPressed: context.read<ProfileSettingState>().savePressed,
       child: const Text('수정 완료'),
     );
   }

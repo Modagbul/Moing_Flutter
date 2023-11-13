@@ -10,6 +10,7 @@ import '../const/color/colors.dart';
 import '../make_group/component/warning_dialog.dart';
 import '../model/response/sign_out_response.dart';
 import '../utils/shared_preferences/shared_preferences.dart';
+import 'alram_setting_state.dart';
 import 'component/list_custom_tile.dart';
 
 class SettingPage extends StatelessWidget {
@@ -51,7 +52,7 @@ class SettingPage extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AlramSettingPage()),
+                          MaterialPageRoute(builder: (context) => AlramSettingPage.route(context)),
                         );
                       }),
                   ListCustomTile(

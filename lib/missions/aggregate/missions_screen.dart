@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
 import '../../home/component/home_appbar.dart';
+import '../../model/response/team_list_response.dart';
 import 'missions_all_page.dart';
+import 'missions_group_state.dart';
 
 class MissionsScreen extends StatefulWidget {
   static const routeName = '/missons';
@@ -18,6 +20,7 @@ class MissionsScreen extends StatefulWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MissionsState(context: context)),
+        ChangeNotifierProvider(create: (_) => MissionsGroupState(context: context)),
       ],
       builder: (context, _) {
         return const MissionsScreen();
@@ -42,8 +45,11 @@ class _MissionsScreenState extends State<MissionsScreen>
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
+    List<TeamList> teams = Provider.of<MissionsState>(context).teams;
+
     return Scaffold(
       backgroundColor: grayBackground,
       body: SafeArea(
@@ -88,13 +94,19 @@ class _MissionsScreenState extends State<MissionsScreen>
                       onTap: (index) {
                         setState(() {});
                       },
-                      overlayColor: MaterialStateProperty.all(
-                          Colors.transparent), // 물결 효과 색상을 투명하게 설정
+                      overlayColor:
+                          MaterialStateProperty.all(Colors.transparent),
                     ),
                   ),
                   const Spacer(),
-                  // if (_tabController.index == 1) // "모임별 미션" 탭이 선택된 경우
-                  //   MyDropdown(),
+                  if (_tabController.index == 1)
+                    MyDropdown(
+                      teams: teams,
+                      onTeamSelected: (teamId) {
+                        Provider.of<MissionsState>(context, listen: false)
+                            .setSelectedTeamId(teamId);
+                      },
+                    ),
                 ],
               ),
               Expanded(
@@ -147,13 +159,13 @@ class _MissionsScreenState extends State<MissionsScreen>
 }
 
 class MyDropdown extends StatefulWidget {
-  final String teamName;
-  final int teamId;
+  final List<TeamList> teams;
+  final void Function(int teamId) onTeamSelected;
 
   const MyDropdown({
     super.key,
-    required this.teamId,
-    required this.teamName,
+    required this.teams,
+    required this.onTeamSelected,
   });
 
   @override
@@ -162,33 +174,55 @@ class MyDropdown extends StatefulWidget {
 
 class _MyDropdownState extends State<MyDropdown> {
   String? _selectedValue;
+  String? _selectedTeamName;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.teams.isNotEmpty) {
+      _selectedValue = widget.teams[0].teamId.toString();
+      _selectedTeamName = widget.teams[0].teamName;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: _selectedValue,
       hint: Text(
-        "모닥모닥불",
-        style: TextStyle(color: grayScaleGrey300),
+        _selectedTeamName ?? "Select a team",
+        style: const TextStyle(color: grayScaleGrey300),
       ),
       dropdownColor: grayScaleGrey600,
       underline: Container(),
-      items: <String>['모닥모닥불', '두번째모임', '세번째모임'].map((String value) {
+      items: widget.teams.map((TeamList team) {
         return DropdownMenuItem<String>(
-          value: value,
-          child: Container(
-            child: Text(
-              value,
-              style: TextStyle(color: grayScaleGrey100),
-            ),
+          value: team.teamId.toString(),
+          child: Text(
+            team.teamName,
+            style: const TextStyle(color: grayScaleGrey100),
           ),
         );
       }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          _selectedValue = newValue;
-        });
-      },
+        // MyDropdown 위젯에서 팀 선택 변경시 호출되는 메서드
+        onChanged: (String? newValue) {
+          var selectedTeam = widget.teams.firstWhere(
+                  (team) => team.teamId.toString() == newValue,
+              orElse: () => widget.teams[0]);
+          setState(() {
+            _selectedValue = newValue;
+            _selectedTeamName = selectedTeam.teamName;
+
+            var missionsState = Provider.of<MissionsState>(context, listen: false);
+            missionsState.setSelectedTeamId(selectedTeam.teamId);
+
+            var missionsGroupState = Provider.of<MissionsGroupState>(context, listen: false);
+            missionsGroupState.updateSelectedTeamId(selectedTeam.teamId);
+
+          });
+
+        }
+
     );
   }
 }
