@@ -75,6 +75,9 @@ dependencies:
   intl: ^0.18.0
   webview_flutter: ^4.4.2
   url_launcher: ^6.1.14
+  image_gallery_saver: ^2.0.3
+  path_provider: ^2.1.1
+  fluttertoast: ^8.2.4
 
 
 dev_dependencies:

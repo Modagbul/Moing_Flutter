@@ -32,33 +32,86 @@ class RepeatMyMissionProved extends StatelessWidget {
     required int index,
     required BuildContext context,
   }) {
-    int initialIndex = 0;
     TextStyle ts = bodyTextStyle.copyWith(
         fontWeight: FontWeight.w500, color: grayScaleGrey200);
 
-    if (context.watch<MissionProveState>().myMissionList![initialIndex].way ==
-        'PHOTO') {
+    if (context.watch<MissionProveState>().myMissionList![index].status == 'SKIP') {
+      return GestureDetector(
+        onTap: () {
+          context.read<MissionProveState>().getMissionDetailContent(index);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: grayScaleGrey700,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0, left: 12),
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: grayScaleGrey500,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${context.watch<MissionProveState>().myMissionList!.length - index}',
+                      style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Text(
+                  context.watch<MissionProveState>().myMissionList![index].archive,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: bodyTextStyle.copyWith(color: grayScaleGrey200, fontWeight: FontWeight.w500),
+                ),
+              ),
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(left: 12, bottom: 12),
+                child: Text(
+                  '미션을 건너뛰었어요',
+                  style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    if (context.watch<MissionProveState>().myMissionList![index].way ==
+            'PHOTO' &&
+        context
+                .watch<MissionProveState>()
+                .myMissionList![index]
+                .status ==
+            'COMPLETE') {
       return Stack(
         children: [
           GestureDetector(
             onTap: () {
               context.read<MissionProveState>().getMissionDetailContent(index);
             },
-            child: Container(
-              width: 172,
-              height: 155,
-              decoration: BoxDecoration(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-              ),
-              child: Image.network(
-                context
-                    .watch<MissionProveState>()
-                    .myMissionList![index]
-                    .archive,
-                fit: BoxFit.cover,
+                child: Image.network(
+                  context
+                      .watch<MissionProveState>()
+                      .myMissionList![index]
+                      .archive,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
           Positioned(
             left: 12,
             top: 12,
@@ -82,10 +135,15 @@ class RepeatMyMissionProved extends StatelessWidget {
     }
     // 텍스트인 경우
     else if (context
-            .watch<MissionProveState>()
-            .myMissionList![initialIndex]
-            .way ==
-        'TEXT') {
+                .watch<MissionProveState>()
+                .myMissionList![index]
+                .way ==
+            'TEXT' &&
+        context
+                .watch<MissionProveState>()
+                .myMissionList![index]
+                .status ==
+            'COMPLETE') {
       return GestureDetector(
         onTap: () {
           context.read<MissionProveState>().getMissionDetailContent(index);
@@ -180,80 +238,90 @@ class RepeatMyMissionProved extends StatelessWidget {
           context.read<MissionProveState>().getMissionDetailContent(index);
         },
         child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: grayScaleGrey700,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0, left: 12),
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: grayScaleGrey500,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${context.watch<MissionProveState>().myMissionList!.length - index}',
-                      style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: grayScaleGrey700,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0, left: 12),
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: grayScaleGrey500,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${context.watch<MissionProveState>().myMissionList!.length - index}',
+                        style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12, top: 20),
-                child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    final String text = context.watch<MissionProveState>().myMissionList![index].archive;
-                    final TextStyle textStyle = bodyTextStyle.copyWith(fontWeight: FontWeight.w500, color: grayScaleGrey400);
-                    final TextSpan textSpan = TextSpan(text: text, style: textStyle);
-                    final TextPainter textPainter = TextPainter(
-                      text: textSpan,
-                      maxLines: 1,
-                      textDirection: TextDirection.ltr,
-                    );
+                Padding(
+                    padding:
+                        const EdgeInsets.only(left: 12, right: 12, top: 20),
+                    child: LayoutBuilder(
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        final String text = context
+                            .watch<MissionProveState>()
+                            .myMissionList![index]
+                            .archive;
+                        final TextStyle textStyle = bodyTextStyle.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: grayScaleGrey400);
+                        final TextSpan textSpan =
+                            TextSpan(text: text, style: textStyle);
+                        final TextPainter textPainter = TextPainter(
+                          text: textSpan,
+                          maxLines: 1,
+                          textDirection: TextDirection.ltr,
+                        );
 
-                    textPainter.layout(maxWidth: constraints.maxWidth);
-                    // 텍스트 길이가 8자 이상이면서 실제 레이아웃 상에서 넘칠 경우
-                    if (text.length > 7 || textPainter.didExceedMaxLines) {
-                      return Text(
-                        text,
-                        style: textStyle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      );
-                    } else {
-                      return Text(
-                        text,
-                        style: textStyle,
-                        maxLines: 1,
-                      );
-                    }
-                  },
+                        textPainter.layout(maxWidth: constraints.maxWidth);
+                        // 텍스트 길이가 8자 이상이면서 실제 레이아웃 상에서 넘칠 경우
+                        if (text.length > 7 || textPainter.didExceedMaxLines) {
+                          return Text(
+                            text,
+                            style: textStyle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        } else {
+                          return Text(
+                            text,
+                            style: textStyle,
+                            maxLines: 1,
+                          );
+                        }
+                      },
+                    )),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'asset/image/icon_link_white.png',
+                        width: 20,
+                        height: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '바로보기',
+                        style: bodyTextStyle.copyWith(color: grayScaleGrey100),
+                      ),
+                    ],
+                  ),
                 )
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('asset/image/icon_link_white.png',
-                    width: 20,
-                    height: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text('바로보기',style: bodyTextStyle.copyWith(color: grayScaleGrey100),),
-                  ],
-                ),
-              )
-            ],
-          )
-        ),
+              ],
+            )),
       );
     }
   }

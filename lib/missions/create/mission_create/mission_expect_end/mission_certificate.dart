@@ -108,7 +108,6 @@ class MissionCertificate extends StatelessWidget {
           ),
           Spacer(),
           GestureDetector(
-            onTap: context.read<MissionCreateState>().timePicker,
             child: Container(
               alignment: Alignment.center,
               width: 75,

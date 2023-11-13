@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:http/http.dart' as http;
+import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'dart:io';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -166,8 +168,8 @@ class MyPageRevokeState extends ChangeNotifier {
     String? socialToken = await socialSign(sign: sign);
     if(socialToken == null) return ;
 
-    final String apiUrl = '${dotenv.env['MOING_API']}/api/withdrawal/$sign';
-    APICall call = APICall();
+    final String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/withdrawal/$sign';
+    final APICall call = APICall();
 
     Map<String, dynamic> data = {
       'reason': selectedReason,
@@ -175,25 +177,15 @@ class MyPageRevokeState extends ChangeNotifier {
     };
 
     try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+      ApiResponse<void> apiResponse = await call.makeRequest<void>(
         url: apiUrl,
         method: 'DELETE',
         body: data,
-        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
+        fromJson: (_) => null,
       );
-
-      if (apiResponse.isSuccess == true) {
-        print('회원탈퇴 완료');
-        Navigator.of(context).pop();
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          InitPage.routeName,
-              (route) => false,
-        );
-      }
+      print('회원탈퇴 성공!');
     } catch (e) {
-      log('회원 탈퇴 실패: $e');
+      log('회원탈퇴 실패: $e');
     }
   }
 
@@ -234,7 +226,9 @@ class MyPageRevokeState extends ChangeNotifier {
               AppleIDAuthorizationScopes.fullName,
             ],
           );
-          return appleCredential.identityToken;
+
+          print('crendential : ${appleCredential.authorizationCode}');
+          return appleCredential.authorizationCode;
         } catch (e) {
           print('애플 로그인 실패 : ${e.toString()}');
           return null;

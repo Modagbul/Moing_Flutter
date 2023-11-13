@@ -69,7 +69,7 @@ class CompletedMissionPage extends StatelessWidget {
                           Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
                               arguments: {
-                                'isRepeated': true,
+                                'isRepeated': e.missionType == 'ONCE' ? false : true,
                                 'teamId':
                                 context.read<CompletedMissionState>().teamId,
                                 'missionId': e.missionId,
