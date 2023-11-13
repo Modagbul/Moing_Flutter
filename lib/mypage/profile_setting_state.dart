@@ -82,7 +82,7 @@ class ProfileSettingState extends ChangeNotifier {
       if(apiResponse.isSuccess == true) {
         nameController.text = apiResponse.data?['name'];
         introduceController.text = apiResponse.data?['introduction'];
-        getProfileImageUrl = apiResponse.data?['profileImgUrl'];
+        getProfileImageUrl = apiResponse.data?['profileImage'];
       }
       else {
         print('에러 발생..');
@@ -180,7 +180,7 @@ class ProfileSettingState extends ChangeNotifier {
     print('savePressed called');
 
     // 변경된 항목이 있는지 확인
-    if (isNameChanged || isIntroduceChanged || isAvatarChanged == true) {
+    if (isNameChanged || isIntroduceChanged || isAvatarChanged) {
       if (isAvatarChanged && avatarFile != null) {
         // 파일 확장자 얻기
         extension = avatarFile!.path.split('.').last;
@@ -264,16 +264,11 @@ class ProfileSettingState extends ChangeNotifier {
   // 프로필 수정 API 연동
   Future<void> fixProfileAPI() async {
     final String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
-
-    if(nameController.text != null && nameController.text.isNotEmpty &&
-        introduceController.text != null && introduceController.text.isNotEmpty &&
-        avatarFile != null) {
       try {
-
         FixProfile data = FixProfile(
-            nickName: nameController.text,
-            introduction: introduceController.text,
-            profileImage: putProfileImageUrl);
+            nickName: isNameChanged ? nameController.text : null,
+            introduction: isIntroduceChanged ? introduceController.text : null,
+            profileImage: isAvatarChanged ? putProfileImageUrl : null);
 
         ApiResponse<Map<String, dynamic>> apiResponse =
         await call.makeRequest<Map<String, dynamic>>(
@@ -284,15 +279,7 @@ class ProfileSettingState extends ChangeNotifier {
         );
 
         if(apiResponse.isSuccess == true) {
-          // Navigator.of(context).pushNamed(
-          //   SettingPage.routeName,
-          //   arguments: teamCount,
-          // );
-          Navigator.pushReplacementNamed(
-            context,
-            MyPageScreen.routeName,
-            arguments: {'isSuccess': true},
-          );
+          Navigator.of(context).pop(true);
         }
         else {
           print('에러 발생..');
@@ -300,7 +287,6 @@ class ProfileSettingState extends ChangeNotifier {
       } catch (e) {
         print('프로필 수정 실패: $e');
       }
-    }
   }
 }
 

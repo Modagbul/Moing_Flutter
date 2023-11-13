@@ -1,9 +1,9 @@
 class FixProfile {
-  final String nickName;
-  final String introduction;
-  final String profileImage;
+  final String? nickName;
+  final String? introduction;
+  final String? profileImage;
 
-  FixProfile({required this.nickName, required this.introduction, required this.profileImage});
+  FixProfile({this.nickName, this.introduction, this.profileImage});
 
   Map<String, dynamic> toJson() => {
     'nickName': nickName,

@@ -9,6 +9,23 @@ class JoinedGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String imageAsset = '';
+
+    print(teamBlock.category);
+    switch(teamBlock.category) {
+      case 'SPORTS':
+        break;
+      case 'HABIT':
+        break;
+      case 'TEST':
+        break;
+      case 'STUDY':
+        break;
+      case 'READING':
+        break;
+      case 'ETC':
+        break;
+    }
     return Column(
       children: [
         Image.asset(

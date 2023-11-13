@@ -15,11 +15,11 @@ class MyPageState extends ChangeNotifier {
     required this.context,
   }) {
     initState();
-    getMyPageData();
   }
 
   void initState() async {
     log('Instance "MyPageState" has been created');
+    getMyPageData();
   }
 
   @override
@@ -28,10 +28,14 @@ class MyPageState extends ChangeNotifier {
     super.dispose();
   }
 
-  void profilePressed() {
-    Navigator.of(context).pushNamed(
+  void profilePressed() async {
+    var result = await Navigator.of(context).pushNamed(
       ProfileSettingPage.routeName,
     );
+
+    if(result != null && result == true) {
+      getMyPageData();
+    }
   }
 
   void getMyPageData() async {

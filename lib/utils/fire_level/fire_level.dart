@@ -5,7 +5,7 @@ class FireLevel {
   }) {
     String graphicPath = '';
 
-    if (level == 1) {
+    if (level <= 1) {
       graphicPath = 'asset/graphic/small.json';
     } else if (2 <= level && level <= 10) {
       graphicPath = 'asset/graphic/small2.json';
@@ -56,7 +56,7 @@ class FireLevel {
   }) {
     String name = '';
 
-    if (level == 1) {
+    if (level <= 1) {
       name = '태어난 불';
     } else if (2 <= level && level <= 10) {
       name = '작은 불';
@@ -77,7 +77,7 @@ class FireLevel {
   }) {
     String message = '';
 
-    if (level == 1) {
+    if (level <= 1) {
       message = '새로 태어났어요!';
     } else if (2 <= level && level <= 10) {
       message = '저 좀 커졌나요?';

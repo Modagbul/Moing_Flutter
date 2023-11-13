@@ -85,12 +85,6 @@ class MyPageScreen extends StatelessWidget {
 }
 
 class _Profile extends StatelessWidget {
-  final Image editProfileImg = Image.asset(
-    'asset/image/icon_edit_circle.png',
-    width: 24.0,
-    height: 24.0,
-  );
-
   _Profile();
 
   @override
@@ -103,15 +97,30 @@ class _Profile extends StatelessWidget {
           onTap: context.read<MyPageState>().profilePressed,
           child: Stack(
             children: [
-              CircleAvatar(
-                radius: 40.0,
-                backgroundImage: AssetImage(myPageData?.profileImage ??
-                    'asset/image/icon_user_profile.png'),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(40),
+                child: myPageData?.profileImage != null
+                    ? Image.network(
+                  myPageData!.profileImage!,
+                  fit: BoxFit.cover,
+                  width: 80,
+                  height: 80,
+                ) : Image.asset(
+                    'asset/image/icon_user_profile.png',
+                  fit: BoxFit.cover,
+                  width: 80,
+                  height: 80,
+                ),
               ),
               Positioned(
                 right: 0,
                 bottom: 0,
-                child: editProfileImg,
+                child: Image.asset(
+                  'asset/image/icon_edit_circle.png',
+                  fit: BoxFit.cover,
+                  width: 32.0,
+                  height: 32.0,
+                ),
               ),
             ],
           ),

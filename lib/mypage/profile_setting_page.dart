@@ -37,12 +37,12 @@ class ProfileSettingPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: 40),
               _Profile(),
+              const SizedBox(height: 32),
               const _TextFields(),
+              Spacer(),
               const _SubmitButton(),
             ],
           ),
@@ -70,64 +70,58 @@ class ProfileSettingPage extends StatelessWidget {
 class _Profile extends StatelessWidget {
   _Profile();
 
-  final AssetImage defaultProfileImg = const AssetImage(
-    'asset/image/icon_user_profile.png',
-  );
-
-  final Image editProfileImg = Image.asset(
-    'asset/image/icon_gallery.png',
-    width: 24.0,
-    height: 24.0,
-  );
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => context.read<ProfileSettingState>().imageUpload(context),
       child: Stack(
-        alignment: Alignment.center,
         children: [
-          CircleAvatar(
-            radius: 40.0,
-            backgroundImage: defaultProfileImg,
-          ),
-          CircleAvatar(
-            radius: 40.0,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(40.0),
-                child: _buildImage(context),
+          // 프로필 사진이 없을 때
+          if(context.watch<ProfileSettingState>().profileData?.profileImage == null ||
+              context.watch<ProfileSettingState>().profileData!.profileImage!.isEmpty)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(40),
+              child: Image.asset(
+                'asset/image/icon_user_profile.png',
+                width: 80.0,
+                height: 80.0,
+              ),
+            ),
+          // 프로필 사진이 있고, 수정 전일 때
+          if (context.watch<ProfileSettingState>().avatarFile == null &&
+              context.watch<ProfileSettingState>().profileData?.profileImage != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(40),
+              child: Image.network(
+                context.watch<ProfileSettingState>().profileData!.profileImage!,
+                fit: BoxFit.cover,
+                width: 80.0,
+                height: 80.0,
+              ),
+            ),
+          if(context.watch<ProfileSettingState>().avatarFile != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(40),
+              child: Image.file(
+                File(context.watch<ProfileSettingState>().avatarFile!.path),
+                fit: BoxFit.cover,
+                width: 80.0,
+                height: 80.0,
+              ),
+            ),
+          Positioned(
+            bottom: 0,
+              right: 0,
+              child: Image.asset(
+                'asset/image/icon_gallery.png',
+                width: 32.0,
+                height: 32.0,
               ),
           ),
         ],
       ),
     );
-  }
-
-  Widget _buildImage(BuildContext context) {
-    if (context.watch<ProfileSettingState>().avatarFile == null &&
-        context.watch<ProfileSettingState>().getProfileImageUrl != null) {
-      return Image.network(
-          context.watch<ProfileSettingState>().getProfileImageUrl!,
-          fit: BoxFit.cover,
-          width: 80.0,
-          height: 80.0,
-          );
-    } else if (context.watch<ProfileSettingState>().avatarFile != null) {
-      return Image.file(
-        File(context.watch<ProfileSettingState>().avatarFile!.path),
-        fit: BoxFit.cover,
-        width: 80.0,
-        height: 80.0,
-      );
-    } else {
-      return Image(
-        image: defaultProfileImg,
-        fit: BoxFit.cover,
-        width: 80.0,
-        height: 80.0,
-      );
-    }
   }
 }
 
@@ -152,6 +146,7 @@ class _TextFields extends StatelessWidget {
           onClearButtonPressed:
               context.read<ProfileSettingState>().clearNameTextField,
         ),
+        const SizedBox(height: 32),
         OutlinedTextField(
           maxLength: 50,
           maxLines: 10,
@@ -175,24 +170,31 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: grayScaleWhite,
-        foregroundColor: grayScaleGrey900,
-        disabledBackgroundColor: grayScaleGrey700,
-        disabledForegroundColor: grayScaleGrey500,
-        textStyle: const TextStyle(
-          color: grayScaleGrey900,
-          fontSize: 18.0,
-          fontWeight: FontWeight.w600,
-        ),
-        padding: const EdgeInsets.all(16.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 32.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 62,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: grayScaleWhite,
+            foregroundColor: grayScaleGrey900,
+            disabledBackgroundColor: grayScaleGrey700,
+            disabledForegroundColor: grayScaleGrey500,
+            textStyle: const TextStyle(
+              color: grayScaleGrey900,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
+            ),
+            padding: const EdgeInsets.all(16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+          ),
+          onPressed: context.read<ProfileSettingState>().savePressed,
+          child: const Text('수정 완료'),
         ),
       ),
-      onPressed: context.read<ProfileSettingState>().savePressed,
-      child: const Text('수정 완료'),
     );
   }
 }
