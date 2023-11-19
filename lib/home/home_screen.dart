@@ -15,8 +15,11 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   static route(BuildContext context) {
-    final String newCreated =
-        ModalRoute.of(context)?.settings.arguments as String;
+    String newCreated = "";
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      newCreated = ModalRoute.of(context)?.settings.arguments as String;
+    }
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -74,7 +77,7 @@ class HomeScreen extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
-                    onPressed: maxTeamBlockLength < maxTeamBlockLength
+                    onPressed: teamBlockLength < maxTeamBlockLength
                         ? context.read<HomeScreenState>().makeGroupPressed
                         : () {
                             ViewUtil().showErrorSnackBar(
