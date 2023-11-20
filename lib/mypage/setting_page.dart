@@ -118,6 +118,7 @@ class SettingPage extends StatelessWidget {
                     imagePath: 'asset/image/right_arrow.png',
                     onTap: () {
                       int teamCount = Provider.of<SettingState>(context, listen: false).teamCount;
+                      print('teamCount : $teamCount');
                       if(teamCount != 0) {
                         Navigator.push(
                           context,

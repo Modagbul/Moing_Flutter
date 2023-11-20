@@ -107,7 +107,7 @@ class SignUpState extends ChangeNotifier {
 
   /// 닉네임 중복검사 요청
   Future<void> checkNicknameOverlapped(String nickname) async {
-    final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/nickname/$nickname';
+    final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/checkNickname?nickname=$nickname';
 
     final response = await http.get(
       Uri.parse(apiUrl),

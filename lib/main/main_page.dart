@@ -46,19 +46,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// 사용자 정보 없으면 첫 페이지로 돌아가기 (API 추가 예정)
-    // final MeState meState = context.read<MeState>();
-    // if (meState.me == null) {
-    //   WidgetsBinding.instance.addPostFrameCallback(
-    //         (_) {
-    //       Navigator.pushNamedAndRemoveUntil(
-    //         context,
-    //         InitPage.routeName,
-    //         ModalRoute.withName(InitPage.routeName),
-    //       );
-    //     },
-    //   );
-    // }
+    int teamCount = context.read<HomeScreenState>().futureData?.teamBlocks.length ?? 0;
     return WillPopScope(
       onWillPop: () async {
         final appState = context.read<AppState>();
@@ -88,7 +76,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   HomeScreen(),
                   MissionsScreen(),
-                  MyPageScreen.route(context),
+                  MyPageScreen.route(context: context, teamCount: teamCount),
                 ],
               ),
             ],

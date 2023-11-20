@@ -13,10 +13,13 @@ class MissionFirePage extends StatelessWidget {
   const MissionFirePage({super.key});
 
   static route(BuildContext context) {
+    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final int teamId = data['teamId'] as int;
+    final int missionId = data['missionId'] as int;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => MissionFireState(context: context),
+          create: (context) => MissionFireState(context: context, teamId: teamId, missionId: missionId),
           lazy: false,
         ),
       ],

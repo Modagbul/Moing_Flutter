@@ -1,12 +1,12 @@
 class EveryMissionProveData {
   final int archiveId;
   final String nickname;
-  final String profileImg;
+  String? profileImg;
   final String archive;
   final String createdDate;
   final String way;
-  final String heartStatus;
-  final int hearts;
+  String heartStatus;
+  int hearts;
   final String status;
   final int count;
 
@@ -14,11 +14,19 @@ class EveryMissionProveData {
     required this.archive, required this.createdDate, required this.way, required this.heartStatus,
     required this.hearts, required this.status, required this.count});
 
+  set setheartStatus(String newHeartStatus) {
+    heartStatus = newHeartStatus;
+  }
+
+  set setHearts(int newHearts) {
+    hearts = newHearts;
+  }
+
   factory EveryMissionProveData.fromJson(Map<String, dynamic> json) {
     return EveryMissionProveData(
       archiveId: json['archiveId'] as int,
       nickname: json['nickname'] as String,
-      profileImg: json['profileImg'] as String,
+      profileImg: json['profileImg'] as String?,
       archive: json['archive'] as String,
       createdDate: json['createdDate'] as String,
       way: json['way'] as String,

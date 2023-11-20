@@ -183,7 +183,15 @@ class MyPageRevokeState extends ChangeNotifier {
         body: data,
         fromJson: (_) => null,
       );
-      print('회원탈퇴 성공!');
+      if(apiResponse.isSuccess == true) {
+        print('회원탈퇴 성공!');
+        Navigator.of(context).pop();
+        final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
+        sharedPreferencesInfo.removePreferencesData('old');
+        sharedPreferencesInfo.removePreferencesData('sign');
+        Navigator.of(context).pushNamedAndRemoveUntil(InitPage.routeName, (route) => false);
+        notifyListeners();
+      }
     } catch (e) {
       log('회원탈퇴 실패: $e');
     }

@@ -28,8 +28,8 @@ class SingleMyMissionProved extends StatelessWidget {
               /// 건너뛰기 한 경우
               context.watch<MissionProveState>().myMissionList![0].status == 'SKIP'
             ? Padding(
-              padding: const EdgeInsets.only(top: 68.0, left: 16),
-              child: Text('건너뛰기했지롱~', style: contentTextStyle.copyWith(color: Colors.white)),
+              padding: const EdgeInsets.only(top: 68.0, left: 16, right: 16),
+              child: Text(context.watch<MissionProveState>().myMissionList![0].archive, style: contentTextStyle.copyWith(color: Colors.white)),
             )
               /// 사진 인증
               : context.watch<MissionProveState>().missionWay.length > 1 &&

@@ -88,13 +88,8 @@ class RepeatMyMissionProved extends StatelessWidget {
         ),
       );
     }
-    if (context.watch<MissionProveState>().myMissionList![index].way ==
-            'PHOTO' &&
-        context
-                .watch<MissionProveState>()
-                .myMissionList![index]
-                .status ==
-            'COMPLETE') {
+    if (context.watch<MissionProveState>().myMissionList![index].way == 'PHOTO' &&
+        context.watch<MissionProveState>().myMissionList![index].status == 'COMPLETE') {
       return Stack(
         children: [
           GestureDetector(
@@ -103,12 +98,15 @@ class RepeatMyMissionProved extends StatelessWidget {
             },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  context
-                      .watch<MissionProveState>()
-                      .myMissionList![index]
-                      .archive,
-                  fit: BoxFit.cover,
+                child: Container(
+                  height: 155,
+                  child: Image.network(
+                    context
+                        .watch<MissionProveState>()
+                        .myMissionList![index]
+                        .archive,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

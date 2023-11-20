@@ -77,16 +77,16 @@ class MissionCertificate extends StatelessWidget {
     else {
       return Row(
         children: [
-          Container(
-            padding: EdgeInsets.only(left: 16),
-            width: 271,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: grayScaleGrey700,
-            ),
-            child: GestureDetector(
-              onTap: context.read<MissionCreateState>().datePicker,
+          GestureDetector(
+            onTap: context.read<MissionCreateState>().datePicker,
+            child: Container(
+              padding: EdgeInsets.only(left: 16),
+              width: 271,
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: grayScaleGrey700,
+              ),
               child: Row(
                 children: [
                   Text(
@@ -108,6 +108,7 @@ class MissionCertificate extends StatelessWidget {
           ),
           Spacer(),
           GestureDetector(
+            onTap: context.read<MissionCreateState>().timePicker,
             child: Container(
               alignment: Alignment.center,
               width: 75,

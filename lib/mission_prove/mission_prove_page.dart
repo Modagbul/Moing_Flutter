@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/mission_prove/component/repeat_every_mission/every_mission_prove.dart';
 import 'package:moing_flutter/mission_prove/component/mission_current_situation.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_not_prove_button.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_prove_button.dart';
@@ -98,9 +99,14 @@ class _MissionProvePageState extends State<MissionProvePage>
                         context.watch<MissionProveState>().everyMissionList != null &&
                         context.watch<MissionProveState>().everyMissionList!.isEmpty))
                   SingleMyMissionNotProved(),
+                /// 모두의 인증이면서 인증 한 경우
+                if(!context.watch<MissionProveState>().isMeOrEveryProved &&
+                    context.watch<MissionProveState>().everyMissionList != null &&
+                    context.watch<MissionProveState>().everyMissionList!.isNotEmpty)
+                EveryMissionProved(),
+                sliverSizedBox(height: 240),
               ],
             ),
-
             /// 인증 안한 경우
             if(!context.watch<MissionProveState>().isMeProved ||
                 context.watch<MissionProveState>().isRepeated)
@@ -109,6 +115,7 @@ class _MissionProvePageState extends State<MissionProvePage>
             if(context.watch<MissionProveState>().isMeProved &&
                 !context.watch<MissionProveState>().isRepeated)
             MissionProveButton(),
+
           ],
         ),
       ),

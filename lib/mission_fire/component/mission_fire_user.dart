@@ -28,7 +28,7 @@ class MissionFireUser extends StatelessWidget {
               crossAxisCount: 3,
               childAspectRatio: 94 / 148,
               mainAxisSpacing: 28,
-              crossAxisSpacing: 50,
+              crossAxisSpacing: 32,
             ),
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -58,11 +58,14 @@ class MissionFireUser extends StatelessWidget {
                     ),
                     SizedBox(height: 12), // 원과 텍스트 간의 간격 조정
                     Flexible(
-                      child: Text(
-                        context.watch<MissionFireState>().userNameList[index],
-                        style: contentTextStyle.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isSelected ? coralGrey500 : grayScaleGrey300,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          context.watch<MissionFireState>().userNameList[index],
+                          style: contentTextStyle.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: isSelected ? coralGrey500 : grayScaleGrey300,
+                          ),
                         ),
                       ),
                     ),

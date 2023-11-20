@@ -134,7 +134,7 @@ class MoingApp extends StatelessWidget {
             SettingPage.routeName:(context) => SettingPage.route(context),
             AlramSettingPage.routeName:(context) => AlramSettingPage.route(context),
 
-            MyPageScreen.routeName:(context) => MyPageScreen.route(context),
+            MyPageScreen.routeName:(context) => MyPageScreen.route(context: context),
             MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),
 
             TeamMemberListPage.routeName:(context) => TeamMemberListPage.route(context),
