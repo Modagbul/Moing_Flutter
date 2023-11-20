@@ -13,7 +13,9 @@ class MissionFireAppBar extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pop();
+            },
             child: Icon(Icons.close, size: 28, color: Colors.white,),
           ),
           const SizedBox(width: 32),

@@ -1,45 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:provider/provider.dart';
-import 'package:speech_balloon/speech_balloon.dart';
 
-class MissionProveButton extends StatefulWidget {
+class MissionProveButton extends StatelessWidget {
   const MissionProveButton({Key? key}) : super(key: key);
-
-  @override
-  State<MissionProveButton> createState() => _MissionProveButtonState();
-}
-
-class _MissionProveButtonState extends State<MissionProveButton> with SingleTickerProviderStateMixin{
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    // 애니메이션 컨트롤러를 초기화합니다.
-    _animationController = AnimationController(
-      duration: const Duration(seconds: 2), // 애니메이션 지속 시간
-      vsync: this,
-    );
-
-    // 투명도 애니메이션을 정의합니다.
-    _fadeAnimation = Tween(begin: 1.0, end: 0.0).animate(_animationController);
-
-    // 애니메이션을 시작합니다.
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      _animationController.forward();
-    });
-  }
-
-  @override
-  void dispose() {
-    // 애니메이션 컨트롤러를 해제합니다.
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +23,7 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    if(context.watch<MissionProveState>().isMeOrEveryProved)
                     ElevatedButton(
                       onPressed: () {},
                       style: ButtonStyle(
@@ -91,9 +59,10 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
                         ],
                       ),
                     ),
-                    if(context.watch<MissionProveState>().missionWay.contains('사진'))
+                    if(context.watch<MissionProveState>().missionWay.contains('사진') &&
+                        context.watch<MissionProveState>().myMissionList![0].status == 'COMPLETE')
                     ElevatedButton(
-                      onPressed:context.read<MissionProveState>().missionShareDialog,
+                      onPressed: context.read<MissionProveState>().missionShareDialog,
                       style: ButtonStyle(
                         fixedSize: MaterialStateProperty.all(
                           Size(138, 50),
@@ -119,7 +88,17 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // // 내가 인증한 경우
+                  // if(context.watch<MissionProveState>().isMeProved) {
+                  //
+                  // }
+                  // // 인증 안한 경우
+                  // else {
+                  //
+                  // }
+                  Navigator.of(context).pushNamed(MissionFirePage.routeName);
+                },
                 style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all(
                     Size(224, 62),
@@ -148,32 +127,6 @@ class _MissionProveButtonState extends State<MissionProveButton> with SingleTick
                 ),
               )
             ],
-          ),
-          if(context.watch<MissionProveState>().isFireText)
-          Positioned(
-            top: 20,
-            left: 20,
-            right: 20,
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SpeechBalloon(
-                color: coralGrey500,
-                width: double.infinity,
-                height: 33,
-                borderRadius: 24,
-                nipLocation: NipLocation.bottom,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '미션을 인증하지 않은 모임원에게 불을 던져 독려해요',
-                      style: bodyTextStyle.copyWith(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
         ],
       ),

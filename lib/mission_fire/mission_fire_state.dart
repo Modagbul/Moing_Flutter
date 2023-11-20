@@ -1,16 +1,25 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/model/api_generic.dart';
+import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/response/mission/fire_person_list_repsonse.dart';
 
 class MissionFireState extends ChangeNotifier {
   final BuildContext context;
+  final int teamId;
+  final int missionId;
   String selectedUserName = '모임원 프로필을 클릭해보세요';
   int? selectedIndex;
+  List<FireReceiverData>? userList;
+  String apiUrl = '';
+  final APICall call = APICall();
 
   List<String> userNameList = [
     '뮹뮹',
-    '일이삼사오육칠팔구십',
+    'JeffCollin',
     '채채채리',
     '현석쿤',
     '여비',
@@ -22,12 +31,40 @@ class MissionFireState extends ChangeNotifier {
 
   MissionFireState({
     required this.context,
+    required this.teamId,
+    required this.missionId,
   }) {
     initState();
   }
 
   void initState() {
     log('Instance "MissionFireState" has been created');
+    print('teamId : $teamId, missionId : $missionId');
+    loadFirePersonList();
+  }
+
+  void loadFirePersonList() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/missions/$missionId/fire';
+
+    try {
+      ApiResponse<List<FireReceiverData>> apiResponse =
+      await call.makeRequest<List<FireReceiverData>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (dataJson) => List<FireReceiverData>.from(
+          (dataJson as List).map(
+                (item) => FireReceiverData.fromJson(item as Map<String, dynamic>),
+          ),
+        ),
+      );
+
+      if (apiResponse.data != null) {
+        userList = apiResponse.data;
+        notifyListeners();
+      }
+    } catch (e) {
+      log('미션인증 실패: $e');
+    }
   }
 
   // 선택 적용

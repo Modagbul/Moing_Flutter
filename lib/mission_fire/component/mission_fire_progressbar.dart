@@ -29,7 +29,7 @@ class MissionFireProgressBar extends StatelessWidget {
         const SizedBox(height: 24),
         RoundedProgressBar(
           borderRadius: BorderRadius.circular(24),
-          childLeft: Text('3/9명 성공',style: bodyTextStyle.copyWith(color: grayScaleGrey100),),
+          childLeft: Text('3/9명 인증성공',style: bodyTextStyle.copyWith(color: grayScaleGrey100),),
           percent: 30,
           style: RoundedProgressBarStyle(
             colorBorder: Colors.transparent,

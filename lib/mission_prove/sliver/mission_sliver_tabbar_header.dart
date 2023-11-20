@@ -31,7 +31,7 @@ class TabBarDelegate extends SliverPersistentHeaderDelegate {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.47,
+              width: MediaQuery.of(context).size.width * 0.5,
               child: _CustomTabBar(
                 tabs: const [
                   '나의 인증',

@@ -27,16 +27,17 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao6671c3a9b377c8f302c17c14e2c940f2</string>
-				<string>naverloginhyunseok</string>
+				<string>com.googleusercontent.apps.325197804561-t5cno0jvbl3g65sqv6olv0iuasvb6amr</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.moing.moing-team</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.78739178434-v9ou55jemaf18vrhhcvuu86q5amquugg</string>
+				<string>moing.page.link</string>
 			</array>
 		</dict>
 	</array>
@@ -46,11 +47,11 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-        <key>NSAllowsLocalNetworking</key>
-        <true/>
-        <key>NSAllowsArbitraryLoadsInWebContent</key>
-        <true/>
 		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+		<key>NSAllowsLocalNetworking</key>
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
@@ -73,7 +74,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>카메라를 사용하여 사진을 촬영합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-    <string>이 앱의 사진을 갤러리에 저장하려고 합니다</string>
+	<string>이 앱의 사진을 갤러리에 저장하려고 합니다</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>사진 라이브러리에서 이미지를 선택합니다.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -112,14 +113,5 @@
 	<string>naverlogintest</string>
 	<key>naverServiceAppUrlScheme</key>
 	<string>naverloginhyunseok</string>
-	<key>CFBundleURLTypes</key>
-        <array>
-          <dict>
-          <key>CFBundleURLSchemes</key>
-          <array>
-            <string>com.googleusercontent.apps.325197804561-t5cno0jvbl3g65sqv6olv0iuasvb6amr</string>
-          </array>
-          </dict>
-        </array>
 </dict>
 </plist>

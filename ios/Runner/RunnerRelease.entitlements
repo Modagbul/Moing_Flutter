@@ -9,6 +9,8 @@
 		<string>Default</string>
 	</array>
 	<key>com.apple.developer.associated-domains</key>
-	<array/>
+	<array>
+		<string>applinks:moing.page.link</string>
+	</array>
 </dict>
 </plist>

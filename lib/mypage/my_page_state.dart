@@ -9,16 +9,19 @@ import 'package:moing_flutter/mypage/setting_page.dart';
 class MyPageState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
+  final int teamCount;
   MyPageData? myPageData;
 
   MyPageState({
     required this.context,
+    required this.teamCount,
   }) {
     initState();
   }
 
   void initState() async {
     log('Instance "MyPageState" has been created');
+    print('teamCount : $teamCount');
     getMyPageData();
   }
 
@@ -44,7 +47,6 @@ class MyPageState extends ChangeNotifier {
   }
 
   void settingPressed() {
-    int teamCount = myPageData?.getMyPageTeamBlocks.length ?? 0;
     Navigator.of(context).pushNamed(
       SettingPage.routeName,
       arguments: teamCount,

@@ -176,6 +176,7 @@ class LoginState extends ChangeNotifier {
 
         // decodeJWT(appleCredential!.identityToken!);
         print('애플 액세스 토큰 : ${appleCredential.identityToken}');
+        print(' ====');
         await appleLoginSendToken(appleCredential.identityToken!);
       } catch (e) {
         print('애플 로그인 실패 : ${e.toString()}');

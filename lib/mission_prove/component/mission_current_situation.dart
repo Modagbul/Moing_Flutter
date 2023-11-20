@@ -3,6 +3,7 @@ import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_fire_button.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -133,11 +134,14 @@ class MissionCurrentSituation extends StatelessWidget {
                         ),
                       // 한번 미션이면서 내가 인증했을 때
                       if (!context.watch<MissionProveState>().isRepeated &&
-                          context.watch<MissionProveState>().isMeProved)
+                          context.watch<MissionProveState>().myMissionList != null &&
+                          context.watch<MissionProveState>().myMissionList!.isNotEmpty)
                         Image.asset('asset/image/icon_mission_prove.png'),
                       // 한번 미션이면서 내가 인증 안 했을 때
                       if (!context.watch<MissionProveState>().isRepeated &&
-                          !context.watch<MissionProveState>().isMeProved)
+                          (context.watch<MissionProveState>().myMissionList == null ||
+                              (context.watch<MissionProveState>().myMissionList != null &&
+                                context.watch<MissionProveState>().myMissionList!.isEmpty)))
                         Image.asset('asset/image/icon_mission_not_yet.png'),
                       SizedBox(width: 16),
                       Column(
@@ -204,9 +208,7 @@ class MissionCurrentSituation extends StatelessWidget {
             // 반복 미션이면서 내가 인증했을 때
             if (context.watch<MissionProveState>().isRepeated)
               MissionFireButton(
-                onPressed: () {
-                  print('불 던지러 가기 버튼 클릭!');
-                },
+                onPressed: context.read<MissionProveState>().firePressed,
               ),
             SizedBox(height: 24),
           ],

@@ -31,3 +31,9 @@ const TextStyle middleTextStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w600,
 );
+
+const TextStyle smallTextStyle = TextStyle(
+  color: grayScaleGrey400,
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+);
