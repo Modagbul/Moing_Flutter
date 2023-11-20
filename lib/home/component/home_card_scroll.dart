@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
 import 'package:provider/provider.dart';
+import 'package:speech_balloon/speech_balloon.dart';
 
 import '../../model/response/group_team_response.dart';
 
@@ -15,10 +18,17 @@ class HomeCardScroll extends StatelessWidget {
       height: 356,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          physics: PageScrollPhysics(),
+          physics: const PageScrollPhysics(),
           itemCount: context.watch<HomeScreenState>().teamList.length,
           itemBuilder: (context, index) {
             TeamBlock team = context.watch<HomeScreenState>().teamList[index];
+
+            log(context.read<HomeScreenState>().newCreated ?? 'sdd');
+            if (context.watch<HomeScreenState>().newCreated == "new" &&
+                index == 0 &&
+                context.read<HomeScreenState>().onlyOnce) {
+              context.read<HomeScreenState>().showNewAddedGroup();
+            }
 
             return GestureDetector(
               onTap: () {
@@ -72,7 +82,7 @@ class HomeCardScroll extends StatelessWidget {
                                     color: grayScaleGrey100,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 6.0,
                                 ),
                                 Row(
@@ -85,10 +95,10 @@ class HomeCardScroll extends StatelessWidget {
                                         color: grayScaleGrey300,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 4.0,
                                     ),
-                                    Text(
+                                    const Text(
                                       '하며 함께 불태운 시간',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
@@ -172,15 +182,60 @@ class HomeCardScroll extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 64.0,
-                      ),
+                      //위치 좌측으로, 1초 이후 사라지게
+                      (context.watch<HomeScreenState>().showNewExpression &&
+                              index == 0)
+                          ? const Column(
+                              children: [
+                                SizedBox(
+                                  height: 15.0,
+                                ),
+                                SpeechBalloon(
+                                  color: coralGrey500,
+                                  width: 180,
+                                  height: 34,
+                                  borderRadius: 24,
+                                  nipLocation: NipLocation.bottom,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical: 8.0,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '새 모임이 추가되었어요',
+                                        style: TextStyle(
+                                          color: grayScaleWhite,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15.0,
+                                ),
+                              ],
+                            )
+                          : const SizedBox(
+                              height: 64.0,
+                            ),
                       Container(
                         width: 302,
                         height: 96,
                         decoration: BoxDecoration(
                           color: grayScaleGrey600,
                           borderRadius: BorderRadius.circular(32),
+                          border: Border.all(
+                            color: (context
+                                        .watch<HomeScreenState>()
+                                        .showNewExpression &&
+                                    index == 0)
+                                ? coralGrey500
+                                : Colors.transparent,
+                            width: 1.0,
+                          ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(left: 21.0, top: 19),
@@ -196,7 +251,7 @@ class HomeCardScroll extends StatelessWidget {
                                     height: 56,
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 8.0),
+                                    padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(
                                       team.levelOfFire.toString(),
                                       style: const TextStyle(
@@ -215,7 +270,7 @@ class HomeCardScroll extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(top: 4.0),
+                                    padding: const EdgeInsets.only(top: 4.0),
                                     child: Text(
                                       team.teamName,
                                       style: const TextStyle(
