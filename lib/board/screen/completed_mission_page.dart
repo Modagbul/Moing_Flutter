@@ -104,7 +104,7 @@ class _BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.extended(  // FloatingActionButton으로 변경
+    return FloatingActionButton.extended(
       onPressed: () {
         Navigator.of(context).pushNamed(
           MissionsCreatePage.routeName,

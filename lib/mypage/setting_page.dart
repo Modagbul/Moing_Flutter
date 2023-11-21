@@ -8,9 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
 import '../make_group/component/warning_dialog.dart';
-import '../model/response/sign_out_response.dart';
-import '../utils/shared_preferences/shared_preferences.dart';
-import 'alram_setting_state.dart';
 import 'component/list_custom_tile.dart';
 
 class SettingPage extends StatelessWidget {

@@ -21,7 +21,7 @@ class CompletedMissionState extends ChangeNotifier {
   }
 
   void initState() async {
-    log('Instance "OngoingMissionState" has been created');
+    log('Instance "CompletedMissionState" has been created');
   }
 
   @override
