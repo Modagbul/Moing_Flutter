@@ -61,7 +61,7 @@ class BoardCompletedMissionCard extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                status == 'SUCCESS' ? '성공' : '실패',
+                                status == 'COMPLETE' ? '성공' : '실패',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.0,

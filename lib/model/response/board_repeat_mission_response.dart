@@ -28,6 +28,7 @@ class RepeatMission {
   String dueTo;
   int done;
   int number;
+  String status;
 
   RepeatMission({
     required this.missionId,
@@ -35,6 +36,7 @@ class RepeatMission {
     required this.dueTo,
     required this.done,
     required this.number,
+    required this.status,
   });
 
   factory RepeatMission.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class RepeatMission {
       dueTo: json['dueTo'],
       done: json['done'],
       number: json['number'],
+      status: json['status'],
     );
   }
 }
