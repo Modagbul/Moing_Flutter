@@ -5,6 +5,7 @@ import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/login/sign_in/component/custom_login_button.dart';
 import 'package:moing_flutter/login/sign_in/login_state.dart';
 import 'package:moing_flutter/main/main_page.dart';
+import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 
@@ -14,9 +15,14 @@ class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   static route(BuildContext context) {
+    String? teamId = ModalRoute.of(context)?.settings.arguments as String?;
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LoginState(context: context)),
+        ChangeNotifierProvider(create: (_) => LoginState(
+            context: context, teamId: teamId,
+        dynamicLinkService : DynamicLinkService(context: context)),
+        ),
       ],
       builder: (context, _) {
         return const LoginPage();

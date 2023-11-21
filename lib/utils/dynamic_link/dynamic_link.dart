@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:moing_flutter/login/sign_in/login_page.dart';
 
 class DynamicLinkService extends ChangeNotifier {
   BuildContext context;
@@ -14,12 +15,14 @@ class DynamicLinkService extends ChangeNotifier {
     final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
 
     if (initialLink != null) {
+      print('리다이렉트 1');
       redirect(initialLink);
     }
 
     FirebaseDynamicLinks.instance.onLink.listen(
           (PendingDynamicLinkData? pendingDynamicLinkData) async {
         if (pendingDynamicLinkData != null) {
+          print('리다이렉트 2');
           redirect(pendingDynamicLinkData);
         }
       },
@@ -56,7 +59,11 @@ class DynamicLinkService extends ChangeNotifier {
   Future<void> redirect(PendingDynamicLinkData dynamicLinkData) async {
     try {
       String link = dynamicLinkData.link.path;
-      print('link : $link');
+      print('link성공! : $link');
+      String teamId = link.replaceAll('/teamId=', '');
+      print('teamId : $teamId');
+
+      Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false, arguments: teamId);
       // switch (link) {
       //   case "/counselor":
       //     final UserRepository userRepository = UserRepository();
