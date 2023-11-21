@@ -18,11 +18,11 @@ class OngoingMissionState extends ChangeNotifier {
     required this.teamId,
   }) {
     initState();
-    getRepeatMissionStatus();
-    getSingleMissionStatus();
   }
 
   void initState() async {
+    getRepeatMissionStatus();
+    getSingleMissionStatus();
     log('Instance "OngoingMissionState" has been created');
   }
 

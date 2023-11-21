@@ -21,7 +21,7 @@ class AlramSettingState extends ChangeNotifier {
     fetchAlarmSettings(); // 초기화 시 알람 설정 조회
   }
 
-  // 알람 설정 조회
+  /// 알람 설정 조회
   Future<void> fetchAlarmSettings() async {
     try {
       // API 호출 로직 구현 예시
@@ -32,7 +32,7 @@ class AlramSettingState extends ChangeNotifier {
     }
   }
 
-  // 알람 설정 수정
+  /// 알람 설정 수정
   Future<void> changeAlarmSettings(bool newUploadPush, bool remindPush, bool firePush) async {
     try {
       // AlarmSettingsEditor 객체 생성
