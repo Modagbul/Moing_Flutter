@@ -52,10 +52,15 @@ class APICall {
       if(response.statusCode == 200) {
         return ApiResponse.fromJson(responseBody, fromJson);
       } else {
-        print('에러코드 : ${response.statusCode}');
-        await exception.throwErrorMessage(responseBody['errorCode']);
-        // errorCode가 담긴 body 그대로 반환
-        return ApiResponse.fromJson(responseBody, fromJson);
+        print('API CALL 에러코드 : ${response.statusCode}');
+        bool isSuccess = await exception.throwErrorMessage(responseBody['errorCode']);
+        if(isSuccess) {
+          // errorCode가 담긴 body 그대로 반환
+          return ApiResponse.fromJson(responseBody, fromJson);
+        }
+        else {
+          throw Exception("API Call에서 예외를 발생시켰습니다 : ${responseBody['errorCode']}");
+        }
       }
     } catch (e) {
       throw Exception(e.toString());

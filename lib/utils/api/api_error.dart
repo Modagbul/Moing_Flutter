@@ -7,21 +7,29 @@ import 'package:moing_flutter/utils/api/refresh_token.dart';
 
 class ApiException implements Exception {
   TokenManagement tokenManagement = TokenManagement();
-  Future<void> throwErrorMessage(String errorCode) async {
+  Future<bool> throwErrorMessage(String errorCode) async {
     String msg='';
 
-    print('에러코드 : $errorCode');
+    print('API EXCEPTION 에러코드 : $errorCode');
 
     if (errorCode == 'J0008') {
       print('리프레시 토큰이 만료되어 로그인 페이지로 이동합니다..');
       GetIt.I.get<GlobalKey<NavigatorState>>().currentState!.pushNamed(LoginPage.routeName);
-      return ;
+      return false;
     }
 
     // 만료된 토큰 -> 토큰 재발급
     if (errorCode == 'J0003') {
+      print('API EXCEPTION 에서 토큰 재발급 받기를 시행합니다. : $errorCode');
       // 토큰 재발급 받기
-      return await tokenManagement.getNewToken();
+      bool renewalTokenSuccess = await tokenManagement.getNewToken();
+      if(!renewalTokenSuccess) {
+        print('리프레시 토큰이 만료되어 로그인 페이지로 이동합니다..');
+        GetIt.I.get<GlobalKey<NavigatorState>>().currentState!.pushNamed(LoginPage.routeName);
+        return false;
+      }
+
+      return true;
     }
 
     switch (errorCode) {

@@ -87,6 +87,9 @@ class SignUpDateState extends ChangeNotifier {
         if(apiResponse.errorCode == 'J0003') {
           signUp(birthDate);
         }
+        else {
+          throw Exception('signUp is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       print('소모임 생성 실패: $e');

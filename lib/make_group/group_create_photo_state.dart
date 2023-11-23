@@ -107,8 +107,11 @@ class GroupCreatePhotoState extends ChangeNotifier {
         await uploadImageToS3(presignedUrl, avatarFile!);
         return true;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
+        if(apiResponse.errorCode == 'J0003') {
           getPresignedUrl(fileExtension);
+        }
+        else {
+          throw Exception('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
         }
         return false;
       }
@@ -166,6 +169,14 @@ class GroupCreatePhotoState extends ChangeNotifier {
         Navigator.of(context).pushNamed(
           GroupCreateSuccessPage.routeName,
         );
+      }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          makeTeam();
+        }
+        else {
+          throw Exception('makeTeam is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       print('소모임 생성 실패: $e');

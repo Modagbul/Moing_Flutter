@@ -87,6 +87,14 @@ class SkipMissionState extends ChangeNotifier {
       if(apiResponse.data != null) {
         skipSuccess();
       }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          submit();
+        }
+        else {
+          throw Exception('submit is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('텍스트 인증 실패: $e');
     }
