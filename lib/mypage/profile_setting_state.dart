@@ -85,7 +85,12 @@ class ProfileSettingState extends ChangeNotifier {
         getProfileImageUrl = apiResponse.data?['profileImage'];
       }
       else {
-        print('에러 발생..');
+        if(apiResponse.errorCode == 'J0003') {
+          loadFixData(teamId);
+        }
+        else {
+          throw Exception('loadFixData is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
@@ -232,8 +237,11 @@ class ProfileSettingState extends ChangeNotifier {
         await uploadImageToS3(presignedUrl, avatarFile!);
         return true;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
+        if(apiResponse.errorCode == 'J0003') {
           getPresignedUrl(fileExtension);
+        }
+        else {
+          throw Exception('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
         }
         return false;
       }
@@ -286,7 +294,12 @@ class ProfileSettingState extends ChangeNotifier {
           Navigator.of(context).pop(true);
         }
         else {
-          print('에러 발생..');
+          if(apiResponse.errorCode == 'J0003') {
+            fixProfileAPI();
+          }
+          else {
+            throw Exception('fixProfileAPI is Null, error code : ${apiResponse.errorCode}');
+          }
         }
       } catch (e) {
         print('프로필 수정 실패: $e');

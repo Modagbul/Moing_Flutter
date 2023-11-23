@@ -222,8 +222,16 @@ class MissionProveState with ChangeNotifier {
       if (apiResponse.data != null) {
         singleMissionMyCount = int.parse(apiResponse.data?['done']);
         singleMissionTotalCount = int.parse(apiResponse.data?['total']);
+        notifyListeners();
       }
-      notifyListeners();
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          loadTeamMissionProveCount();
+        }
+        else {
+          throw Exception('loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
     }
@@ -245,8 +253,16 @@ class MissionProveState with ChangeNotifier {
       if (apiResponse.data != null) {
         repeatMissionMyCount = int.parse(apiResponse.data?['done']);
         repeatMissionTotalCount = int.parse(apiResponse.data?['total']);
+        notifyListeners();
       }
-      notifyListeners();
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          loadMyMissionProveCount();
+        }
+        else {
+          throw Exception('loadMyMissionProveCount is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
     }
@@ -307,6 +323,14 @@ class MissionProveState with ChangeNotifier {
         print('내가 오늘 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
         notifyListeners();
       }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          loadMissionData();
+        }
+        else {
+          throw Exception('loadMissionData is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('나의 인증 조회 실패: $e');
     }
@@ -331,6 +355,14 @@ class MissionProveState with ChangeNotifier {
 
       if(apiResponse.isSuccess == true) {
         everyMissionList = apiResponse.data;
+      }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          loadEveryMissionData();
+        }
+        else {
+          throw Exception('loadEveryMissionData is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('모임원 인증 조회 실패: $e');
@@ -382,9 +414,16 @@ class MissionProveState with ChangeNotifier {
         }
         // 남은 시간 계산
         calculateTimeLeft(apiResponse.data?['dueTo']);
+        notifyListeners();
       }
-
-      notifyListeners();
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          getMissionContent();
+        }
+        else {
+          throw Exception('getMissionContent is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
     }
@@ -405,10 +444,18 @@ class MissionProveState with ChangeNotifier {
         fromJson: (dataJson) => dataJson as Map<String, dynamic>,
       );
 
-      notifyListeners();
       if (apiResponse.data != null) {
-        return true;
         print('미션인증 성공!');
+        notifyListeners();
+        return true;
+      }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          isFix == null ? submitMission(url: url) : submitMission(url: url, isFix: isFix);
+        }
+        else {
+          throw Exception('submitMission is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('미션인증 실패: $e');
@@ -523,6 +570,14 @@ class MissionProveState with ChangeNotifier {
         everyMissionList![index].hearts = newHearts;
         print('hearts : ${everyMissionList![index].hearts}');
         notifyListeners();
+      }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          likePressed(archiveId: archiveId, index: index, heartStatus: heartStatus);
+        }
+        else {
+          throw Exception('likePressed is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('미션인증 실패: $e');

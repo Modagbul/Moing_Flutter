@@ -192,6 +192,14 @@ class MyPageRevokeState extends ChangeNotifier {
         Navigator.of(context).pushNamedAndRemoveUntil(InitPage.routeName, (route) => false);
         notifyListeners();
       }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          revoke();
+        }
+        else {
+          throw Exception('revoke is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('회원탈퇴 실패: $e');
     }

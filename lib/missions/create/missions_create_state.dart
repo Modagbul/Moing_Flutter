@@ -194,8 +194,17 @@ class MissionCreateState extends ChangeNotifier {
             recommendText = '자기계발을 도와주는';
             break;
         }
+        notifyListeners();
       }
-      notifyListeners();
+
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          getMissionRecommend();
+        }
+        else {
+          throw Exception('getMissionRecommend is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
     }

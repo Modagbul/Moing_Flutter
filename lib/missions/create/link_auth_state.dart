@@ -78,6 +78,14 @@ class LinkAuthState extends ChangeNotifier {
       if(apiResponse.data != null) {
         Navigator.of(context).pop(true);
       }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          submit();
+        }
+        else {
+          throw Exception('submit is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('링크 인증 실패: $e');
     }

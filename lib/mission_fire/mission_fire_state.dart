@@ -62,6 +62,14 @@ class MissionFireState extends ChangeNotifier {
         userList = apiResponse.data;
         notifyListeners();
       }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          loadFirePersonList();
+        }
+        else {
+          throw Exception('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('미션인증 실패: $e');
     }

@@ -80,6 +80,14 @@ class TextAuthState extends ChangeNotifier {
       if(apiResponse.data != null) {
         Navigator.of(context).pop(true);
       }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          submit();
+        }
+        else {
+          throw Exception('Text submit is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('텍스트 인증 실패: $e');
     }
