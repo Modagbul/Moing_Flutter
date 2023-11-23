@@ -9,11 +9,11 @@ class TokenManagement {
   final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
   int count = 0;
   /// 토큰 재발급
-  Future<void> getNewToken() async {
+  Future<bool> getNewToken() async {
     String? refreshToken = await loadRefreshToken();
     if(refreshToken == null) {
       print('refreshToken 값이 존재하지 않습니다.');
-      return;
+      return false;
     }
 
     final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/reissue';
@@ -34,12 +34,13 @@ class TokenManagement {
       // sharedPreferences를 이용하여 accessToken, refreshToken 저장
       print('액세스 토큰, 리프레시 토큰이 갱신되었습니다!');
       await saveToken(accessToken, refreshToken);
+      return true;
     }
 
     else {
-      print('액세스 토큰 갱신 실패 : ${response.statusCode}');
+      print('Token Management에서 액세스 토큰 갱신 실패 : ${response.statusCode}');
+      return false;
     }
-    return;
   }
 
   /// 토큰 저장 또는 수정

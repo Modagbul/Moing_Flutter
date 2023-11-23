@@ -59,16 +59,18 @@ class HomeScreenState extends ChangeNotifier {
         nickname = apiResponse.data!.memberNickName;
         return apiResponse.data!;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          print('재실행합니다.');
-          return await fetchApiData();
+        if(apiResponse.errorCode == 'J0003') {
+          fetchApiData();
+        }
+        else {
+          throw Exception('fetchApiData is Null, error code : ${apiResponse.errorCode}');
         }
       }
-      return null;
     } catch (e) {
       print('홈 화면 받아 오는 중 에러 발생 : ${e.toString()}');
       return null;
     }
+    return null;
   }
 
   // 알람 클릭
@@ -102,27 +104,5 @@ class HomeScreenState extends ChangeNotifier {
         notifyListeners();
       });
     });
-  }
-
-  void apiTest() {
-    /// Team 소모임 개설
-    // apiCode.makeTeamAPI();
-    /// Team 소모임 가입
-    // apiCode.joinTeamAPI();
-    /// Team 목표보드_소모임 단건 조회
-    // apiCode.getSingleBoard();
-    /// Team 소모임 수정
-    // apiCode.fixTeam();
-
-    /// Mission 생성
-    // apiCode.makeMissionAPI();
-    /// Mission 조회
-    // apiCode.getSingleMission();
-    /// Mission 수정
-    // apiCode.fixSingleMission();
-    /// Mission 삭제
-    // apiCode.removeMission();
-    /// Mission 인증
-    // apiCode.certifyMission();
   }
 }
