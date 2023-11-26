@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:moing_flutter/login/sign_in/login_page.dart';
+import 'package:moing_flutter/init/init_page.dart';
 
 class DynamicLinkService extends ChangeNotifier {
   BuildContext context;
@@ -63,7 +63,7 @@ class DynamicLinkService extends ChangeNotifier {
       String teamId = link.replaceAll('/teamId=', '');
       print('teamId : $teamId');
 
-      Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false, arguments: teamId);
+      Navigator.pushNamedAndRemoveUntil(context, InitPage.routeName, (route) => false, arguments: teamId);
       // switch (link) {
       //   case "/counselor":
       //     final UserRepository userRepository = UserRepository();
