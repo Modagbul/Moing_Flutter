@@ -11,6 +11,7 @@ import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/init/init_page.dart';
 import 'package:moing_flutter/login/date/sign_up_date_page.dart';
 import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
+import 'package:moing_flutter/login/invitate_link/welcome_team_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_second.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_last.dart';
@@ -69,7 +70,6 @@ class MoingApp extends StatelessWidget {
           navigatorKey: GetIt.I.get<GlobalKey<NavigatorState>>(),
           title: 'Moing',
           initialRoute: InitPage.routeName,
-          
           builder: (context, child) {
             return MultiProvider(
               providers: [
@@ -88,6 +88,7 @@ class MoingApp extends StatelessWidget {
             WelcomePage.routeName: (_) => const WelcomePage(),
             /// StateFul 위젯이 필요하다면, 다음과 같이 작성!
             LoginPage.routeName: (context) => LoginPage.route(context),
+            InvitationWelcomePage.routeName: (context) => InvitationWelcomePage.route(context),
             InitPage.routeName: (context) => InitPage.route(context),
             OnBoardingFirstPage.routeName: (context) => OnBoardingFirstPage.route(context),
             OnBoardingSecondPage.routeName: (context) => OnBoardingSecondPage.route(context),
