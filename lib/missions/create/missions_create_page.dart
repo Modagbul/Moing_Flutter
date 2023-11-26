@@ -18,8 +18,17 @@ class MissionsCreatePage extends StatelessWidget {
 
   static route(BuildContext context) {
     final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
-    final int teamId = arguments?['teamId'];
-    final int repeatMissions = arguments?['repeatMissions'];
+    int teamId;
+    int repeatMissions = 0;
+
+    if (arguments is Map) {
+      teamId = arguments['teamId'];
+      repeatMissions = arguments['repeatMissions'] ?? 0;
+    } else if (arguments is int) {
+      teamId = arguments;
+    } else {
+      throw ArgumentError('Invalid arguments for MissionsCreatePage.route');
+    }
 
     return MultiProvider(
       providers: [
@@ -52,21 +61,21 @@ class MissionsCreatePage extends StatelessWidget {
               children: [
                 SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 56),
+                        const SizedBox(height: 56),
                         _missionText(),
-                        MissionTitleContent(),
-                        MissionEndDate(),
-                        MissionChoose(),
-                        MissionRule(),
+                        const MissionTitleContent(),
+                        const MissionEndDate(),
+                        const MissionChoose(),
+                        const MissionRule(),
                       ],
                     ),
                   ),
                 ),
-                Positioned(
+                const Positioned(
                   top: 0,
                   left: 20,
                   right: 20,
@@ -84,18 +93,18 @@ class MissionsCreatePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 34),
+        const SizedBox(height: 34),
         Text(
           '미션을 만들어볼까요?',
           style: headerTextStyle.copyWith(color: grayScaleGrey100),
         ),
-        SizedBox(height: 52),
+        const SizedBox(height: 52),
         Text(
           '미션 제목과 내용',
           style: contentTextStyle.copyWith(
               color: grayScaleGrey200, fontWeight: FontWeight.w500),
         ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
       ],
     );
   }

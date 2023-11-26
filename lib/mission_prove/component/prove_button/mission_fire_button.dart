@@ -14,25 +14,9 @@ class MissionFireButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(context.watch<MissionProveState>().isMeProved
-              ? '친구들에게 불 던지러 가기'
-              : '인증을 완료하고 불을 던져요',
-          style: contentTextStyle.copyWith(
-            fontWeight: FontWeight.w600,
-            color: context.watch<MissionProveState>().isMeProved ? grayScaleGrey200: grayScaleGrey550,
-          ),),
-          if (context.watch<MissionProveState>().isMeProved)
-            Image.asset(
-              'asset/image/icon_fire_mono_white.png',
-              width: 24,
-              height: 24,
-            ),
-        ],
-      ),
       style: ButtonStyle(
+        animationDuration: (context.watch<MissionProveState>().myMissionList == null ||
+            context.watch<MissionProveState>().myMissionList!.isNotEmpty) ? Duration(milliseconds: 200): Duration(milliseconds: 0),
         fixedSize: MaterialStateProperty.all(
           Size(MediaQuery.of(context).size.width, 56),
         ),
@@ -48,6 +32,29 @@ class MissionFireButton extends StatelessWidget {
             ),
           ),
         ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+          (context.watch<MissionProveState>().myMissionList == null ||
+              context.watch<MissionProveState>().myMissionList!.isNotEmpty)
+              ? '친구들에게 불 던지러 가기'
+              : '인증을 완료하고 불을 던져요',
+          style: contentTextStyle.copyWith(
+            fontWeight: FontWeight.w600,
+            color: (context.watch<MissionProveState>().myMissionList == null ||
+                context.watch<MissionProveState>().myMissionList!.isNotEmpty)
+                ? grayScaleGrey200 : grayScaleGrey550,
+          ),),
+          if ((context.watch<MissionProveState>().myMissionList == null ||
+              context.watch<MissionProveState>().myMissionList!.isNotEmpty))
+            Image.asset(
+              'asset/image/icon_fire_mono_white.png',
+              width: 24,
+              height: 24,
+            ),
+        ],
       ),
     );
   }

@@ -85,7 +85,12 @@ class ProfileSettingState extends ChangeNotifier {
         getProfileImageUrl = apiResponse.data?['profileImage'];
       }
       else {
-        print('에러 발생..');
+        if(apiResponse.errorCode == 'J0003') {
+          loadFixData(teamId);
+        }
+        else {
+          throw Exception('loadFixData is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
@@ -102,7 +107,7 @@ class ProfileSettingState extends ChangeNotifier {
 
   void _onIntroduceTextChanged() {
     isIntroduceChanged = profileData?.introduction != introduceController.text;
-    print('isNameChanged: $isIntroduceChanged');
+    print('isIntroduceChanged: $isIntroduceChanged');
     notifyListeners();
   }
 
@@ -179,10 +184,10 @@ class ProfileSettingState extends ChangeNotifier {
   void savePressed() async {
     print('savePressed called');
 
-    // 변경된 항목이 있는지 확인
-    if (isNameChanged || isIntroduceChanged || isAvatarChanged) {
+    // 이름, 소개글 또는 사진 변경이 있는지 확인
+    if (isNameChanged || isIntroduceChanged || (isAvatarChanged && avatarFile != null)) {
+      // 파일 확장자 얻기 (사진이 변경된 경우에만)
       if (isAvatarChanged && avatarFile != null) {
-        // 파일 확장자 얻기
         extension = avatarFile!.path.split('.').last;
         String fileExtension = '';
         if (extension == 'jpg') {
@@ -193,15 +198,19 @@ class ProfileSettingState extends ChangeNotifier {
           fileExtension = 'PNG';
         }
 
-        // presigned url 발급 성공 시
+        // presigned url 발급 및 프로필 수정 API 호출
         if (await getPresignedUrl(fileExtension)) {
           await fixProfileAPI();
         }
+      } else {
+        // 사진 변경이 없는 경우에도 프로필 수정 API 호출
+        await fixProfileAPI();
       }
     } else {
       print('No changes to save');
     }
   }
+
 
 
   /// presignedURL 발급받기
@@ -228,8 +237,11 @@ class ProfileSettingState extends ChangeNotifier {
         await uploadImageToS3(presignedUrl, avatarFile!);
         return true;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
+        if(apiResponse.errorCode == 'J0003') {
           getPresignedUrl(fileExtension);
+        }
+        else {
+          throw Exception('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
         }
         return false;
       }
@@ -282,7 +294,12 @@ class ProfileSettingState extends ChangeNotifier {
           Navigator.of(context).pop(true);
         }
         else {
-          print('에러 발생..');
+          if(apiResponse.errorCode == 'J0003') {
+            fixProfileAPI();
+          }
+          else {
+            throw Exception('fixProfileAPI is Null, error code : ${apiResponse.errorCode}');
+          }
         }
       } catch (e) {
         print('프로필 수정 실패: $e');

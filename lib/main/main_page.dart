@@ -12,9 +12,17 @@ import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
   static const routeName = '/main';
+
   const MainPage({super.key});
 
   static route(BuildContext context) {
+    String newCreated = "";
+    int selectedTeamId = 0;
+
+    if (ModalRoute.of(context)?.settings.arguments != null) {
+      newCreated = ModalRoute.of(context)?.settings.arguments as String;
+    }
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -22,11 +30,11 @@ class MainPage extends StatelessWidget {
           lazy: false,
         ),
         ChangeNotifierProvider(
-          create: (_) => AppState(),  // AppState를 추가합니다.
+          create: (_) => AppState(), // AppState를 추가합니다.
           lazy: false,
         ),
         ChangeNotifierProvider(
-          create: (_) => HomeScreenState(context: context),
+          create: (_) => HomeScreenState(context: context, newCreated: newCreated),
           lazy: false,
         ),
         ChangeNotifierProvider(
@@ -34,7 +42,8 @@ class MainPage extends StatelessWidget {
           lazy: false,
         ),
         ChangeNotifierProvider(
-          create: (_) => MissionsGroupState(context: context), // MissionsState 추가
+          create: (_) => MissionsGroupState(context: context, selectedTeamId: selectedTeamId),
+          // MissionsState 추가
           lazy: false,
         ),
       ],
@@ -46,19 +55,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// 사용자 정보 없으면 첫 페이지로 돌아가기 (API 추가 예정)
-    // final MeState meState = context.read<MeState>();
-    // if (meState.me == null) {
-    //   WidgetsBinding.instance.addPostFrameCallback(
-    //         (_) {
-    //       Navigator.pushNamedAndRemoveUntil(
-    //         context,
-    //         InitPage.routeName,
-    //         ModalRoute.withName(InitPage.routeName),
-    //       );
-    //     },
-    //   );
-    // }
+    int teamCount = context.read<HomeScreenState>().futureData?.teamBlocks.length ?? 0;
     return WillPopScope(
       onWillPop: () async {
         final appState = context.read<AppState>();
@@ -88,7 +85,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   HomeScreen(),
                   MissionsScreen(),
-                  MyPageScreen.route(context),
+                  MyPageScreen.route(context: context, teamCount: teamCount),
                 ],
               ),
             ],
@@ -104,45 +101,35 @@ class MainPage extends StatelessWidget {
               type: BottomNavigationBarType.fixed,
               unselectedItemColor: grayScaleGrey550,
               selectedItemColor: grayScaleGrey100,
-              selectedLabelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey100),
-              unselectedLabelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey550),
+              selectedLabelStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: grayScaleGrey100),
+              unselectedLabelStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: grayScaleGrey550),
               items: const [
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
+                    padding:
+                        EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
                     child: Icon(Icons.home),
                   ),
                   label: '홈',
                 ),
-                // BottomNavigationBarItem(
-                //   icon: Stack(
-                //     children: [
-                //       Padding(
-                //         padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                //         child: Icon(Icons.chat_bubble_rounded),
-                //       ),
-                //       Positioned(
-                //         top: 0,
-                //         left: 0,
-                //         child: Container(
-                //           decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(8)),
-                //           padding: EdgeInsets.symmetric(horizontal: 4),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                //   label: '내 상담',
-                // ),
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
+                    padding:
+                        EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
                     child: Icon(Icons.tour),
                   ),
                   label: '미션목록',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
-                    padding: EdgeInsets.only(top: 8, left: 8, right: 8,bottom: 6),
+                    padding:
+                        EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
                     child: Icon(Icons.person),
                   ),
                   label: '마이페이지',

@@ -1,4 +1,3 @@
-// OngoingMissionPage.dart
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -46,6 +45,19 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
+  void handleMissionTap(BuildContext context, int missionId, bool isRepeated) {
+    Navigator.of(context).pushNamed(
+      MissionProvePage.routeName,
+      arguments: {
+        'isRepeated': isRepeated,
+        'teamId': context.read<OngoingMissionState>().teamId,
+        'missionId': missionId,
+      },
+    ).then((_) {
+      context.read<OngoingMissionState>().reloadMissionStatus();
+    });
+  }
 
   @override
   void initState() {
@@ -128,37 +140,46 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                             done: e.done,
                             number: e.number,
                             missionId: e.missionId,
+                            status: e.status,
+                            fadeAnimation: _fadeAnimation,
                             onTap: () {
                               Navigator.of(context).pushNamed(
-                                  MissionProvePage.routeName,
-                                  arguments: {
-                                    'isRepeated': true,
-                                    'teamId': context
-                                        .read<OngoingMissionState>()
-                                        .teamId,
-                                    'missionId': e.missionId,
-                                  });
+                                MissionProvePage.routeName,
+                                arguments: {
+                                  'isRepeated': true,
+                                  'teamId': context
+                                      .read<OngoingMissionState>()
+                                      .teamId,
+                                  'missionId': e.missionId,
+                                },
+                              ).then((_) {
+                                Provider.of<OngoingMissionState>(context,
+                                        listen: false)
+                                    .reloadMissionStatus();
+                              });
                             },
                           ),
-                          Positioned(
-                            top: -25,
-                            child: FadeTransition(
-                              opacity: _fadeAnimation,
-                              child: SpeechBalloon(
-                                color: coralGrey500,
-                                width: 91,
-                                height: 33,
-                                borderRadius: 24,
-                                nipLocation: NipLocation.bottom,
-                                child: Center(
-                                  child: Text(
-                                    'NEW 미션',
-                                    style: bodyTextStyle.copyWith(color: Colors.white),
+                          if (e.status == "WAIT")
+                            Positioned(
+                              top: -25,
+                              child: FadeTransition(
+                                opacity: _fadeAnimation,
+                                child: SpeechBalloon(
+                                  color: coralGrey500,
+                                  width: 91,
+                                  height: 33,
+                                  borderRadius: 24,
+                                  nipLocation: NipLocation.bottom,
+                                  child: Center(
+                                    child: Text(
+                                      'NEW 미션',
+                                      style: bodyTextStyle.copyWith(
+                                          color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
                         ],
                       );
                     },
@@ -186,27 +207,58 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                     state.singleMissionStatus!.data.isNotEmpty)
                   ...state.singleMissionStatus!.data
                       .map(
-                        (e) => // ...
-                            Padding(
+                        (e) => Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
-                          child: BoardSingleMissionCard(
-                            title: e.title,
-                            status: e.status,
-                            dueTo: e.dueTo,
-                            missionType: e.missionType,
-                            missionId: e.missionId,
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  MissionProvePage.routeName,
-                                  arguments: {
-                                    'isRepeated': false,
-                                    'teamId': context
-                                        .read<OngoingMissionState>()
-                                        .teamId,
-                                    'missionId': e.missionId,
-                                    // 'way': e.way,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              BoardSingleMissionCard(
+                                title: e.title,
+                                status: e.status,
+                                dueTo: e.dueTo,
+                                missionType: e.missionType,
+                                missionId: e.missionId,
+                                fadeAnimation: _fadeAnimation,
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    MissionProvePage.routeName,
+                                    arguments: {
+                                      'isRepeated': false,
+                                      'teamId': context
+                                          .read<OngoingMissionState>()
+                                          .teamId,
+                                      'missionId': e.missionId,
+                                    },
+                                  ).then((_) {
+                                    Provider.of<OngoingMissionState>(context,
+                                            listen: false)
+                                        .reloadMissionStatus();
                                   });
-                            },
+                                },
+                              ),
+                              if (e.status == "WAIT")
+                                Positioned(
+                                  top: -25,
+                                  right: 15,
+                                  child: FadeTransition(
+                                    opacity: _fadeAnimation,
+                                    child: SpeechBalloon(
+                                      color: coralGrey500,
+                                      width: 91,
+                                      height: 33,
+                                      borderRadius: 24,
+                                      nipLocation: NipLocation.bottom,
+                                      child: Center(
+                                        child: Text(
+                                          'NEW 미션',
+                                          style: bodyTextStyle.copyWith(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                       )
@@ -276,7 +328,6 @@ class _BottomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
-      // FloatingActionButton으로 변경
       onPressed: () async {
         final ongoingMissionState =
             Provider.of<OngoingMissionState>(context, listen: false);
@@ -287,7 +338,7 @@ class _BottomButton extends StatelessWidget {
               ongoingMissionState.repeatMissionStatus?.data.length ?? 0,
         });
 
-        if(result != null && result == true) {
+        if (result != null && result == true) {
           print('미션 만들기 성공!!');
           ongoingMissionState.initState();
         }
@@ -305,5 +356,29 @@ class _BottomButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+String formatDueTo(String dueToString) {
+  DateTime dueTo = DateTime.parse(dueToString);
+  DateTime now = DateTime.now();
+  Duration difference = dueTo.difference(now);
+
+  if (difference.isNegative) {
+    return '기한 종료';
+  } else {
+    String formattedString = '';
+    if (difference.inDays > 0) {
+      formattedString += '${difference.inDays}일 ';
+    }
+    int hours = difference.inHours % 24;
+    if (hours > 0) {
+      formattedString += '$hours시간 ';
+    }
+    int minutes = difference.inMinutes % 60;
+    if (minutes > 0) {
+      formattedString += '$minutes분 ';
+    }
+    return formattedString + '후 종료';
   }
 }

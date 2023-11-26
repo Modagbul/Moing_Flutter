@@ -30,54 +30,6 @@ class ApiCode {
   final APICall call = APICall();
   String apiUrl = '';
 
-  void makeTeamAPI() async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team';
-
-    MakeTeamData data = MakeTeamData(
-      category: 'SPORTS',
-      name: '현석모닥불테스트',
-      introduction: '반가워요 모닥불!',
-      promise: '우리 모두 화이팅입니다!',
-      profileImgUrl: 'hyunseok',
-    );
-
-    try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-          await call.makeRequest<Map<String, dynamic>>(
-        url: apiUrl,
-        method: 'POST',
-        body: data.toJson(),
-        fromJson: (json) => json as Map<String, dynamic>,
-      );
-
-      if (apiResponse.data?['teamId'] != null) {
-        log('소모임 생성 완료! : ${apiResponse.data?['teamId']}');
-      }
-    } catch (e) {
-      log('소모임 생성 실패: $e');
-    }
-  }
-
-  void joinTeamAPI() async {
-    var teamId = 6;
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId';
-
-    try {
-      ApiResponse<Map<String, dynamic>>? apiResponse =
-          await call.makeRequest<Map<String, dynamic>>(
-        url: apiUrl,
-        method: 'POST',
-        fromJson: (json) => json as Map<String, dynamic>,
-      );
-
-      if (apiResponse.data?['teamId'] != null) {
-        log('소모임 가입 완료! : ${apiResponse.data?['teamId']}');
-      }
-    } catch (e) {
-      log('소모임 생성 실패: $e');
-    }
-  }
-
   Future<SingleBoardData?> getSingleBoard({required int teamId}) async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/board/$teamId';
 
@@ -93,7 +45,12 @@ class ApiCode {
         log('단일 소모임 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getSingleBoard(teamId: teamId);
+        }
+        else {
+          throw Exception('getSingleBoard data is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('단일 소모임 데이터 조회 실패: $e');
@@ -115,7 +72,12 @@ class ApiCode {
         log('마이페이지 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getMyPageData();
+        }
+        else {
+          throw Exception('getMyPageData is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('마이페이지 데이터 조회 실패: $e');
@@ -123,6 +85,7 @@ class ApiCode {
     return null;
   }
 
+  /// J0003 적용 ver
   Future<ProfileData?> getProfileData() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
 
@@ -138,7 +101,12 @@ class ApiCode {
         log('프로필 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getProfileData();
+        }
+        else {
+          throw Exception('ApiResponse.data is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('프로필 데이터 조회 실패: $e');
@@ -157,7 +125,17 @@ class ApiCode {
         body: profileData.toJson(),
         fromJson: (data) => data as Map<String, dynamic>,
       );
-      log('프로필 데이터 수정 성공: ${apiResponse.data}');
+
+      if (apiResponse.data != null) {
+        log('프로필 데이터 수정 성공: ${apiResponse.data}');
+      } else {
+        if(apiResponse.errorCode == 'J0003') {
+          putProfileData(profileData: profileData);
+        }
+        else {
+          throw Exception('putProfileData is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('프로필 데이터 수정 실패: $e');
     }
@@ -178,7 +156,12 @@ class ApiCode {
         log('모든 공지, 게시글 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getAllPostData(teamId: teamId);
+        }
+        else {
+          throw Exception('getAllPostData is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('모든 공지, 게시글 데이터 조회 실패: $e');
@@ -210,7 +193,12 @@ class ApiCode {
         return RepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getRepeatMissionStatus(teamId: teamId);
+        }
+        else {
+          throw Exception('getRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('반복 미션 상태 조회 실패: $e');
@@ -236,7 +224,12 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글/공지 생성 성공: ${apiResponse.data}');
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          postCreatePostOrNotice(teamId: teamId, createPostData: createPostData);
+        }
+        else {
+          throw Exception('postCreatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('게시글/공지 생성 실패: $e');
@@ -260,7 +253,12 @@ class ApiCode {
         log('게시글 상세 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getDetailPostData(teamId: teamId, boardId: boardId);
+        }
+        else {
+          throw Exception('getDetailPostData is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('게시글 상세 조회 실패: $e');
@@ -292,7 +290,12 @@ class ApiCode {
         return BoardSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getSingleMissionStatus(teamId: teamId);
+        }
+        else {
+          throw Exception('getSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('한번 미션 상태 조회 실패: $e');
@@ -318,10 +321,15 @@ class ApiCode {
         log('게시글 댓글 전체 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getAllCommentData(teamId: teamId, boardId: boardId);
+        }
+        else {
+          throw Exception('getAllCommentData is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
-      log('게시글 댓글 전체  조회 실패: $e');
+      log('게시글 댓글 전체 조회 실패: $e');
     }
     return null;
   }
@@ -351,7 +359,12 @@ class ApiCode {
         return BoardCompletedMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getCompletedMissionStatus(teamId: teamId);
+        }
+        else {
+          throw Exception('getCompletedMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('완료된 미션 상태 조회 실패: $e');
@@ -378,7 +391,12 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글 댓글 생성 성공: ${apiResponse.data}');
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          postCreateComment(teamId: teamId, boardId: boardId, createCommentData: createCommentData);
+        }
+        else {
+          throw Exception('postCreateComment is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('게시글 댓글 생성 실패: $e');
@@ -395,13 +413,23 @@ class ApiCode {
         '${dotenv.env['MOING_API']}/api/$teamId/$boardId/comment/$boardCommentId';
 
     try {
-      await call.makeRequest<Map<String, dynamic>>(
+      ApiResponse<Map<String, dynamic>> apiResponse =await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'DELETE',
         fromJson: (data) => data as Map<String, dynamic>,
       );
 
-      log('게시글 댓글 삭제 성공');
+      if(apiResponse.isSuccess) {
+        log('게시글 댓글 삭제 성공');
+      }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          deleteComment(teamId: teamId, boardId: boardId, boardCommentId: boardCommentId);
+        }
+        else {
+          throw Exception('deleteComment is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('게시글 댓글 삭제 실패: $e');
     }
@@ -424,7 +452,12 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글 삭제 성공: ${apiResponse.message}');
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          deletePost(teamId: teamId, boardId: boardId);
+        }
+        else {
+          throw Exception('deletePost is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('게시글 삭제 실패: $e');
@@ -451,7 +484,12 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글/공지 수정 성공: ${apiResponse.data}');
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          putUpdatePostOrNotice(teamId: teamId, boardId: boardId, createPostData: createPostData);
+        }
+        else {
+          throw Exception('putUpdatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('게시글/공지 수정 실패: $e');
@@ -459,32 +497,69 @@ class ApiCode {
     return;
   }
 
+  // Future<SignOutResponse?> signOut({
+  //   required String accessToken,
+  // }) async {
+  //   apiUrl = '${dotenv.env['MOING_API']}/api/mypage/signOut';
+  //
+  //   try {
+  //     ApiResponse<SignOutResponse>? apiResponse =
+  //     await call.makeRequest<SignOutResponse>(
+  //       url: apiUrl,
+  //       method: 'GET',
+  //       fromJson: (data) {
+  //         log('Server response: $data'); // 서버 응답 로그 출력
+  //         return SignOutResponse.fromJson(data);
+  //       },
+  //     );
+  //
+  //     if (apiResponse.data != null) {
+  //       log('로그아웃 성공: ${apiResponse.data}');
+  //       return apiResponse.data!;
+  //     } else {
+  //       if (apiResponse.errorCode == 'J0003') {
+  //         signOut(accessToken: accessToken);
+  //       } else {
+  //         throw Exception('signOut is Null, error code : ${apiResponse.errorCode}');
+  //       }
+  //     }
+  //   } catch (e) {
+  //     log('로그아웃 실패: $e');
+  //   }
+  //   return null;
+  // }
+
   Future<SignOutResponse?> signOut({
-    required int userId,
+    required String accessToken,
   }) async {
     String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/signOut';
 
     try {
       ApiResponse<SignOutResponse>? apiResponse =
-          await call.makeRequest<SignOutResponse>(
+      await call.makeRequest<SignOutResponse>(
         url: apiUrl,
-        method: 'GET',
-        fromJson: (data) {
-          log('Server response: $data'); // 서버 응답 로그 출력
-          return SignOutResponse.fromJson(data);
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json;charset=UTF-8',
         },
+        fromJson: (data) => SignOutResponse.fromJson(data as Map<String, dynamic>),
       );
 
-      if (apiResponse.data != null) {
+      if (apiResponse?.data != null) {
         log('로그아웃 성공: ${apiResponse.data}');
-        return apiResponse.data!;
+        return apiResponse.data;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse?.errorCode == 'J0003') {
+          return signOut(accessToken: accessToken); // 재귀 호출
+        } else {
+          throw Exception('signOut is Null, error code : ${apiResponse?.errorCode}');
+        }
       }
     } catch (e) {
       log('로그아웃 실패: $e');
+      return null;
     }
-    return null;
   }
 
   Future<AggregateSingleMissionResponse?>
@@ -510,7 +585,12 @@ class ApiCode {
         return AggregateSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getAggregateSingleMissionStatus();
+        }
+        else {
+          throw Exception('getAggregateSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('한번 미션 상태 조회 실패: $e');
@@ -543,7 +623,12 @@ class ApiCode {
         return AggregateTeamSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getAggregateTeamSingleMissionStatus(teamId: teamId);
+        }
+        else {
+          throw Exception('getAggregateTeamSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('팀별 한번 미션 상태 조회 실패: $e');
@@ -574,7 +659,12 @@ class ApiCode {
         return AggregateRepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getAggregateRepeatMissionStatus();
+        }
+        else {
+          throw Exception('getAggregateRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('반복 미션 상태 조회 실패: $e');
@@ -607,7 +697,12 @@ class ApiCode {
         return AggregateTeamRepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getAggregateTeamRepeatMissionStatus(teamId: teamId);
+        }
+        else {
+          throw Exception('getAggregateTeamRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('팀별 반복 미션 상태 조회 실패: $e');
@@ -636,7 +731,12 @@ class ApiCode {
         return TeamListResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getTeamListStatus();
+        }
+        else {
+          throw Exception('getTeamListStatus is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('팀 리스트 조회 실패: $e');
@@ -658,7 +758,12 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getTeamFireLevel(teamId: teamId);
+        }
+        else {
+          throw Exception('getTeamFireLevel is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('팀별 불 레벨 경험치 조회: $e');
@@ -680,7 +785,12 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data!['teamId'];
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          deleteTeam(teamId: teamId);
+        }
+        else {
+          throw Exception('deleteTeam is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('팀별 불 레벨 경험치 조회: $e');
@@ -703,7 +813,12 @@ class ApiCode {
         log('알람 설정 조회 성공: ${apiResponse.data}');
         return apiResponse.data;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          getAlarmSettings();
+        }
+        else {
+          throw Exception('getAlarmSettings is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('알람 설정 조회 실패: $e');
@@ -727,180 +842,16 @@ class ApiCode {
         log('알람 설정 수정 성공: ${apiResponse.data}');
         return apiResponse.data;
       } else {
-        throw Exception('ApiResponse.data is Null');
+        if(apiResponse.errorCode == 'J0003') {
+          updateAlarmSettings(alarmSettings);
+        }
+        else {
+          throw Exception('updateAlarmSettings is Null, error code : ${apiResponse.errorCode}');
+        }
       }
     } catch (e) {
       log('알람 설정 수정 실패: $e');
     }
     return null;
   }
-
-// void makeMissionAPI() async {
-//   var teamId = 6;
-//   apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';
-//   String? accessToken = await tokenManagement.loadAccessToken();
-//
-//   // 분 부터 00 으로 표기하면 됩니다.
-//   MakeMissionData data = MakeMissionData(
-//       title: '미션 제목 테스트1',
-//       dueTo: '2023-12-31 23:00:00.000',
-//       rule: '규칙 테스트입니다.',
-//       content: '내용 테스트입니다.',
-//       number: 2,
-//       type: 'ONCE',
-//       way: 'TEXT');
-//
-//   final response = await http.post(
-//     Uri.parse(apiUrl),
-//     headers: {
-//       "Content-Type": "application/json;charset=UTF-8",
-//       "Authorization": "Bearer $accessToken",
-//     },
-//     body: jsonEncode(data.toJson()),
-//   );
-//   Map<String, dynamic> responseBody = jsonDecode(response.body);
-//   if (response.statusCode == 200) {
-//     print('소모임 미션 생성 : ${utf8.decode(response.bodyBytes)}');
-//     if(responseBody['isSuccess'] == true) {
-//       ApiResponse<MakeMissionResponse> apiResponse = ApiResponse.fromJson(
-//         jsonDecode(utf8.decode(response.bodyBytes)),
-//             (data) => MakeMissionResponse.fromJson(data),
-//       );
-//       print('미션 생성 완료 : ${apiResponse.data.missionId}');
-//       print('미션 생성 완료, 제목 & 규칙 : ${apiResponse.data.title}, ${apiResponse.data.rule}');
-//     }
-//   } else {
-//     print(responseBody['errorCode']);
-//   }
-// }
-//
-// void getSingleMission() async {
-//   var teamId = 6;
-//   var missionId = 1;
-//   apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId';
-//   String? accessToken = await tokenManagement.loadAccessToken();
-//
-//   final response = await http.get(
-//     Uri.parse(apiUrl),
-//     headers: {
-//       "Content-Type": "application/json;charset=UTF-8",
-//       "Authorization": "Bearer $accessToken",
-//     },
-//   );
-//
-//   if (response.statusCode == 200) {
-//     Map<String, dynamic> responseBody = jsonDecode(response.body);
-//     print('소모임 미션 생성 : ${utf8.decode(response.bodyBytes)}');
-//     if(responseBody['isSuccess'] == true) {
-//       ApiResponse<MakeMissionResponse> apiResponse = ApiResponse.fromJson(
-//         jsonDecode(utf8.decode(response.bodyBytes)),
-//             (data) => MakeMissionResponse.fromJson(data),
-//       );
-//       print('미션 조회 완료 : ${apiResponse.data.missionId}');
-//       print('미션 조회 완료, 제목 & 규칙 : ${apiResponse.data.title}, ${apiResponse.data.rule}');
-//     }
-//   }
-//   else {
-//     print('에러 : ${response.statusCode}');
-//   }
-// }
-//
-// void fixSingleMission() async {
-//   var teamId = 6;
-//   var missionId = 1;
-//
-//   apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId';
-//   String? accessToken = await tokenManagement.loadAccessToken();
-//
-//   // 분 부터 00 으로 표기하면 됩니다.
-//   MakeMissionData data = MakeMissionData(
-//       title: '미션 제목 테스트 수정1',
-//       dueTo: '2023-12-31 23:00:00.000',
-//       rule: '규칙 테스트 수정입니다.',
-//       content: '내용 테스트 수정입니다.',
-//       number: 2,
-//       type: 'ONCE',
-//       way: 'TEXT');
-//
-//   final response = await http.put(
-//     Uri.parse(apiUrl),
-//     headers: {
-//       "Content-Type": "application/json;charset=UTF-8",
-//       "Authorization": "Bearer $accessToken",
-//     },
-//     body: jsonEncode(data.toJson()),
-//   );
-//
-//   if (response.statusCode == 200) {
-//     Map<String, dynamic> responseBody = jsonDecode(response.body);
-//     print('소모임 미션 수정 : ${utf8.decode(response.bodyBytes)}');
-//     if(responseBody['isSuccess'] == true) {
-//       ApiResponse<MakeMissionResponse> apiResponse = ApiResponse.fromJson(
-//         jsonDecode(utf8.decode(response.bodyBytes)),
-//             (data) => MakeMissionResponse.fromJson(data),
-//       );
-//       print('미션 수정 완료 : ${apiResponse.data.missionId}');
-//       print('미션 수정 완료, 제목 & 규칙 : ${apiResponse.data.title}, ${apiResponse.data.rule}');
-//     }
-//   }
-// }
-//
-// void removeMission() async {
-//   var teamId = 6;
-//   var missionId = 1;
-//
-//   apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId';
-//   String? accessToken = await tokenManagement.loadAccessToken();
-//
-//   final response = await http.delete(
-//     Uri.parse(apiUrl),
-//     headers: {
-//       "Content-Type": "application/json;charset=UTF-8",
-//       "Authorization": "Bearer $accessToken",
-//     },
-//   );
-//
-//   if (response.statusCode == 200) {
-//     Map<String, dynamic> responseBody = jsonDecode(response.body);
-//     print('소모임 미션 삭제 : ${utf8.decode(response.bodyBytes)}');
-//     if(responseBody['isSuccess'] == true) {
-//       print('소모임 미션 삭제 성공!');
-//     }
-//   }
-// }
-//
-// void certifyMission() async {
-//   var teamId = 6;
-//   var missionId = 3;
-//
-//   apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
-//   String? accessToken = await tokenManagement.loadAccessToken();
-//   Map data = {"status": 'SKIP', "archive": 'text'};
-//
-//   final response = await http.post(
-//     Uri.parse(apiUrl),
-//     headers: {
-//       "Content-Type": "application/json;charset=UTF-8",
-//       "Authorization": "Bearer $accessToken",
-//     },
-//     body: json.encode(data),
-//   );
-//
-//   Map<String, dynamic> responseBody = jsonDecode(response.body);
-//   if(responseBody['isSuccess'] == true) {
-//     ApiResponse<MissionArchive> apiResponse = ApiResponse.fromJson(
-//       jsonDecode(utf8.decode(response.bodyBytes)),
-//           (data) => MissionArchive.fromJson(data),
-//     );
-//     print('미션 수정 완료 : ${apiResponse.data.archiveId}');
-//     print('미션 수정 완료, 제목 & 규칙 : ${apiResponse.data.archive}, ${apiResponse.data.status}');
-//   }
-//   else {
-//     print(responseBody['errorCode']);
-//   }
-// }
-//
-// void fixTeam() async {
-//
-// }
 }

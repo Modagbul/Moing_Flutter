@@ -10,10 +10,10 @@ class MyPageScreen extends StatelessWidget {
 
   const MyPageScreen({Key? key}) : super(key: key);
 
-  static route(BuildContext context) {
+  static route({required BuildContext context, int? teamCount}) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => MyPageState(context: context)),
+        ChangeNotifierProvider(create: (_) => MyPageState(context: context, teamCount: teamCount!)),
       ],
       builder: (context, _) {
         return const MyPageScreen();

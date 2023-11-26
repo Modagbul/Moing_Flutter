@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/icon_text_button.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_page.dart';
+import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../const/style/elevated_button.dart';
 
 class BoardMainBottomSheetLeader extends StatelessWidget {
   final int teamId;
-  const BoardMainBottomSheetLeader({required this.teamId, super.key});
+
+  const BoardMainBottomSheetLeader({
+    required this.teamId, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,14 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             IconTextButton(
-              onPressed: () {},
+              onPressed: () async {
+                DynamicLinkService dynamicLinkService = DynamicLinkService(context: context);
+
+                String link = await dynamicLinkService.getShortLink(
+                    route: "teamId=$teamId",);
+                print('dynamic link : $link');
+                Share.share(link, subject: '모잉 테스트!');
+              },
               icon: 'asset/image/icon_link.png',
               text: '소모임 초대 링크 복사하기',
             ),

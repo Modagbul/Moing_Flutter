@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/response/board_completed_mission_response.dart';
-
+import 'package:intl/intl.dart';
 import '../../model/api_code/api_code.dart';
 
 class CompletedMissionState extends ChangeNotifier {
@@ -21,7 +21,7 @@ class CompletedMissionState extends ChangeNotifier {
   }
 
   void initState() async {
-    log('Instance "OngoingMissionState" has been created');
+    log('Instance "CompletedMissionState" has been created');
   }
 
   @override
@@ -31,7 +31,31 @@ class CompletedMissionState extends ChangeNotifier {
   }
 
   void getCompletedMissionStatus() async {
-    completedMissionStatus = await apiCode.getCompletedMissionStatus(teamId: teamId);
+    var response = await apiCode.getCompletedMissionStatus(teamId: teamId);
+
+    if (response != null && response.isSuccess) {
+      var filteredMissions = response.data?.where((mission) {
+        var dueToDate = DateTime.parse(mission.dueTo);
+
+        return dueToDate.isBefore(DateTime.now()) || mission.status == 'COMPLETE';
+      }).toList() ?? [];
+
+      completedMissionStatus = BoardCompletedMissionResponse(
+        isSuccess: true,
+        message: 'Filtered missions successfully',
+        data: filteredMissions,
+      );
+    } else {
+      completedMissionStatus = BoardCompletedMissionResponse(
+        isSuccess: false,
+        message: response?.message ?? 'Error: Response was null',
+        data: [],
+      );
+    }
     notifyListeners();
   }
+
+  @override
+  notifyListeners();
+
 }

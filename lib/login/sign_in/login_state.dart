@@ -11,6 +11,7 @@ import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/utils/api/api_error.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
+import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -21,6 +22,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class LoginState extends ChangeNotifier {
   /// Login Page에서 사용하는 context를 가져옴.
   final BuildContext context;
+
   bool? _isRegistered;
   TokenManagement tokenManagement = TokenManagement();
   SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
@@ -176,6 +178,7 @@ class LoginState extends ChangeNotifier {
 
         // decodeJWT(appleCredential!.identityToken!);
         print('애플 액세스 토큰 : ${appleCredential.identityToken}');
+        print(' ====');
         await appleLoginSendToken(appleCredential.identityToken!);
       } catch (e) {
         print('애플 로그인 실패 : ${e.toString()}');

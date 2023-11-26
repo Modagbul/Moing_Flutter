@@ -18,11 +18,11 @@ class OngoingMissionState extends ChangeNotifier {
     required this.teamId,
   }) {
     initState();
-    getRepeatMissionStatus();
-    getSingleMissionStatus();
   }
 
   void initState() async {
+    getRepeatMissionStatus();
+    getSingleMissionStatus();
     log('Instance "OngoingMissionState" has been created');
   }
 
@@ -32,13 +32,20 @@ class OngoingMissionState extends ChangeNotifier {
     super.dispose();
   }
 
-  void getRepeatMissionStatus() async {
+  Future<void> getRepeatMissionStatus() async {
     repeatMissionStatus = await apiCode.getRepeatMissionStatus(teamId: teamId);
     notifyListeners();
   }
 
-  void getSingleMissionStatus() async {
+  Future<void> getSingleMissionStatus() async {
     singleMissionStatus = await apiCode.getSingleMissionStatus(teamId: teamId);
     notifyListeners();
   }
+
+  void reloadMissionStatus() async {
+    await getRepeatMissionStatus();
+    await getSingleMissionStatus();
+    notifyListeners();
+  }
+
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../const/color/colors.dart';
@@ -5,23 +7,28 @@ import '../../const/color/colors.dart';
 class BoardRepeatMissionCard extends StatelessWidget {
   final String title;
   final String dueTo;
+  final String status;
   final int done;
   final int number;
   final int missionId;
   final VoidCallback onTap;
+  final Animation<double> fadeAnimation;
 
   const BoardRepeatMissionCard({
     super.key,
     required this.title,
     required this.dueTo,
+    required this.status,
     required this.done,
     required this.number,
     required this.missionId,
     required this.onTap,
+    required this.fadeAnimation,
   });
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -33,9 +40,8 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 width: 170,
                 height: 170,
                 decoration: BoxDecoration(
-                  color: grayScaleGrey600,
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                    color: grayScaleGrey600,
+                    borderRadius: BorderRadius.circular(16)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -110,10 +116,30 @@ class BoardRepeatMissionCard extends StatelessWidget {
               ),
             ],
           ),
-          const Positioned(
-            bottom: 85,
-            left: 10.0,
-            child: _Tag(),
+          Positioned(
+            bottom: Platform.isIOS
+                ? MediaQuery.of(context).size.height * 0.1
+                : MediaQuery.of(context).size.height * 0.125,
+            left: MediaQuery.of(context).size.width * 0.03,
+            child: _Tag(status: status),
+          ),
+          Positioned.fill(
+            child: FadeTransition(
+              opacity: fadeAnimation,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: 170,
+                  height: 170,
+                  decoration: BoxDecoration(
+                    border: status == 'WAIT'
+                        ? Border.all(color: coralGrey500, width: 1)
+                        : null,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -122,43 +148,65 @@ class BoardRepeatMissionCard extends StatelessWidget {
 }
 
 class _Tag extends StatelessWidget {
-  const _Tag({super.key});
+  final String status;
+
+  const _Tag({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 87,
-          height: 25,
-          decoration: BoxDecoration(
-            color: coralGrey900,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Row(
-              children: [
-                const SizedBox(width: 1.0),
-                Image.asset(
-                  'asset/image/timer.png',
-                  width: 16.0,
-                  height: 16.0,
+    DateTime now = DateTime.now();
+    String tagText = '';
+
+    if (status == 'WAIT') {
+      if (now.weekday == DateTime.sunday) {
+        tagText = '내일 시작';
+      } else {
+        int daysToSunday = DateTime.sunday - now.weekday;
+        if (daysToSunday > 0) {
+          tagText = '${daysToSunday}일 후 시작';
+        }
+      }
+    } else if (status == 'ONGOING' && now.weekday == DateTime.sunday) {
+      tagText = '내일 리셋';
+    }
+
+    if (status == 'SKIP' || status == 'COMPLETE') {
+      debugPrint('Status: $status');
+    }
+
+    return tagText.isNotEmpty
+        ? IntrinsicWidth(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: coralGrey900,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'asset/image/timer.png',
+                      width: 16.0,
+                      height: 16.0,
+                    ),
+                    const SizedBox(width: 1.0),
+                    Flexible(
+                      child: Text(
+                        tagText,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          color: coralGrey300,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 1.0),
-                const Text(
-                  '내일 리셋',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                    color: coralGrey300,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ],
-    );
+          )
+        : const SizedBox.shrink();
   }
 }

@@ -44,9 +44,17 @@ class GroupFinishExitState extends ChangeNotifier {
       if (apiResponse.data != null) {
         teamInfo = apiResponse.data;
         log('삭제 전 조회 성공!');
+        notifyListeners();
         }
 
-      notifyListeners();
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          loadExitData();
+        }
+        else {
+          throw Exception('loadExitData is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
     }

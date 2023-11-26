@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,17 @@ class HomeScreenState extends ChangeNotifier {
 
   TeamData? futureData;
   List<TeamBlock> teamList = [];
+
   /// Test API
   final ApiCode apiCode = ApiCode();
 
   String apiUrl = '';
+
   // 알림 여부
   bool isNotification = false;
+
+  bool showNewExpression = false;
+  bool onlyOnce = true;
 
   HomeScreenState({required this.context, this.newCreated}) {
     log('Instance "HomeScreenState" has been created');
@@ -34,8 +40,8 @@ class HomeScreenState extends ChangeNotifier {
   /// API 데이터 로딩
   void loadTeamData() async {
     futureData = await fetchApiData();
-    if(futureData != null) {
-      teamList = futureData!.teamBlocks;
+    if (futureData != null) {
+      teamList = futureData!.teamBlocks.reversed.toList();
     }
     notifyListeners();
   }
@@ -49,21 +55,22 @@ class HomeScreenState extends ChangeNotifier {
         fromJson: (json) => TeamData.fromJson(json),
       );
 
-      if(apiResponse.isSuccess == true) {
+      if (apiResponse.isSuccess == true) {
         nickname = apiResponse.data!.memberNickName;
         return apiResponse.data!;
-      }
-      else {
+      } else {
         if(apiResponse.errorCode == 'J0003') {
-          print('재실행합니다.');
-          return await fetchApiData();
+          fetchApiData();
+        }
+        else {
+          throw Exception('fetchApiData is Null, error code : ${apiResponse.errorCode}');
         }
       }
-      return null;
-    } catch(e) {
+    } catch (e) {
       print('홈 화면 받아 오는 중 에러 발생 : ${e.toString()}');
       return null;
     }
+    return null;
   }
 
   // 알람 클릭
@@ -83,28 +90,19 @@ class HomeScreenState extends ChangeNotifier {
   // 가입한 모임 클릭
   void teamPressed(int teamId) {
     /// 목표보드 페이지로 이동
-    Navigator.pushNamed(context, BoardMainPage.routeName, arguments: {'teamId': teamId});
+    Navigator.pushNamed(context, BoardMainPage.routeName,
+        arguments: {'teamId': teamId});
   }
 
-  void apiTest() {
-    /// Team 소모임 개설
-    // apiCode.makeTeamAPI();
-    /// Team 소모임 가입
-    // apiCode.joinTeamAPI();
-    /// Team 목표보드_소모임 단건 조회
-    // apiCode.getSingleBoard();
-    /// Team 소모임 수정
-    // apiCode.fixTeam();
-
-    /// Mission 생성
-    // apiCode.makeMissionAPI();
-    /// Mission 조회
-    // apiCode.getSingleMission();
-    /// Mission 수정
-    // apiCode.fixSingleMission();
-    /// Mission 삭제
-    // apiCode.removeMission();
-    /// Mission 인증
-    // apiCode.certifyMission();
+  void showNewAddedGroup() {
+    onlyOnce = false;
+    showNewExpression = true;
+    // 현재 빌드 주기가 완료된 후에 notifyListeners()를 호출
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Timer(const Duration(seconds: 1), () {
+        showNewExpression = false;
+        notifyListeners();
+      });
+    });
   }
 }
