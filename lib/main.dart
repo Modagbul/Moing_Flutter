@@ -14,18 +14,17 @@ import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDefault();
   // 화면 세로로 고정
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await initializeDefault();
   runApp(const MoingApp());
 }
 
 Future<void> initializeDefault() async {
+  await Firebase.initializeApp();
+  await Future.delayed(Duration(milliseconds: 500));
   /// env 파일 업로드
   await dotenv.load(fileName: 'asset/config/.env');
-  // key 값 가져오기
-  // 방법 1. String nativeAppKey = dotenv.get('KAKAO_NATIVE_APP_KEY');
-  // 방법 2. String nativeAppKey = dotenv.env['KAKAO_NATIVE_APP_KEY'];
   /// kakao init
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 

@@ -6,7 +6,6 @@ import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/request/create_comment_request.dart';
 import 'package:moing_flutter/model/request/create_post_request.dart';
-import 'package:moing_flutter/model/request/make_team_request.dart';
 import 'package:moing_flutter/model/profile/profile_model.dart';
 import 'package:moing_flutter/model/response/get_all_comments_response.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
@@ -23,7 +22,6 @@ import '../response/alarm_settings_response.dart';
 import '../response/board_completed_mission_response.dart';
 import '../response/board_repeat_mission_response.dart';
 import '../response/board_single_mission_response.dart';
-import '../response/sign_out_response.dart';
 import '../response/team_list_response.dart';
 
 class ApiCode {
@@ -503,62 +501,22 @@ class ApiCode {
     return;
   }
 
-  // Future<SignOutResponse?> signOut({
-  //   required String accessToken,
-  // }) async {
-  //   apiUrl = '${dotenv.env['MOING_API']}/api/mypage/signOut';
-  //
-  //   try {
-  //     ApiResponse<SignOutResponse>? apiResponse =
-  //     await call.makeRequest<SignOutResponse>(
-  //       url: apiUrl,
-  //       method: 'GET',
-  //       fromJson: (data) {
-  //         log('Server response: $data'); // 서버 응답 로그 출력
-  //         return SignOutResponse.fromJson(data);
-  //       },
-  //     );
-  //
-  //     if (apiResponse.data != null) {
-  //       log('로그아웃 성공: ${apiResponse.data}');
-  //       return apiResponse.data!;
-  //     } else {
-  //       if (apiResponse.errorCode == 'J0003') {
-  //         signOut(accessToken: accessToken);
-  //       } else {
-  //         throw Exception('signOut is Null, error code : ${apiResponse.errorCode}');
-  //       }
-  //     }
-  //   } catch (e) {
-  //     log('로그아웃 실패: $e');
-  //   }
-  //   return null;
-  // }
-
-  Future<SignOutResponse?> signOut({
-    required String accessToken,
-  }) async {
+  Future<bool?> signOut() async {
     String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/signOut';
-
     try {
-      ApiResponse<SignOutResponse>? apiResponse =
-          await call.makeRequest<SignOutResponse>(
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        fromJson: (data) =>
-            SignOutResponse.fromJson(data as Map<String, dynamic>),
+        fromJson: (data) => data as Map<String, dynamic>,
       );
 
-      if (apiResponse?.data != null) {
-        log('로그아웃 성공: ${apiResponse.data}');
-        return apiResponse.data;
+      if (apiResponse.isSuccess) {
+        log('로그아웃 성공!');
+        return true;
       } else {
-        if (apiResponse?.errorCode == 'J0003') {
-          return signOut(accessToken: accessToken); // 재귀 호출
+        if(apiResponse?.errorCode == 'J0003') {
+          signOut();
         } else {
           throw Exception(
               'signOut is Null, error code : ${apiResponse?.errorCode}');
@@ -566,7 +524,7 @@ class ApiCode {
       }
     } catch (e) {
       log('로그아웃 실패: $e');
-      return null;
+      return false;
     }
   }
 

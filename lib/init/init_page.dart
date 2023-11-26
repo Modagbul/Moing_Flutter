@@ -5,7 +5,7 @@ import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:provider/provider.dart';
 
 class InitPage extends StatelessWidget {
-  static const routeName = '/';
+  static const routeName = '/init';
 
   const InitPage({super.key});
 

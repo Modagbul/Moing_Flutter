@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/mypage/alarm_setting_page.dart';
+import 'package:moing_flutter/init/init_page.dart';
+import 'package:moing_flutter/mypage/alram_setting_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/mypage/setting_state.dart';
@@ -7,11 +8,8 @@ import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
-import '../login/sign_in/login_page.dart';
 import '../make_group/component/warning_dialog.dart';
 import '../model/api_code/api_code.dart';
-import '../model/response/sign_out_response.dart';
-import '../utils/shared_preferences/shared_preferences.dart';
 import 'component/list_custom_tile.dart';
 
 class SettingPage extends StatelessWidget {
@@ -25,7 +23,9 @@ class SettingPage extends StatelessWidget {
     final int teamCount = ModalRoute.of(context)?.settings.arguments as int;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SettingState(context: context, teamCount: teamCount)),
+        ChangeNotifierProvider(
+            create: (_) =>
+                SettingState(context: context, teamCount: teamCount)),
       ],
       builder: (context, _) {
         return SettingPage();
@@ -72,17 +72,19 @@ class SettingPage extends StatelessWidget {
                     listName: '회원탈퇴',
                     imagePath: 'asset/image/right_arrow.png',
                     onTap: () {
-                      int teamCount = Provider.of<SettingState>(context, listen: false).teamCount;
+                      int teamCount =
+                          Provider.of<SettingState>(context, listen: false)
+                              .teamCount;
                       print('teamCount : $teamCount');
-                      if(teamCount != 0) {
+                      if (teamCount != 0) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MyPageRevokePage()),
+                          MaterialPageRoute(
+                              builder: (context) => MyPageRevokePage()),
                         );
-                      }
-                      else {
+                      } else {
                         Navigator.of(context).pushNamed(
-                            MyPageRevokeReasonPage.routeName,
+                          MyPageRevokeReasonPage.routeName,
                         );
                       }
                     },
@@ -95,38 +97,6 @@ class SettingPage extends StatelessWidget {
       ),
     );
   }
-
-  // void _showLogoutDialog(BuildContext context, ApiCode apiCode) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return WarningDialog(
-  //         title: '정말 로그아웃하시겠어요?',
-  //         content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
-  //         onConfirm: () async {
-  //           Navigator.of(context).pop();
-  //           SharedPreferencesInfo prefsInfo = SharedPreferencesInfo();
-  //           String? userIdString = await prefsInfo.loadPreferencesData('userId');
-  //           int? userId = userIdString != null ? int.tryParse(userIdString) : null;
-  //           if (userId != null) {
-  //             final signOutResponse = await apiCode.signOut(userId: userId);
-  //             if (signOutResponse != null && signOutResponse.isSuccess) {
-  //               print('로그아웃 성공: ${signOutResponse.message}');
-  //               Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false);
-  //             } else {
-  //               print('로그아웃 실패: ${signOutResponse?.message ?? 'Unknown error'}');
-  //             }
-  //           } else {
-  //             print('로그아웃 실패: 사용자 ID가 없습니다.');
-  //           }
-  //         },
-  //         onCanceled: () => Navigator.of(context).pop(),
-  //         leftText: '로그아웃',
-  //         rightText: '남아있기',
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showLogoutDialog(BuildContext context) {
     showDialog(
@@ -148,22 +118,12 @@ class SettingPage extends StatelessWidget {
   }
 
   Future<void> _logout(BuildContext context) async {
-    SharedPreferencesInfo prefsInfo = SharedPreferencesInfo();
-    String? accessToken = await prefsInfo.loadPreferencesData('accessToken');
-
-    if (accessToken != null) {
-      final signOutResponse = await apiCode.signOut(accessToken: accessToken);
-      if (signOutResponse != null && signOutResponse.isSuccess) {
-        await prefsInfo.removePreferencesData('accessToken');
-        await prefsInfo.removePreferencesData('refreshToken');
-        Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false);
-      } else {
-        print('로그아웃 실패: ${signOutResponse?.message ?? 'Unknown error'}');
-      }
-    } else {
-      print('로그아웃 실패: 액세스 토큰이 없습니다.');
+    bool? signOutResponse = await apiCode.signOut();
+    print('로그아웃 Response : ${signOutResponse.toString()}');
+    if (signOutResponse != null && signOutResponse) {
+      print('settingPage에서 로그아웃 성공 : ${signOutResponse.toString()}');
+      Navigator.pushNamedAndRemoveUntil(
+          context, InitPage.routeName, (route) => false);
     }
   }
-
 }
-
