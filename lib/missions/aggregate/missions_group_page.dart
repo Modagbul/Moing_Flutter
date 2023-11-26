@@ -16,21 +16,22 @@ class MissionsGroupPage extends StatefulWidget {
   const MissionsGroupPage({super.key});
 
   static route(BuildContext context) {
-    final selectedTeamId =
-        Provider.of<MissionsState>(context, listen: false).selectedTeamId;
+    final selectedTeamId = Provider.of<MissionsState>(context, listen: false).teams.isNotEmpty
+        ? Provider.of<MissionsState>(context, listen: false).teams[0].teamId
+        : null;
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => MissionsState(
+          create: (context) => MissionsGroupState(
             context: context,
+            selectedTeamId: selectedTeamId ?? 0,
           ),
           lazy: false,
         ),
         ChangeNotifierProvider(
-          create: (context) => MissionsGroupState(
+          create: (context) => MissionsState(
             context: context,
-            selectedTeamId: selectedTeamId,
           ),
           lazy: false,
         ),
@@ -46,170 +47,133 @@ class MissionsGroupPage extends StatefulWidget {
 }
 
 class _MissionsGroupPageState extends State<MissionsGroupPage> {
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<MissionsState>(
-      builder: (context, missionsState, child) {
-        final currentSelectedTeamId = missionsState.selectedTeamId;
-        log('currentSelectedTeamId: $currentSelectedTeamId');
 
-        return Consumer<MissionsGroupState>(
-          builder: (context, state, child) {
-            if (currentSelectedTeamId != null &&
-                state.selectedTeamId != currentSelectedTeamId) {
-              state.updateSelectedTeamId(currentSelectedTeamId);
-            }
+    final state = context.watch<MissionsGroupState>();
+    log('Building MissionsGroupPage with state: ${state.selectedTeamId}');
 
-            final repeatMissionData =
-                state.aggregateTeamRepeatMissionStatus?.data;
+    return Scaffold(
+      backgroundColor: grayBackground,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 52.0,
+              ),
+              _Title(
+                mainText: '한번 미션',
+                countText:
+                    '${state.aggregateTeamSingleMissionStatus?.data?.length ?? 0}',
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              if (state.aggregateTeamSingleMissionStatus?.data != null &&
+                  state.aggregateTeamSingleMissionStatus!.data.isNotEmpty)
+                SizedBox(
+                  height: 126,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount:
+                        state.aggregateTeamSingleMissionStatus?.data.length,
+                    itemBuilder: (context, index) {
+                      final e =
+                          state.aggregateTeamSingleMissionStatus?.data[index];
+                      log('Building item: ${e?.missionTitle}');
 
-            // final currentSelectedTeamId = missionsState.selectedTeamId;
-            // log('currentSelectedTeamId: $currentSelectedTeamId');
-            //
-            // final missionsGroupState =
-            //     Provider.of<MissionsGroupState>(context, listen: false);
-            //
-            // if (currentSelectedTeamId != null &&
-            //     missionsGroupState.selectedTeamId != currentSelectedTeamId) {
-            //   missionsGroupState.updateSelectedTeamId(currentSelectedTeamId);
-            // }
-
-            // final state = context.watch<MissionsGroupState>();
-            //
-            // final data = state.aggregateTeamRepeatMissionStatus?.data;
-            // if (data == null) {
-            //   log('data is null');
-            // } else if (data.isEmpty) {
-            //   log('data is empty');
-            // } else {
-            //   log('data is not empty: $data');
-            // }
-            //
-            // final singleMissionData = state.aggregateTeamSingleMissionStatus?.data;
-            // if (singleMissionData == null) {
-            //   log('singleMissionData is null');
-            // } else {
-            //   log('singleMissionData is not empty: $singleMissionData');
-            // }
-
-            return Scaffold(
-              backgroundColor: grayBackground,
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 52.0,
-                      ),
-                      _Title(
-                        mainText: '한번 미션',
-                        countText: '${state.aggregateTeamSingleMissionStatus?.data?.length ?? 0}',
-                      ),
-                      const SizedBox(
-                        height: 12.0,
-                      ),
-                      if (state.aggregateTeamSingleMissionStatus?.data != null &&
-                          state.aggregateTeamSingleMissionStatus!.data.isNotEmpty)
-                        SizedBox(
-                          height: 126,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: state.aggregateTeamSingleMissionStatus?.data.length,
-                            itemBuilder: (context, index) {
-                              final e = state.aggregateTeamSingleMissionStatus?.data[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 12.0),
-                                child: GroupSingleMissionCard(
-                                  missionId: e!.missionId,
-                                  teamId: e.teamId,
-                                  missionTitle: e.missionTitle,
-                                  dueTo: e.dueTo,
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                        MissionProvePage.routeName,
-                                        arguments: {
-                                          'isRepeated': false,
-                                          'teamId': e.teamId,
-                                          'missionId': e.missionId,
-                                        });
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        )
-                      else
-                        const Center(
-                          child: Text(
-                            '아직 미션이 없어요.',
-                            style: TextStyle(
-                              color: grayScaleGrey400,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                      const SizedBox(
-                        height: 40.0,
-                      ),
-                      _Title(
-                        mainText: '반복 미션',
-                        countText: '${repeatMissionData?.length ?? 0}',
-                      ),
-                      const SizedBox(
-                        height: 12.0,
-                      ),
-                      if (repeatMissionData != null &&
-                          repeatMissionData.isNotEmpty)
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
-                            childAspectRatio: 170 / 249,
-                          ),
-                          itemCount: repeatMissionData.length,
-                          itemBuilder: (context, index) {
-                            final e = repeatMissionData[index];
-                            return GroupRepeatMissionCard(
-                              missionId: e.missionId,
-                              teamId: e.teamId,
-                              missionTitle: e.missionTitle,
-                              totalNum: e.totalNum,
-                              doneNum: e.doneNum,
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    MissionProvePage.routeName,
-                                    arguments: {
-                                      'isRepeated': true,
-                                      'teamId': e.teamId,
-                                      'missionId': e.missionId,
-                                    });
-                              },
-                            );
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 12.0),
+                        child: GroupSingleMissionCard(
+                          missionId: e!.missionId,
+                          teamId: e.teamId,
+                          missionTitle: e.missionTitle,
+                          dueTo: e.dueTo,
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                MissionProvePage.routeName,
+                                arguments: {
+                                  'isRepeated': false,
+                                  'teamId': e.teamId,
+                                  'missionId': e.missionId,
+                                });
                           },
-                        )
-                      else
-                        const Center(
-                          child: Text(
-                            '아직 미션이 없어요.',
-                            style: TextStyle(
-                              color: grayScaleGrey400,
-                              fontSize: 14.0,
-                            ),
-                          ),
                         ),
-                    ],
+                      );
+                    },
+                  ),
+                )
+              else
+                const Center(
+                  child: Text(
+                    '아직 미션이 없어요.',
+                    style: TextStyle(
+                      color: grayScaleGrey400,
+                      fontSize: 14.0,
+                    ),
                   ),
                 ),
+              const SizedBox(
+                height: 40.0,
               ),
-            );
-          },
-        );
-      },
+              _Title(
+                mainText: '반복 미션',
+                countText:
+                    '${state.aggregateTeamRepeatMissionStatus?.data?.length ?? 0}',
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              if (state.aggregateTeamRepeatMissionStatus?.data != null &&
+                  state.aggregateTeamRepeatMissionStatus!.data.isNotEmpty)
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    childAspectRatio: 170 / 249,
+                  ),
+                  itemCount:
+                      state.aggregateTeamRepeatMissionStatus?.data.length,
+                  itemBuilder: (context, index) {
+                    final e =
+                        state.aggregateTeamRepeatMissionStatus?.data[index];
+                    return GroupRepeatMissionCard(
+                      missionId: e!.missionId,
+                      teamId: e.teamId,
+                      missionTitle: e.missionTitle,
+                      totalNum: e.totalNum,
+                      doneNum: e.doneNum,
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(MissionProvePage.routeName, arguments: {
+                          'isRepeated': true,
+                          'teamId': e.teamId,
+                          'missionId': e.missionId,
+                        });
+                      },
+                    );
+                  },
+                )
+              else
+                const Center(
+                  child: Text(
+                    '아직 미션이 없어요.',
+                    style: TextStyle(
+                      color: grayScaleGrey400,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -32,13 +32,20 @@ class OngoingMissionState extends ChangeNotifier {
     super.dispose();
   }
 
-  void getRepeatMissionStatus() async {
+  Future<void> getRepeatMissionStatus() async {
     repeatMissionStatus = await apiCode.getRepeatMissionStatus(teamId: teamId);
     notifyListeners();
   }
 
-  void getSingleMissionStatus() async {
+  Future<void> getSingleMissionStatus() async {
     singleMissionStatus = await apiCode.getSingleMissionStatus(teamId: teamId);
     notifyListeners();
   }
+
+  void reloadMissionStatus() async {
+    await getRepeatMissionStatus();
+    await getSingleMissionStatus();
+    notifyListeners();
+  }
+
 }

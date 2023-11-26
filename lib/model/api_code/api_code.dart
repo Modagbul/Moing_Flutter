@@ -497,37 +497,69 @@ class ApiCode {
     return;
   }
 
+  // Future<SignOutResponse?> signOut({
+  //   required String accessToken,
+  // }) async {
+  //   apiUrl = '${dotenv.env['MOING_API']}/api/mypage/signOut';
+  //
+  //   try {
+  //     ApiResponse<SignOutResponse>? apiResponse =
+  //     await call.makeRequest<SignOutResponse>(
+  //       url: apiUrl,
+  //       method: 'GET',
+  //       fromJson: (data) {
+  //         log('Server response: $data'); // 서버 응답 로그 출력
+  //         return SignOutResponse.fromJson(data);
+  //       },
+  //     );
+  //
+  //     if (apiResponse.data != null) {
+  //       log('로그아웃 성공: ${apiResponse.data}');
+  //       return apiResponse.data!;
+  //     } else {
+  //       if (apiResponse.errorCode == 'J0003') {
+  //         signOut(accessToken: accessToken);
+  //       } else {
+  //         throw Exception('signOut is Null, error code : ${apiResponse.errorCode}');
+  //       }
+  //     }
+  //   } catch (e) {
+  //     log('로그아웃 실패: $e');
+  //   }
+  //   return null;
+  // }
+
   Future<SignOutResponse?> signOut({
-    required int userId,
+    required String accessToken,
   }) async {
     String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/signOut';
 
     try {
       ApiResponse<SignOutResponse>? apiResponse =
-          await call.makeRequest<SignOutResponse>(
+      await call.makeRequest<SignOutResponse>(
         url: apiUrl,
-        method: 'GET',
-        fromJson: (data) {
-          log('Server response: $data'); // 서버 응답 로그 출력
-          return SignOutResponse.fromJson(data);
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json;charset=UTF-8',
         },
+        fromJson: (data) => SignOutResponse.fromJson(data as Map<String, dynamic>),
       );
 
-      if (apiResponse.data != null) {
+      if (apiResponse?.data != null) {
         log('로그아웃 성공: ${apiResponse.data}');
-        return apiResponse.data!;
+        return apiResponse.data;
       } else {
-        if(apiResponse.errorCode == 'J0003') {
-          signOut(userId: userId);
-        }
-        else {
-          throw Exception('signOut is Null, error code : ${apiResponse.errorCode}');
+        if(apiResponse?.errorCode == 'J0003') {
+          return signOut(accessToken: accessToken); // 재귀 호출
+        } else {
+          throw Exception('signOut is Null, error code : ${apiResponse?.errorCode}');
         }
       }
     } catch (e) {
       log('로그아웃 실패: $e');
+      return null;
     }
-    return null;
   }
 
   Future<AggregateSingleMissionResponse?>
