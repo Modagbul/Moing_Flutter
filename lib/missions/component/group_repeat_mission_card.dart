@@ -107,7 +107,7 @@ class GroupRepeatMissionCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, left: 8.0),
                 child: Text(
-                  '주 ${doneNum}회',
+                  '주 $totalNum회',
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14.0,

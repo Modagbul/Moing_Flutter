@@ -115,7 +115,6 @@ class _MissionProvePageState extends State<MissionProvePage>
             if(context.watch<MissionProveState>().isMeProved &&
                 !context.watch<MissionProveState>().isRepeated)
             MissionProveButton(),
-
           ],
         ),
       ),

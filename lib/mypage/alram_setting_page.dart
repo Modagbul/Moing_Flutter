@@ -31,12 +31,23 @@ class AlramSettingPage extends StatefulWidget {
 }
 
 class _AlramSettingPageState extends State<AlramSettingPage> {
+  bool isTotalAlarmOn = true;
+  bool isNewUploadPushOn = true;
+  bool isRemindPushOn = true;
+  bool isFirePushOn = true;
+
   @override
   Widget build(BuildContext context) {
     final alarmSettingsState = Provider.of<AlramSettingState>(context);
 
+    final state = context.watch<AlramSettingState>();
+
     void handleTotalAlarmToggle(bool isTotalOn) {
-      alarmSettingsState.changeAlarmSettings(isTotalOn, isTotalOn, isTotalOn);
+      setState(() {
+        isTotalAlarmOn = isTotalOn;
+
+        alarmSettingsState.changeAlarmSettings(isTotalOn, isTotalOn, isTotalOn);
+      });
     }
 
     void handleChangeAlarmSettings(bool newUploadPush, bool remindPush, bool firePush) {
@@ -55,7 +66,7 @@ class _AlramSettingPageState extends State<AlramSettingPage> {
           children: [
             ListToggleTileNoSub(
               listName: '전체 알림',
-              initialValue: alarmSettingsState.getAlarmSettings?.data.newUploadPush ?? true,
+              initialValue: isTotalAlarmOn,
               onToggle: (value) {
                 handleTotalAlarmToggle(value);
               },
@@ -63,33 +74,33 @@ class _AlramSettingPageState extends State<AlramSettingPage> {
             ListToggleTile(
               listName: '신규 공지 알림',
               subText: '빠른 공지 확인을 위해\n알림 ON을 유지해주세요!',
-              initialValue: alarmSettingsState.getAlarmSettings?.data.newUploadPush ?? true,
+              initialValue: state.getAlarmSettings?.data.newUploadPush ?? true,
               onToggle: (value) {
                 handleChangeAlarmSettings(
                     value,
-                    alarmSettingsState.getAlarmSettings?.data.remindPush ?? true,
-                    alarmSettingsState.getAlarmSettings?.data.firePush ?? true);
+                    state.getAlarmSettings?.data.remindPush ?? true,
+                    state.getAlarmSettings?.data.firePush ?? true);
               },
             ),
             ListToggleTile(
               listName: '미션 리마인드 알림',
               subText: '매일 오전 8시, 미션에 대한\n리마인드 알림을 드릴게요!',
-              initialValue: alarmSettingsState.getAlarmSettings?.data.remindPush ?? true,
+              initialValue: state.getAlarmSettings?.data.remindPush ?? true,
               onToggle: (value) {
                 handleChangeAlarmSettings(
                     value,
-                    alarmSettingsState.getAlarmSettings?.data.newUploadPush ?? true,
-                    alarmSettingsState.getAlarmSettings?.data.firePush ?? true);
+                    state.getAlarmSettings?.data.newUploadPush ?? true,
+                    state.getAlarmSettings?.data.firePush ?? true);
               },
             ),
             ListToggleTileNoSub(
               listName: '불 던지기 알림',
-              initialValue: alarmSettingsState.getAlarmSettings?.data.firePush ?? true,
+              initialValue: state.getAlarmSettings?.data.firePush ?? true,
               onToggle: (value) {
                 handleChangeAlarmSettings(
                     value,
-                    alarmSettingsState.getAlarmSettings?.data.remindPush ?? true,
-                    alarmSettingsState.getAlarmSettings?.data.newUploadPush ?? true);
+                    state.getAlarmSettings?.data.remindPush ?? true,
+                    state.getAlarmSettings?.data.newUploadPush ?? true);
               },
             ),
             const Spacer(),
@@ -107,6 +118,7 @@ class _NextBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final alarmSettingsState = Provider.of<AlramSettingState>(context, listen: false);
 
     return SizedBox(
       width: 353,
@@ -120,8 +132,9 @@ class _NextBtn extends StatelessWidget {
           ),
         ),
         onPressed: () {
+          alarmSettingsState.saveAlarmSettings();
           Navigator.of(context).pop();
-        },
+          },
         child: const Text(
           '완료',
           style: TextStyle(

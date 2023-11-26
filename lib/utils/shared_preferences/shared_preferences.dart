@@ -13,9 +13,15 @@ class SharedPreferencesInfo {
     return await pref.getString(key);
   }
 
+  // void removePreferencesData(String key) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   await pref.remove(key);
+  // }
+
   // SharedPreference 값 삭제
-  void removePreferencesData(String key) async {
+  Future<void> removePreferencesData(String key) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.remove(key);
   }
+
 }

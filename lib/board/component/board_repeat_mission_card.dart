@@ -28,13 +28,6 @@ class BoardRepeatMissionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BoxDecoration boxDecoration = status == 'WAIT'
-        ? BoxDecoration(
-            border: Border.all(color: coralGrey500, width: 1),
-            color: grayScaleGrey600,
-            borderRadius: BorderRadius.circular(16))
-        : BoxDecoration(
-            color: grayScaleGrey600, borderRadius: BorderRadius.circular(16));
 
     return GestureDetector(
       onTap: onTap,
@@ -165,8 +158,14 @@ class _Tag extends StatelessWidget {
     String tagText = '';
 
     if (status == 'WAIT') {
-      int daysToSunday = DateTime.sunday - now.weekday;
-      tagText = '${daysToSunday}일 후 시작';
+      if (now.weekday == DateTime.sunday) {
+        tagText = '내일 시작';
+      } else {
+        int daysToSunday = DateTime.sunday - now.weekday;
+        if (daysToSunday > 0) {
+          tagText = '${daysToSunday}일 후 시작';
+        }
+      }
     } else if (status == 'ONGOING' && now.weekday == DateTime.sunday) {
       tagText = '내일 리셋';
     }

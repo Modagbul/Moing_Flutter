@@ -17,6 +17,8 @@ class MainPage extends StatelessWidget {
 
   static route(BuildContext context) {
     String newCreated = "";
+    int selectedTeamId = 0;
+
     if (ModalRoute.of(context)?.settings.arguments != null) {
       newCreated = ModalRoute.of(context)?.settings.arguments as String;
     }
@@ -40,7 +42,7 @@ class MainPage extends StatelessWidget {
           lazy: false,
         ),
         ChangeNotifierProvider(
-          create: (_) => MissionsGroupState(context: context),
+          create: (_) => MissionsGroupState(context: context, selectedTeamId: selectedTeamId),
           // MissionsState 추가
           lazy: false,
         ),

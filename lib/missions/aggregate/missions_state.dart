@@ -12,9 +12,9 @@ class MissionsState extends ChangeNotifier {
 
   TeamListResponse? teamListStatus;
 
-  int? _selectedTeamId;
+  int _selectedTeamId = 0;
 
-  int? get selectedTeamId => _selectedTeamId;
+  int get selectedTeamId => _selectedTeamId;
 
   void setSelectedTeamId(int teamId) {
     if (_selectedTeamId != teamId) {
@@ -43,6 +43,9 @@ class MissionsState extends ChangeNotifier {
   }
 
   void initState() {
+    getTeamListStatus();
+    log('Instance "OngoingMissionState" has been created');
+    notifyListeners();
   }
 
   void alarmPressed() {
