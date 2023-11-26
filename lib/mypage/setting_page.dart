@@ -55,9 +55,7 @@ class SettingPage extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  AlramSettingPage.route(context)),
+                          MaterialPageRoute(builder: (context) => AlarmSettingPage.route(context)),
                         );
                       }),
                   ListCustomTile(
@@ -99,38 +97,6 @@ class SettingPage extends StatelessWidget {
       ),
     );
   }
-
-  // void _showLogoutDialog(BuildContext context, ApiCode apiCode) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return WarningDialog(
-  //         title: '정말 로그아웃하시겠어요?',
-  //         content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
-  //         onConfirm: () async {
-  //           Navigator.of(context).pop();
-  //           SharedPreferencesInfo prefsInfo = SharedPreferencesInfo();
-  //           String? userIdString = await prefsInfo.loadPreferencesData('userId');
-  //           int? userId = userIdString != null ? int.tryParse(userIdString) : null;
-  //           if (userId != null) {
-  //             final signOutResponse = await apiCode.signOut(userId: userId);
-  //             if (signOutResponse != null && signOutResponse.isSuccess) {
-  //               print('로그아웃 성공: ${signOutResponse.message}');
-  //               Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false);
-  //             } else {
-  //               print('로그아웃 실패: ${signOutResponse?.message ?? 'Unknown error'}');
-  //             }
-  //           } else {
-  //             print('로그아웃 실패: 사용자 ID가 없습니다.');
-  //           }
-  //         },
-  //         onCanceled: () => Navigator.of(context).pop(),
-  //         leftText: '로그아웃',
-  //         rightText: '남아있기',
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showLogoutDialog(BuildContext context) {
     showDialog(

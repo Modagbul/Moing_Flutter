@@ -43,7 +43,6 @@ class AlarmPage extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                   itemCount: alarmList.length + 1,
-                  itemExtent: 107,
                   itemBuilder: (context, position) {
                     if (position < alarmList.length) {
                       final Alarm alarm = alarmList[position];
@@ -85,11 +84,11 @@ class AlarmPage extends StatelessWidget {
                                             color: grayScaleGrey400,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 8,
                                         ),
                                         Container(
-                                          width: 280,
+                                          width: 268,
                                           child: Text(
                                             alarmList![position].title!,
                                             overflow: TextOverflow.ellipsis,
@@ -101,7 +100,7 @@ class AlarmPage extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 3,
                                         ),
                                         Container(
@@ -109,7 +108,7 @@ class AlarmPage extends StatelessWidget {
                                           child: Text(
                                             alarmList![position].content!,
                                             overflow: TextOverflow.ellipsis,
-                                            maxLines: 3,
+                                            maxLines: 2,
                                             style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
@@ -144,7 +143,7 @@ class AlarmPage extends StatelessWidget {
                       );
                     } else {
                       return const Padding(
-                        padding: EdgeInsets.only(bottom: 40.0),
+                        padding: EdgeInsets.symmetric(vertical: 40.0),
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Text(

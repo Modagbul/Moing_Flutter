@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDefault();
   // 화면 세로로 고정
@@ -25,7 +27,9 @@ Future<void> initializeDefault() async {
   await dotenv.load(fileName: 'asset/config/.env');
   /// kakao init
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
+
   /// FCM 알람 설정 초기화
+  await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   /// Global Keys
@@ -37,21 +41,22 @@ Future<void> initializeDefault() async {
   timeago.setDefaultLocale('ko');
 
   /// fcm device token값 출력
-  String? _fcmToken = await FirebaseMessaging.instance.getToken();
-  print('fcmToken : $_fcmToken');
+  String? fcmToken = await FirebaseMessaging.instance.getToken();
+  log('fcmToken : $fcmToken');
 }
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.messageId}");
-  print('백그라운드 메세지 : ${message.notification!.body}');
+  log("Handling a background message: ${message.messageId}");
+  log('백그라운드 메세지 : ${message.notification!.body}');
 
   if (message.data['title'] == null && message.data['body'] == null) return;
 
-  final FlutterLocalNotificationsPlugin localNotification = FlutterLocalNotificationsPlugin();
-  final androidChannel = AndroidNotificationChannel(
+  final FlutterLocalNotificationsPlugin localNotification =
+      FlutterLocalNotificationsPlugin();
+  const androidChannel = AndroidNotificationChannel(
     'high_importance_channel',
     '중요도 높은 알림',
     importance: Importance.max,
