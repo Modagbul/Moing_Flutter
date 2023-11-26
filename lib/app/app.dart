@@ -34,7 +34,7 @@ import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
-import 'package:moing_flutter/mypage/alram_setting_page.dart';
+import 'package:moing_flutter/mypage/alarm_setting_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/post/post_update_page.dart';
@@ -132,7 +132,7 @@ class MoingApp extends StatelessWidget {
             ProfileSettingPage.routeName:(context) => ProfileSettingPage.route(context),
 
             SettingPage.routeName:(context) => SettingPage.route(context),
-            AlramSettingPage.routeName:(context) => AlramSettingPage.route(context),
+            AlarmSettingPage.routeName:(context) => AlarmSettingPage.route(context),
 
             MyPageScreen.routeName:(context) => MyPageScreen.route(context: context),
             MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),

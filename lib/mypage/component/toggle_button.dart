@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 
 class ToggleButton extends StatefulWidget {
-  final ValueChanged<bool> onToggle;  // 상태 변경 콜백
-  final bool initialValue;  // 초기 상태 값
+  final ValueChanged<bool> onToggle;
+  final bool initialValue;
 
-  ToggleButton({super.key, required this.onToggle, required this.initialValue});
+  const ToggleButton({super.key, required this.onToggle, required this.initialValue});
 
   @override
   _ToggleButtonState createState() => _ToggleButtonState();
@@ -17,17 +17,17 @@ class _ToggleButtonState extends State<ToggleButton> {
   @override
   void initState() {
     super.initState();
-    isOn = widget.initialValue;  // 초기 상태 설정
+    isOn = widget.initialValue;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 108.0,  // 가로 길이
-      height: 47.0,  // 세로 길이
+      width: 108.0,
+      height: 47.0,
       decoration: BoxDecoration(
-        color: grayScaleGrey600,  // 배경색
-        borderRadius: BorderRadius.circular(18.0),  // 모서리 둥글기 정도
+        color: grayScaleGrey600,
+        borderRadius: BorderRadius.circular(18.0),
       ),
       child: Align(
         alignment: Alignment.center,
@@ -35,11 +35,7 @@ class _ToggleButtonState extends State<ToggleButton> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton(
-              onPressed: () {
-                setState(() {
-                  isOn = true;
-                });
-              },
+              onPressed: () => _toggle(true),
               style: TextButton.styleFrom(
                 backgroundColor: isOn ? grayScaleGrey100 : grayScaleGrey600,
                 shape: RoundedRectangleBorder(
@@ -57,11 +53,7 @@ class _ToggleButtonState extends State<ToggleButton> {
               ),
             ),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  isOn = false;
-                });
-              },
+              onPressed: () => _toggle(false),
               style: TextButton.styleFrom(
                 backgroundColor: !isOn ? grayScaleGrey100 : grayScaleGrey600,
                 shape: RoundedRectangleBorder(
@@ -88,7 +80,7 @@ class _ToggleButtonState extends State<ToggleButton> {
     setState(() {
       isOn = value;
     });
-    widget.onToggle(isOn);  // 상태 변경 콜백 호출
+    widget.onToggle(isOn);
   }
 
 }

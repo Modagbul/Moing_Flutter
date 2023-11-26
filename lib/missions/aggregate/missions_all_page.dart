@@ -87,12 +87,17 @@ class MissionsAllPage extends StatelessWidget {
                           dueTo: e.dueTo,
                           onTap: () {
                             Navigator.of(context).pushNamed(
-                                MissionProvePage.routeName,
-                                arguments: {
-                                  'isRepeated': false,
-                                  'teamId': e.teamId,
-                                  'missionId': e.missionId,
-                                });
+                              MissionProvePage.routeName,
+                              arguments: {
+                                'isRepeated': false,
+                                'teamId': e.teamId,
+                                'missionId': e.missionId,
+                              },
+                            ).then((_) {
+                              Provider.of<MissionsAllState>(context,
+                                      listen: false)
+                                  .reloadMissionStatus();
+                            });
                           },
                         ),
                       );
@@ -141,11 +146,16 @@ class MissionsAllPage extends StatelessWidget {
                       totalNum: e.totalNum,
                       doneNum: e.doneNum,
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(MissionProvePage.routeName, arguments: {
-                          'isRepeated': true,
-                          'teamId': e.teamId,
-                          'missionId': e.missionId,
+                        Navigator.of(context).pushNamed(
+                          MissionProvePage.routeName,
+                          arguments: {
+                            'isRepeated': true,
+                            'teamId': e.teamId,
+                            'missionId': e.missionId,
+                          },
+                        ).then((_) {
+                          Provider.of<MissionsAllState>(context, listen: false)
+                              .reloadMissionStatus();
                         });
                       },
                     );

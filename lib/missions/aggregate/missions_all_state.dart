@@ -39,15 +39,21 @@ class MissionsAllState extends ChangeNotifier {
     );
   }
 
-  void getAggregateRepeatMissionStatus() async {
+  Future<void> getAggregateRepeatMissionStatus() async {
     aggregateRepeatMissionStatus =
         await apiCode.getAggregateRepeatMissionStatus();
     notifyListeners();
   }
 
-  void getAggregateSingleMissionStatus() async {
+  Future<void> getAggregateSingleMissionStatus() async {
     aggregateSingleMissionStatus =
         await apiCode.getAggregateSingleMissionStatus();
+    notifyListeners();
+  }
+
+  void reloadMissionStatus() async {
+    await getAggregateRepeatMissionStatus();
+    await getAggregateSingleMissionStatus();
     notifyListeners();
   }
 }
