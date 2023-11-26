@@ -96,6 +96,8 @@ class LoginState extends ChangeNotifier {
         return ;
       }
 
+      String deviceType = (Platform.isAndroid ? 'ANDROID' : 'APPLE');
+
       final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signIn/kakao';
 
       final response = await http.post(
@@ -106,6 +108,7 @@ class LoginState extends ChangeNotifier {
         body: jsonEncode(<String, String>{
           'socialToken': token,
           'fcmToken': fcmToken,
+          'deviceType': deviceType,
         }),
       );
 
