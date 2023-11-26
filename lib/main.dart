@@ -14,6 +14,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await initializeDefault();
   // 화면 세로로 고정
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -21,7 +22,6 @@ void main() async {
 }
 
 Future<void> initializeDefault() async {
-  await Firebase.initializeApp();
   await Future.delayed(Duration(milliseconds: 500));
   /// env 파일 업로드
   await dotenv.load(fileName: 'asset/config/.env');

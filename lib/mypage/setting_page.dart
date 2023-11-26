@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/init/init_page.dart';
-import 'package:moing_flutter/mypage/alram_setting_page.dart';
+import 'package:moing_flutter/mypage/alarm_setting_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/mypage/setting_state.dart';

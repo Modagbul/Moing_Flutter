@@ -39,7 +39,6 @@ dependencies:
   firebase_auth: ^4.7.3
   firebase_dynamic_links: ^5.4.4
   firebase_messaging: ^14.7.1
-  firebase_in_app_messaging: ^0.7.1
   sign_in_with_apple: ^3.0.0
   crypto: ^3.0.3
   http: ^1.1.0
