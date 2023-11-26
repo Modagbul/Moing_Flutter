@@ -16,13 +16,9 @@ class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   static route(BuildContext context) {
-    String? teamId = ModalRoute.of(context)?.settings.arguments as String?;
-
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LoginState(
-            context: context, teamId: teamId,
-        dynamicLinkService : DynamicLinkService(context: context)),
+        ChangeNotifierProvider(create: (_) => LoginState(context: context),
         ),
       ],
       builder: (context, _) {
