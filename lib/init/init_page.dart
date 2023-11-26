@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/init/init_state.dart';
+import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:provider/provider.dart';
 
 class InitPage extends StatelessWidget {
@@ -9,10 +10,15 @@ class InitPage extends StatelessWidget {
   const InitPage({super.key});
 
   static route(BuildContext context) {
+    String? teamId = ModalRoute.of(context)?.settings.arguments as String?;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => InitState(context: context),
+          create: (context) => InitState(
+              context: context,
+              teamId: teamId,
+              dynamicLinkService: DynamicLinkService(context: context)),
           lazy: false,
         ),
       ],

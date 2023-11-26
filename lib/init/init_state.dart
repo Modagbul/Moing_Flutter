@@ -10,17 +10,24 @@ import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
+import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 
 class InitState extends ChangeNotifier {
   BuildContext context;
   final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
   final TokenManagement tokenManagement = TokenManagement();
+  final DynamicLinkService dynamicLinkService;
+  String? teamId;
 
-  InitState({required this.context}) {
+  InitState({
+    required this.context,
+    required this.dynamicLinkService,
+    required this.teamId,
+  }) {
     print('Instance "InitState" has been created');
+    print('teamId : $teamId');
     initStart();
-    // asyncInitState();
   }
 
   @override

@@ -22,8 +22,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 class LoginState extends ChangeNotifier {
   /// Login Page에서 사용하는 context를 가져옴.
   final BuildContext context;
-  final DynamicLinkService dynamicLinkService;
-  String? teamId;
 
   bool? _isRegistered;
   TokenManagement tokenManagement = TokenManagement();
@@ -35,9 +33,8 @@ class LoginState extends ChangeNotifier {
   /// Context를 사용하여 initState() 생성
   /// initState, dispose에서 controller 등 생성, 삭제 해주고,
   /// 우리가 어떤 페이지에 있는지 알기 위해 log를 찍어서 확인한다.
-  LoginState({required this.context, required this.dynamicLinkService, required this.teamId}) {
+  LoginState({required this.context}) {
     log('Instance "LoginState" has been created');
-    print('로그인 페이지에서 팀ID : ${teamId}');
   }
 
   @override
