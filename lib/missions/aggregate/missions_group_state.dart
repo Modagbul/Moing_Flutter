@@ -12,26 +12,36 @@ class MissionsGroupState extends ChangeNotifier {
   AggregateTeamRepeatMissionStatusResponse? aggregateTeamRepeatMissionStatus;
 
   bool isNotification = false;
-  int? selectedTeamId;
+  int selectedTeamId;
+
   final BuildContext context;
 
   MissionsGroupState({
     required this.context,
-    this.selectedTeamId,
+    required this.selectedTeamId,
   }) {
     _initState();
+    notifyListeners();
+  }
+
+  void initState() async {
+    getAggregateTeamRepeatMissionStatus();
+    getAggregateTeamSingleMissionStatus();
+    log('Instance "OngoingMissionState" has been created');
+    notifyListeners();
   }
 
   void _initState() {
     _fetchData();
+    notifyListeners();
   }
 
   void updateSelectedTeamId(int newTeamId) async {
     if (selectedTeamId != newTeamId) {
       selectedTeamId = newTeamId;
+      log('MissionsGroupState Selected team ID changed to: $selectedTeamId');
       await _fetchData();
       notifyListeners();
-      log('updateSelectedTeamId: $selectedTeamId');
     }
   }
 
@@ -39,10 +49,15 @@ class MissionsGroupState extends ChangeNotifier {
     if (selectedTeamId != null) {
       await getAggregateTeamSingleMissionStatus();
       await getAggregateTeamRepeatMissionStatus();
-      notifyListeners();
+      notifyListeners(); // Ensure this is called after data is fetched
     } else {
       log('No team selected for fetching mission status');
     }
+  }
+
+  void getAggregateTeamRepeatMission() async {
+    aggregateTeamRepeatMissionStatus = await apiCode.getAggregateTeamRepeatMissionStatus(teamId: selectedTeamId);
+    notifyListeners();
   }
 
   Future<void> getAggregateTeamRepeatMissionStatus() async {

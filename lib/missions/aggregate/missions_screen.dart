@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_state.dart';
@@ -16,11 +18,13 @@ class MissionsScreen extends StatefulWidget {
     super.key,
   });
 
+  static get selectedTeamId => null;
+
   static route(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MissionsState(context: context)),
-        ChangeNotifierProvider(create: (_) => MissionsGroupState(context: context)),
+        ChangeNotifierProvider(create: (_) => MissionsGroupState(context: context, selectedTeamId: selectedTeamId)),
       ],
       builder: (context, _) {
         return const MissionsScreen();
@@ -114,7 +118,8 @@ class _MissionsScreenState extends State<MissionsScreen>
                   controller: _tabController,
                   children: [
                     MissionsAllPage.route(context),
-                    MissionsGroupPage.route(context),
+                    // MissionsGroupPage.route(context),
+                    const MissionsGroupPage(),
                   ],
                 ),
               ),
@@ -182,47 +187,71 @@ class _MyDropdownState extends State<MyDropdown> {
     if (widget.teams.isNotEmpty) {
       _selectedValue = widget.teams[0].teamId.toString();
       _selectedTeamName = widget.teams[0].teamName;
+
+      var missionsState = Provider.of<MissionsState>(context, listen: false);
+      missionsState.setSelectedTeamId(widget.teams[0].teamId);
+
+      var missionsGroupState = Provider.of<MissionsGroupState>(context, listen: false);
+      missionsGroupState.updateSelectedTeamId(widget.teams[0].teamId);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: _selectedValue,
-      hint: Text(
-        _selectedTeamName ?? "Select a team",
-        style: const TextStyle(color: grayScaleGrey300),
-      ),
-      dropdownColor: grayScaleGrey600,
-      underline: Container(),
-      items: widget.teams.map((TeamList team) {
-        return DropdownMenuItem<String>(
-          value: team.teamId.toString(),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
           child: Text(
-            team.teamName,
-            style: const TextStyle(color: grayScaleGrey100),
+            _selectedTeamName ?? "Select a team",
+            style: TextStyle(color: _selectedValue != null ? grayScaleGrey100 : grayScaleGrey400),
           ),
-        );
-      }).toList(),
-        // MyDropdown 위젯에서 팀 선택 변경시 호출되는 메서드
-        onChanged: (String? newValue) {
-          var selectedTeam = widget.teams.firstWhere(
-                  (team) => team.teamId.toString() == newValue,
-              orElse: () => widget.teams[0]);
-          setState(() {
-            _selectedValue = newValue;
-            _selectedTeamName = selectedTeam.teamName;
+        ),
+        Theme(
+          data: Theme.of(context).copyWith(
+            popupMenuTheme: const PopupMenuThemeData(
+              color: grayScaleGrey900,
+            ),
+          ),
+          child: InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            child: PopupMenuButton<String>(
+              icon: Image.asset('asset/image/arrow_icon.png', width: 14.45, height: 7.16),
+              onSelected: (String value) {
+                var selectedTeam = widget.teams.firstWhere(
+                        (team) => team.teamId.toString() == value,
+                    orElse: () => widget.teams[0]
+                );
 
-            var missionsState = Provider.of<MissionsState>(context, listen: false);
-            missionsState.setSelectedTeamId(selectedTeam.teamId);
+                setState(() {
+                  _selectedValue = value;
+                  _selectedTeamName = selectedTeam.teamName;
+                });
 
-            var missionsGroupState = Provider.of<MissionsGroupState>(context, listen: false);
-            missionsGroupState.updateSelectedTeamId(selectedTeam.teamId);
+                var missionsState = Provider.of<MissionsState>(context, listen: false);
+                missionsState.setSelectedTeamId(selectedTeam.teamId);
 
-          });
-
-        }
-
+                var missionsGroupState = Provider.of<MissionsGroupState>(context, listen: false);
+                missionsGroupState.updateSelectedTeamId(selectedTeam.teamId);
+              },
+              itemBuilder: (BuildContext context) {
+                return widget.teams.map((TeamList team) {
+                  return PopupMenuItem<String>(
+                    value: team.teamId.toString(),
+                    child: Text(
+                      team.teamName,
+                      style: TextStyle(
+                        color: team.teamId.toString() == _selectedValue ? grayScaleGrey100 : grayScaleGrey400,
+                      ),
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
