@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/mypage/alram_setting_page.dart';
+import 'package:moing_flutter/mypage/alarm_setting_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/mypage/setting_state.dart';
@@ -55,7 +55,7 @@ class SettingPage extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AlramSettingPage.route(context)),
+                          MaterialPageRoute(builder: (context) => AlarmSettingPage.route(context)),
                         );
                       }),
                   ListCustomTile(

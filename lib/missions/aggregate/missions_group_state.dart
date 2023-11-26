@@ -80,4 +80,9 @@ class MissionsGroupState extends ChangeNotifier {
     }
   }
 
+  void reloadMissionStatus() async {
+    await getAggregateTeamRepeatMissionStatus();
+    await getAggregateTeamSingleMissionStatus();
+    notifyListeners();
+  }
 }

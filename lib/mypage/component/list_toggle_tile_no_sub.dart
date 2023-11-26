@@ -41,7 +41,7 @@ class ListToggleTileNoSubState extends State<ListToggleTileNoSub> {
           ),
         ),
         trailing: ToggleButton(
-          initialValue: widget.initialValue, // 현재 상태 전달
+          initialValue: widget.initialValue,
           onToggle: widget.onToggle,
         ),
       ),

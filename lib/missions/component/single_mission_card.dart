@@ -91,14 +91,26 @@ class SingleMissionCard extends StatelessWidget {
   }
 }
 
-String formatDueTo(String dueTo) {
-  DateTime dueDate = DateTime.parse(dueTo);
+String formatDueTo(String dueToString) {
+  DateTime dueTo = DateTime.parse(dueToString);
   DateTime now = DateTime.now();
+  Duration difference = dueTo.difference(now);
 
-  Duration difference = dueDate.difference(now);
-
-  int hours = difference.inHours;
-  int minutes = difference.inMinutes - hours * 60;
-
-  return '$hours시간 $minutes분 후 종료';
+  if (difference.isNegative) {
+    return '기한 종료';
+  } else {
+    String formattedString = '';
+    if (difference.inDays > 0) {
+      formattedString += '${difference.inDays}일 ';
+    }
+    int hours = difference.inHours % 24;
+    if (hours > 0) {
+      formattedString += '$hours시간 ';
+    }
+    int minutes = difference.inMinutes % 60;
+    if (minutes > 0) {
+      formattedString += '$minutes분 ';
+    }
+    return '$formattedString후 종료';
+  }
 }
