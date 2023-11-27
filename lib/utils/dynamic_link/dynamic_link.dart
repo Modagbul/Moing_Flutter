@@ -15,7 +15,7 @@ class DynamicLinkService extends ChangeNotifier {
     final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
 
     if (initialLink != null) {
-      print('리다이렉트 1');
+      print('리다이렉트 1 : ${initialLink.link.path}');
       redirect(initialLink);
     }
 

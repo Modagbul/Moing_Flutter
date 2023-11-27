@@ -83,6 +83,6 @@ class ApiException implements Exception {
         break;
     }
 
-    throw Exception(errorCode + ' : ' + msg);
+    return false;
   }
 }
