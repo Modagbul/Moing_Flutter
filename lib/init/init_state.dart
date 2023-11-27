@@ -21,6 +21,7 @@ class InitState extends ChangeNotifier {
   String apiUrl = '';
   String? teamId;
   String? teamName;
+  String errorCode = '';
   int? numOfTeam;
 
   InitState({
@@ -42,20 +43,16 @@ class InitState extends ChangeNotifier {
   void initStart() async {
     await Future.delayed(
       const Duration(
-        seconds: 1,
-        milliseconds: 0,
+        seconds: 2,
+        milliseconds: 500,
       ),
     );
-
-    // Navigator.pushNamedAndRemoveUntil(
-    //     context, InvitationWelcomePage.routeName, (route) => false);
-    // return ;
 
     String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
     /// 한 번이라도 앱에 접속한 사람
     if (oldUser == 'true') {
       SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
-      String? accessToken = await sharedPreferencesInfo.loadPreferencesData('accessToken');
+      String? accessToken = await sharedPreferencesInfo.loadPreferencesData('ACCESS_TOKEN');
       if (accessToken == null) {
         // 액세스 토큰이 유효하지 않은 경우 로그인 페이지로 이동
         Navigator.pushNamedAndRemoveUntil(
@@ -67,6 +64,7 @@ class InitState extends ChangeNotifier {
         if(teamId != null) {
           bool? isUser = await checkUser();
           if(isUser != null && isUser) {
+            await getTeamNameAndNumber();
             if(numOfTeam != null && numOfTeam! < 3) {
               bool? isRegistered = await registerTeam();
               if(isRegistered != null && isRegistered) {
@@ -75,7 +73,12 @@ class InitState extends ChangeNotifier {
               }
               else {
                 /// TODO : 메인 페이지로 이동하면서 추가 조건 넣어줘야 함.
-                print('다이나믹 링크로 접속했지만 numOfTeam 3 이상 또는 이미 가입된 유저라 가입하지 못했을 때~');
+                print('다이나믹 링크로 접속했지만 이미 가입된 유저라 가입하지 못했을 때~ 추가 전달 메세지 필요!');
+                if(errorCode == 'T0004') {
+                  /// 이미 가입된 유저라 가입하지 못했을 때
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MainPage.routeName, (route) => false);
+                }
               }
             }
             else {
@@ -84,7 +87,6 @@ class InitState extends ChangeNotifier {
                 /// TODO : 추가 초건 넣어줘야 함
                   context, MainPage.routeName, (route) => false);
             }
-
           }
         }
 
@@ -119,9 +121,12 @@ class InitState extends ChangeNotifier {
       if (apiResponse.isSuccess) {
         return true;
       } else {
+        print('errorCode : ${apiResponse?.errorCode}');
         // 토큰 갱신 여부 확인
         if(apiResponse?.errorCode == 'J0003') {
+          print('이거 실행해야 되는데?');
           checkUser();
+          return true;
         } else if (apiResponse?.errorCode == 'J0007' || apiResponse?.errorCode == 'J0008') {
           /// 회원가입 안한 사람의 경우
           Navigator.pushNamedAndRemoveUntil(
@@ -188,6 +193,8 @@ class InitState extends ChangeNotifier {
       }
     } catch (e) {
       print('소모임 가입 실패2 : ${e.toString()}');
+      List<String> list = e.toString().split(": ");
+      errorCode = list[3];
       return false;
     }
   }
