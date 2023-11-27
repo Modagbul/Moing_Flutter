@@ -165,15 +165,18 @@ class _NoticeCheckContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton(
-            icon: Image.asset(
-              context.watch<PostCreateState>().isCheckedNotice
-                  ? 'asset/image/icon_check_box_active.png'
-                  : 'asset/image/icon_check_box_default.png',
-              width: 24.0,
-              height: 24.0,
+          InkWell(
+            onTap: context.read<PostCreateState>().toggleCheckedNotice,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                context.watch<PostCreateState>().isCheckedNotice
+                    ? 'asset/image/icon_check_box_active.png'
+                    : 'asset/image/icon_check_box_default.png',
+                width: 24.0,
+                height: 24.0,
+              ),
             ),
-            onPressed: context.read<PostCreateState>().toggleCheckedNotice,
           ),
           const Text(
             '공지사항으로 변경하기',
