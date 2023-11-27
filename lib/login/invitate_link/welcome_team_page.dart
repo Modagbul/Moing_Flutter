@@ -6,7 +6,7 @@ import 'package:moing_flutter/main/main_page.dart';
 import 'package:provider/provider.dart';
 
 class InvitationWelcomePage extends StatelessWidget {
-  static const routeName = '/';
+  static const routeName = '/invitation/welcome';
 
   static route(BuildContext context) {
     final String teamName = ModalRoute.of(context)?.settings.arguments as String;
