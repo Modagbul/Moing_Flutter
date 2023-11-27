@@ -22,7 +22,10 @@ class PostUpdatePage extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
             create: (_) => PostUpdateState(
-                context: context, teamId: teamId, boardId: boardId, postData: postData)),
+                context: context,
+                teamId: teamId,
+                boardId: boardId,
+                postData: postData)),
       ],
       builder: (context, _) {
         return const PostUpdatePage();
@@ -37,22 +40,27 @@ class PostUpdatePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       appBar: _renderAppBar(context),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 32.0),
-                _renderHeader(header: header),
-                const SizedBox(height: 52.0),
-                const _PostInfoTextFields(),
-                const SizedBox(height: 85.0),
-                const _NoticeCheckContainer(),
-                const SizedBox(height: 32.0),
-                const _PostCreateButton(),
-              ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 32.0),
+                  _renderHeader(header: header),
+                  const SizedBox(height: 52.0),
+                  const _PostInfoTextFields(),
+                  const SizedBox(height: 85.0),
+                  const _NoticeCheckContainer(),
+                  const SizedBox(height: 32.0),
+                  const _PostCreateButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -163,15 +171,18 @@ class _NoticeCheckContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton(
-            icon: Image.asset(
-              context.watch<PostUpdateState>().isCheckedNotice
-                  ? 'asset/image/icon_check_box_active.png'
-                  : 'asset/image/icon_check_box_default.png',
-              width: 24.0,
-              height: 24.0,
+          InkWell(
+            onTap: context.read<PostUpdateState>().toggleCheckedNotice,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                context.watch<PostUpdateState>().isCheckedNotice
+                    ? 'asset/image/icon_check_box_active.png'
+                    : 'asset/image/icon_check_box_default.png',
+                width: 24.0,
+                height: 24.0,
+              ),
             ),
-            onPressed: context.read<PostUpdateState>().toggleCheckedNotice,
           ),
           const Text(
             '공지사항으로 변경하기',

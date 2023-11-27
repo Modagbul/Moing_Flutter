@@ -46,14 +46,21 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
   /// 프로필 사진
   Future<void> imageUpload(BuildContext context) async {
+    print('소모임 대표 사진 업로드하기');
     if (onLoading) return;
     try {
       onLoading = true;
       notifyListeners();
-      await Permission.photos.request();
-      final XFile? assetFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      avatarFile = assetFile;
+      var status = await Permission.photos.request();
+      print('status : ${status.toString()}');
+      if(status.isGranted) {
+        final XFile? assetFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+        avatarFile = assetFile;
+      }
+      else {
+        openAppSettings();
+      }
     } catch (e) {
       print(e.toString());
       viewUtil.showAlertDialog(context: context, message: e.toString());

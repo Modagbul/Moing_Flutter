@@ -11,6 +11,7 @@ import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/init/init_page.dart';
 import 'package:moing_flutter/login/date/sign_up_date_page.dart';
 import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
+import 'package:moing_flutter/login/invitate_link/welcome_team_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_second.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_last.dart';
@@ -34,7 +35,7 @@ import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
-import 'package:moing_flutter/mypage/alram_setting_page.dart';
+import 'package:moing_flutter/mypage/alarm_setting_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/post/post_update_page.dart';
@@ -69,7 +70,6 @@ class MoingApp extends StatelessWidget {
           navigatorKey: GetIt.I.get<GlobalKey<NavigatorState>>(),
           title: 'Moing',
           initialRoute: InitPage.routeName,
-          
           builder: (context, child) {
             return MultiProvider(
               providers: [
@@ -88,6 +88,7 @@ class MoingApp extends StatelessWidget {
             WelcomePage.routeName: (_) => const WelcomePage(),
             /// StateFul 위젯이 필요하다면, 다음과 같이 작성!
             LoginPage.routeName: (context) => LoginPage.route(context),
+            InvitationWelcomePage.routeName: (context) => InvitationWelcomePage.route(context),
             InitPage.routeName: (context) => InitPage.route(context),
             OnBoardingFirstPage.routeName: (context) => OnBoardingFirstPage.route(context),
             OnBoardingSecondPage.routeName: (context) => OnBoardingSecondPage.route(context),
@@ -132,7 +133,7 @@ class MoingApp extends StatelessWidget {
             ProfileSettingPage.routeName:(context) => ProfileSettingPage.route(context),
 
             SettingPage.routeName:(context) => SettingPage.route(context),
-            AlramSettingPage.routeName:(context) => AlramSettingPage.route(context),
+            AlarmSettingPage.routeName:(context) => AlarmSettingPage.route(context),
 
             MyPageScreen.routeName:(context) => MyPageScreen.route(context: context),
             MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),

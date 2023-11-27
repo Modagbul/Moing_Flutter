@@ -12,7 +12,6 @@ import 'package:moing_flutter/missions/create/const/mission_modal_text_list.dart
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/request/make_mission_request.dart';
-import 'package:moing_flutter/model/request/make_team_request.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 
 class MissionCreateState extends ChangeNotifier {

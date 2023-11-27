@@ -99,7 +99,11 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                                   'isRepeated': false,
                                   'teamId': e.teamId,
                                   'missionId': e.missionId,
-                                });
+                                },).then((_) {
+                              Provider.of<MissionsGroupState>(context,
+                                  listen: false)
+                                  .reloadMissionStatus();
+                            });
                           },
                         ),
                       );
@@ -155,6 +159,10 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                           'isRepeated': true,
                           'teamId': e.teamId,
                           'missionId': e.missionId,
+                        },).then((_) {
+                          Provider.of<MissionsGroupState>(context,
+                              listen: false)
+                              .reloadMissionStatus();
                         });
                       },
                     );
