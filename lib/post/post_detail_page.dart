@@ -42,101 +42,107 @@ class PostDetailPage extends StatelessWidget {
     final PostDetailData? postDetailData =
         context.watch<PostDetailState>().postData;
 
-    return Scaffold(
-      backgroundColor: grayScaleGrey900,
-      appBar: renderAppBar(context),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 26.0),
-                      if (postDetailData?.isNotice ?? false) _renderNoticeTag(),
-                      const SizedBox(height: 12.0),
-                      Text(
-                        postDetailData?.title ?? '',
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600,
-                          color: grayScaleGrey300,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        backgroundColor: grayScaleGrey900,
+        appBar: renderAppBar(context),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 26.0),
+                        if (postDetailData?.isNotice ?? false)
+                          _renderNoticeTag(),
+                        const SizedBox(height: 12.0),
+                        Text(
+                          postDetailData?.title ?? '',
+                          style: const TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w600,
+                            color: grayScaleGrey300,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 32.0),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 20.0,
-                              height: 20.0,
-                              decoration: BoxDecoration(
-                                color: grayScaleGrey500,
-                                borderRadius: BorderRadius.circular(50),
+                        const SizedBox(height: 32.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 20.0,
+                                height: 20.0,
+                                decoration: BoxDecoration(
+                                  color: grayScaleGrey500,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8.0),
-                            Text(
-                              postDetailData?.writerNickName ?? '',
-                              style: const TextStyle(
-                                color: grayScaleGrey400,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
+                              const SizedBox(width: 8.0),
+                              Text(
+                                postDetailData?.writerNickName ?? '',
+                                style: const TextStyle(
+                                  color: grayScaleGrey400,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 4.0),
-                            if (postDetailData?.writerIsLeader ?? false)
-                              Image.asset(
-                                'asset/image/icon_crown.png',
-                                width: 14.0,
-                                height: 14.0,
+                              const SizedBox(width: 4.0),
+                              if (postDetailData?.writerIsLeader ?? false)
+                                Image.asset(
+                                  'asset/image/icon_crown.png',
+                                  width: 14.0,
+                                  height: 14.0,
+                                ),
+                              const Spacer(),
+                              Text(
+                                postDetailData?.createdDate ?? '',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: grayBlack8,
+                                ),
                               ),
-                            const Spacer(),
-                            Text(
-                              postDetailData?.createdDate ?? '',
-                              style: const TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w500,
-                                color: grayBlack8,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4.0),
-                      Text(
-                        postDetailData?.content ?? '',
-                        style: const TextStyle(
-                          color: grayBlack3,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w500,
-                          height: 1.7,
+                        const SizedBox(height: 4.0),
+                        Text(
+                          postDetailData?.content ?? '',
+                          style: const TextStyle(
+                            color: grayBlack3,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                            height: 1.7,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 40.0),
-                    ],
+                        const SizedBox(height: 40.0),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  height: 8.0,
-                  decoration: const BoxDecoration(color: grayScaleGrey600),
-                ),
-                Expanded(child: _renderCommentScrollBody(context: context)),
-                Container(
-                  color: grayScaleGrey700,
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                    child: _CommentsInputWidget(),
+                  Container(
+                    height: 8.0,
+                    decoration: const BoxDecoration(color: grayScaleGrey600),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Expanded(child: _renderCommentScrollBody(context: context)),
+                  Container(
+                    color: grayScaleGrey700,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 12.0),
+                      child: _CommentsInputWidget(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
