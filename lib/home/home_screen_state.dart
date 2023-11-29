@@ -8,6 +8,7 @@ import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/response/get_team_mission_photo_list_response.dart';
 import 'package:moing_flutter/model/response/group_team_response.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 
@@ -20,6 +21,8 @@ class HomeScreenState extends ChangeNotifier {
 
   TeamData? futureData;
   List<TeamBlock> teamList = [];
+  List<TeamMissionPhotoData>? futureTeamMissionPhotoList;
+  List<TeamMissionPhotoData> teamMissionPhotoList = [];
 
   /// Test API
   final ApiCode apiCode = ApiCode();
@@ -35,6 +38,7 @@ class HomeScreenState extends ChangeNotifier {
   HomeScreenState({required this.context, this.newCreated}) {
     log('Instance "HomeScreenState" has been created');
     loadTeamData();
+    getTeamMissionPhotoListData();
   }
 
   /// API 데이터 로딩
@@ -45,6 +49,14 @@ class HomeScreenState extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void getTeamMissionPhotoListData() async {
+    futureTeamMissionPhotoList = await apiCode.getTeamMissionPhotoList();
+    if(futureTeamMissionPhotoList != null){
+
+      teamMissionPhotoList = futureTeamMissionPhotoList!;
+    }
+}
 
   Future<TeamData?> fetchApiData() async {
     try {
