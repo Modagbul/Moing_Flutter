@@ -21,6 +21,7 @@ class InitState extends ChangeNotifier {
   String apiUrl = '';
   String? teamId;
   String? teamName;
+  String? teamLeaderName;
   String errorCode = '';
   int? numOfTeam;
 
@@ -69,7 +70,10 @@ class InitState extends ChangeNotifier {
               bool? isRegistered = await registerTeam();
               if(isRegistered != null && isRegistered) {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, InvitationWelcomePage.routeName, (route) => false);
+                    context,
+                    InvitationWelcomePage.routeName,
+                        (route) => false,
+                arguments: {'teamName': teamName, 'teamLeaderName': teamLeaderName,});
               }
               else {
                 /// TODO : 메인 페이지로 이동하면서 추가 조건 넣어줘야 함.
@@ -153,9 +157,14 @@ class InitState extends ChangeNotifier {
         fromJson: (data) => data as Map<String, dynamic>,
       );
 
+      print('가입 상태 확인 : ${apiResponse?.errorCode}');
+      print('가입 상태 확인2 : ${apiResponse.data.toString()}');
       if (apiResponse.isSuccess) {
+        print('가입하려는 팀 이름과 소모임 개수는 다음과 같습니다.');
+
         teamName = apiResponse.data?['teamName'];
         numOfTeam = apiResponse.data?['numOfTeam'] as int;
+        teamLeaderName = apiResponse.data?['leaderName'];
       } else {
         if(apiResponse?.errorCode == 'J0003') {
           getTeamNameAndNumber();

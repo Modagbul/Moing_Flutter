@@ -9,13 +9,17 @@ class InvitationWelcomePage extends StatelessWidget {
   static const routeName = '/invitation/welcome';
 
   static route(BuildContext context) {
-    final String teamName = ModalRoute.of(context)?.settings.arguments as String;
+    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final String teamName = data['teamName'] as String;
+    final String teamLeaderName = data['teamLeaderName'] as String;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (_) => WelcomeTeamState(
               context: context,
               teamName: teamName,
+              teamLeaderName: teamLeaderName,
             )),
       ],
       builder: (context, _) {
@@ -48,7 +52,7 @@ class InvitationWelcomePage extends StatelessWidget {
                     height: 54,
                     alignment: Alignment.center,
                     child: Text(
-                      '챙귤님이 모닥불님을\n${context.watch<WelcomeTeamState>().teamName} 모임에 초대했어요',
+                      '${context.watch<WelcomeTeamState>().teamLeaderName}님이 모닥불님을\n${context.watch<WelcomeTeamState>().teamName} 모임에 초대했어요',
                       style: contentTextStyle.copyWith(height: 1.68),
                       textAlign: TextAlign.center,
                     ),

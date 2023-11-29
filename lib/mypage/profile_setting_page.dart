@@ -31,20 +31,27 @@ class ProfileSettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _renderAppBar(context: context),
       backgroundColor: grayBackground,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-              _Profile(),
-              const SizedBox(height: 32),
-              const _TextFields(),
-              Spacer(),
-              const _SubmitButton(),
-            ],
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 40),
+                _Profile(),
+                const SizedBox(height: 32),
+                const _TextFields(),
+                Spacer(),
+                _SubmitButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -152,7 +159,7 @@ class _TextFields extends StatelessWidget {
           maxLines: 10,
           labelText: '한줄다짐',
           counterText:
-              '(${context.watch<ProfileSettingState>().resolutionController.text.length}/50)',
+              '(${context.watch<ProfileSettingState>().introduceController.text.length}/50)',
           onChanged: (value) =>
               context.read<ProfileSettingState>().updateTextField(),
           controller: context.read<ProfileSettingState>().introduceController,
@@ -176,23 +183,32 @@ class _SubmitButton extends StatelessWidget {
         width: double.infinity,
         height: 62,
         child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: grayScaleWhite,
-            foregroundColor: grayScaleGrey900,
-            disabledBackgroundColor: grayScaleGrey700,
-            disabledForegroundColor: grayScaleGrey500,
-            textStyle: const TextStyle(
-              color: grayScaleGrey900,
-              fontSize: 18.0,
-              fontWeight: FontWeight.w600,
+          style: ButtonStyle(
+              backgroundColor: (context.watch<ProfileSettingState>().isAvatarChanged ||
+                  context.watch<ProfileSettingState>().isIntroduceChanged ||
+                  context.watch<ProfileSettingState>().isNameChanged )
+                  ? MaterialStateProperty.all(grayScaleWhite)
+                  : MaterialStateProperty.all(grayScaleGrey700),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
             ),
-            padding: const EdgeInsets.all(16.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
+            overlayColor: (context.watch<ProfileSettingState>().isAvatarChanged ||
+                context.watch<ProfileSettingState>().isIntroduceChanged ||
+                context.watch<ProfileSettingState>().isNameChanged )
+              ? null
+                : MaterialStateProperty.all(Colors.transparent),
           ),
           onPressed: context.read<ProfileSettingState>().savePressed,
-          child: const Text('수정 완료'),
+          child: Text('수정 완료', style: TextStyle(
+        color: (context.watch<ProfileSettingState>().isAvatarChanged ||
+            context.watch<ProfileSettingState>().isIntroduceChanged ||
+            context.watch<ProfileSettingState>().isNameChanged )
+         ? grayScaleGrey900 : grayScaleGrey500,
+        fontSize: 18.0,
+        fontWeight: FontWeight.w600,
+      ),),
         ),
       ),
     );

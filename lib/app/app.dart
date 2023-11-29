@@ -21,7 +21,6 @@ import 'package:moing_flutter/login/register_success/welcome_page.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 import 'package:moing_flutter/main/alarm/alarm.dart';
-import 'package:moing_flutter/main/group_exit_and_finish/group_exit_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_exit_success_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_success_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_page.dart';
@@ -119,7 +118,6 @@ class MoingApp extends StatelessWidget {
             GroupCreateInfoPage.routeName: (context) => GroupCreateInfoPage.route(context),
             GroupCreatePhotoPage.routeName: (context) => GroupCreatePhotoPage.route(context),
             GroupCreateSuccessPage.routeName: (context) => GroupCreateSuccessPage.route(context),
-            GroupExitPage.routeName:(context) => GroupExitPage.route(context),
             GroupFinishPage.routeName:(context) => GroupFinishPage.route(context),
             GroupFinishSuccessPage.routeName:(context) => GroupFinishSuccessPage.route(context),
             GroupExitApplyPage.routeName:(context) => GroupExitApplyPage.route(context),

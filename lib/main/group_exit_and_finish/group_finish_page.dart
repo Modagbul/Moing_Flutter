@@ -53,7 +53,8 @@ class GroupFinishPage extends StatelessWidget {
                           )),
                       SizedBox(width: 40),
                       Text(
-                        '소모임 강제종료',
+                        context.watch<GroupFinishExitState>().teamInfo?.isLeader == true
+                        ? '소모임 강제종료' : '소모임 탈퇴',
                         style:
                             buttonTextStyle.copyWith(color: grayScaleGrey300),
                       ),
@@ -64,7 +65,7 @@ class GroupFinishPage extends StatelessWidget {
                   height: 44,
                 ),
                 Text(
-                  '정말 모닥모닥불 모임과\n이별하시겠어요?',
+                  '정말 ${context.watch<GroupFinishExitState>().teamInfo?.teamName ?? '해당'} 모임과\n이별하시겠어요?',
                   style: headerTextStyle.copyWith(
                     color: grayScaleGrey100,
                     height: 1.5,
@@ -114,22 +115,22 @@ class GroupFinishPage extends StatelessWidget {
                         child: SizedBox(
                           width: double.infinity,
                           height: 137,
-                          child: ExitCard(),
+                          child: ExitCard(isLeader : context.watch<GroupFinishExitState>().teamInfo!.isLeader),
                         ),
                       ),
                   ],
                 ),
-                SizedBox(
-                  height: 144,
-                ),
-                Text(
-                  '강제 종료 절차가 시작되면 그간의 데이터를\n복구할 수 없으니 신중하게 고민해주세요.',
-                  style: bodyTextStyle.copyWith(
-                    color: grayScaleGrey400,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
                 Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: Text(
+                    '강제 종료 절차가 시작되면 그간의 데이터를\n복구할 수 없으니 신중하게 고민해주세요.',
+                    style: bodyTextStyle.copyWith(
+                      color: grayScaleGrey400,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Align(

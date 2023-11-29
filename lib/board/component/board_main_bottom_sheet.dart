@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/icon_text_button.dart';
+import 'package:moing_flutter/main/group_exit_and_finish/group_finish_page.dart';
 
 import '../../const/style/elevated_button.dart';
 
@@ -22,11 +23,12 @@ class BoardMainBottomSheet extends StatelessWidget {
             IconTextButton(
               onPressed: () {
                 // TODO(): 소모임 탈퇴하기 구현 후 연결
-                // Navigator.of(context).pop();
-                // Navigator.of(context).pushNamed(
-                //   GroupFinishPage.routeName,
-                //   arguments: teamId,
-                // );
+                print('소모임원 탈퇴 구현하기!');
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(
+                  GroupFinishPage.routeName,
+                  arguments: teamId,
+                );
               },
               icon: 'asset/image/icon_delete.png',
               text: '소모임 탈퇴하기',

@@ -75,7 +75,7 @@ class SettingPage extends StatelessWidget {
                       int teamCount =
                           Provider.of<SettingState>(context, listen: false)
                               .teamCount;
-                      print('teamCount : $teamCount');
+                      print('회원 탈퇴를 위해 teamCount 조회 : $teamCount');
                       if (teamCount != 0) {
                         Navigator.push(
                           context,

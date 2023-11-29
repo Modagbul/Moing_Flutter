@@ -13,6 +13,7 @@ class ApiException implements Exception {
     print('API EXCEPTION 에러코드 : $errorCode');
 
     if (errorCode == 'J0008') {
+      print('J0008 JWT 토큰 만료!');
       print('리프레시 토큰이 만료되어 로그인 페이지로 이동합니다..');
       GetIt.I.get<GlobalKey<NavigatorState>>().currentState!.pushNamed(LoginPage.routeName);
       return false;

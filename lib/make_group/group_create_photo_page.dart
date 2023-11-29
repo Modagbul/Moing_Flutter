@@ -77,8 +77,8 @@ class GroupCreatePhotoPage extends StatelessWidget {
                   height: 1.7,
                 ),
               ),
-              const SizedBox(
-                height: 104.0,
+              SizedBox(
+                height: context.watch<GroupCreatePhotoState>().avatarFile == null ? 104.0 : 49,
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,

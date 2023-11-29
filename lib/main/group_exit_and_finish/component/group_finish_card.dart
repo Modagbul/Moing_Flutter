@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/main/group_exit_and_finish/group_finish_and_exit_state.dart';
+import 'package:provider/provider.dart';
 
 class ExitCard extends StatelessWidget {
   final String? number;
   final String? time;
   final String? missionClear;
   final String? level;
+  final bool? isLeader;
 
   const ExitCard({
-    super.key,
+    Key? key,
     this.number,
     this.time,
     this.missionClear,
     this.level,
-  });
+    this.isLeader,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +111,9 @@ class ExitCard extends StatelessWidget {
                   ],
                 ),
               ),
-            if (number == null)
+            if (isLeader != null)
               Text(
-                '소모임 강제종료 시 모든 모임원들은\n자동 탈퇴처리 돼요.\n3일의 안내기간이 지나면 삭제될 예정이에요.',
+                context.watch<GroupFinishExitState>().exitDescription,
                 style: contentTextStyle.copyWith(
                   color: grayScaleGrey300,
                   height: 1.5
@@ -120,6 +124,5 @@ class ExitCard extends StatelessWidget {
         ),
       ),
     );
-
   }
 }

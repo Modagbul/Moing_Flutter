@@ -331,10 +331,12 @@ class MissionCreateState extends ChangeNotifier {
 
   /// 마감 날짜 선택 시 IOS 날짜 선택 모달
   void datePicker() {
+    DateTime now = DateTime.now();
     DatePicker.showDatePicker(context,
         showTitleActions: true,
-        minTime: DateTime(2018, 1, 1),
-        maxTime: DateTime(2024, 12, 31), onConfirm: (date) {
+        minTime: now,
+        maxTime: DateTime(now.year + 5, now.month, now.day),
+        onConfirm: (date) {
       today = date;
       formattedDate =
           "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";

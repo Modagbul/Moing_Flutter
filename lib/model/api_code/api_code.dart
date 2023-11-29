@@ -737,6 +737,7 @@ class ApiCode {
     return null;
   }
 
+  // 소모임장 강제종료
   Future<int> deleteTeam({required int teamId}) async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/disband';
 
@@ -759,7 +760,35 @@ class ApiCode {
         }
       }
     } catch (e) {
-      log('팀별 불 레벨 경험치 조회: $e');
+      log('소모임장 강제종료 실패: $e');
+    }
+    return 0;
+  }
+
+  //소모임원 탈퇴
+  Future<int> deleteTeamUser({required int teamId}) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/withdraw';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        return apiResponse.data!['teamId'];
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
+          deleteTeam(teamId: teamId);
+        } else {
+          throw Exception(
+              'deleteTeamUser is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('소모임원 탈퇴 실패: $e');
     }
     return 0;
   }

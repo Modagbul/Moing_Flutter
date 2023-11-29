@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
@@ -70,7 +71,11 @@ class MyPageScreen extends StatelessWidget {
       centerTitle: false,
       automaticallyImplyLeading: false,
       actions: [
-        IconButton(onPressed: () {}, icon: notificationImg),
+        IconButton(onPressed: () {
+          Navigator.of(context).pushNamed(
+              AlarmPage.routeName
+          );
+        }, icon: notificationImg),
         Builder(
           builder: (newContext) {
             return IconButton(

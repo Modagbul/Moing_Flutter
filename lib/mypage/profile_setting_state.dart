@@ -28,7 +28,6 @@ class ProfileSettingState extends ChangeNotifier {
   final APICall call = APICall();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController introduceController = TextEditingController();
-  final TextEditingController resolutionController = TextEditingController();
 
   MyPageData? myPageData;
 
@@ -101,19 +100,17 @@ class ProfileSettingState extends ChangeNotifier {
   void _onNameTextChanged() {
     nameGroupText = nameController.text;
     isNameChanged = profileData?.nickName != nameController.text;
-    print('isNameChanged: $isNameChanged');
     notifyListeners();
   }
 
   void _onIntroduceTextChanged() {
     isIntroduceChanged = profileData?.introduction != introduceController.text;
-    print('isIntroduceChanged: $isIntroduceChanged');
     notifyListeners();
   }
 
   // 텍스트 필드 초기화 메소드
   void clearResolutionTextField() {
-    resolutionController.clear();
+    introduceController.clear();
     notifyListeners();
   }
 
@@ -182,36 +179,43 @@ class ProfileSettingState extends ChangeNotifier {
 
   /// 저장 버튼 클릭
   void savePressed() async {
-    print('savePressed called');
+    try {
+      if(onLoading) return;
+      if(!isAvatarChanged && !isNameChanged && !isIntroduceChanged) return;
 
-    // 이름, 소개글 또는 사진 변경이 있는지 확인
-    if (isNameChanged || isIntroduceChanged || (isAvatarChanged && avatarFile != null)) {
-      // 파일 확장자 얻기 (사진이 변경된 경우에만)
-      if (isAvatarChanged && avatarFile != null) {
-        extension = avatarFile!.path.split('.').last;
-        String fileExtension = '';
-        if (extension == 'jpg') {
-          fileExtension = 'JPG';
-        } else if (extension == 'jpeg') {
-          fileExtension = 'JPEG';
-        } else if (extension == 'png') {
-          fileExtension = 'PNG';
-        }
+      print('savePressed called');
+      onLoading = true;
+      // 이름, 소개글 또는 사진 변경이 있는지 확인
+      if (isNameChanged || isIntroduceChanged || (isAvatarChanged && avatarFile != null)) {
+        // 파일 확장자 얻기 (사진이 변경된 경우에만)
+        if (isAvatarChanged && avatarFile != null) {
+          extension = avatarFile!.path.split('.').last;
+          String fileExtension = '';
+          if (extension == 'jpg') {
+            fileExtension = 'JPG';
+          } else if (extension == 'jpeg') {
+            fileExtension = 'JPEG';
+          } else if (extension == 'png') {
+            fileExtension = 'PNG';
+          }
 
-        // presigned url 발급 및 프로필 수정 API 호출
-        if (await getPresignedUrl(fileExtension)) {
+          // presigned url 발급 및 프로필 수정 API 호출
+          if (await getPresignedUrl(fileExtension)) {
+            await fixProfileAPI();
+          }
+        } else {
+          // 사진 변경이 없는 경우에도 프로필 수정 API 호출
           await fixProfileAPI();
         }
       } else {
-        // 사진 변경이 없는 경우에도 프로필 수정 API 호출
-        await fixProfileAPI();
+        print('No changes to save');
       }
-    } else {
-      print('No changes to save');
+    } catch (e) {
+      print('수정 실패 : ${e.toString()}');
+    } finally {
+      onLoading = false;
     }
   }
-
-
 
   /// presignedURL 발급받기
   Future<bool> getPresignedUrl(String fileExtension) async {
@@ -281,6 +285,8 @@ class ProfileSettingState extends ChangeNotifier {
             nickName: isNameChanged ? nameController.text : null,
             introduction: isIntroduceChanged ? introduceController.text : null,
             profileImage: isAvatarChanged ? putProfileImageUrl : null);
+
+        print('수정 data : ${data.toString()}');
 
         ApiResponse<Map<String, dynamic>> apiResponse =
         await call.makeRequest<Map<String, dynamic>>(
