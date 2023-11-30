@@ -173,7 +173,9 @@ class _NavButtons extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             style: darkButtonStyle,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
             child: const Text('이전으로'),
           ),
         ),

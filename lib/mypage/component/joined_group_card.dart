@@ -11,7 +11,6 @@ class JoinedGroupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String imageAsset = '';
 
-    print(teamBlock.category);
     switch(teamBlock.category) {
       case 'SPORTS':
         break;

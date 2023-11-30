@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
 import 'package:moing_flutter/login/invitate_link/welcome_team_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
@@ -83,6 +84,11 @@ class InitState extends ChangeNotifier {
                   Navigator.pushNamedAndRemoveUntil(
                       context, MainPage.routeName, (route) => false);
                 }
+                else {
+                  print('다이나믹 링크로 진입했지만 에러났을 때 : $errorCode');
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MainPage.routeName, (route) => false);
+                }
               }
             }
             else {
@@ -128,7 +134,6 @@ class InitState extends ChangeNotifier {
         print('errorCode : ${apiResponse?.errorCode}');
         // 토큰 갱신 여부 확인
         if(apiResponse?.errorCode == 'J0003') {
-          print('이거 실행해야 되는데?');
           checkUser();
           return true;
         } else if (apiResponse?.errorCode == 'J0007' || apiResponse?.errorCode == 'J0008') {

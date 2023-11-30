@@ -43,6 +43,7 @@ class SignUpDateState extends ChangeNotifier {
     if (result == true) {
       Navigator.of(context).pushNamed(
         WelcomePage.routeName,
+        arguments: nickname,
       );
     }
   }
