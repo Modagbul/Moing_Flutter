@@ -5,6 +5,7 @@ import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/mypage/setting_state.dart';
 import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
+import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
@@ -122,8 +123,15 @@ class SettingPage extends StatelessWidget {
     print('로그아웃 Response : ${signOutResponse.toString()}');
     if (signOutResponse != null && signOutResponse) {
       print('settingPage에서 로그아웃 성공 : ${signOutResponse.toString()}');
+
+      SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
+      sharedPreferencesInfo.removePreferencesData('ACCESS_TOKEN');
+      sharedPreferencesInfo.removePreferencesData('REFRESH_TOKEN');
       Navigator.pushNamedAndRemoveUntil(
           context, InitPage.routeName, (route) => false);
+    } else {
+      print('로그아웃 재실행');
+      _logout(context);
     }
   }
 }

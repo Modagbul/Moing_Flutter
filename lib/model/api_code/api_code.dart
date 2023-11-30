@@ -515,8 +515,8 @@ class ApiCode {
         log('로그아웃 성공!');
         return true;
       } else {
-        if(apiResponse?.errorCode == 'J0003') {
-          signOut();
+        if (apiResponse?.errorCode == 'J0003') {
+          return false;
         } else {
           throw Exception(
               'signOut is Null, error code : ${apiResponse?.errorCode}');

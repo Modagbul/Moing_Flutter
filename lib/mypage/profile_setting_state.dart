@@ -234,7 +234,6 @@ class ProfileSettingState extends ChangeNotifier {
       );
 
       if (apiResponse.isSuccess == true) {
-        print(apiResponse.data?.toString());
         presignedUrl = apiResponse.data?['presignedUrl'];
         putProfileImageUrl = apiResponse.data?['imgUrl'];
 
@@ -285,8 +284,6 @@ class ProfileSettingState extends ChangeNotifier {
             nickName: isNameChanged ? nameController.text : null,
             introduction: isIntroduceChanged ? introduceController.text : null,
             profileImage: isAvatarChanged ? putProfileImageUrl : null);
-
-        print('수정 data : ${data.toString()}');
 
         ApiResponse<Map<String, dynamic>> apiResponse =
         await call.makeRequest<Map<String, dynamic>>(
