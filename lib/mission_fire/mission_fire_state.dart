@@ -11,11 +11,15 @@ class MissionFireState extends ChangeNotifier {
   final BuildContext context;
   final int teamId;
   final int missionId;
+  int singleMissionMyCount = 0;
+  int singleMissionTotalCount = 0;
+
   String selectedUserName = '모임원 프로필을 클릭해보세요';
   int? selectedIndex;
   List<FireReceiverData>? userList;
   String apiUrl = '';
   final APICall call = APICall();
+  bool _isThrowFireInProgress = false;
 
   List<String> userNameList = [
     '뮹뮹',
@@ -39,21 +43,54 @@ class MissionFireState extends ChangeNotifier {
 
   void initState() {
     log('Instance "MissionFireState" has been created');
-    print('teamId : $teamId, missionId : $missionId');
+    log('teamId : $teamId, missionId : $missionId');
     loadFirePersonList();
+    loadTeamMissionProveCount();
   }
 
+  /// 모임원 미션 인증 성공 인원 조회 API
+  void loadTeamMissionProveCount() async {
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/status';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        singleMissionMyCount = int.parse(apiResponse.data?['done']);
+        singleMissionTotalCount = int.parse(apiResponse.data?['total']);
+        notifyListeners();
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
+          loadTeamMissionProveCount();
+        } else {
+          throw Exception(
+              'loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('나의 성공 횟수 조회 실패: $e');
+    }
+  }
+
+  /// 불 던질 인원 조회 API
   void loadFirePersonList() async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/missions/$missionId/fire';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/fire';
 
     try {
       ApiResponse<List<FireReceiverData>> apiResponse =
-      await call.makeRequest<List<FireReceiverData>>(
+          await call.makeRequest<List<FireReceiverData>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (dataJson) => List<FireReceiverData>.from(
           (dataJson as List).map(
-                (item) => FireReceiverData.fromJson(item as Map<String, dynamic>),
+            (item) => FireReceiverData.fromJson(item as Map<String, dynamic>),
           ),
         ),
       );
@@ -61,17 +98,53 @@ class MissionFireState extends ChangeNotifier {
       if (apiResponse.data != null) {
         userList = apiResponse.data;
         notifyListeners();
-      }
-      else {
-        if(apiResponse.errorCode == 'J0003') {
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
           loadFirePersonList();
-        }
-        else {
-          throw Exception('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
+        } else {
+          throw Exception(
+              'loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
         }
       }
     } catch (e) {
-      log('미션인증 실패: $e');
+      log('불 던질 사람 조회 실패: $e');
+    }
+  }
+
+  /// 불 던지기 API
+  void throwFire() async {
+    _isThrowFireInProgress = true;
+
+    if (selectedIndex == null || userList == null) {
+      return;
+    }
+
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/fire/${userList![selectedIndex!].receiveMemberId}';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'POST',
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        loadFirePersonList();
+        compeleteThrowFireModal();
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
+          throwFire();
+        } else {
+          throw Exception(
+              'loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('불던지기 실패: $e');
+    } finally {
+      _isThrowFireInProgress = false;
     }
   }
 
@@ -83,10 +156,24 @@ class MissionFireState extends ChangeNotifier {
 
   // 불 던지기 버튼 클릭
   void firePressed() {
+    if (_isThrowFireInProgress) {
+      return;
+    }
+
+    if (selectedIndex == null || userList == null) {
+      return;
+    }
+
+    if (userList![selectedIndex!].fireStatus == "True") {
+      throwFire();
+    }
+  }
+
+  void compeleteThrowFireModal() {
     showDialog(
       context: context,
       builder: (context) {
-        Future.delayed(Duration(seconds: 2), () {
+        Future.delayed(const Duration(seconds: 2), () {
           Navigator.of(context).pop(); // 2초 후에 다이얼로그를 닫습니다.
         });
 
@@ -106,7 +193,7 @@ class MissionFireState extends ChangeNotifier {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 42),
-                  Text(
+                  const Text(
                     '발등에 불 떨어트리는 중..',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
