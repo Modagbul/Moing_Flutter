@@ -28,9 +28,10 @@ class BoardRepeatMissionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String tagText = _getTagText(status);
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: (tagText == '내일 리셋' || tagText.isEmpty) ? onTap : null,
       child: Stack(
         children: [
           Column(
@@ -145,6 +146,27 @@ class BoardRepeatMissionCard extends StatelessWidget {
       ),
     );
   }
+
+  String _getTagText(String status) {
+    DateTime now = DateTime.now();
+    String tagText = '';
+
+    if (status == 'WAIT') {
+      if (now.weekday == DateTime.sunday) {
+        tagText = '내일 시작';
+      } else {
+        int daysToSunday = DateTime.sunday - now.weekday;
+        if (daysToSunday > 0) {
+          tagText = '${daysToSunday}일 후 시작';
+        }
+      }
+    } else if (status == 'ONGOING' && now.weekday == DateTime.sunday) {
+      tagText = '내일 리셋';
+    }
+
+    return tagText;
+  }
+
 }
 
 class _Tag extends StatelessWidget {

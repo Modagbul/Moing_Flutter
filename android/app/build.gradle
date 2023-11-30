@@ -65,6 +65,22 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    signingConfigs {
+        release {
+            keyAlias 'moing'
+            keyPassword '000719'
+            storeFile file('/Users/dihyeonee/StudioProjects/Moing_Flutter/release.keystore')
+            storePassword '000719'
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
 }
 
 flutter {

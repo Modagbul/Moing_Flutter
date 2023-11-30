@@ -5,6 +5,7 @@ import 'package:moing_flutter/model/api_code/api_code.dart';
 
 import '../../model/response/board_repeat_mission_response.dart';
 import '../../model/response/board_single_mission_response.dart';
+import 'completed_mission_page.dart';
 
 class OngoingMissionState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();

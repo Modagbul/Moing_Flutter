@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/response/board_completed_mission_response.dart';
-import 'package:intl/intl.dart';
 import '../../model/api_code/api_code.dart';
 
 class CompletedMissionState extends ChangeNotifier {

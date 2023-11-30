@@ -185,12 +185,19 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                     },
                   )
                 else
-                  const Center(
-                    child: Text(
-                      '아직 미션이 없어요.',
-                      style: TextStyle(
-                        color: grayScaleGrey400,
-                        fontSize: 14.0,
+                  Visibility(
+                    visible: state.repeatMissionStatus?.data.isEmpty ?? true,
+                    replacement: const SizedBox(height: 182),
+                    child: const SizedBox(
+                      height: 182,
+                      child: Center(
+                        child: Text(
+                          '아직 미션이 없어요.',
+                          style: TextStyle(
+                            color: grayScaleGrey400,
+                            fontSize: 14.0,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -264,12 +271,19 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                       )
                       .toList()
                 else
-                  const Center(
-                    child: Text(
-                      '아직 미션이 없어요.',
-                      style: TextStyle(
-                        color: grayScaleGrey400,
-                        fontSize: 14.0,
+                  Visibility(
+                    visible: state.singleMissionStatus?.data.isEmpty ?? true,
+                    replacement: const SizedBox(height: 126),
+                    child: const SizedBox(
+                      height: 126,
+                      child: Center(
+                        child: Text(
+                          '아직 미션이 없어요.',
+                          style: TextStyle(
+                            color: grayScaleGrey400,
+                            fontSize: 14.0,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -366,6 +380,16 @@ String formatDueTo(String dueToString) {
 
   if (difference.isNegative) {
     return '기한 종료';
+  } else if (difference.inDays == 0) {
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes % 60;
+    if (hours > 0) {
+      return '${hours}시간 ${minutes}분 후 종료';
+    } else if (minutes > 0) {
+      return '${minutes}분 후 종료';
+    } else {
+      return '기한 종료';
+    }
   } else {
     String formattedString = '';
     if (difference.inDays > 0) {

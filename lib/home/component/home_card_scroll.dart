@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
+import 'package:moing_flutter/model/response/get_team_mission_photo_list_response.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 
@@ -13,6 +12,9 @@ class HomeCardScroll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<TeamMissionPhotoData> teamMissionPhotoList =
+        context.watch<HomeScreenState>().teamMissionPhotoList;
+
     return Container(
       width: double.infinity,
       height: 356,
@@ -23,7 +25,11 @@ class HomeCardScroll extends StatelessWidget {
           itemBuilder: (context, index) {
             TeamBlock team = context.watch<HomeScreenState>().teamList[index];
 
-            log(context.read<HomeScreenState>().newCreated ?? 'sdd');
+            TeamMissionPhotoData? photoData = teamMissionPhotoList.firstWhere(
+              (element) => element.teamId == team.teamId,
+              orElse: () => TeamMissionPhotoData(teamId: 0, photo: []),
+            );
+
             if (context.watch<HomeScreenState>().newCreated == "new" &&
                 index == 0 &&
                 context.read<HomeScreenState>().onlyOnce) {
@@ -117,70 +123,127 @@ class HomeCardScroll extends StatelessWidget {
                       /// 사진 받아오는 클래스 따로 구현하여 생성할 것
                       Padding(
                         padding: const EdgeInsets.only(left: 26.0, top: 30),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4.0),
-                              child: Image.asset(
-                                'asset/image/black.jpeg',
-                                width: 54,
-                                height: 54,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4.0),
-                              child: Image.asset(
-                                'asset/image/black.jpeg',
-                                width: 54,
-                                height: 54,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4.0),
-                              child: Image.asset(
-                                'asset/image/black.jpeg',
-                                width: 54,
-                                height: 54,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4.0),
-                              child: Image.asset(
-                                'asset/image/black.jpeg',
-                                width: 54,
-                                height: 54,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4.0),
-                              child: Image.asset(
-                                'asset/image/black.jpeg',
-                                width: 54,
-                                height: 54,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                          ],
-                        ),
+                        child: photoData != null
+                            ? photoData.photo.isNotEmpty
+                                ? SizedBox(
+                                    height: 54,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: photoData.photo.length > 5
+                                          ? 5
+                                          : photoData.photo.length,
+                                      itemBuilder: (context, index) {
+                                        return Row(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(4.0),
+                                              child: Image.network(
+                                                photoData.photo[index],
+                                                fit: BoxFit.cover,
+                                                width: 54,
+                                                height: 54,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    return const Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          valueColor:
+                                                              AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                  grayScaleGrey500),
+                                                          strokeWidth: 2.0,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            const SizedBox(width: 2),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : const SizedBox(height: 54)
+                            : const SizedBox(height: 54),
+
+                        // child: Row(
+                        //   children: [
+                        //     ClipRRect(
+                        //       borderRadius: BorderRadius.circular(4.0),
+                        //       child: Image.asset(
+                        //         'asset/image/black.jpeg',
+                        //         width: 54,
+                        //         height: 54,
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 2,
+                        //     ),
+                        //     ClipRRect(
+                        //       borderRadius: BorderRadius.circular(4.0),
+                        //       child: Image.asset(
+                        //         'asset/image/black.jpeg',
+                        //         width: 54,
+                        //         height: 54,
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 2,
+                        //     ),
+                        //     ClipRRect(
+                        //       borderRadius: BorderRadius.circular(4.0),
+                        //       child: Image.asset(
+                        //         'asset/image/black.jpeg',
+                        //         width: 54,
+                        //         height: 54,
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 2,
+                        //     ),
+                        //     ClipRRect(
+                        //       borderRadius: BorderRadius.circular(4.0),
+                        //       child: Image.asset(
+                        //         'asset/image/black.jpeg',
+                        //         width: 54,
+                        //         height: 54,
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 2,
+                        //     ),
+                        //     ClipRRect(
+                        //       borderRadius: BorderRadius.circular(4.0),
+                        //       child: Image.asset(
+                        //         'asset/image/black.jpeg',
+                        //         width: 54,
+                        //         height: 54,
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 2,
+                        //     ),
+                        //   ],
+                        // ),
                       ),
                       //위치 좌측으로, 1초 이후 사라지게
                       (context.watch<HomeScreenState>().showNewExpression &&
