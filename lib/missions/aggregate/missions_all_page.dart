@@ -105,12 +105,19 @@ class MissionsAllPage extends StatelessWidget {
                   ),
                 )
               else
-                const Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
+                Visibility(
+                  visible: state.aggregateSingleMissionStatus?.data.isEmpty ?? true,
+                  replacement: const SizedBox(height: 126),
+                  child: const SizedBox(
+                    height: 126,
+                    child: Center(
+                      child: Text(
+                        '아직 미션이 없어요.',
+                        style: TextStyle(
+                          color: grayScaleGrey400,
+                          fontSize: 14.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -162,12 +169,19 @@ class MissionsAllPage extends StatelessWidget {
                   },
                 )
               else
-                const Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
+                Visibility(
+                  visible: state.aggregateRepeatMissionStatus?.data.isEmpty ?? true,
+                  replacement: const SizedBox(height: 182),
+                  child: const SizedBox(
+                    height: 182,
+                    child: Center(
+                      child: Text(
+                        '아직 미션이 없어요.',
+                        style: TextStyle(
+                          color: grayScaleGrey400,
+                          fontSize: 14.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),

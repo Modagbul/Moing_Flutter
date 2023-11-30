@@ -24,7 +24,9 @@ class MissionsScreen extends StatefulWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MissionsState(context: context)),
-        ChangeNotifierProvider(create: (_) => MissionsGroupState(context: context, selectedTeamId: selectedTeamId)),
+        ChangeNotifierProvider(
+            create: (_) => MissionsGroupState(
+                context: context, selectedTeamId: selectedTeamId)),
       ],
       builder: (context, _) {
         return const MissionsScreen();
@@ -48,7 +50,6 @@ class _MissionsScreenState extends State<MissionsScreen>
       setState(() {});
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -191,20 +192,32 @@ class _MyDropdownState extends State<MyDropdown> {
       var missionsState = Provider.of<MissionsState>(context, listen: false);
       missionsState.setSelectedTeamId(widget.teams[0].teamId);
 
-      var missionsGroupState = Provider.of<MissionsGroupState>(context, listen: false);
+      var missionsGroupState =
+          Provider.of<MissionsGroupState>(context, listen: false);
       missionsGroupState.updateSelectedTeamId(widget.teams[0].teamId);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    String displayTeamName = _selectedTeamName ?? "Select a team";
+
+    if (displayTeamName.length > 5) {
+      displayTeamName = '${displayTeamName.substring(0, 5)}...';
+    }
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Flexible(
           child: Text(
-            _selectedTeamName ?? "Select a team",
-            style: TextStyle(color: _selectedValue != null ? grayScaleGrey100 : grayScaleGrey400),
+            displayTeamName,
+            style: TextStyle(
+                color: _selectedValue != null
+                    ? grayScaleGrey100
+                    : grayScaleGrey400),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
         Theme(
@@ -217,22 +230,24 @@ class _MyDropdownState extends State<MyDropdown> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             child: PopupMenuButton<String>(
-              icon: Image.asset('asset/image/arrow_icon.png', width: 14.45, height: 7.16),
+              icon: Image.asset('asset/image/arrow_icon.png',
+                  width: 14.45, height: 7.16),
               onSelected: (String value) {
                 var selectedTeam = widget.teams.firstWhere(
-                        (team) => team.teamId.toString() == value,
-                    orElse: () => widget.teams[0]
-                );
+                    (team) => team.teamId.toString() == value,
+                    orElse: () => widget.teams[0]);
 
                 setState(() {
                   _selectedValue = value;
                   _selectedTeamName = selectedTeam.teamName;
                 });
 
-                var missionsState = Provider.of<MissionsState>(context, listen: false);
+                var missionsState =
+                    Provider.of<MissionsState>(context, listen: false);
                 missionsState.setSelectedTeamId(selectedTeam.teamId);
 
-                var missionsGroupState = Provider.of<MissionsGroupState>(context, listen: false);
+                var missionsGroupState =
+                    Provider.of<MissionsGroupState>(context, listen: false);
                 missionsGroupState.updateSelectedTeamId(selectedTeam.teamId);
               },
               itemBuilder: (BuildContext context) {
@@ -242,7 +257,9 @@ class _MyDropdownState extends State<MyDropdown> {
                     child: Text(
                       team.teamName,
                       style: TextStyle(
-                        color: team.teamId.toString() == _selectedValue ? grayScaleGrey100 : grayScaleGrey400,
+                        color: team.teamId.toString() == _selectedValue
+                            ? grayScaleGrey100
+                            : grayScaleGrey400,
                       ),
                     ),
                   );
