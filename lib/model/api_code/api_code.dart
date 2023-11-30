@@ -11,6 +11,7 @@ import 'package:moing_flutter/model/response/get_all_comments_response.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
+import 'package:moing_flutter/model/response/get_team_mission_photo_list_response.dart';
 import 'package:moing_flutter/model/team/team_fire_level_models.dart';
 
 import '../response/aggregate_repeat_mission_response.dart';
@@ -505,7 +506,7 @@ class ApiCode {
     String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/signOut';
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
         fromJson: (data) => data as Map<String, dynamic>,
@@ -515,7 +516,7 @@ class ApiCode {
         log('로그아웃 성공!');
         return true;
       } else {
-        if(apiResponse?.errorCode == 'J0003') {
+        if (apiResponse?.errorCode == 'J0003') {
           signOut();
         } else {
           throw Exception(
@@ -853,5 +854,36 @@ class ApiCode {
     return null;
   }
 
+  Future<List<TeamMissionPhotoData>?> getTeamMissionPhotoList() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/my-teams';
 
+    try {
+      ApiResponse<List<TeamMissionPhotoData>> apiResponse =
+          await call.makeRequest<List<TeamMissionPhotoData>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) {
+          return (data as List<dynamic>)
+              .map((item) =>
+                  TeamMissionPhotoData.fromJson(item as Map<String, dynamic>))
+              .toList();
+        },
+      );
+
+      if (apiResponse.data != null) {
+        log('팀별 미션 사진 모아보기 성공: ${apiResponse.data}');
+        return apiResponse.data;
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
+          getTeamMissionPhotoList();
+        } else {
+          throw Exception(
+              'getTeamMissionPhotoList is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('팀별 미션 사진 모아보기 실패: $e');
+    }
+    return null;
+  }
 }

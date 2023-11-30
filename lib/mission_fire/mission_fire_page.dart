@@ -13,13 +13,19 @@ class MissionFirePage extends StatelessWidget {
   const MissionFirePage({super.key});
 
   static route(BuildContext context) {
-    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final Map<String, dynamic> data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final int teamId = data['teamId'] as int;
     final int missionId = data['missionId'] as int;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => MissionFireState(context: context, teamId: teamId, missionId: missionId),
+          create: (context) => MissionFireState(
+            context: context,
+            teamId: teamId,
+            missionId: missionId,
+          ),
           lazy: false,
         ),
       ],
@@ -36,10 +42,10 @@ class MissionFirePage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            SingleChildScrollView(
+            const SingleChildScrollView(
               padding: EdgeInsets.only(top: 56),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -50,7 +56,8 @@ class MissionFirePage extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(top: 0, left: 20, right: 20, child: MissionFireAppBar()),
+            const Positioned(
+                top: 0, left: 20, right: 20, child: MissionFireAppBar()),
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: Align(
@@ -62,10 +69,11 @@ class MissionFirePage extends StatelessWidget {
                     onPressed: context.read<MissionFireState>().firePressed,
                     style: ButtonStyle(
                       backgroundColor:
-                      MaterialStateProperty.all<Color>(grayScaleGrey100),
+                          MaterialStateProperty.all<Color>(grayScaleGrey100),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32.0), // borderRadius 설정
+                          borderRadius:
+                              BorderRadius.circular(32.0), // borderRadius 설정
                         ),
                       ),
                     ),

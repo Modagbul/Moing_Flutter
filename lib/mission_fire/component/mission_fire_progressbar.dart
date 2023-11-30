@@ -3,12 +3,16 @@ import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/mission_fire/mission_fire_state.dart';
+import 'package:provider/provider.dart';
 
 class MissionFireProgressBar extends StatelessWidget {
   const MissionFireProgressBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final int singleMissionMyCount = context.watch<MissionFireState>().singleMissionMyCount;
+    final int singleMissionTotalCount = context.watch<MissionFireState>().singleMissionTotalCount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,8 +33,16 @@ class MissionFireProgressBar extends StatelessWidget {
         const SizedBox(height: 24),
         RoundedProgressBar(
           borderRadius: BorderRadius.circular(24),
-          childLeft: Text('3/9명 인증성공',style: bodyTextStyle.copyWith(color: grayScaleGrey100),),
-          percent: 30,
+          childLeft: Text(
+            '${singleMissionMyCount}/$singleMissionTotalCount명 인증성공',
+            style: bodyTextStyle.copyWith(color: grayScaleGrey100),
+          ),
+          percent: singleMissionMyCount < singleMissionTotalCount
+              ? (singleMissionMyCount) *
+              100 /
+              singleMissionTotalCount
+              : 100,
+
           style: RoundedProgressBarStyle(
             colorBorder: Colors.transparent,
             colorProgress: coralGrey500,

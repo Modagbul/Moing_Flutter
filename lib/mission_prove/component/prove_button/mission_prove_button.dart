@@ -23,66 +23,79 @@ class MissionProveButton extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    if(context.watch<MissionProveState>().isMeOrEveryProved)
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        fixedSize: MaterialStateProperty.all(
-                          Size(138, 50),
-                        ),
-                        backgroundColor:
-                            MaterialStateProperty.all(grayScaleGrey600),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24.0),
+                    if (context.watch<MissionProveState>().isMeOrEveryProved)
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(
+                            Size(138, 50),
                           ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '좋아요',
-                            style: contentTextStyle.copyWith(
-                              color: grayScaleGrey100,
-                              fontWeight: FontWeight.w600,
+                          backgroundColor:
+                              MaterialStateProperty.all(grayScaleGrey600),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24.0),
                             ),
                           ),
-                          SizedBox(width: 4),
-                          Text(
-                            context.watch<MissionProveState>().myMissionList![0].hearts.toString(),
-                            style: contentTextStyle.copyWith(
-                              color: coralGrey500,
-                              fontWeight: FontWeight.w600,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '좋아요',
+                              style: contentTextStyle.copyWith(
+                                color: grayScaleGrey100,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              context
+                                  .watch<MissionProveState>()
+                                  .myMissionList![0]
+                                  .hearts
+                                  .toString(),
+                              style: contentTextStyle.copyWith(
+                                color: coralGrey500,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (context
+                            .watch<MissionProveState>()
+                            .missionWay
+                            .contains('사진') &&
+                        context
+                                .watch<MissionProveState>()
+                                .myMissionList![0]
+                                .status ==
+                            'COMPLETE')
+                      ElevatedButton(
+                        onPressed: context
+                            .read<MissionProveState>()
+                            .missionShareDialog,
+                        style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(
+                            Size(138, 50),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all(grayScaleGrey600),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24.0),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    if(context.watch<MissionProveState>().missionWay.contains('사진') &&
-                        context.watch<MissionProveState>().myMissionList![0].status == 'COMPLETE')
-                    ElevatedButton(
-                      onPressed: context.read<MissionProveState>().missionShareDialog,
-                      style: ButtonStyle(
-                        fixedSize: MaterialStateProperty.all(
-                          Size(138, 50),
                         ),
-                        backgroundColor:
-                            MaterialStateProperty.all(grayScaleGrey600),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24.0),
+                        child: Text(
+                          '공유하기',
+                          style: contentTextStyle.copyWith(
+                            color: grayScaleGrey100,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      child: Text(
-                        '공유하기',
-                        style: contentTextStyle.copyWith(
-                          color: grayScaleGrey100,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -97,7 +110,11 @@ class MissionProveButton extends StatelessWidget {
                   // else {
                   //
                   // }
-                  Navigator.of(context).pushNamed(MissionFirePage.routeName);
+                  Navigator.of(context)
+                      .pushNamed(MissionFirePage.routeName, arguments: {
+                    'teamId': context.read<MissionProveState>().teamId,
+                    'missionId': context.read<MissionProveState>().missionId,
+                  });
                 },
                 style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all(
