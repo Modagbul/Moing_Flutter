@@ -10,4 +10,10 @@ class TeamMissionPhotoData {
     return TeamMissionPhotoData(
         teamId: json['teamId'] as int, photo: photoList);
   }
+
+  @override
+  String toString() {
+    String returnString = 'TeamMissionPhotoData(teamId: $teamId, photo: ${photo.toString()}';
+    return returnString;
+  }
 }

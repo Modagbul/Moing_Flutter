@@ -55,6 +55,7 @@ class HomeScreenState extends ChangeNotifier {
     if(futureTeamMissionPhotoList != null){
 
       teamMissionPhotoList = futureTeamMissionPhotoList!;
+      print('teamMissionPhotoList : ${teamMissionPhotoList.toString()}');
     }
 }
 
