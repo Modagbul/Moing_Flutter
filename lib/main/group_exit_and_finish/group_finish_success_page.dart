@@ -47,7 +47,7 @@ class GroupFinishSuccessPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '모닥모닥불',
+                      context.read<GroupFinishExitState>().teamInfo?.teamName ?? '',
                       style: contentTextStyle.copyWith(
                         color: grayScaleGrey100
                       ),

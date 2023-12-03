@@ -37,8 +37,8 @@ class HomeScreenState extends ChangeNotifier {
 
   HomeScreenState({required this.context, this.newCreated}) {
     log('Instance "HomeScreenState" has been created');
-    loadTeamData();
     getTeamMissionPhotoListData();
+
   }
 
   /// API 데이터 로딩
@@ -53,9 +53,8 @@ class HomeScreenState extends ChangeNotifier {
   void getTeamMissionPhotoListData() async {
     futureTeamMissionPhotoList = await apiCode.getTeamMissionPhotoList();
     if(futureTeamMissionPhotoList != null){
-
       teamMissionPhotoList = futureTeamMissionPhotoList!;
-      print('teamMissionPhotoList : ${teamMissionPhotoList.toString()}');
+      loadTeamData();
     }
 }
 
