@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
@@ -92,7 +93,9 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
 
   Widget _buildMissionButton() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        context.read<BoardMainState>().tabController.animateTo(1);
+      },
       style: brightButtonStyle.copyWith(
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -104,8 +107,8 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('미션 인증하고 불 키우기'),
-          Image.asset(
-            'asset/image/icon_fire_black.png',
+          SvgPicture.asset(
+            'asset/image/icon_fire_black.svg',
             width: 24.0,
             height: 24.0,
             fit: BoxFit.contain,

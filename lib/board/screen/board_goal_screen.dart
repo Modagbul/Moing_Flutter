@@ -59,7 +59,7 @@ class BoardGoalScreen extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 48.0),
+                  padding: const EdgeInsets.only(top: 12.0),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
