@@ -66,11 +66,7 @@ class NoticeCard extends StatelessWidget {
           height: 14.0,
         ),
         const Spacer(),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.more_vert, size: 24.0),
-          color: grayScaleGrey400,
-        )
+        const SizedBox(height: 48.0),
       ],
     );
   }
