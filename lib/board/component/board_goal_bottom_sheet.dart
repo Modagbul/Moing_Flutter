@@ -142,7 +142,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                 color: grayScaleGrey500,
               ),
               child: Text(
-                '${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 100}',
+                '${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 0}',
                 style: const TextStyle(
                   color: grayScaleGrey100,
                   fontSize: 16.0,
@@ -359,7 +359,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                   .singleBoardData
                   ?.teamInfo
                   .introduction ??
-              '',
+              '아직 한줄다짐이 없어요',
           style: const TextStyle(
             color: grayScaleGrey400,
             fontSize: 14.0,
