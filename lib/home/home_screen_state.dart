@@ -37,8 +37,8 @@ class HomeScreenState extends ChangeNotifier {
 
   HomeScreenState({required this.context, this.newCreated}) {
     log('Instance "HomeScreenState" has been created');
-    loadTeamData();
     getTeamMissionPhotoListData();
+    loadTeamData();
   }
 
   /// API 데이터 로딩
