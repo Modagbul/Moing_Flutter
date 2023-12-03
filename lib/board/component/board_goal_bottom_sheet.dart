@@ -184,9 +184,14 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '모닥모닥불',
-              style: TextStyle(
+            Text(
+              context
+                      .watch<BoardMainState>()
+                      .singleBoardData
+                      ?.teamInfo
+                      .teamName ??
+                  '',
+              style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w600,
                 color: grayScaleGrey100,
