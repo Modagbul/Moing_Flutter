@@ -217,12 +217,13 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                   ),
                   const SizedBox(width: 12.0),
                   Text(
-                    context
-                            .watch<BoardMainState>()
-                            .singleBoardData
-                            ?.teamInfo
-                            .category ??
-                        '',
+                    context.read<BoardMainState>().convertCategoryName(
+                        category: context
+                                .watch<BoardMainState>()
+                                .singleBoardData
+                                ?.teamInfo
+                                .category ??
+                            ''),
                     style: bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
