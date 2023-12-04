@@ -97,6 +97,8 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8, top: 12),
                 child: Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,

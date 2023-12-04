@@ -82,7 +82,7 @@ class _MissionsScreenState extends State<MissionsScreen>
                       indicator: const BoxDecoration(
                         border: Border(
                           bottom:
-                              BorderSide(color: Colors.transparent, width: 0),
+                          BorderSide(color: Colors.transparent, width: 0),
                         ),
                       ),
                       tabs: [
@@ -100,7 +100,7 @@ class _MissionsScreenState extends State<MissionsScreen>
                         setState(() {});
                       },
                       overlayColor:
-                          MaterialStateProperty.all(Colors.transparent),
+                      MaterialStateProperty.all(Colors.transparent),
                     ),
                   ),
                   const Spacer(),
@@ -182,6 +182,8 @@ class _MyDropdownState extends State<MyDropdown> {
   String? _selectedValue;
   String? _selectedTeamName;
 
+  bool _isMenuOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -193,7 +195,7 @@ class _MyDropdownState extends State<MyDropdown> {
       missionsState.setSelectedTeamId(widget.teams[0].teamId);
 
       var missionsGroupState =
-          Provider.of<MissionsGroupState>(context, listen: false);
+      Provider.of<MissionsGroupState>(context, listen: false);
       missionsGroupState.updateSelectedTeamId(widget.teams[0].teamId);
     }
   }
@@ -226,16 +228,20 @@ class _MyDropdownState extends State<MyDropdown> {
               color: grayScaleGrey900,
             ),
           ),
-          child: InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            child: PopupMenuButton<String>(
-              icon: Image.asset('asset/image/arrow_icon.png',
-                  width: 14.45, height: 7.16),
+          child: PopupMenuButton<String>(
+              offset: const Offset(0, 60),
+              icon: Image.asset(
+                  _isMenuOpen
+                      ? 'asset/image/arrow_icon.png'
+                      : 'asset/image/arrow_not_icon.png',
+                  width: 20,
+                  height: 20),
               onSelected: (String value) {
                 var selectedTeam = widget.teams.firstWhere(
-                    (team) => team.teamId.toString() == value,
+                        (team) => team.teamId.toString() == value,
                     orElse: () => widget.teams[0]);
+
+                _isMenuOpen = false;
 
                 setState(() {
                   _selectedValue = value;
@@ -243,14 +249,22 @@ class _MyDropdownState extends State<MyDropdown> {
                 });
 
                 var missionsState =
-                    Provider.of<MissionsState>(context, listen: false);
+                Provider.of<MissionsState>(context, listen: false);
                 missionsState.setSelectedTeamId(selectedTeam.teamId);
 
                 var missionsGroupState =
-                    Provider.of<MissionsGroupState>(context, listen: false);
+                Provider.of<MissionsGroupState>(context, listen: false);
                 missionsGroupState.updateSelectedTeamId(selectedTeam.teamId);
               },
+              onCanceled: () {
+                setState(() {
+                  _isMenuOpen = false;
+                });
+              },
               itemBuilder: (BuildContext context) {
+                setState(() {
+                  _isMenuOpen = true;
+                });
                 return widget.teams.map((TeamList team) {
                   return PopupMenuItem<String>(
                     value: team.teamId.toString(),
@@ -267,7 +281,6 @@ class _MyDropdownState extends State<MyDropdown> {
               },
             ),
           ),
-        ),
       ],
     );
   }
