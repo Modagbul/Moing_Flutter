@@ -9,12 +9,12 @@ import 'package:provider/provider.dart';
 class MyPageScreen extends StatelessWidget {
   static const routeName = '/mypage';
 
-  const MyPageScreen({Key? key}) : super(key: key);
+  const MyPageScreen({super.key});
 
-  static route({required BuildContext context, int? teamCount}) {
+  static route({required BuildContext context}) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => MyPageState(context: context, teamCount: teamCount!)),
+        ChangeNotifierProvider(create: (_) => MyPageState(context: context)),
       ],
       builder: (context, _) {
         return const MyPageScreen();
@@ -94,8 +94,6 @@ class _Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MyPageData? myPageData = context.watch<MyPageState>().myPageData;
-
     return Row(
       children: [
         GestureDetector(
@@ -104,9 +102,10 @@ class _Profile extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
-                child: myPageData?.profileImage != null
+                child: context.watch<MyPageState>().myPageData != null &&
+                context.watch<MyPageState>().myPageData!.profileImage != null
                     ? Image.network(
-                  myPageData!.profileImage!,
+                  context.watch<MyPageState>().myPageData!.profileImage!,
                   fit: BoxFit.cover,
                   width: 80,
                   height: 80,
@@ -117,6 +116,7 @@ class _Profile extends StatelessWidget {
                   height: 80,
                 ),
               ),
+
               Positioned(
                 right: 0,
                 bottom: 0,
@@ -135,7 +135,7 @@ class _Profile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              myPageData?.nickName ?? '',
+              context.watch<MyPageState>().myPageData?.nickName ?? '',
               style: const TextStyle(
                 color: grayScaleGrey100,
                 fontSize: 18.0,
@@ -144,7 +144,7 @@ class _Profile extends StatelessWidget {
             ),
             const SizedBox(height: 4.0),
             Text(
-              myPageData?.introduction ?? '아직 한줄다짐이 없어요',
+              context.watch<MyPageState>().myPageData?.introduction ?? '아직 한줄다짐이 없어요',
               style: const TextStyle(
                 color: grayScaleGrey400,
                 fontSize: 14.0,

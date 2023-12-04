@@ -109,7 +109,6 @@ class FixGroupState extends ChangeNotifier {
     if (onLoading) return;
     try {
       onLoading = true;
-      notifyListeners();
       await Permission.photos.request();
       final XFile? assetFile =
       await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -125,6 +124,9 @@ class FixGroupState extends ChangeNotifier {
 
   /// 저장 버튼 클릭
   void savePressed() async {
+    print('저장 버튼 클릭');
+    if(onLoading) return ;
+    onLoading = true;
     if (avatarFile != null) {
       // 파일 확장자 얻기
       extension = avatarFile!.path.split(".").last;
@@ -142,6 +144,7 @@ class FixGroupState extends ChangeNotifier {
         await fixTeamAPI();
       }
     }
+    onLoading = false;
   }
 
   /// presignedURL 발급받기
@@ -161,7 +164,6 @@ class FixGroupState extends ChangeNotifier {
       );
 
       if (apiResponse.isSuccess == true) {
-        print(apiResponse.data?.toString());
         presignedUrl = apiResponse.data?['presignedUrl'];
         putProfileImageUrl = apiResponse.data?['imgUrl'];
 
@@ -174,7 +176,7 @@ class FixGroupState extends ChangeNotifier {
         return false;
       }
     } catch (e) {
-      print('소모임 생성 실패: $e');
+      print('presigned url 발급 실패: $e');
       return false;
     }
   }

@@ -55,7 +55,7 @@ class ExitCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        TextSpan(text: '시간을 함께했어요'),
+                        TextSpan(text: '일을 함께했어요'),
                       ],
                     ),
                   ),

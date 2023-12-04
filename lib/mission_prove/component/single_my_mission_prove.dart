@@ -153,19 +153,14 @@ class SingleMyMissionProved extends StatelessWidget {
                       iconEnabledColor: Colors.white,
                       items: <DropdownMenuItem<String>>[
                         DropdownMenuItem(
+                            value: 'retry',
                             child: Container(
-                                padding: EdgeInsets.only(right: 8),
-                                alignment: Alignment.centerRight,
-                                child: Text('인증 수정하기')),
-                            value: 'fix'),
-                        DropdownMenuItem(
-                            child: Container(
-                              padding: EdgeInsets.only(right: 8),
+                              padding: EdgeInsets.only(top: 8, right: 8),
                               alignment: Alignment.centerRight,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('다시 인증하기'),
+                                  Text('다시 인증하기ㅋ'),
                                   Text(
                                     '기존 인증내역이 취소돼요',
                                     style: bodyTextStyle.copyWith(
@@ -173,8 +168,7 @@ class SingleMyMissionProved extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            ),
-                            value: 'retry'),
+                            )),
                       ],
                       isDense: true,
                       onChanged: (String? val) {

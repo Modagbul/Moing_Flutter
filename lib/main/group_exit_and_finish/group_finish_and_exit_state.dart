@@ -56,7 +56,7 @@ class GroupFinishExitState extends ChangeNotifier {
         else {
           // 소모임원인 경우
           finishButtonText = '소모임 탈퇴하기';
-          exitDescription = '탈퇴 시 ${teamInfo!.memberName}님의\n해당 소모임 미션활동 정보가 삭제돼요.\n한번 탈퇴하면 다시 돌아올 수 없어요}';
+          exitDescription = '탈퇴 시 ${teamInfo!.memberName}님의\n해당 소모임 미션활동 정보가 삭제돼요.\n한번 탈퇴하면 다시 돌아올 수 없어요';
         }
         notifyListeners();
         }
