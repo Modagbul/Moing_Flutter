@@ -225,7 +225,7 @@ class _HashTag extends StatelessWidget {
                                 .take(2)
                                 .map(
                                   (category) => Text(
-                                    '# $category',
+                                    '# ${context.read<MyPageState>().convertCategoryName(category: category)}',
                                     style: const TextStyle(
                                       color: grayScaleWhite,
                                       fontSize: 28.0,

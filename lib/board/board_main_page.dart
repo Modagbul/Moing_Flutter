@@ -75,7 +75,7 @@ class _BoardMainPageState extends State<BoardMainPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.6,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: _CustomTabBar(
               tabs: const [
                 '목표보드',

@@ -127,9 +127,8 @@ class HomeScreenState extends ChangeNotifier {
   void getTeamMissionPhotoListData() async {
     futureTeamMissionPhotoList = await apiCode.getTeamMissionPhotoList();
     if(futureTeamMissionPhotoList != null){
-
       teamMissionPhotoList = futureTeamMissionPhotoList!;
-      print('teamMissionPhotoList : ${teamMissionPhotoList.toString()}');
+      loadTeamData();
     }
 }
 

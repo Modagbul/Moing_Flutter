@@ -34,7 +34,7 @@ class MyPageState extends ChangeNotifier {
       ProfileSettingPage.routeName,
     );
 
-    if(result != null && result == true) {
+    if (result != null && result == true) {
       getMyPageData();
     }
   }
@@ -59,5 +59,32 @@ class MyPageState extends ChangeNotifier {
       SettingPage.routeName,
       arguments: teamCount,
     );
+  }
+
+  String convertCategoryName({required String category}) {
+    String convertedCategory = '';
+
+    switch (category) {
+      case 'SPORTS':
+        convertedCategory = '스포츠/운동';
+        break;
+      case 'HABIT':
+        convertedCategory = '생활습관 개선';
+        break;
+      case 'TEST':
+        convertedCategory = '시험/취업준비';
+        break;
+      case 'STUDY':
+        convertedCategory = '스터디/공부';
+        break;
+      case 'READING':
+        convertedCategory = '독서';
+        break;
+      case 'ETC':
+        convertedCategory = '그외 자기계발';
+        break;
+    }
+
+    return convertedCategory;
   }
 }
