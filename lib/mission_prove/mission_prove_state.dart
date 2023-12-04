@@ -1,10 +1,12 @@
 import 'dart:developer';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +19,7 @@ import 'dart:typed_data';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
+import 'package:moing_flutter/mission_prove/mission_state.dart';
 import 'package:moing_flutter/missions/create/link_auth_page.dart';
 import 'package:moing_flutter/missions/create/skip_mission_page.dart';
 import 'package:moing_flutter/missions/create/text_auth_page.dart';
@@ -40,6 +43,7 @@ class MissionProveState with ChangeNotifier {
   final int teamId;
   final int missionId;
   final bool isRepeated; // 반복 미션 여부
+  final MissionState missionState = MissionState();
 
   late TabController tabController;
 
@@ -73,6 +77,8 @@ class MissionProveState with ChangeNotifier {
   // 남은 시간 반환
   String missionRemainTime = '';
 
+  // 리더 여부
+  bool isLeader = false;
   // 내가 당일에 인증한 경우 T/F 값
   bool isMeProved = false;
 
@@ -372,16 +378,41 @@ class MissionProveState with ChangeNotifier {
   /// 더보기 버튼 클릭 시
   void setMission(String? val) {
     missionMoreButton = val!;
-    // 인증 수정하기 버튼 클릭 시...
-    if (missionMoreButton.contains('fix')) {
-      print('인증 수정 버튼 클릭!');
-      submit(isFix: true);
-    }
     // 다시 인증하기 버튼 클릭 시..
-    else if (missionMoreButton.contains('retry')) {
+    if (missionMoreButton.contains('retry')) {
       print('인증 다시 버튼 클릭!');
+      missionDelete();
     }
     notifyListeners();
+  }
+
+  /// 미션 삭제 API
+  void missionDelete() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
+
+    try {
+      ApiResponse<int> apiResponse =
+      await call.makeRequest<int>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (dataJson) => dataJson as int,
+      );
+
+      if (apiResponse.isSuccess) {
+        print('${apiResponse.data} 미션 삭제가 완료되었습니다.');
+        initState();
+      }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          missionDelete();
+        }
+        else {
+          throw Exception('missionDelete is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('미션 삭제 실패: $e');
+    }
   }
 
   /// 미션 내용(규칙) 조회 API
@@ -401,6 +432,7 @@ class MissionProveState with ChangeNotifier {
         missionContent = apiResponse.data?['content'];
         missionRule = apiResponse.data?['rule'];
         missionWay = apiResponse.data?['way'];
+        isLeader = apiResponse.data?['isLeader'];
         switch (apiResponse.data?['way']) {
           case 'TEXT':
             missionWay = '텍스트인증';
@@ -430,7 +462,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 미션 인증 API
-  Future<bool?> submitMission({required String url, bool? isFix}) async {
+  Future<bool?> submitMission({required String url}) async {
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
     Map<String, dynamic> data = {"status": 'COMPLETE', "archive": url};
@@ -439,7 +471,7 @@ class MissionProveState with ChangeNotifier {
       ApiResponse<Map<String, dynamic>> apiResponse =
           await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
-        method: isFix == true ? 'PUT' : 'POST',
+        method: 'POST',
         body: data,
         fromJson: (dataJson) => dataJson as Map<String, dynamic>,
       );
@@ -451,7 +483,7 @@ class MissionProveState with ChangeNotifier {
       }
       else {
         if(apiResponse.errorCode == 'J0003') {
-          isFix == null ? submitMission(url: url) : submitMission(url: url, isFix: isFix);
+          submitMission(url: url);
         }
         else {
           throw Exception('submitMission is Null, error code : ${apiResponse.errorCode}');
@@ -476,8 +508,8 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
-  // 미션 인증하기 버튼 클릭
-  void submit({bool? isFix}) async {
+  /// 미션 인증하기 버튼 클릭
+  void submit() async {
     // 텍스트 인증 시
     if (missionWay.contains('텍스트')) {
       var result = await Navigator.of(context)
@@ -520,7 +552,7 @@ class MissionProveState with ChangeNotifier {
         imageUrl = tmpUrl ?? '';
         // presigned url 발급 성공 시
         if (imageUrl.isNotEmpty) {
-          bool? isSuccess = isFix == true ? await submitMission(url: imageUrl, isFix: true) :  await submitMission(url: imageUrl);
+          bool? isSuccess = await submitMission(url: imageUrl);
           if(isSuccess != null && isSuccess) {
             showMissionSuccessDialog();
             initState();
@@ -584,7 +616,7 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
-  // 이미지 공유하기 모달
+  /// 이미지 공유하기 모달
   void missionShareDialog({int? index}) {
     showDialog(
       context: context,
@@ -637,14 +669,16 @@ class MissionProveState with ChangeNotifier {
                                   left: 0,
                                   right: 0,
                                   child: Container(
-                                    height: 100, // scrim의 높이
+                                    // scrim의 높이
+                                    // height: 100,
+                                    height: 313,
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         begin: Alignment.bottomCenter,
                                         end: Alignment.topCenter,
                                         colors: [
-                                          Colors.black.withOpacity(0.5), // 하단이 어둡게 처리됨
-                                          Colors.transparent,             // 점차 투명해짐
+                                          coralGrey500,
+                                          Colors.transparent,
                                         ],
                                       ),
                                     ),
@@ -658,7 +692,7 @@ class MissionProveState with ChangeNotifier {
                                         Text(
                                           index != null ? myRepeatMissionTime[index][0] : myRepeatMissionTime[0][0],
                                           style: bodyTextStyle.copyWith(
-                                            color: grayScaleGrey400,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -666,7 +700,7 @@ class MissionProveState with ChangeNotifier {
                                         Text(
                                           index != null ? myRepeatMissionTime[index][1] : myRepeatMissionTime[0][1],
                                           style: bodyTextStyle.copyWith(
-                                            color: grayScaleGrey400,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -676,7 +710,7 @@ class MissionProveState with ChangeNotifier {
                                 Positioned(
                                   bottom: 23,
                                   left: 20,
-                                  child: Text('작업한 내용 인증하기',
+                                  child: Text(missionTitle,
                                   style: buttonTextStyle.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,)),
@@ -773,7 +807,7 @@ class MissionProveState with ChangeNotifier {
     );
   }
 
-  // 미션 인증 시 모달
+  /// 미션 인증 시 모달
   void showMissionSuccessDialog() {
     showDialog(
       context: context,
@@ -837,7 +871,7 @@ class MissionProveState with ChangeNotifier {
       },
     );
 
-    Future.delayed(Duration(milliseconds: 1000), () {
+    Future.delayed(Duration(milliseconds: 2000), () {
       Navigator.of(context).pop();
       notifyListeners();
       showFireToast();
@@ -854,6 +888,35 @@ class MissionProveState with ChangeNotifier {
   /// 나의 인증, 모두의 인증에 따라 리스트의 인덱스 반환
   dynamic getCurrentMission(int index) {
     return isMeOrEveryProved ? myMissionList![index] : everyMissionList![index];
+  }
+
+  /// 신고하기 API
+  void doReport() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$missionId/archive';
+
+    try {
+      ApiResponse<int> apiResponse =
+          await call.makeRequest<int>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (dataJson) => dataJson as int,
+      );
+
+      if (apiResponse.isSuccess) {
+        print('${apiResponse.data} 미션 삭제가 완료되었습니다.');
+        initState();
+      }
+      else {
+        if(apiResponse.errorCode == 'J0003') {
+          missionDelete();
+        }
+        else {
+          throw Exception('missionDelete is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('미션 삭제 실패: $e');
+    }
   }
 
   /// 미션 상세내용 확인
@@ -913,14 +976,83 @@ class MissionProveState with ChangeNotifier {
                               color: grayScaleGrey300, fontWeight: FontWeight.w500),
                         ),
                         Spacer(),
-                        GestureDetector(
-                            onTap: () {
-                              print('... 클릭');
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            items: <DropdownMenuItem<String>>[
+                              DropdownMenuItem(
+                                  value: 'report',
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 20.0),
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 16),
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        '인증내역 신고하기',
+                                        style: contentTextStyle.copyWith(color: grayScaleGrey100),
+                                      textAlign: TextAlign.right,),
+                                    ),
+                                  )),
+                            ],
+                            onChanged: (String? val) {
+                              print('신고하기 버튼 클릭');
+                              fToast.showToast(
+                                  child: Material(
+                                    type: MaterialType.transparency,
+                                    child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          width: double.infinity,
+                                          height: 51,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(12),
+                                            color: Colors.white,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '신고가 완료되었어요',
+                                                style: bodyTextStyle.copyWith(color: grayScaleGrey700),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                    ),
+                                  ),
+                                  toastDuration: Duration(milliseconds: 2000),
+                                  positionedToastBuilder: (context, child) {
+                                    return Positioned(
+                                      child: child,
+                                      bottom: 40.0,
+                                      left: 0.0,
+                                      right: 0,
+                                    );
+                                  });
                             },
-                            child: Icon(
-                              Icons.more_vert_outlined,
-                              color: grayScaleGrey300,
-                            )),
+                            buttonStyleData: const ButtonStyleData(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              height: 20,
+                              width: 150,
+                            ),
+                            iconStyleData: IconStyleData(
+                              icon: Icon(
+                                Icons.more_vert_outlined,
+                              ),
+                              iconSize: 20,
+                              iconEnabledColor: grayScaleGrey300,
+                            ),
+                            dropdownStyleData: DropdownStyleData(
+                              maxHeight: 51,
+                              width: 185,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: grayScaleGrey500,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: 16),
@@ -1166,93 +1298,30 @@ class MissionProveState with ChangeNotifier {
     );
   }
 
-  /// 미션 내용 모달
-  void showMissionRuleBottomModal() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return Container(
-          width: double.infinity,
-          height: 700,
-          decoration: const BoxDecoration(
-            color: grayScaleGrey600,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 32, right: 32, top: 36),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      '미션내용과 규칙',
-                      style: middleTextStyle.copyWith(color: grayScaleGrey100),
-                    ),
-                    Spacer(),
-                    Container(
-                      alignment: Alignment.center,
-                      width: 72,
-                      height: 33,
-                      decoration: BoxDecoration(
-                        color: grayScaleGrey500,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        missionWay,
-                        style: bodyTextStyle.copyWith(color: grayScaleGrey200),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 24),
-                Text(
-                  '미션 내용',
-                  style: contentTextStyle.copyWith(
-                      fontWeight: FontWeight.w600, color: grayScaleGrey100),
-                ),
-                SizedBox(height: 4),
-                Container(
-                  child: Text(
-                    missionContent,
-                    style: bodyTextStyle.copyWith(
-                        fontWeight: FontWeight.w500, color: grayScaleGrey400),
-                  ),
-                ),
-                SizedBox(height: 24),
-                Text(
-                  '미션 규칙',
-                  style: contentTextStyle.copyWith(
-                      fontWeight: FontWeight.w600, color: grayScaleGrey100),
-                ),
-                SizedBox(height: 4),
-                Container(
-                  child: Text(
-                    missionRule,
-                    style: bodyTextStyle.copyWith(
-                        fontWeight: FontWeight.w500, color: grayScaleGrey400),
-                  ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 32.0),
-                  child: WhiteButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      text: '확인했어요'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+  /// 바텀 모달 클릭
+  void showModal(String value) async {
+    switch(value) {
+      // 더보기 클릭
+      case 'more':
+        missionState.showMoreDetails(context: context, missionWay: missionWay, missionContent: missionContent, missionRule: missionRule);
+        break;
+      // 미션내용 클릭
+      case 'content':
+        missionState.showContentAndRule(context: context, missionWay: missionWay, missionContent: missionContent, missionRule: missionRule);
+      // 미션 인증하기 클릭
+      case 'mission':
+        print('미션 인증하기 클릭했냥~');
+        var missionResult = await missionState.MissionSuccessPressed(context: context);
+        print('missionResult2 : $missionResult');
+        if(missionResult != null) {
+          if(missionResult == 'skip') {
+            missionSkip();
+          }
+          else if (missionResult == 'submit') {
+            submit();
+          }
+        }
+    }
   }
 
   // 인증 날짜 변환

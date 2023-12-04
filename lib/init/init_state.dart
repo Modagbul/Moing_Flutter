@@ -9,6 +9,7 @@ import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/mypage/profile_setting_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ class InitState extends ChangeNotifier {
   String? teamId;
   String? teamName;
   String? teamLeaderName;
+  String? memberName;
   String errorCode = '';
   int? numOfTeam;
 
@@ -74,7 +76,10 @@ class InitState extends ChangeNotifier {
                     context,
                     InvitationWelcomePage.routeName,
                         (route) => false,
-                arguments: {'teamName': teamName, 'teamLeaderName': teamLeaderName,});
+                arguments: {
+                      'teamName': teamName,
+                  'teamLeaderName': teamLeaderName,
+                'memberName': memberName});
               }
               else {
                 /// TODO : 메인 페이지로 이동하면서 추가 조건 넣어줘야 함.
@@ -82,12 +87,12 @@ class InitState extends ChangeNotifier {
                 if(errorCode == 'T0004') {
                   /// 이미 가입된 유저라 가입하지 못했을 때
                   Navigator.pushNamedAndRemoveUntil(
-                      context, MainPage.routeName, (route) => false);
+                      context, MainPage.routeName, (route) => false, arguments: 'isRegistered');
                 }
                 else {
                   print('다이나믹 링크로 진입했지만 에러났을 때 : $errorCode');
                   Navigator.pushNamedAndRemoveUntil(
-                      context, MainPage.routeName, (route) => false);
+                      context, MainPage.routeName, (route) => false, arguments: errorCode);
                 }
               }
             }
@@ -95,7 +100,7 @@ class InitState extends ChangeNotifier {
               /// Team 개수가 3개 초과했을 때
               Navigator.pushNamedAndRemoveUntil(
                 /// TODO : 추가 초건 넣어줘야 함
-                  context, MainPage.routeName, (route) => false);
+                  context, MainPage.routeName, (route) => false , arguments: 'full');
             }
           }
         }
@@ -170,6 +175,7 @@ class InitState extends ChangeNotifier {
         teamName = apiResponse.data?['teamName'];
         numOfTeam = apiResponse.data?['numOfTeam'] as int;
         teamLeaderName = apiResponse.data?['leaderName'];
+        memberName = apiResponse.data?['memberName'];
       } else {
         if(apiResponse?.errorCode == 'J0003') {
           getTeamNameAndNumber();

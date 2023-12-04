@@ -5,23 +5,21 @@ import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
 import 'package:moing_flutter/mypage/setting_page.dart';
+import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 
 class MyPageState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
-  final int teamCount;
   MyPageData? myPageData;
 
   MyPageState({
     required this.context,
-    required this.teamCount,
   }) {
     initState();
   }
 
   void initState() async {
     log('Instance "MyPageState" has been created');
-    print('teamCount : $teamCount');
     getMyPageData();
   }
 
@@ -46,7 +44,17 @@ class MyPageState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void settingPressed() {
+  void settingPressed() async {
+    SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
+    String? teamCountString = await sharedPreferencesInfo.loadPreferencesData('teamCount');
+    int? teamCount;
+    if (teamCountString == null || teamCountString.isEmpty || teamCountString.length < 1) {
+      teamCount = 0;
+    }
+    else {
+      teamCount = int.parse(teamCountString);
+    }
+    print('mypageScreen teamCount : $teamCount');
     Navigator.of(context).pushNamed(
       SettingPage.routeName,
       arguments: teamCount,

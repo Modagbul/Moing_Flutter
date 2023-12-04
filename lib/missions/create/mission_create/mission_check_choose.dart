@@ -42,6 +42,7 @@ class MissionChoose extends StatelessWidget {
         height: 56,
         decoration: BoxDecoration(
           color: isSelected ? grayScaleGrey100 : grayScaleGrey900,
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [

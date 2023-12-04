@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/login/register_success/guide.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
   static const routeName = '/register/welcome';
   const WelcomePage({super.key});
 
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     final String nickname = ModalRoute.of(context)?.settings.arguments as String;
     /// 1.2초 후에 안내 페이지로 이동
     Future.delayed(const Duration(milliseconds: 1200), () {
-      Navigator.of(context).pushNamed(
-        RegisterGuide.routeName,
-      );
+      if (mounted) {
+        Navigator.of(context).pushNamed(
+          RegisterGuide.routeName,
+        );
+      }
     });
 
     return Scaffold(

@@ -92,7 +92,7 @@ class ProfileSettingState extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print('소모임 생성 실패: $e');
+      print('프로필 수정 전 조회 실패: $e');
     }
   }
 
@@ -148,29 +148,25 @@ class ProfileSettingState extends ChangeNotifier {
     Navigator.pop(context);
   }
 
-  void pressSubmitButton() {
-    if(profileData != null){
-      apiCode.putProfileData(profileData: profileData!);
-    }
-  }
-
-/// 프로필 사진
+  /// 프로필 사진
   Future<void> imageUpload(BuildContext context) async {
     if (onLoading) return;
     try {
       onLoading = true;
-      notifyListeners();
       await Permission.photos.request();
       final XFile? assetFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
       if (assetFile != null) {
         avatarFile = assetFile;
-        isAvatarChanged = true; // 여기에 플래그를 설정합니다.
+        isAvatarChanged = true;
       }
-
+      else {
+        isAvatarChanged = false;
+      }
     } catch (e) {
       print(e.toString());
       viewUtil.showAlertDialog(context: context, message: e.toString());
+      isAvatarChanged = false;
     } finally {
       onLoading = false;
       notifyListeners();
@@ -243,13 +239,10 @@ class ProfileSettingState extends ChangeNotifier {
         if(apiResponse.errorCode == 'J0003') {
           getPresignedUrl(fileExtension);
         }
-        else {
-          throw Exception('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
-        }
         return false;
       }
     } catch (e) {
-      print('소모임 생성 실패: $e');
+      print('presigned url 발급 실패: $e');
       return false;
     }
   }
@@ -285,6 +278,7 @@ class ProfileSettingState extends ChangeNotifier {
             introduction: isIntroduceChanged ? introduceController.text : null,
             profileImage: isAvatarChanged ? putProfileImageUrl : null);
 
+        print('프로필 수정 data : ${data.toString()}');
         ApiResponse<Map<String, dynamic>> apiResponse =
         await call.makeRequest<Map<String, dynamic>>(
           url: apiUrl,
@@ -294,6 +288,7 @@ class ProfileSettingState extends ChangeNotifier {
         );
 
         if(apiResponse.isSuccess == true) {
+          print('프로필 수정이 완료되었습니다.');
           Navigator.of(context).pop(true);
         }
         else {
