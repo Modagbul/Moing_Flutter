@@ -64,11 +64,12 @@ class NoticeCard extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 4.0),
-        Image.asset(
-          'asset/image/icon_crown.png',
-          width: 14.0,
-          height: 14.0,
-        ),
+        if (noticeData.writerIsLeader)
+          Image.asset(
+            'asset/image/icon_crown.png',
+            width: 14.0,
+            height: 14.0,
+          ),
         const Spacer(),
         const SizedBox(height: 48.0),
       ],

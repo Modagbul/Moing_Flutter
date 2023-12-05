@@ -772,7 +772,7 @@ class ApiCode {
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'DELETE',
         fromJson: (data) => data as Map<String, dynamic>,
@@ -885,5 +885,32 @@ class ApiCode {
       log('팀별 미션 사진 모아보기 실패: $e');
     }
     return null;
+  }
+
+  Future<bool?> postReportPost({required int boardId}) async {
+    String apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$boardId';
+    try {
+      ApiResponse<int> apiResponse =
+          await call.makeRequest<int>(
+        url: apiUrl,
+        method: 'POST',
+        fromJson: (data) => data as int,
+      );
+
+      if (apiResponse.isSuccess) {
+        log('게시글 신고 성공!');
+        return true;
+      } else {
+        if (apiResponse?.errorCode == 'J0003') {
+          return false;
+        } else {
+          throw Exception(
+              'postReportPost is Null, error code : ${apiResponse?.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('게시글 신고 실패: $e');
+      return false;
+    }
   }
 }

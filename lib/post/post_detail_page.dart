@@ -78,19 +78,21 @@ class PostDetailPage extends StatelessWidget {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
-                                child: postDetailData?.writerProfileImage != null
+                                child: postDetailData?.writerProfileImage !=
+                                        null
                                     ? Image.network(
-                                  postDetailData?.writerProfileImage ?? '',
-                                  fit: BoxFit.cover,
-                                  width: 20,
-                                  height: 20,
-                                )
+                                        postDetailData?.writerProfileImage ??
+                                            '',
+                                        fit: BoxFit.cover,
+                                        width: 20,
+                                        height: 20,
+                                      )
                                     : Image.asset(
-                                  'asset/image/icon_user_profile.png',
-                                  fit: BoxFit.cover,
-                                  width: 20,
-                                  height: 20,
-                                ),
+                                        'asset/image/icon_user_profile.png',
+                                        fit: BoxFit.cover,
+                                        width: 20,
+                                        height: 20,
+                                      ),
                               ),
                               const SizedBox(width: 8.0),
                               Text(
@@ -190,14 +192,60 @@ class PostDetailPage extends StatelessWidget {
         },
       ),
       actions: [
-        if (context.watch<PostDetailState>().postData?.writerIsLeader ?? false)
-          IconButton(
-            onPressed: () {
-              showPostControlBottomSheet(context: context);
-            },
-            icon: const Icon(Icons.more_vert),
-          )
+        IconButton(
+          onPressed: () {
+            context.read<PostDetailState>().postData?.isWriter ?? false
+                ? showPostControlBottomSheet(context: context)
+                : showPostControlBottomSheetNotWriter(context: context);
+          },
+          icon: const Icon(Icons.more_vert),
+        )
       ],
+    );
+  }
+
+  void showPostControlBottomSheetNotWriter({
+    required BuildContext context,
+  }) {
+    showModalBottomSheet(
+      backgroundColor: grayScaleGrey600,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24.0),
+        ),
+      ),
+      builder: (_) {
+        final screenHeight = MediaQuery.of(context).size.height;
+        return SizedBox(
+          height: screenHeight * 0.25,
+          child: Padding(
+            padding:
+            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                IconTextButton(
+                  onPressed: () {
+                    context.read<PostDetailState>().reportPost();
+                  },
+                  icon: 'asset/image/icon_edit.png',
+                  text: '게시글 신고하기',
+                ),
+
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: defaultButtonStyle,
+                  child: const Text('닫기'),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -238,7 +286,9 @@ class PostDetailPage extends StatelessWidget {
                   text: '게시글 삭제하기',
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                   style: defaultButtonStyle,
                   child: const Text('닫기'),
                 )
