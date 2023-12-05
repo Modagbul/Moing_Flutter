@@ -76,12 +76,20 @@ class PostDetailPage extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: Row(
                             children: [
-                              Container(
-                                width: 20.0,
-                                height: 20.0,
-                                decoration: BoxDecoration(
-                                  color: grayScaleGrey500,
-                                  borderRadius: BorderRadius.circular(50),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: postDetailData?.writerProfileImage != null
+                                    ? Image.network(
+                                  postDetailData?.writerProfileImage ?? '',
+                                  fit: BoxFit.cover,
+                                  width: 20,
+                                  height: 20,
+                                )
+                                    : Image.asset(
+                                  'asset/image/icon_user_profile.png',
+                                  fit: BoxFit.cover,
+                                  width: 20,
+                                  height: 20,
                                 ),
                               ),
                               const SizedBox(width: 8.0),

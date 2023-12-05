@@ -180,10 +180,7 @@ class _Notice extends StatelessWidget {
                                       boardId: notice.boardId);
                             },
                             child: NoticeCard(
-                              commentNum: notice.commentNum,
-                              content: notice.content,
-                              nickName: notice.writerNickName,
-                              title: notice.title,
+                              noticeData: notice,
                             ),
                           ))
                       .toList() ??
@@ -239,15 +236,15 @@ class _Post extends StatelessWidget {
     AllPostData? allPostData = context.watch<PostMainState>().allPostData;
     return allPostData != null && allPostData.postNum == 0
         ? const Center(
-          child: Text(
-            '아직 게시글이 없어요',
-            style: TextStyle(
-              color: grayScaleGrey400,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
+            child: Text(
+              '아직 게시글이 없어요',
+              style: TextStyle(
+                color: grayScaleGrey400,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-        )
+          )
         : ListView.builder(
             itemCount: allPostData?.postBlocks.length ?? 0,
             itemBuilder: (BuildContext context, int index) {
