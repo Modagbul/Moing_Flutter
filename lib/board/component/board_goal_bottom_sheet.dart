@@ -310,13 +310,36 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                       borderRadius: BorderRadius.circular(24.0),
                       color: grayScaleGrey500,
                     ),
-                    child: Text(
-                      name,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        color: grayScaleGrey100,
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
+                    child: IntrinsicWidth(
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: memberList?[index].profileImage != null
+                                ? Image.network(
+                                    memberList?[index].profileImage ?? '',
+                                    fit: BoxFit.cover,
+                                    width: 20,
+                                    height: 20,
+                                  )
+                                : Image.asset(
+                                    'asset/image/icon_user_profile.png',
+                                    fit: BoxFit.cover,
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                          ),
+                          const SizedBox(width: 4.0),
+                          Text(
+                            name,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              color: grayScaleGrey100,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );

@@ -13,11 +13,21 @@ class TeamMemeberCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            Image.asset(
-              'asset/image/icon_user_profile.png',
-              width: 56.0,
-              height: 56.0,
-              fit: BoxFit.contain,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: teamMemberInfo.profileImage != null
+                  ? Image.network(
+                      teamMemberInfo.profileImage ?? '',
+                      fit: BoxFit.cover,
+                      width: 56,
+                      height: 56,
+                    )
+                  : Image.asset(
+                      'asset/image/icon_user_profile.png',
+                      fit: BoxFit.cover,
+                      width: 56,
+                      height: 56,
+                    ),
             ),
             const SizedBox(width: 20.0),
             Column(

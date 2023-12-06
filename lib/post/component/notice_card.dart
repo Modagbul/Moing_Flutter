@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/model/post/post_model.dart';
 
 class NoticeCard extends StatelessWidget {
-  final String nickName;
-  final String title;
-  final String content;
-  final int commentNum;
+  final PostData noticeData;
 
   const NoticeCard({
     super.key,
-    required this.commentNum,
-    required this.nickName,
-    required this.title,
-    required this.content,
+    required this.noticeData,
   });
 
   @override
@@ -28,11 +23,12 @@ class NoticeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _renderNoticeCardHeader(nickName: nickName),
+            _renderNoticeCardHeader(nickName: noticeData.writerNickName),
             const SizedBox(height: 8.0),
-            _renderNoticeCardBody(title: title, content: content),
+            _renderNoticeCardBody(
+                title: noticeData.title, content: noticeData.content),
             const SizedBox(height: 12.0),
-            _renderNoticeCardFooter(commentNum: commentNum),
+            _renderNoticeCardFooter(commentNum: noticeData.commentNum),
           ],
         ),
       ),
@@ -42,13 +38,21 @@ class NoticeCard extends StatelessWidget {
   Widget _renderNoticeCardHeader({required String nickName}) {
     return Row(
       children: [
-        Container(
-          width: 20.0,
-          height: 20.0,
-          decoration: BoxDecoration(
-            color: grayScaleGrey500,
-            borderRadius: BorderRadius.circular(50),
-          ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: noticeData.writerProfileImage != null
+              ? Image.network(
+                  noticeData.writerProfileImage!,
+                  fit: BoxFit.cover,
+                  width: 20,
+                  height: 20,
+                )
+              : Image.asset(
+                  'asset/image/icon_user_profile.png',
+                  fit: BoxFit.cover,
+                  width: 20,
+                  height: 20,
+                ),
         ),
         const SizedBox(width: 8.0),
         Text(
@@ -60,11 +64,12 @@ class NoticeCard extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 4.0),
-        Image.asset(
-          'asset/image/icon_crown.png',
-          width: 14.0,
-          height: 14.0,
-        ),
+        if (noticeData.writerIsLeader)
+          Image.asset(
+            'asset/image/icon_crown.png',
+            width: 14.0,
+            height: 14.0,
+          ),
         const Spacer(),
         const SizedBox(height: 48.0),
       ],

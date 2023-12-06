@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/request/create_comment_request.dart';
@@ -18,6 +20,8 @@ class PostDetailState extends ChangeNotifier {
   PostDetailData? postData;
   AllCommentData? allCommentData;
 
+  final FToast fToast = FToast();
+
   PostDetailState({
     required this.context,
     required this.teamId,
@@ -29,6 +33,7 @@ class PostDetailState extends ChangeNotifier {
   }
 
   void initState() {
+    fToast.init(context);
     log('Instance "PostDetailState" has been created');
   }
 
@@ -100,6 +105,52 @@ class PostDetailState extends ChangeNotifier {
 
     if (result as bool) {
       getDetailPostData();
+    }
+  }
+
+  void reportPost() async {
+    final bool? isSuccess = await apiCode.postReportPost(boardId: boardId);
+
+    if (isSuccess != null && isSuccess) {
+      fToast.showToast(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 51,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '신고가 완료되었어요',
+                        style: TextStyle(
+                          color: grayBlack8,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          toastDuration: const Duration(milliseconds: 3000),
+          positionedToastBuilder: (context, child) {
+            return Positioned(
+              bottom: 120.0,
+              left: 0.0,
+              right: 0,
+              child: child,
+            );
+          });
+
+      Navigator.of(context).pop();
     }
   }
 }

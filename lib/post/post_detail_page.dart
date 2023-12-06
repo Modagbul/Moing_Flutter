@@ -54,92 +54,116 @@ class PostDetailPage extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 26.0),
-                        if (postDetailData?.isNotice ?? false)
-                          _renderNoticeTag(),
-                        const SizedBox(height: 12.0),
-                        Text(
-                          postDetailData?.title ?? '',
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w600,
-                            color: grayScaleGrey300,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 26.0),
+                                if (postDetailData?.isNotice ?? false)
+                                  _renderNoticeTag(),
+                                const SizedBox(height: 12.0),
+                                Text(
+                                  postDetailData?.title ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w600,
+                                    color: grayScaleGrey300,
+                                  ),
+                                ),
+                                const SizedBox(height: 32.0),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                  child: Row(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: postDetailData?.writerProfileImage !=
+                                                null
+                                            ? Image.network(
+                                                postDetailData?.writerProfileImage ??
+                                                    '',
+                                                fit: BoxFit.cover,
+                                                width: 20,
+                                                height: 20,
+                                              )
+                                            : Image.asset(
+                                                'asset/image/icon_user_profile.png',
+                                                fit: BoxFit.cover,
+                                                width: 20,
+                                                height: 20,
+                                              ),
+                                      ),
+                                      const SizedBox(width: 8.0),
+                                      Text(
+                                        postDetailData?.writerNickName ?? '',
+                                        style: const TextStyle(
+                                          color: grayScaleGrey400,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4.0),
+                                      if (postDetailData?.writerIsLeader ?? false)
+                                        Image.asset(
+                                          'asset/image/icon_crown.png',
+                                          width: 14.0,
+                                          height: 14.0,
+                                        ),
+                                      const Spacer(),
+                                      Text(
+                                        postDetailData?.createdDate ?? '',
+                                        style: const TextStyle(
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: grayBlack8,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 4.0),
+                                Text(
+                                  postDetailData?.content ?? '',
+                                  style: const TextStyle(
+                                    color: grayBlack3,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.7,
+                                  ),
+                                ),
+                                const SizedBox(height: 40.0),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 32.0),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 20.0,
-                                height: 20.0,
-                                decoration: BoxDecoration(
-                                  color: grayScaleGrey500,
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              const SizedBox(width: 8.0),
-                              Text(
-                                postDetailData?.writerNickName ?? '',
-                                style: const TextStyle(
-                                  color: grayScaleGrey400,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(width: 4.0),
-                              if (postDetailData?.writerIsLeader ?? false)
-                                Image.asset(
-                                  'asset/image/icon_crown.png',
-                                  width: 14.0,
-                                  height: 14.0,
-                                ),
-                              const Spacer(),
-                              Text(
-                                postDetailData?.createdDate ?? '',
-                                style: const TextStyle(
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.w500,
-                                  color: grayBlack8,
-                                ),
-                              ),
-                            ],
+                          Container(
+                            height: 8.0,
+                            decoration: const BoxDecoration(color: grayScaleGrey600),
                           ),
-                        ),
-                        const SizedBox(height: 4.0),
-                        Text(
-                          postDetailData?.content ?? '',
-                          style: const TextStyle(
-                            color: grayBlack3,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500,
-                            height: 1.7,
-                          ),
-                        ),
-                        const SizedBox(height: 40.0),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 8.0,
-                    decoration: const BoxDecoration(color: grayScaleGrey600),
-                  ),
-                  Expanded(child: _renderCommentScrollBody(context: context)),
-                  Container(
-                    color: grayScaleGrey700,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 12.0),
-                      child: _CommentsInputWidget(),
+                          _renderCommentScrollBody(context: context),
+                          const SizedBox(height: 100),
+                        ],
+                      ),
                     ),
                   ),
                 ],
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  color: grayScaleGrey700,
+                  child: const Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                    child: _CommentsInputWidget(),
+                  ),
+                ),
               ),
             ],
           ),
@@ -182,14 +206,59 @@ class PostDetailPage extends StatelessWidget {
         },
       ),
       actions: [
-        if (context.watch<PostDetailState>().postData?.writerIsLeader ?? false)
-          IconButton(
-            onPressed: () {
-              showPostControlBottomSheet(context: context);
-            },
-            icon: const Icon(Icons.more_vert),
-          )
+        IconButton(
+          onPressed: () {
+            context.read<PostDetailState>().postData?.isWriter ?? false
+                ? showPostControlBottomSheet(context: context)
+                : showPostControlBottomSheetNotWriter(context: context);
+          },
+          icon: const Icon(Icons.more_vert),
+        )
       ],
+    );
+  }
+
+  void showPostControlBottomSheetNotWriter({
+    required BuildContext context,
+  }) {
+    showModalBottomSheet(
+      backgroundColor: grayScaleGrey600,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24.0),
+        ),
+      ),
+      builder: (_) {
+        final screenHeight = MediaQuery.of(context).size.height;
+        return SizedBox(
+          height: screenHeight * 0.25,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                IconTextButton(
+                  onPressed: () {
+                    context.read<PostDetailState>().reportPost();
+                  },
+                  icon: 'asset/image/icon_edit.png',
+                  text: '게시글 신고하기',
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: defaultButtonStyle,
+                  child: const Text('닫기'),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -230,7 +299,9 @@ class PostDetailPage extends StatelessWidget {
                   text: '게시글 삭제하기',
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                   style: defaultButtonStyle,
                   child: const Text('닫기'),
                 )
@@ -247,17 +318,15 @@ class PostDetailPage extends StatelessWidget {
         context.watch<PostDetailState>().allCommentData;
     List<CommentData> commentList = allCommentData?.commentBlocks ?? [];
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 8.0,
-        ),
-        child: Column(
-          children: commentList.map((CommentData comment) {
-            return CommentCard(commentData: comment);
-          }).toList(),
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 8.0,
+      ),
+      child: Column(
+        children: commentList.map((CommentData comment) {
+          return CommentCard(commentData: comment);
+        }).toList(),
       ),
     );
   }

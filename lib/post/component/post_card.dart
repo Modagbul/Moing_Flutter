@@ -32,13 +32,21 @@ class PostCard extends StatelessWidget {
   Widget _renderNoticeCardHeader({required String nickName}) {
     return Row(
       children: [
-        Container(
-          width: 20.0,
-          height: 20.0,
-          decoration: BoxDecoration(
-            color: grayScaleGrey500,
-            borderRadius: BorderRadius.circular(50),
-          ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: postData.writerProfileImage != null
+              ? Image.network(
+                  postData.writerProfileImage!,
+                  fit: BoxFit.cover,
+                  width: 20,
+                  height: 20,
+                )
+              : Image.asset(
+                  'asset/image/icon_user_profile.png',
+                  fit: BoxFit.cover,
+                  width: 20,
+                  height: 20,
+                ),
         ),
         const SizedBox(width: 8.0),
         Text(

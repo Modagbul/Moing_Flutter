@@ -58,46 +58,48 @@ class MissionFirePage extends StatelessWidget {
             ),
             const Positioned(
                 top: 0, left: 20, right: 20, child: MissionFireAppBar()),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 190,
-                  height: 62,
-                  child: ElevatedButton(
-                    onPressed: context.read<MissionFireState>().firePressed,
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(grayScaleGrey100),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(32.0), // borderRadius 설정
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '불 던지기',
-                          style: buttonTextStyle.copyWith(
-                            color: grayScaleGrey900,
+            if (context.watch<MissionFireState>().selectedIndex != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: 190,
+                    height: 62,
+                    child: ElevatedButton(
+                      onPressed: context.read<MissionFireState>().firePressed,
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(grayScaleGrey100),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(32.0), // borderRadius 설정
                           ),
                         ),
-                        const SizedBox(width: 4),
-                        Image.asset(
-                          'asset/image/icon_fire_black.png',
-                          width: 24,
-                          height: 24,
-                        )
-                      ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '불 던지기',
+                            style: buttonTextStyle.copyWith(
+                              color: grayScaleGrey900,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Image.asset(
+                            'asset/image/icon_fire_black.png',
+                            width: 24,
+                            height: 24,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),

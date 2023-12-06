@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
@@ -34,16 +32,23 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log(commentData.writerNickName);
     return Row(
       children: [
-        Container(
-          width: 20.0,
-          height: 20.0,
-          decoration: BoxDecoration(
-            color: grayScaleGrey500,
-            borderRadius: BorderRadius.circular(50),
-          ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: commentData.writerProfileImage != null
+              ? Image.network(
+                  commentData.writerProfileImage!,
+                  fit: BoxFit.cover,
+                  width: 20,
+                  height: 20,
+                )
+              : Image.asset(
+                  'asset/image/icon_user_profile.png',
+                  fit: BoxFit.cover,
+                  width: 20,
+                  height: 20,
+                ),
         ),
         const SizedBox(width: 8.0),
         Text(
