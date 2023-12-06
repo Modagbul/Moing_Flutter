@@ -133,6 +133,7 @@ class MissionFireState extends ChangeNotifier {
       if (apiResponse.data != null) {
         loadFirePersonList();
         compeleteThrowFireModal();
+        initSelectedUser();
       } else {
         if (apiResponse.errorCode == 'J0003') {
           throwFire();
@@ -148,9 +149,24 @@ class MissionFireState extends ChangeNotifier {
     }
   }
 
+  // 선택 유저 초기화 메소드
+  void initSelectedUser(){
+    selectedIndex = null;
+    selectedUserName = '모임원 프로필을 클릭해보세요';
+    notifyListeners();
+  }
+
   // 선택 적용
   void setSelectedIndex(int index) {
     selectedIndex = index;
+
+    if (userList != null) {
+      userList![selectedIndex!].fireStatus == "False"
+          ? selectedUserName = '불 던지기는 1시간에 1번 가능해요'
+          : selectedUserName =
+              '${userList![selectedIndex!].nickname}님에게 불을 던져\n 푸시알림을 보내요';
+    }
+
     notifyListeners();
   }
 
