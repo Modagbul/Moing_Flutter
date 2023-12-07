@@ -64,6 +64,8 @@ class MissionProveState with ChangeNotifier {
 
   // 미션 방법(텍스트, 사진, 링크)
   String missionWay = '';
+  // 미션 종료 날짜
+  String missionDueTo = '';
   // 반복인증 시 나의 성공 횟수
   int repeatMissionMyCount = 0;
   // 반복인증 시 전체 성공 횟수
@@ -211,6 +213,13 @@ class MissionProveState with ChangeNotifier {
           }
         });
   }
+
+  /// 단일 미션 링크 이동
+  void singleMissionLink() async {
+    print('버튼 클릭~');
+    launchUrl(Uri.parse(myMissionList![0].archive));
+  }
+
 
   /// 모임원 미션 인증 성공 인원 조회 API
   void loadTeamMissionProveCount() async {
@@ -388,7 +397,16 @@ class MissionProveState with ChangeNotifier {
 
   /// 미션 삭제 API
   void missionDelete() async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
+    int count = -1;
+    if(isRepeated) {
+      /// TODO : 반복 미션 시 본인 미션 삭제
+      print('반복미션일때는 구현해야 함..');
+    } else {
+      // 단일 미션일 때
+      count = myMissionList![0].count;
+    }
+    print('count : $count');
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$count';
 
     try {
       ApiResponse<int> apiResponse =
@@ -445,7 +463,8 @@ class MissionProveState with ChangeNotifier {
             break;
         }
         // 남은 시간 계산
-        calculateTimeLeft(apiResponse.data?['dueTo']);
+        missionDueTo = apiResponse.data?['dueTo'];
+        calculateTimeLeft(missionDueTo);
         notifyListeners();
       }
       else {
@@ -1298,12 +1317,34 @@ class MissionProveState with ChangeNotifier {
     );
   }
 
+  /// 더보기 버튼 클릭 시
+  clickMoreModal() {
+    if(isLeader) {
+      showModal('more');
+    }
+  }
+
   /// 바텀 모달 클릭
   void showModal(String value) async {
     switch(value) {
       // 더보기 클릭
       case 'more':
-        missionState.showMoreDetails(context: context, missionWay: missionWay, missionContent: missionContent, missionRule: missionRule);
+        bool result = await missionState.showMoreDetails(
+            context: context,
+            missionTitle: missionTitle,
+            missionContent: missionContent,
+            missionRule: missionRule,
+            dueTo : missionDueTo,
+            isRepeated : isRepeated,
+            teamId : teamId,
+            missionId : missionId,
+            repeatCount : repeatMissionTotalCount,
+          missionWay: missionWay,
+        );
+
+        if(result) {
+          initState();
+        }
         break;
       // 미션내용 클릭
       case 'content':

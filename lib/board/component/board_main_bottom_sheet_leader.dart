@@ -60,7 +60,9 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
               text: '소모임 삭제하기',
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               style: defaultButtonStyle,
               child: const Text('닫기'),
             )

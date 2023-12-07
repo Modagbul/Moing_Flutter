@@ -14,25 +14,27 @@ import 'ongoing_misson_state.dart';
 
 class OngoingMissionPage extends StatefulWidget {
   static const routeName = '/board/mission/ongoing';
+  final bool isLeader;
+  const OngoingMissionPage({Key? key, required this.isLeader}) : super(key: key);
 
-  const OngoingMissionPage({Key? key}) : super(key: key);
 
   static route(BuildContext context) {
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
-    log(arguments.runtimeType.toString());
-    log(arguments['teamId'].runtimeType.toString());
     final int teamId = arguments['teamId'];
+    final bool isLeader = arguments['isLeader'] ?? false;
+    print('미션 인증에서 teamId : $teamId');
+    print('리더 값도 보내주나? : ${arguments['isLeader']}');
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (_) =>
-                OngoingMissionState(context: context, teamId: teamId)),
+                OngoingMissionState(context: context, teamId: teamId, isLeader: isLeader)),
       ],
       builder: (context, _) {
-        return const OngoingMissionPage();
+        return OngoingMissionPage(isLeader: isLeader);
       },
     );
   }
@@ -79,7 +81,6 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
   @override
   Widget build(BuildContext context) {
     final state = context.watch<OngoingMissionState>();
-
     final data = state.repeatMissionStatus?.data;
     if (data == null) {
       log('repeatMissionData is null');
@@ -293,7 +294,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
           ),
         ),
       ),
-      floatingActionButton: const _BottomButton(),
+      floatingActionButton: (state.isLeader != null && state.isLeader!) ? const _BottomButton() : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

@@ -2,17 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/missions/fix/mission_fix_data.dart';
+import 'package:moing_flutter/missions/fix/mission_fix_page.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 
 class MissionState {
   /// 미션 더보기 클릭 시
-  void showMoreDetails({
+  Future<bool> showMoreDetails({
     required BuildContext context,
-    required String missionWay,
+    required String missionTitle,
     required String missionContent,
     required String missionRule,
-}) {
-    showModalBottomSheet(
+    required String dueTo,
+    required bool isRepeated,
+    required int teamId,
+    required int missionId,
+    required int repeatCount,
+    required String missionWay,
+}) async {
+    MissionFixData data = MissionFixData(
+        missionTitle: missionTitle,
+        missionContent: missionContent,
+        missionDueto: dueTo,
+        missionRule: missionRule,
+      isRepeated: isRepeated,
+      teamId: teamId,
+      missionId: missionId,
+      repeatCount: repeatCount,
+      missionWay: missionWay,
+    );
+
+    var modalResult = await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
@@ -31,43 +51,60 @@ class MissionState {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SvgPicture.asset(
-                        'asset/icons/repeat_mission_end.svg',
-                        width: 32,
-                        height: 32,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(width: 24),
-                      Text(
-                        '반복미션 종료하기',
-                        style: middleTextStyle.copyWith(color: grayScaleGrey100),
-                      ),
-                    ],
+                GestureDetector(
+                  onTap: () {
+                    print('반복미션 종료하기 클릭');
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(
+                          'asset/icons/repeat_mission_end.svg',
+                          width: 32,
+                          height: 32,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(width: 24),
+                        Text(
+                          '반복미션 종료하기',
+                          style: middleTextStyle.copyWith(color: grayScaleGrey100),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 16),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SvgPicture.asset(
-                        'asset/icons/mission_skip.svg',
-                        width: 32,
-                        height: 32,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(width: 24),
-                      Text(
-                        '미션 수정하기',
-                        style: middleTextStyle.copyWith(color: grayScaleGrey100),
-                      ),
-                    ],
+                GestureDetector(
+                  onTap: () async {
+                    print('미션 수정하기 클릭');
+                    var result = await Navigator.of(context).pushNamed(MissionFixPage.routeName, arguments: data);
+                    if(result != null && result == true) {
+                      Navigator.of(context).pop(true);
+                    }
+                    else {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(
+                          'asset/icons/mission_skip.svg',
+                          width: 32,
+                          height: 32,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(width: 24),
+                        Text(
+                          '미션 수정하기',
+                          style: middleTextStyle.copyWith(color: grayScaleGrey100),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
@@ -95,6 +132,10 @@ class MissionState {
         );
       },
     );
+
+    if(modalResult != null && modalResult == true) {
+      return true;
+    } else return false;
   }
 
   /// 미션 내용, 규칙 클릭 시

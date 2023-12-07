@@ -87,9 +87,9 @@ class _BoardMainPageState extends State<BoardMainPage>
           Expanded(
             child: TabBarView(
               controller: context.read<BoardMainState>().tabController,
-              children: const [
+              children: [
                 BoardGoalScreen(),
-                BoardMissionScreen(),
+                BoardMissionScreen(isLeader: context.watch<BoardMainState>().isLeader),
               ],
             ),
           ),

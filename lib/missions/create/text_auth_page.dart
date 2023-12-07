@@ -30,7 +30,7 @@ class TextAuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: '텍스트로 인증하기'),
       body: const Padding(
         padding: EdgeInsets.only(left: 10.0),

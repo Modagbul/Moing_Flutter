@@ -11,12 +11,14 @@ class OngoingMissionState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
   int teamId;
+  bool? isLeader;
   RepeatMissionStatusResponse? repeatMissionStatus;
   BoardSingleMissionResponse? singleMissionStatus;
 
   OngoingMissionState({
     required this.context,
     required this.teamId,
+    this.isLeader,
   }) {
     initState();
   }

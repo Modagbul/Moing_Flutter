@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
+import 'package:moing_flutter/board/screen/completed_mission_state.dart';
 import 'package:moing_flutter/board/screen/ongoing_misson_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:provider/provider.dart';
@@ -12,37 +13,19 @@ import 'ongoing_misson_page.dart';
 
 class BoardMissionScreen extends StatefulWidget {
   static const routeName = '/board/mission';
-
-  const BoardMissionScreen({super.key});
-
-  static route(BuildContext context) {
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-
-    log(arguments.runtimeType.toString());
-    log(arguments['teamId'].runtimeType.toString());
-    final int teamId = arguments['teamId'];
-
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (_) => BoardMissionState(context: context)),
-        ChangeNotifierProvider(
-            create: (_) =>
-                OngoingMissionState(context: context, teamId: teamId)),
-      ],
-      builder: (context, _) {
-        return const BoardMissionScreen();
-      },
-    );
-  }
+  bool? isLeader;
+  BoardMissionScreen({Key? key, this.isLeader}) : super(key: key);
 
   @override
-  State<BoardMissionScreen> createState() => _BoardMissionScreenState();
+  State<BoardMissionScreen> createState() => _BoardMissionScreenState(isLeader : isLeader);
 }
 
 class _BoardMissionScreenState extends State<BoardMissionScreen>
     with SingleTickerProviderStateMixin {
+  var isLeader;
+
+  _BoardMissionScreenState({this.isLeader});
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +41,7 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
 
   @override
   Widget build(BuildContext context) {
+    print('BoardMissionScreen에서 나의 리더 여부2 : $isLeader');
     final tabController = context.select<BoardMissionState, TabController?>(
       (state) => state.tabController,
     );
@@ -65,13 +49,20 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
     if (tabController == null) {
       return Container();
     }
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => OngoingMissionState(
             context: context,
             teamId: context.watch<BoardMainState>().teamId,
+            isLeader: isLeader,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CompletedMissionState(
+            context: context,
+            teamId: context.watch<BoardMainState>().teamId,
+            isLeader: isLeader,
           ),
         ),
       ],
@@ -113,8 +104,9 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  OngoingMissionPage.route(context),
-                  CompletedMissionPage.route(context),
+                  OngoingMissionPage(isLeader: isLeader ?? false),
+                  // CompletedMissionPage.route(context),
+                  CompletedMissionPage(isLeader: isLeader ?? false),
                 ],
               ),
             ),

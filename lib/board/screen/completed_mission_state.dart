@@ -8,11 +8,13 @@ class CompletedMissionState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
   int teamId;
+  bool? isLeader;
   BoardCompletedMissionResponse? completedMissionStatus;
 
   CompletedMissionState({
     required this.context,
     required this.teamId,
+    this.isLeader,
   }) {
     log('Instance "CompletedMissionState" has been created');
     initState();

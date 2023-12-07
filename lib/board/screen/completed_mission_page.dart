@@ -11,21 +11,22 @@ import 'completed_mission_state.dart';
 
 class CompletedMissionPage extends StatelessWidget {
   static const routeName = '/board/mission/completed';
-
-  const CompletedMissionPage({super.key});
+  final bool isLeader;
+  const CompletedMissionPage({Key? key, required this.isLeader}) : super(key: key);
 
   static route(BuildContext context) {
     final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
     final int teamId = arguments['teamId'] as int;
+    final bool isLeader = arguments['isLeader'] ?? false;
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (_) =>
-                CompletedMissionState(context: context, teamId: teamId)),
+                CompletedMissionState(context: context, teamId: teamId, isLeader: isLeader)),
       ],
       builder: (context, _) {
-        return const CompletedMissionPage();
+        return CompletedMissionPage(isLeader: isLeader,);
       },
     );
   }
@@ -93,7 +94,7 @@ class CompletedMissionPage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: const _BottomButton(),
+      floatingActionButton: (state.isLeader != null && state.isLeader!) ? const _BottomButton() : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

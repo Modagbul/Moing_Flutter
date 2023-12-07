@@ -5,6 +5,7 @@ import 'package:moing_flutter/board/screen/team_member_list_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
+import 'package:moing_flutter/model/response/single_board_team_member_info.dart';
 import 'package:moing_flutter/model/team/team_fire_level_models.dart';
 import 'package:moing_flutter/post/post_main_page.dart';
 
@@ -14,6 +15,7 @@ class BoardMainState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final int teamId;
   final bool isSuccess;
+  bool? isLeader;
 
   SingleBoardData? singleBoardData;
   TeamFireLevelData? teamFireLevelData;
@@ -48,7 +50,21 @@ class BoardMainState extends ChangeNotifier {
   void getSingleBoard() async {
     singleBoardData = await apiCode.getSingleBoard(teamId: teamId);
     teamInfo = singleBoardData?.teamInfo;
+    isMeLeader();
     notifyListeners();
+  }
+
+  // 내가 리더인지 확인
+  void isMeLeader() {
+    int myMemberId = teamInfo!.currentUserId;
+    for(TeamMemberInfo teamMember in teamInfo!.teamMemberInfoList) {
+      if(myMemberId == teamMember.memberId && teamMember.isLeader) {
+        isLeader = true;
+      }
+      else {
+        isLeader = false;
+      }
+    }
   }
 
   void navigatePostMainPage() {

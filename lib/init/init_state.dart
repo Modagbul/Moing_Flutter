@@ -71,6 +71,7 @@ class InitState extends ChangeNotifier {
             await getTeamNameAndNumber();
             if(numOfTeam != null && numOfTeam! < 3) {
               bool? isRegistered = await registerTeam();
+              // 가입 완료되었을 때
               if(isRegistered != null && isRegistered) {
                 Navigator.pushNamedAndRemoveUntil(
                     context,
@@ -105,12 +106,17 @@ class InitState extends ChangeNotifier {
           }
         }
 
-        /// 일반적으로 접속한 사람
+        /// 일반적으로 접속한 사람 (teamId = null)
         else {
           bool? isUser = await checkUser();
           if(isUser != null && isUser) {
             Navigator.pushNamedAndRemoveUntil(
                 context, MainPage.routeName, (route) => false);
+          }
+          else {
+            print(1);
+            Navigator.pushNamedAndRemoveUntil(
+                context, LoginPage.routeName, (route) => false);
           }
         }
       }
