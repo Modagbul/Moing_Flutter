@@ -57,10 +57,15 @@ class HomeScreenState extends ChangeNotifier {
     String warningText = '';
     // 이미 가입한 유저일 때
     if(newCreated == 'isRegistered') {
-      warningText = '이미 이 소모임에 가입했어요';
+      warningText = '이미 가입한 소모임이에요';
     }
     else if (newCreated == 'full') {
       warningText = '최대 3개의 소모임에서만 활동할 수 있어요';
+    } else if (newCreated == 'T0003') {
+      warningText = '한번 탈퇴한 소모임에 다시 가입할 수 없어요';
+    } else {
+      warningText = '소모임 가입에 실패했어요';
+      print('소모임 가입 실패 에러 확인 : $newCreated');
     }
     if(warningText.length > 1) {
       fToast.showToast(
@@ -79,7 +84,6 @@ class HomeScreenState extends ChangeNotifier {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if(newCreated == 'full')
                         Row(
                           children: [
                             SvgPicture.asset(

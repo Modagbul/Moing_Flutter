@@ -14,8 +14,7 @@ import 'ongoing_misson_state.dart';
 
 class OngoingMissionPage extends StatefulWidget {
   static const routeName = '/board/mission/ongoing';
-  final bool isLeader;
-  const OngoingMissionPage({Key? key, required this.isLeader}) : super(key: key);
+  const OngoingMissionPage({Key? key}) : super(key: key);
 
 
   static route(BuildContext context) {
@@ -23,18 +22,16 @@ class OngoingMissionPage extends StatefulWidget {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
     final int teamId = arguments['teamId'];
-    final bool isLeader = arguments['isLeader'] ?? false;
     print('미션 인증에서 teamId : $teamId');
-    print('리더 값도 보내주나? : ${arguments['isLeader']}');
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (_) =>
-                OngoingMissionState(context: context, teamId: teamId, isLeader: isLeader)),
+                OngoingMissionState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
-        return OngoingMissionPage(isLeader: isLeader);
+        return OngoingMissionPage();
       },
     );
   }

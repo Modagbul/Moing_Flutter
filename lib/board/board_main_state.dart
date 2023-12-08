@@ -15,7 +15,6 @@ class BoardMainState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final int teamId;
   final bool isSuccess;
-  bool? isLeader;
 
   SingleBoardData? singleBoardData;
   TeamFireLevelData? teamFireLevelData;
@@ -50,21 +49,7 @@ class BoardMainState extends ChangeNotifier {
   void getSingleBoard() async {
     singleBoardData = await apiCode.getSingleBoard(teamId: teamId);
     teamInfo = singleBoardData?.teamInfo;
-    isMeLeader();
     notifyListeners();
-  }
-
-  // 내가 리더인지 확인
-  void isMeLeader() {
-    int myMemberId = teamInfo!.currentUserId;
-    for(TeamMemberInfo teamMember in teamInfo!.teamMemberInfoList) {
-      if(myMemberId == teamMember.memberId && teamMember.isLeader) {
-        isLeader = true;
-      }
-      else {
-        isLeader = false;
-      }
-    }
   }
 
   void navigatePostMainPage() {

@@ -13,18 +13,14 @@ import 'ongoing_misson_page.dart';
 
 class BoardMissionScreen extends StatefulWidget {
   static const routeName = '/board/mission';
-  bool? isLeader;
-  BoardMissionScreen({Key? key, this.isLeader}) : super(key: key);
+  BoardMissionScreen({Key? key}) : super(key: key);
 
   @override
-  State<BoardMissionScreen> createState() => _BoardMissionScreenState(isLeader : isLeader);
+  State<BoardMissionScreen> createState() => _BoardMissionScreenState();
 }
 
 class _BoardMissionScreenState extends State<BoardMissionScreen>
     with SingleTickerProviderStateMixin {
-  var isLeader;
-
-  _BoardMissionScreenState({this.isLeader});
 
   @override
   void initState() {
@@ -41,7 +37,6 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
 
   @override
   Widget build(BuildContext context) {
-    print('BoardMissionScreen에서 나의 리더 여부2 : $isLeader');
     final tabController = context.select<BoardMissionState, TabController?>(
       (state) => state.tabController,
     );
@@ -55,14 +50,12 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
           create: (_) => OngoingMissionState(
             context: context,
             teamId: context.watch<BoardMainState>().teamId,
-            isLeader: isLeader,
           ),
         ),
         ChangeNotifierProvider(
           create: (_) => CompletedMissionState(
             context: context,
             teamId: context.watch<BoardMainState>().teamId,
-            isLeader: isLeader,
           ),
         ),
       ],
@@ -104,9 +97,9 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  OngoingMissionPage(isLeader: isLeader ?? false),
+                  OngoingMissionPage(),
                   // CompletedMissionPage.route(context),
-                  CompletedMissionPage(isLeader: isLeader ?? false),
+                  CompletedMissionPage(),
                 ],
               ),
             ),

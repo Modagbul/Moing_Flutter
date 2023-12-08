@@ -89,7 +89,7 @@ class _BoardMainPageState extends State<BoardMainPage>
               controller: context.read<BoardMainState>().tabController,
               children: [
                 BoardGoalScreen(),
-                BoardMissionScreen(isLeader: context.watch<BoardMainState>().isLeader),
+                BoardMissionScreen(),
               ],
             ),
           ),
