@@ -9,6 +9,8 @@ import 'package:moing_flutter/model/request/create_comment_request.dart';
 import 'package:moing_flutter/model/response/get_all_comments_response.dart';
 import 'package:moing_flutter/post/post_update_page.dart';
 
+import '../const/style/text.dart';
+
 class PostDetailState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
@@ -83,6 +85,48 @@ class PostDetailState extends ChangeNotifier {
       return commentBlock.boardCommentId == boardCommentId;
     });
     notifyListeners();
+
+    String warningText = '댓글이 삭제되었어요.';
+
+    if (warningText.isNotEmpty) {
+      fToast.showToast(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 51,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        warningText,
+                        style: bodyTextStyle.copyWith(
+                          color: grayScaleGrey700,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          toastDuration: const Duration(milliseconds: 3000),
+          positionedToastBuilder: (context, child) {
+            return Positioned(
+              bottom: 136.0,
+              left: 0.0,
+              right: 0,
+              child: child,
+            );
+          });
+    }
   }
 
   void deletePost() async {
@@ -90,6 +134,48 @@ class PostDetailState extends ChangeNotifier {
     notifyListeners();
     Navigator.pop(context);
     Navigator.pop(context, true);
+
+    String warningText = '게시글이 삭제되었어요.';
+
+    if (warningText.isNotEmpty) {
+      fToast.showToast(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 51,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        warningText,
+                        style: bodyTextStyle.copyWith(
+                          color: grayScaleGrey700,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          toastDuration: const Duration(milliseconds: 3000),
+          positionedToastBuilder: (context, child) {
+            return Positioned(
+              top: 114.0,
+              left: 0.0,
+              right: 0,
+              child: child,
+            );
+          });
+    }
   }
 
   void navigatePostUpdatePage() async {
@@ -105,6 +191,50 @@ class PostDetailState extends ChangeNotifier {
 
     if (result as bool) {
       getDetailPostData();
+    }
+
+    Navigator.of(context).pop();
+
+    String warningText = '게시글이 수정되었어요.';
+
+    if (warningText.isNotEmpty) {
+      fToast.showToast(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 51,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        warningText,
+                        style: bodyTextStyle.copyWith(
+                          color: grayScaleGrey700,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          toastDuration: const Duration(milliseconds: 3000),
+          positionedToastBuilder: (context, child) {
+            return Positioned(
+              bottom: 136.0,
+              left: 0.0,
+              right: 0,
+              child: child,
+            );
+          });
     }
   }
 

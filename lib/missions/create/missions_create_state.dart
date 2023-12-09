@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
@@ -62,6 +63,8 @@ class MissionCreateState extends ChangeNotifier {
   String formattedDate = '';
   String formattedTime = '';
 
+  final FToast fToast = FToast();
+
   MissionCreateState({
     required this.context,
     required this.teamId,
@@ -83,6 +86,8 @@ class MissionCreateState extends ChangeNotifier {
         FixedExtentScrollController(initialItem: missionCountIndex);
     timeScrollController =
         FixedExtentScrollController(initialItem: timeCountIndex);
+
+    fToast.init(context);
   }
 
   @override
@@ -605,6 +610,47 @@ class MissionCreateState extends ChangeNotifier {
       } catch (e) {
         log('미션 생성 실패: $e');
       }
+    }
+    String warningText = '미션이 등록되었어요.';
+
+    if (warningText.isNotEmpty) {
+      fToast.showToast(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 51,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        warningText,
+                        style: bodyTextStyle.copyWith(
+                          color: grayScaleGrey700,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          toastDuration: const Duration(milliseconds: 3000),
+          positionedToastBuilder: (context, child) {
+            return Positioned(
+              top: 114.0,
+              left: 0.0,
+              right: 0,
+              child: child,
+            );
+          });
     }
   }
 }

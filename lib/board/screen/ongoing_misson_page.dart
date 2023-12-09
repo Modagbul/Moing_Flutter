@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
@@ -58,6 +59,8 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
     });
   }
 
+  final FToast fToast = FToast();
+
   @override
   void initState() {
     super.initState();
@@ -67,12 +70,50 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
     );
     _fadeAnimation = Tween(begin: 1.0, end: 0.0).animate(_animationController);
     _animationController.forward();
+    fToast.init(context);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  void showToast(String message) {
+    fToast.showToast(
+      child: Material(
+        type: MaterialType.transparency,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: 51,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+            ),
+            child: Text(
+              message,
+              style: bodyTextStyle.copyWith(
+                color: grayScaleGrey700,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      ),
+      toastDuration: const Duration(milliseconds: 3000),
+      positionedToastBuilder: (context, child) {
+        return Positioned(
+          top: 114.0,
+          left: 0.0,
+          right: 0,
+          child: child,
+        );
+      },
+    );
   }
 
   @override
@@ -140,6 +181,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                             missionId: e.missionId,
                             status: e.status,
                             fadeAnimation: _fadeAnimation,
+                            onShowToast: showToast,
                             onTap: () {
                               Navigator.of(context).pushNamed(
                                 MissionProvePage.routeName,

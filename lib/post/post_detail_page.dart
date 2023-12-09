@@ -10,6 +10,7 @@ import 'package:moing_flutter/post/post_detail_state.dart';
 import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
+import '../make_group/component/warning_dialog.dart';
 
 class PostDetailPage extends StatelessWidget {
   static const routeName = '/post/detail';
@@ -292,9 +293,7 @@ class PostDetailPage extends StatelessWidget {
                   text: '게시글 수정하기',
                 ),
                 IconTextButton(
-                  onPressed: () {
-                    context.read<PostDetailState>().deletePost();
-                  },
+                  onPressed: () => _showDeleteDialog(context),
                   icon: 'asset/image/icon_delete.png',
                   text: '게시글 삭제하기',
                 ),
@@ -312,6 +311,31 @@ class PostDetailPage extends StatelessWidget {
       },
     );
   }
+
+  void _showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            WarningDialog(
+              title: '게시글을 삭제하시겠어요?',
+              content: '한번 삭제한 게시글은 복구할 수 없게 됩니다',
+              onConfirm: () async {
+                Navigator.of(dialogContext).pop();
+                context.read<PostDetailState>().deletePost();
+              },
+              onCanceled: () => Navigator.of(dialogContext).pop(),
+              leftText: '취소하기',
+              rightText: '삭제하기',
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   Widget _renderCommentScrollBody({required BuildContext context}) {
     AllCommentData? allCommentData =
