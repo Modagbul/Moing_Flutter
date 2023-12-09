@@ -13,6 +13,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
   final int missionId;
   final VoidCallback onTap;
   final Animation<double> fadeAnimation;
+  final Function(String) onShowToast;
 
   const BoardRepeatMissionCard({
     super.key,
@@ -24,6 +25,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
     required this.missionId,
     required this.onTap,
     required this.fadeAnimation,
+    required this.onShowToast,
   });
 
   @override
@@ -31,8 +33,13 @@ class BoardRepeatMissionCard extends StatelessWidget {
     String tagText = _getTagText(status);
 
     return GestureDetector(
-      onTap: (tagText == '내일 리셋' || tagText.isEmpty) ? onTap : null,
-      child: Stack(
+      onTap: () {
+        if (tagText == '내일 리셋' || tagText.isEmpty) {
+          onTap();
+        } else {
+          onShowToast('반복 미션은 다음 주 월요일에 시작해요.');
+        }
+      },      child: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

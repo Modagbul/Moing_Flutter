@@ -4,11 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:moing_flutter/missions/create/const/mission_create_text_list.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_data.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
+
+import '../../const/color/colors.dart';
+import '../../const/style/text.dart';
 
 class MissionFixState extends ChangeNotifier {
   final BuildContext context;
@@ -33,6 +37,8 @@ class MissionFixState extends ChangeNotifier {
   // 완료 버
   bool checkSubmit = true;
 
+  final FToast fToast = FToast();
+
   MissionFixState({
     required this.context,
     required this.fixData,
@@ -49,6 +55,8 @@ class MissionFixState extends ChangeNotifier {
     ruleController.text = fixData.missionRule;
     timeScrollController = FixedExtentScrollController(initialItem: timeCountIndex);
     notifyListeners();
+
+    fToast.init(context);
   }
 
   void dispose() {
@@ -230,6 +238,48 @@ class MissionFixState extends ChangeNotifier {
       } catch (e) {
         log('미션 수정 실패2: $e');
       }
+    }
+
+    String warningText = '미션이 수정되었어요.';
+
+    if (warningText.isNotEmpty) {
+      fToast.showToast(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 51,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        warningText,
+                        style: bodyTextStyle.copyWith(
+                          color: grayScaleGrey700,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          toastDuration: const Duration(milliseconds: 3000),
+          positionedToastBuilder: (context, child) {
+            return Positioned(
+              bottom: 136.0,
+              left: 0.0,
+              right: 0,
+              child: child,
+            );
+          });
     }
   }
 }

@@ -103,16 +103,21 @@ class SettingPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return WarningDialog(
-          title: '정말 로그아웃하시겠어요?',
-          content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
-          onConfirm: () async {
-            Navigator.of(context).pop();
-            await _logout(context);
-          },
-          onCanceled: () => Navigator.of(context).pop(),
-          leftText: '로그아웃',
-          rightText: '남아있기',
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            WarningDialog(
+              title: '정말 로그아웃하시겠어요?',
+              content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
+              onConfirm: () async {
+                Navigator.of(context).pop();
+                await _logout(context);
+              },
+              onCanceled: () => Navigator.of(context).pop(),
+              leftText: '로그아웃',
+              rightText: '남아있기',
+            ),
+          ],
         );
       },
     );

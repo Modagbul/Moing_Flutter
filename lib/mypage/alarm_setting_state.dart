@@ -9,10 +9,10 @@ class AlarmSettingState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
 
-  bool isTotalAlarmOn = true;
-  bool isNewUploadPushOn = true;
-  bool isRemindPushOn = true;
-  bool isFirePushOn = true;
+  bool? isTotalAlarmOn;
+  bool? isNewUploadPushOn;
+  bool? isRemindPushOn;
+  bool? isFirePushOn;
 
   AlarmSettingsResponse? getAlarmSettings;
   AlarmSettingsEditor? updateAlarmSettings;
@@ -36,6 +36,7 @@ class AlarmSettingState extends ChangeNotifier {
   }
 
   AlarmSettingState({required this.context}) {
+    fetchAlarmSettings();
     initState();
   }
 
@@ -49,7 +50,7 @@ class AlarmSettingState extends ChangeNotifier {
       isNewUploadPushOn = response.newUploadPush;
       isRemindPushOn = response.remindPush;
       isFirePushOn = response.firePush;
-      isTotalAlarmOn = isNewUploadPushOn && isRemindPushOn && isFirePushOn;
+      isTotalAlarmOn = isNewUploadPushOn! && isRemindPushOn! && isFirePushOn!;
 
       notifyListeners();
     }
@@ -57,9 +58,9 @@ class AlarmSettingState extends ChangeNotifier {
 
   Future<void> saveAlarmSettings() async {
     try {
-      await updateSingleAlarmSetting('isNewUploadPush', isNewUploadPushOn);
-      await updateSingleAlarmSetting('isRemindPush', isRemindPushOn);
-      await updateSingleAlarmSetting('isFirePush', isFirePushOn);
+      await updateSingleAlarmSetting('isNewUploadPush', isNewUploadPushOn!);
+      await updateSingleAlarmSetting('isRemindPush', isRemindPushOn!);
+      await updateSingleAlarmSetting('isFirePush', isFirePushOn!);
 
       log('알람 설정이 성공적으로 업데이트되었습니다.');
       fetchAlarmSettings();
@@ -108,7 +109,7 @@ class AlarmSettingState extends ChangeNotifier {
 
   void changeAllAlarms(bool isTotalOn) {
     isNewUploadPushOn = isRemindPushOn = isFirePushOn = isTotalOn;
-    print('iisNewUploadPushOn : $isNewUploadPushOn');
+    print('isNewUploadPushOn : $isNewUploadPushOn');
     print('isRemindPushOn : $isRemindPushOn');
     print('isFirePushOn : $isFirePushOn');
 
@@ -118,18 +119,18 @@ class AlarmSettingState extends ChangeNotifier {
   bool changeNewAlarm(bool isChecked) {
     isNewUploadPushOn = isChecked;
     notifyListeners();
-    return isNewUploadPushOn;
+    return isNewUploadPushOn!;
   }
 
   bool changeRemindAlarm(bool isChecked) {
     isRemindPushOn = isChecked;
     notifyListeners();
-    return isRemindPushOn;
+    return isRemindPushOn!;
   }
 
   bool changeFireAlarm(bool isChecked) {
     isFirePushOn = isChecked;
     notifyListeners();
-    return isFirePushOn;
+    return isFirePushOn!;
   }
 }

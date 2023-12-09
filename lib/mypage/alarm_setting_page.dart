@@ -26,6 +26,12 @@ class AlarmSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var alarmSettingState = context.watch<AlarmSettingState>();
+
+    if (alarmSettingState.isTotalAlarmOn == null) {
+      return const CircularProgressIndicator();
+    }
+
     return Scaffold(
       appBar: MoingAppBar(
         title: '알림설정',
@@ -38,24 +44,24 @@ class AlarmSettingPage extends StatelessWidget {
           children: [
             ListToggleTileNoSub(
               listName: '전체 알림',
-              initialValue: context.watch<AlarmSettingState>().isTotalAlarmOn,
+              initialValue: context.watch<AlarmSettingState>().isTotalAlarmOn!,
               onToggle: (value) => context.read<AlarmSettingState>().changeAllAlarms(value),
             ),
             ListToggleTile(
               listName: '신규 공지 알림',
               subText: '빠른 공지 확인을 위해\n알림 ON을 유지해주세요!',
-              initialValue: context.watch<AlarmSettingState>().isNewUploadPushOn,
+              initialValue: context.watch<AlarmSettingState>().isNewUploadPushOn!,
               onToggle: (value) => context.read<AlarmSettingState>().changeNewAlarm(value),
             ),
             ListToggleTile(
               listName: '미션 리마인드 알림',
               subText: '매일 오전 8시, 미션에 대한\n리마인드 알림을 드릴게요!',
-              initialValue: context.watch<AlarmSettingState>().isRemindPushOn,
+              initialValue: context.watch<AlarmSettingState>().isRemindPushOn!,
               onToggle: (value) => context.read<AlarmSettingState>().changeRemindAlarm(value),
             ),
             ListToggleTileNoSub(
               listName: '불 던지기 알림',
-              initialValue: context.watch<AlarmSettingState>().isFirePushOn,
+              initialValue: context.watch<AlarmSettingState>().isFirePushOn!,
               onToggle: (value) => context.read<AlarmSettingState>().changeFireAlarm(value),
             ),
             const Spacer(),
