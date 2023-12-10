@@ -30,12 +30,6 @@ class HomeCardScroll extends StatelessWidget {
               orElse: () => TeamMissionPhotoData(teamId: 0, photo: []),
             );
 
-            if (context.watch<HomeScreenState>().newCreated == "new" &&
-                index == 0 &&
-                context.read<HomeScreenState>().onlyOnce) {
-              context.read<HomeScreenState>().showNewAddedGroup();
-            }
-
             return GestureDetector(
               onTap: () {
                 context.read<HomeScreenState>().teamPressed(team.teamId);
@@ -181,7 +175,7 @@ class HomeCardScroll extends StatelessWidget {
                             : const SizedBox(height: 54),
                       ),
                       //위치 좌측으로, 1초 이후 사라지게
-                      (context.watch<HomeScreenState>().showNewExpression &&
+                      (context.watch<HomeScreenState>().newCreated == "new" &&
                               index == 0)
                           ? const Column(
                               children: [
@@ -226,12 +220,12 @@ class HomeCardScroll extends StatelessWidget {
                           color: grayScaleGrey600,
                           borderRadius: BorderRadius.circular(32),
                           border: Border.all(
-                            color: (context
-                                        .watch<HomeScreenState>()
-                                        .showNewExpression &&
-                                    index == 0)
-                                ? coralGrey500
-                                : Colors.transparent,
+                            color:
+                                (context.watch<HomeScreenState>().newCreated ==
+                                            "new" &&
+                                        index == 0)
+                                    ? coralGrey500
+                                    : Colors.transparent,
                             width: 1.0,
                           ),
                         ),
