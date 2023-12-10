@@ -64,7 +64,7 @@ class _BoardMainPageState extends State<BoardMainPage>
 
   @override
   Widget build(BuildContext context) {
-    final TeamInfo? teamInfo = context.read<BoardMainState>().teamInfo;
+    final TeamInfo? teamInfo = context.watch<BoardMainState>().teamInfo;
     final String teamName = teamInfo?.teamName ?? '';
     final int teamId = context.read<BoardMainState>().teamId;
 
@@ -88,7 +88,7 @@ class _BoardMainPageState extends State<BoardMainPage>
             child: TabBarView(
               controller: context.read<BoardMainState>().tabController,
               children: [
-                BoardGoalScreen(),
+                const BoardGoalScreen(),
                 BoardMissionScreen(),
               ],
             ),

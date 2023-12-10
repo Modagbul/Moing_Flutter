@@ -122,8 +122,8 @@ class _Notice extends StatelessWidget {
           child: _renderNoticeHeader(noticeNum: allPostData?.noticeNum ?? 0),
         ),
         const SizedBox(height: 8.0),
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0),
+        SizedBox(
+          height: 150,
           child: _renderNoticeScrollBody(context: context),
         ),
       ],
@@ -153,40 +153,47 @@ class _Notice extends StatelessWidget {
 
   Widget _renderNoticeScrollBody({required BuildContext context}) {
     AllPostData? allPostData = context.watch<PostMainState>().allPostData;
+    PageController pageController = PageController(
+      viewportFraction: 0.9,
+    );
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: allPostData != null && allPostData.noticeNum == 0
-          ? const SizedBox(
-              height: 150,
-              child: Center(
-                child: Text(
-                  '아직 공지사항이 없어요',
-                  style: TextStyle(
-                    color: grayScaleGrey400,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+    return allPostData != null && allPostData.noticeNum == 0
+        ? const SizedBox(
+            height: 150,
+            child: Center(
+              child: Text(
+                '아직 공지사항이 없어요',
+                style: TextStyle(
+                  color: grayScaleGrey400,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            )
-          : Row(
-              children: allPostData?.noticeBlocks
-                      .map((notice) => GestureDetector(
-                            onTap: () {
-                              context
-                                  .read<PostMainState>()
-                                  .navigatePostDetailPage(
-                                      boardId: notice.boardId);
-                            },
-                            child: NoticeCard(
-                              noticeData: notice,
-                            ),
-                          ))
-                      .toList() ??
-                  [],
             ),
-    );
+          )
+        : PageView.builder(
+            controller: pageController,
+            scrollDirection: Axis.horizontal,
+            pageSnapping: true,
+            itemCount: allPostData?.noticeBlocks.length ?? 0,
+            itemBuilder: (context, index) {
+              final notice = allPostData!.noticeBlocks[index];
+
+              return GestureDetector(
+                onTap: () {
+                  context
+                      .read<PostMainState>()
+                      .navigatePostDetailPage(boardId: notice.boardId);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: NoticeCard(
+                    noticeData: notice,
+                  ),
+                ),
+              );
+            },
+          );
   }
 }
 

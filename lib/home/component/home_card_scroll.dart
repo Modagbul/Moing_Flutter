@@ -14,11 +14,16 @@ class HomeCardScroll extends StatelessWidget {
   Widget build(BuildContext context) {
     List<TeamMissionPhotoData> teamMissionPhotoList =
         context.watch<HomeScreenState>().teamMissionPhotoList;
+    PageController pageController = PageController(
+      viewportFraction: 0.95,
+    );
 
     return Container(
       width: double.infinity,
       height: 356,
-      child: ListView.builder(
+      child: PageView.builder(
+          controller: pageController,
+          pageSnapping: true,
           scrollDirection: Axis.horizontal,
           physics: const PageScrollPhysics(),
           itemCount: context.watch<HomeScreenState>().teamList.length,
@@ -29,12 +34,6 @@ class HomeCardScroll extends StatelessWidget {
               (element) => element.teamId == team.teamId,
               orElse: () => TeamMissionPhotoData(teamId: 0, photo: []),
             );
-
-            if (context.watch<HomeScreenState>().newCreated == "new" &&
-                index == 0 &&
-                context.read<HomeScreenState>().onlyOnce) {
-              context.read<HomeScreenState>().showNewAddedGroup();
-            }
 
             return GestureDetector(
               onTap: () {
@@ -51,78 +50,78 @@ class HomeCardScroll extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 26.0, top: 36),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(
-                                  width: 52.0,
-                                  height: 52.0,
-                                  decoration: BoxDecoration(
-                                    color: grayScaleGrey500,
-                                    borderRadius: BorderRadius.circular(50),
+                      const SizedBox(height: 36.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 52.0,
+                                height: 52.0,
+                                decoration: BoxDecoration(
+                                  color: grayScaleGrey500,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              Image.asset(
+                                'asset/image/category_book.png',
+                                width: 24.0,
+                                height: 24.0,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 9.0,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${team.duration.toString()}일',
+                                style: const TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: grayScaleGrey100,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 6.0,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '#${team.category}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16.0,
+                                      color: grayScaleGrey300,
+                                    ),
                                   ),
-                                ),
-                                Image.asset(
-                                  'asset/image/category_book.png',
-                                  width: 24.0,
-                                  height: 24.0,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 9.0,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${team.duration.toString()}일',
-                                  style: const TextStyle(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: grayScaleGrey100,
+                                  const SizedBox(
+                                    width: 4.0,
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 6.0,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '#${team.category}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16.0,
-                                        color: grayScaleGrey300,
-                                      ),
+                                  const Text(
+                                    '하며 함께 불태운 시간',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.0,
+                                      color: grayScaleGrey400,
                                     ),
-                                    const SizedBox(
-                                      width: 4.0,
-                                    ),
-                                    const Text(
-                                      '하며 함께 불태운 시간',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14.0,
-                                        color: grayScaleGrey400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
 
                       /// 사진 받아오는 클래스 따로 구현하여 생성할 것
                       Padding(
-                        padding: const EdgeInsets.only(left: 26.0, top: 30),
+                        padding:
+                            const EdgeInsets.only(left: 13, top: 30, right: 13),
                         child: photoData != null
                             ? photoData.photo.isNotEmpty
                                 ? SizedBox(
@@ -181,7 +180,7 @@ class HomeCardScroll extends StatelessWidget {
                             : const SizedBox(height: 54),
                       ),
                       //위치 좌측으로, 1초 이후 사라지게
-                      (context.watch<HomeScreenState>().showNewExpression &&
+                      (context.watch<HomeScreenState>().newCreated == "new" &&
                               index == 0)
                           ? const Column(
                               children: [
@@ -220,18 +219,18 @@ class HomeCardScroll extends StatelessWidget {
                               height: 64.0,
                             ),
                       Container(
-                        width: 302,
+                        width: 280,
                         height: 96,
                         decoration: BoxDecoration(
                           color: grayScaleGrey600,
                           borderRadius: BorderRadius.circular(32),
                           border: Border.all(
-                            color: (context
-                                        .watch<HomeScreenState>()
-                                        .showNewExpression &&
-                                    index == 0)
-                                ? coralGrey500
-                                : Colors.transparent,
+                            color:
+                                (context.watch<HomeScreenState>().newCreated ==
+                                            "new" &&
+                                        index == 0)
+                                    ? coralGrey500
+                                    : Colors.transparent,
                             width: 1.0,
                           ),
                         ),

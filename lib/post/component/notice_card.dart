@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/post/post_model.dart';
 
@@ -26,7 +27,10 @@ class NoticeCard extends StatelessWidget {
             _renderNoticeCardHeader(nickName: noticeData.writerNickName),
             const SizedBox(height: 8.0),
             _renderNoticeCardBody(
-                title: noticeData.title, content: noticeData.content),
+              title: noticeData.title,
+              content: noticeData.content,
+              isRead: noticeData.isRead,
+            ),
             const SizedBox(height: 12.0),
             _renderNoticeCardFooter(commentNum: noticeData.commentNum),
           ],
@@ -76,19 +80,33 @@ class NoticeCard extends StatelessWidget {
     );
   }
 
-  Widget _renderNoticeCardBody(
-      {required String title, required String content}) {
+  Widget _renderNoticeCardBody({
+    required String title,
+    required String content,
+    required bool isRead,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: grayScaleWhite,
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-          ),
-          overflow: TextOverflow.ellipsis,
+        Row(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: grayScaleWhite,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(width: 4.0),
+            if (!isRead)
+              SvgPicture.asset(
+                'asset/image/icon_new.svg',
+                width: 16,
+                height: 16,
+              ),
+          ],
         ),
         Text(
           content,

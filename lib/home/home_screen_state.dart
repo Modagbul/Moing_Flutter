@@ -39,8 +39,6 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  bool showNewExpression = false;
-  bool onlyOnce = true;
 
   HomeScreenState({required this.context, this.newCreated}) {
     log('Instance "HomeScreenState" has been created');
@@ -182,17 +180,5 @@ class HomeScreenState extends ChangeNotifier {
     /// 목표보드 페이지로 이동
     Navigator.pushNamed(context, BoardMainPage.routeName,
         arguments: {'teamId': teamId});
-  }
-
-  void showNewAddedGroup() {
-    onlyOnce = false;
-    showNewExpression = true;
-    // 현재 빌드 주기가 완료된 후에 notifyListeners()를 호출
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer(const Duration(seconds: 1), () {
-        showNewExpression = false;
-        notifyListeners();
-      });
-    });
   }
 }
