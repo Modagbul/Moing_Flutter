@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               HomeAppBar(
-                notificationCount: '3',
+                notificationCount: context.watch<HomeScreenState>().alarmCount ?? '0',
                 onTap: context.watch<HomeScreenState>().alarmPressed,
               ),
               const SizedBox(

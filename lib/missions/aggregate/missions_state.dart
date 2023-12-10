@@ -16,6 +16,8 @@ class MissionsState extends ChangeNotifier {
 
   int get selectedTeamId => _selectedTeamId;
 
+  String? alarmCount;
+
   void setSelectedTeamId(int teamId) {
     if (_selectedTeamId != teamId) {
       _selectedTeamId = teamId;
@@ -32,6 +34,7 @@ class MissionsState extends ChangeNotifier {
   MissionsState({required this.context}) {
     log('Instance "MissionsState" has been created');
     initState();
+    getNotReadAlarmCount();
     getTeamListStatus();
     notifyListeners();
   }
@@ -48,10 +51,15 @@ class MissionsState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void alarmPressed() {
-    Navigator.of(context).pushNamed(
+  // 알람 클릭
+  void alarmPressed() async {
+    final result = await Navigator.of(context).pushNamed(
       AlarmPage.routeName,
     );
+
+    if (result as bool) {
+      getNotReadAlarmCount();
+    }
   }
 
   Future<void> getTeamListStatus() async {
@@ -65,4 +73,9 @@ class MissionsState extends ChangeNotifier {
     }
   }
 
+  // 안읽음 알림 개수 조회
+  void getNotReadAlarmCount() async {
+    alarmCount = await apiCode.getNotReadAlarmCount();
+    notifyListeners();
+  }
 }
