@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_data.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_page.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
+import 'package:provider/provider.dart';
 
 class MissionState {
   /// 미션 더보기 클릭 시
@@ -38,7 +40,7 @@ class MissionState {
       builder: (BuildContext context) {
         return Container(
           width: double.infinity,
-          height: 275,
+          height: isRepeated ? 275 : 195,
           decoration: const BoxDecoration(
             color: grayScaleGrey600,
             borderRadius: BorderRadius.only(
@@ -51,31 +53,36 @@ class MissionState {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    print('반복미션 종료하기 클릭');
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SvgPicture.asset(
-                          'asset/icons/repeat_mission_end.svg',
-                          width: 32,
-                          height: 32,
-                          fit: BoxFit.cover,
+                if(isRepeated)
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        print('반복미션 종료하기 클릭');
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              'asset/icons/repeat_mission_end.svg',
+                              width: 32,
+                              height: 32,
+                              fit: BoxFit.cover,
+                            ),
+                            SizedBox(width: 24),
+                            Text(
+                              '반복미션 종료하기',
+                              style: middleTextStyle.copyWith(color: grayScaleGrey100),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 24),
-                        Text(
-                          '반복미션 종료하기',
-                          style: middleTextStyle.copyWith(color: grayScaleGrey100),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 16),
+                  ],
                 ),
-                SizedBox(height: 16),
                 GestureDetector(
                   onTap: () async {
                     print('미션 수정하기 클릭');

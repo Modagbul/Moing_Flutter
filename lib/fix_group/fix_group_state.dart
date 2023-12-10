@@ -24,6 +24,14 @@ class FixGroupState extends ChangeNotifier {
 
   /// 클릭 제어
   bool onLoading = false;
+  bool isNameChanged = false;
+  bool isIntroduceChanged = false;
+  bool isImageChanged = false;
+  bool isSuccess = true;
+
+  String name='';
+  String introduce = '';
+
   /// 사진 업로드
   XFile? avatarFile;
   String? getProfileImageUrl;
@@ -51,9 +59,10 @@ class FixGroupState extends ChangeNotifier {
       );
 
       if(apiResponse.isSuccess == true) {
-        nameController.text = apiResponse.data?['name'];
-        introduceController.text = apiResponse.data?['introduction'];
+        name = nameController.text = apiResponse.data?['name'];
+        introduce = introduceController.text = apiResponse.data?['introduction'];
         getProfileImageUrl = apiResponse.data?['profileImgUrl'];
+        checkSave();
       }
       else {
         if(apiResponse.errorCode == 'J0003') {
@@ -90,17 +99,22 @@ class FixGroupState extends ChangeNotifier {
   // 이름 텍스트 필드 초기화 메소드
   void clearNameTextField() {
     nameController.clear();
+    checkSave();
     notifyListeners();
   }
 
   // 소개글 텍스트 필드 초기화 메소드
   void clearIntroduceTextField() {
     introduceController.clear();
+    checkSave();
     notifyListeners();
   }
 
   // 텍스트 필드 변경 감지 메소드
   void updateTextField() {
+    isNameChanged = nameController.value.text != name ? true : false;
+    isIntroduceChanged= introduceController.value.text != introduce ? true : false;
+    checkSave();
     notifyListeners();
   }
 
@@ -113,9 +127,12 @@ class FixGroupState extends ChangeNotifier {
       final XFile? assetFile =
       await ImagePicker().pickImage(source: ImageSource.gallery);
       avatarFile = assetFile;
+      isImageChanged = true;
+      checkSave();
     } catch (e) {
       print(e.toString());
       viewUtil.showAlertDialog(context: context, message: e.toString());
+      isImageChanged = false;
     } finally {
       onLoading = false;
       notifyListeners();
@@ -127,20 +144,26 @@ class FixGroupState extends ChangeNotifier {
     print('저장 버튼 클릭');
     if(onLoading) return ;
     onLoading = true;
-    if (avatarFile != null) {
-      // 파일 확장자 얻기
-      extension = avatarFile!.path.split(".").last;
-      String fileExtension = '';
-      if (extension == 'jpg') {
-        fileExtension = 'JPG';
-      } else if (extension == 'jpeg') {
-        fileExtension = 'JPEG';
-      } else if (extension == 'png') {
-        fileExtension = 'PNG';
-      }
 
-      // presigned url 발급 성공 시
-      if (await getPresignedUrl(fileExtension)) {
+    if(isSuccess) {
+      if (avatarFile != null) {
+        // 파일 확장자 얻기
+        extension = avatarFile!.path.split(".").last;
+        String fileExtension = '';
+        if (extension == 'jpg') {
+          fileExtension = 'JPG';
+        } else if (extension == 'jpeg') {
+          fileExtension = 'JPEG';
+        } else if (extension == 'png') {
+          fileExtension = 'PNG';
+        }
+
+        // presigned url 발급 성공 시
+        if (await getPresignedUrl(fileExtension)) {
+          await fixTeamAPI();
+        }
+      }
+      else {
         await fixTeamAPI();
       }
     }
@@ -206,40 +229,40 @@ class FixGroupState extends ChangeNotifier {
   // 소모임 수정 API 연동
   Future<void> fixTeamAPI() async {
     final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId';
+    try {
+      FixTeam data = FixTeam(
+          name: isNameChanged ? nameController.text : null,
+          introduction: isIntroduceChanged ? introduceController.text : null,
+          profileImgUrl: isImageChanged ? putProfileImageUrl : null);
 
-    if(nameController.text != null && nameController.text.isNotEmpty &&
-    introduceController.text != null && introduceController.text.isNotEmpty &&
-    avatarFile != null) {
-      try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'PUT',
+        body: data.toJson(),
+        fromJson: (json) => json as Map<String, dynamic>,
+      );
 
-        FixTeam data = FixTeam(
-            name: nameController.text,
-            introduction: introduceController.text,
-            profileImgUrl: putProfileImageUrl);
-
-        ApiResponse<Map<String, dynamic>> apiResponse =
-        await call.makeRequest<Map<String, dynamic>>(
-          url: apiUrl,
-          method: 'PUT',
-          body: data.toJson(),
-          fromJson: (json) => json as Map<String, dynamic>,
+      if (apiResponse.isSuccess == true) {
+        // 목표보드 화면으로 이동
+        int fixTeamId = apiResponse.data?['teamId'];
+        Navigator.pushReplacementNamed(
+          context,
+          BoardMainPage.routeName,
+          arguments: {'teamId': fixTeamId, 'isSuccess': true},
         );
-
-        if(apiResponse.isSuccess == true) {
-          // 목표보드 화면으로 이동
-          int fixTeamId = apiResponse.data?['teamId'];
-          Navigator.pushReplacementNamed(
-            context,
-            BoardMainPage.routeName,
-            arguments: {'teamId': fixTeamId, 'isSuccess': true},
-          );
-        }
-        else {
-          print('에러 발생..');
-        }
-      } catch (e) {
-        print('소모임 수정 실패: $e');
+      } else {
+        print('에러 발생..');
       }
+    } catch (e) {
+      print('소모임 수정 실패: $e');
     }
+  }
+
+  /// 저장 버튼 누를 수 있는지 확인
+  void checkSave() {
+    isSuccess = (isNameChanged || isIntroduceChanged || isImageChanged)
+    ? true : false;
+    notifyListeners();
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../const/color/colors.dart';
 
@@ -13,10 +14,11 @@ class BoardRepeatMissionCard extends StatelessWidget {
   final int missionId;
   final VoidCallback onTap;
   final Animation<double> fadeAnimation;
+  final FToast ftoast;
   final Function(String) onShowToast;
 
   const BoardRepeatMissionCard({
-    super.key,
+    Key ? key,
     required this.title,
     required this.dueTo,
     required this.status,
@@ -25,8 +27,9 @@ class BoardRepeatMissionCard extends StatelessWidget {
     required this.missionId,
     required this.onTap,
     required this.fadeAnimation,
+    required this.ftoast,
     required this.onShowToast,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,8 @@ class BoardRepeatMissionCard extends StatelessWidget {
         } else {
           onShowToast('반복 미션은 다음 주 월요일에 시작해요.');
         }
-      },      child: Stack(
+      },
+      child: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

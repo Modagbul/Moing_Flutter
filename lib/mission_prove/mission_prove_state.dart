@@ -29,6 +29,7 @@ import 'package:moing_flutter/model/response/mission/my_mission_get_prove_respon
 import 'package:moing_flutter/model/response/mission/other_mission_get_prove_response.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 import 'package:moing_flutter/utils/image_upload/image_upload.dart';
+import 'package:moing_flutter/utils/toast/toast_message.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/rendering.dart';
@@ -106,6 +107,7 @@ class MissionProveState with ChangeNotifier {
 
   // 토스트 문구
   FToast fToast = FToast();
+  final ToastMessage toastMessage = ToastMessage();
 
   String nobodyText = '데이터를 불러오는 중입니다...';
 
@@ -385,22 +387,24 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 더보기 버튼 클릭 시
-  void setMission(String? val) {
+  void setMission({String? val, int? index}) {
     missionMoreButton = val!;
     // 다시 인증하기 버튼 클릭 시..
     if (missionMoreButton.contains('retry')) {
       print('인증 다시 버튼 클릭!');
-      missionDelete();
+      missionDelete(index: index);
     }
     notifyListeners();
   }
 
   /// 미션 삭제 API
-  void missionDelete() async {
+  void missionDelete({int? index}) async {
     int count = -1;
     if(isRepeated) {
-      /// TODO : 반복 미션 시 본인 미션 삭제
-      print('반복미션일때는 구현해야 함..');
+      if(index != null) {
+        count = index;
+        print('삭제하려는 count : $count');
+      }
     } else {
       // 단일 미션일 때
       count = myMissionList![0].count;
@@ -597,6 +601,17 @@ class MissionProveState with ChangeNotifier {
     'teamId': teamId,
     'missionId': missionId,
     });
+  }
+
+  /// 미션 인증물 에러토스트 띄우기
+  likePressedToast() {
+    toastMessage.showToastMessage(
+        fToast: fToast,
+        warningText: '내 인증에는 좋아요를 누를 수 없어요.',
+      toastBottom: 145.0,
+      toastLeft: 0,
+      toastRight: 0,
+    );
   }
 
   /// 미션 인증물 좋아요
@@ -852,7 +867,7 @@ class MissionProveState with ChangeNotifier {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    '모잉불이 기뻐해요!',
+                    isRepeated ? '${myMissionList!.length + 1}회차 인증완료!' : '모잉불이 기뻐해요!',
                     style: middleTextStyle.copyWith(color: grayScaleGrey100),
                   ),
                   SizedBox(height: 8),
@@ -868,7 +883,9 @@ class MissionProveState with ChangeNotifier {
                       milliseconds: 1000,
                       borderRadius: BorderRadius.circular(24),
                       childLeft: Text(
-                        '${singleMissionMyCount + 1}/$singleMissionTotalCount명 인증성공',
+                        isRepeated
+                        ? '남은 횟수까지 파이팅!'
+                        : '${singleMissionMyCount + 1}/$singleMissionTotalCount명 인증성공',
                         style: bodyTextStyle.copyWith(color: grayScaleGrey100),
                       ),
                       percent: singleMissionMyCount < singleMissionTotalCount
@@ -940,6 +957,7 @@ class MissionProveState with ChangeNotifier {
 
   /// 미션 상세내용 확인
   void getMissionDetailContent(int index) {
+    print('반복 미션 상세내용 확인');
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -995,6 +1013,42 @@ class MissionProveState with ChangeNotifier {
                               color: grayScaleGrey300, fontWeight: FontWeight.w500),
                         ),
                         Spacer(),
+                        if(isMeOrEveryProved)
+                          DropdownButton<String>(
+                            underline: SizedBox.shrink(),
+                            style: contentTextStyle.copyWith(color: grayScaleGrey100),
+                            dropdownColor: grayScaleGrey500,
+                            icon: Icon(
+                              Icons.more_vert_outlined,
+                              color: grayScaleGrey300,
+                            ),
+                            iconEnabledColor: Colors.white,
+                            items: <DropdownMenuItem<String>>[
+                              DropdownMenuItem(
+                                  value: 'retry',
+                                  child: Container(
+                                    padding: EdgeInsets.only(top: 8, right: 8),
+                                    alignment: Alignment.centerRight,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text('다시 인증하기'),
+                                        Text(
+                                          '기존 인증내역이 취소돼요',
+                                          style: bodyTextStyle.copyWith(
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                            isDense: true,
+                            onChanged: (String? val) {
+                              setMission(val: val, index: currentMission.count);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        if(!isMeOrEveryProved)
                         DropdownButtonHideUnderline(
                           child: DropdownButton2<String>(
                             isExpanded: true,
@@ -1251,7 +1305,8 @@ class MissionProveState with ChangeNotifier {
                                 ],
                               ),
                             ],
-                          )),
+                          ),
+                      ),
                     if (missionWay.contains('텍스트') || missionWay.contains('링크') ||
                         currentMission.status == 'SKIP')
                       Padding(

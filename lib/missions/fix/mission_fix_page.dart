@@ -186,7 +186,7 @@ class MissionFixPage extends StatelessWidget {
                   maxLength: 100,
                   maxLines: 10,
                   hintText: '모임원들에게 미션을 인증할 수 있는 방법을 알려주세요',
-                  labelText: '인증 규튼',
+                  labelText: '인증 규칙',
                   onChanged: (value) =>
                       context.read<MissionFixState>().updateTextField(),
                   controller:

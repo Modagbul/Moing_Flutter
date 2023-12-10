@@ -60,7 +60,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 24),
                   Lottie.asset(
                     'asset/graphic/big.json',
                     width: 260,

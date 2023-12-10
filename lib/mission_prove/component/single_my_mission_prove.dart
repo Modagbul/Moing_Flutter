@@ -164,7 +164,7 @@ class SingleMyMissionProved extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('다시 인증하기ㅋ'),
+                                  Text('다시 인증하기'),
                                   Text(
                                     '기존 인증내역이 취소돼요',
                                     style: bodyTextStyle.copyWith(
@@ -176,7 +176,7 @@ class SingleMyMissionProved extends StatelessWidget {
                       ],
                       isDense: true,
                       onChanged: (String? val) {
-                        context.read<MissionProveState>().setMission(val);
+                        context.read<MissionProveState>().setMission(val: val);
                       },
                     ),
                   ],

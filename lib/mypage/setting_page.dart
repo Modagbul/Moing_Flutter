@@ -110,8 +110,7 @@ class SettingPage extends StatelessWidget {
               title: '정말 로그아웃하시겠어요?',
               content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
               onConfirm: () async {
-                Navigator.of(context).pop();
-                await _logout(context);
+                _logout(context);
               },
               onCanceled: () => Navigator.of(context).pop(),
               leftText: '로그아웃',
@@ -123,7 +122,7 @@ class SettingPage extends StatelessWidget {
     );
   }
 
-  Future<void> _logout(BuildContext context) async {
+   _logout(BuildContext context) async {
     bool? signOutResponse = await apiCode.signOut();
     print('로그아웃 Response : ${signOutResponse.toString()}');
     if (signOutResponse != null && signOutResponse) {
@@ -132,6 +131,7 @@ class SettingPage extends StatelessWidget {
       SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
       sharedPreferencesInfo.removePreferencesData('ACCESS_TOKEN');
       sharedPreferencesInfo.removePreferencesData('REFRESH_TOKEN');
+      Navigator.of(context).pop();
       Navigator.pushNamedAndRemoveUntil(
           context, InitPage.routeName, (route) => false);
     } else {

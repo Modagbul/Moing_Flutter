@@ -13,8 +13,8 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     final String nickname = ModalRoute.of(context)?.settings.arguments as String;
-    /// 1.2초 후에 안내 페이지로 이동
-    Future.delayed(const Duration(milliseconds: 1200), () {
+    /// 2초 후에 안내 페이지로 이동
+    Future.delayed(const Duration(milliseconds: 2000), () {
       if (mounted) {
         Navigator.of(context).pushNamed(
           RegisterGuide.routeName,

@@ -64,18 +64,19 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
   @override
   void initState() {
     super.initState();
+    fToast.init(context);
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     );
     _fadeAnimation = Tween(begin: 1.0, end: 0.0).animate(_animationController);
     _animationController.forward();
-    fToast.init(context);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    fToast.removeCustomToast();
     super.dispose();
   }
 
@@ -174,6 +175,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                         clipBehavior: Clip.none,
                         children: [
                           BoardRepeatMissionCard(
+                            ftoast: fToast,
                             title: e.title,
                             dueTo: e.dueTo,
                             done: e.done,

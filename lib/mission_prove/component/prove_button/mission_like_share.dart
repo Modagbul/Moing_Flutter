@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
+import 'package:provider/provider.dart';
+
+class MissionLikeShare extends StatelessWidget {
+  const MissionLikeShare({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<MissionProveState>();
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          children: [
+            SizedBox(height: 16),
+            GestureDetector(
+              onTap: context.read<MissionProveState>().likePressedToast,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                    'asset/icons/mission_like.svg',
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    state.myMissionList![0].hearts.toString(),
+                    style: contentTextStyle.copyWith(color: grayScaleGrey400,),
+                  ),
+                  Spacer(),
+                  if (state.missionWay.contains('사진') &&
+                      state.myMissionList![0].status == 'COMPLETE')
+                  GestureDetector(
+                    onTap: context.read<MissionProveState>().missionShareDialog,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'asset/icons/mission_image_upload.svg',
+                          width: 20,
+                          height: 20,
+                          color: grayScaleGrey300,
+                          fit: BoxFit.cover,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          '이미지 저장',
+                          style: bodyTextStyle.copyWith(
+                              color: grayScaleGrey300, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 160),
+          ],
+        ),
+      ),
+    );
+  }
+}

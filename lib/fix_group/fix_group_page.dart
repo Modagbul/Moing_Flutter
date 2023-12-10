@@ -28,6 +28,8 @@ class FixGroupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<FixGroupState>();
+
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       appBar: AppBar(
@@ -43,7 +45,7 @@ class FixGroupPage extends StatelessWidget {
               child: Text(
                 '저장',
                 style: buttonTextStyle.copyWith(
-                  color: Colors.white,
+                  color: state.isSuccess ? Colors.white : grayScaleGrey500,
                 ),
               ),
             ),
