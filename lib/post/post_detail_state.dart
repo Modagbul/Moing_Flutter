@@ -56,10 +56,8 @@ class PostDetailState extends ChangeNotifier {
 
   // 화면 최하단으로 스크롤
   void scrollToBottom() {
-    scrollController.animateTo(
+    scrollController.jumpTo(
       scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
     );
   }
 
