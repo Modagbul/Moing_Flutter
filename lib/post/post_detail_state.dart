@@ -15,6 +15,7 @@ class PostDetailState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
   final TextEditingController commentController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   final int boardId;
   final int teamId;
@@ -53,6 +54,15 @@ class PostDetailState extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 화면 최하단으로 스크롤
+  void scrollToBottom() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
   void getDetailPostData() async {
     postData =
         await apiCode.getDetailPostData(teamId: teamId, boardId: boardId);
@@ -75,6 +85,8 @@ class PostDetailState extends ChangeNotifier {
     );
     await getAllCommentData();
     clearNameTextField();
+    FocusScope.of(context).unfocus(); // 키보드 닫힘
+    scrollToBottom(); // 화면 아래로 이동
     notifyListeners();
   }
 

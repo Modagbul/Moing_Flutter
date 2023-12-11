@@ -58,6 +58,8 @@ class PostDetailPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
+                      controller:
+                          context.read<PostDetailState>().scrollController,
                       child: Column(
                         children: [
                           Padding(
@@ -153,7 +155,7 @@ class PostDetailPage extends StatelessWidget {
                                 const BoxDecoration(color: grayScaleGrey600),
                           ),
                           _renderCommentScrollBody(context: context),
-                          const SizedBox(height: 100),
+                          const SizedBox(height: 150),
                         ],
                       ),
                     ),
