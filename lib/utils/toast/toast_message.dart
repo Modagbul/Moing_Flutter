@@ -34,7 +34,7 @@ class ToastMessage {
                     Row(
                       children: [
                         SvgPicture.asset(
-                          'asset/icons/danger.svg',
+                          'asset/icons/toast_danger.svg',
                           width: 24,
                           height: 24,
                         ),

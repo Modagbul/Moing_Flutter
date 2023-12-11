@@ -171,6 +171,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                     itemCount: state.repeatMissionStatus!.data.length,
                     itemBuilder: (context, index) {
                       final e = state.repeatMissionStatus!.data[index];
+                      fToast.init(context);
                       return Stack(
                         clipBehavior: Clip.none,
                         children: [

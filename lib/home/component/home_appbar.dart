@@ -17,7 +17,7 @@ class HomeAppBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SvgPicture.asset(
-          'asset/icons/moing_logo.svg',
+            'asset/icons/home_moing_logo.svg',
           width: 80,
           height: 32,
         ),
@@ -50,8 +50,17 @@ class HomeAppBar extends StatelessWidget {
             width: 24.0,
             height: 24.0,
           ),
-        ),
-      ],
+          const Spacer(),
+          GestureDetector(
+            onTap: onTap,
+            child: SvgPicture.asset(
+              'asset/icons/home_notification.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

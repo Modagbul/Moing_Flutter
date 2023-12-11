@@ -11,6 +11,7 @@ class MissionAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: grayBackground,
+      padding: EdgeInsets.symmetric(horizontal: 20),
       height: 56,
       child: Row(
         children: [

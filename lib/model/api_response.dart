@@ -14,12 +14,12 @@ class ApiResponse<T> {
 
   factory ApiResponse.fromJson(
       Map<String, dynamic> json,
-      T Function(dynamic)? fromJson, // nullable 함수로 변경
+      T Function(dynamic)? fromJson,
       ) {
     log(json.toString());
     return ApiResponse(
-      isSuccess: json['isSuccess'] ?? false, // null 일 경우 기본값 false
-      message: json['message'] ?? '', // null 일 경우 기본값 빈 문자열
+      isSuccess: json['isSuccess'] ?? false,
+      message: json['message'] ?? '',
       errorCode: json['errorCode'],
       data: json['data'] != null && fromJson != null ? fromJson(json['data']) : null,
     );

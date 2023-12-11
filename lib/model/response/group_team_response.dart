@@ -31,6 +31,7 @@ class TeamBlock {
   int numOfMember;
   String category;
   String startDate;
+  String profileImgUrl;
 
   TeamBlock({
     required this.teamId,
@@ -40,6 +41,7 @@ class TeamBlock {
     required this.numOfMember,
     required this.category,
     required this.startDate,
+    required this.profileImgUrl,
   });
 
   factory TeamBlock.fromJson(Map<String, dynamic> json) {
@@ -51,6 +53,7 @@ class TeamBlock {
       numOfMember: json['numOfMember'],
       category: json['category'],
       startDate: json['startDate'],
+      profileImgUrl: json['profileImgUrl'],
     );
   }
 }

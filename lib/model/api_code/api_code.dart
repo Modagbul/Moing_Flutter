@@ -45,6 +45,7 @@ class ApiCode {
         return apiResponse.data!;
       } else {
         if (apiResponse.errorCode == 'J0003') {
+          await Future.delayed(Duration(seconds: 1));
           getSingleBoard(teamId: teamId);
         } else {
           throw Exception(
