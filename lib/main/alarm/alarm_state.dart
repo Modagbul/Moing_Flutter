@@ -1,22 +1,118 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/main/alarm/alarm_list.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:moing_flutter/model/api_generic.dart';
+import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/response/alarm_model.dart';
 
 class AlarmState extends ChangeNotifier {
   final BuildContext context;
-  List<Alarm> alarmList = List.empty(growable: true);
+  final APICall apiCall = APICall();
+  List<AlarmData>? alarmList;
 
   AlarmState({required this.context}) {
-    print('Instance "AlarmState" has been created');
+    log('Instance "AlarmState" has been created');
     initState();
   }
 
-  void initState() {
-    alarmList.add(Alarm(team: '모닥모닥불', title: '어라...왜 이렇게 발등이 뜨겁지?🤨', content: '으냥님이 챙굴님에게 불을 던졌어요!', imagePath: 'asset/image/fire_black.png', time: '06:39'));
-    alarmList.add(Alarm(team: '북시즘', title: '[오늘마감] 데미안 읽기', content: '친구들이 으냥님의 인증을 기다려요!', imagePath: 'asset/image/notification_black.png', time: '06:39'));
-    alarmList.add(Alarm(team: '북시즘', title: '으냥님, [북시즘] 미션을 잊으신 건 아니겠죠?', content: '마감 D-1! 서둘러 인증해봐요 💨', imagePath: 'asset/image/notification_black.png', time: '06:39'));
-    alarmList.add(Alarm(team: '모닥모닥불', title: '모임의 새로운 공지 알려드려요!', content: '2023년 8월 정기 모임 장소 공지', imagePath: 'asset/image/notification_black.png', time: '06:39'));
-    alarmList.add(Alarm(team: '북시즘', title: 'HOT 모임! 아 HOT HOT 모임!', content: '축하해요! [북시즘] 모임의 모잉불이 LV.8로 성장했어요.', imagePath: 'asset/image/notification_black.png', time: '06:39'));
-    alarmList.add(Alarm(team: '북시즘', title: 'HOT 모임! 아 HOT HOT 모임!', content: '축하해요! [북시즘] 모임의 모잉불이 LV.8로 성장했어요.', imagePath: 'asset/image/notification_black.png', time: '06:39'));
-    alarmList.add(Alarm(team: '북시즘', title: 'HOT 모임! 아 HOT HOT 모임!', content: '축하해요! [북시즘] 모임의 모잉불이 LV.8로 성장했어요.', imagePath: 'asset/image/notification_black.png', time: '06:39'));
+  void initState() async {
+    await getAllAlarmData();
+  }
+
+  /// 알림 전체 조회
+  Future<List<AlarmData>?> getAllAlarmData() async {
+    final String apiUrl = '${dotenv.env['MOING_API']}/api/history/alarm';
+
+    try {
+      ApiResponse<List<AlarmData>> apiResponse =
+          await apiCall.makeRequest<List<AlarmData>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) {
+          return (data as List<dynamic>)
+              .map((item) => AlarmData.fromJson(item as Map<String, dynamic>))
+              .toList();
+        },
+      );
+
+      if (apiResponse.data != null) {
+        log('알림 모아보기 성공: ${apiResponse.data}');
+        alarmList = apiResponse.data;
+        notifyListeners();
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
+          getAllAlarmData();
+        } else {
+          throw Exception(
+              'getAllAlarmData is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('알림 모아보기 실패: $e');
+    }
+    return null;
+  }
+
+  /// 알림 단건 조회
+  Future<bool> postSingleAlarmData({required int alarmHistoryId}) async {
+    final String apiUrl =
+        '${dotenv.env['MOING_API']}/api/history/alarm/read?alarmHistoryId=$alarmHistoryId';
+
+    try {
+      ApiResponse<void> apiResponse = await apiCall.makeRequest<void>(
+        url: apiUrl,
+        method: 'POST',
+        fromJson: (_) {},
+      );
+
+      if (apiResponse.isSuccess == true) {
+        log('알림 단건 조회 성공');
+        return true;
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
+          postSingleAlarmData(alarmHistoryId: alarmHistoryId);
+        } else {
+          throw Exception(
+              'postSingleAlarmData is Null, error code : ${apiResponse.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('알림 단건 조회 실패: $e');
+    }
+    return false;
+  }
+
+  String convertAlarmTypeToImage({required String type}) {
+    switch (type) {
+      case 'NEW_UPLOAD':
+        return 'asset/image/icon_new_upload.svg';
+      case 'FIRE':
+        return 'asset/image/icon_throw_fire.svg';
+      case 'REMIND':
+        return 'asset/image/icon_remind_alarm.svg';
+      case 'APPROVE_TEAM':
+        return 'asset/image/icon_approve_team.svg';
+      case 'REJECT_TEAM':
+        return 'asset/image/icon_reject_team.svg';
+      default:
+        throw ArgumentError('Invalid alarm type: $type');
+    }
+  }
+
+  void onTapAlarm({required int index}) async {
+    if (alarmList == null) {
+      return;
+    }
+
+    // 알림 읽음 처리 성공 -> 화면 이동
+    AlarmData alarmData = alarmList![index];
+    Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
+    if (await postSingleAlarmData(alarmHistoryId: alarmData.alarmHistoryId)) {
+      await getAllAlarmData();
+      notifyListeners();
+      Navigator.pushNamed(context, alarmData.path, arguments: idInfoMap);
+    }
   }
 }

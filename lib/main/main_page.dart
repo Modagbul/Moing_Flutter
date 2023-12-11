@@ -8,6 +8,7 @@ import 'package:moing_flutter/missions/aggregate/missions_group_state.dart';
 import 'package:moing_flutter/missions/aggregate/missions_screen.dart';
 import 'package:moing_flutter/missions/aggregate/missions_state.dart';
 import 'package:moing_flutter/mypage/my_page_screen.dart';
+import 'package:moing_flutter/mypage/my_page_state.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
@@ -55,7 +56,6 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int teamCount = context.read<HomeScreenState>().futureData?.teamBlocks.length ?? 0;
     return WillPopScope(
       onWillPop: () async {
         final appState = context.read<AppState>();
@@ -64,7 +64,6 @@ class MainPage extends StatelessWidget {
           appState.moveToHomeScreen();
           return false;
         }
-
         return true;
       },
       child: MultiProvider(
@@ -85,7 +84,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   HomeScreen(),
                   MissionsScreen(),
-                  MyPageScreen.route(context: context, teamCount: teamCount),
+                  MyPageScreen.route(context: context),
                 ],
               ),
             ],
@@ -124,7 +123,7 @@ class MainPage extends StatelessWidget {
                         EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
                     child: Icon(Icons.tour),
                   ),
-                  label: '미션목록',
+                  label: '진행 중 미션',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
@@ -43,8 +44,15 @@ class MissionCreateState extends ChangeNotifier {
   // 인증방식 선택 여부
   bool isMethodSelected = false;
 
+  // 미션 만들기 성공 여부
+  bool isSuccess = false;
+  // 오늘 날짜 선택 여부
+  bool isPickedToday = false;
+
   // 미션 추천 문구 리스트
   List<String> textList = [];
+  // 당일 날짜와 그 이후 날짜를 위한 list
+  List<String> timeList = [];
   // 미션 추천 문구
   String recommendText = '';
 
@@ -54,7 +62,8 @@ class MissionCreateState extends ChangeNotifier {
   String? selectedMethod;
   String formattedDate = '';
   String formattedTime = '';
-  DateTime today = DateTime.now();
+
+  final FToast fToast = FToast();
 
   MissionCreateState({
     required this.context,
@@ -77,6 +86,8 @@ class MissionCreateState extends ChangeNotifier {
         FixedExtentScrollController(initialItem: missionCountIndex);
     timeScrollController =
         FixedExtentScrollController(initialItem: timeCountIndex);
+
+    fToast.init(context);
   }
 
   @override
@@ -97,11 +108,13 @@ class MissionCreateState extends ChangeNotifier {
 
   void _onTitleTextChanged() {
     title = titleController.text;
+    checkAddition();
     notifyListeners();
   }
 
   void _onRuleTextChanged() {
     rule = ruleController.text;
+    checkAddition();
     notifyListeners();
   }
 
@@ -112,6 +125,7 @@ class MissionCreateState extends ChangeNotifier {
 
   void _onContentTextChanged() {
     content = contentController.text;
+    checkAddition();
     notifyListeners();
   }
 
@@ -121,35 +135,42 @@ class MissionCreateState extends ChangeNotifier {
 
   void setTitle(String value) {
     titleController.text = value;
+    checkAddition();
     notifyListeners();
   }
 
   // 이름 텍스트 필드 초기화 메소드
   void clearTitleTextField() {
     titleController.clear();
+    checkAddition();
     notifyListeners();
   }
 
   // 소개글 텍스트 필드 초기화 메소드
   void clearContentTextField() {
     contentController.clear();
+    checkAddition();
     notifyListeners();
   }
 
   void clearRuleTextField() {
     ruleController.clear();
+    checkAddition();
     notifyListeners();
   }
 
   // 선택 변경하기
   void setRepeatSelected() {
     isRepeatSelected = !isRepeatSelected;
+    checkAddition();
     notifyListeners();
   }
 
+  // 인증 방식 여부
   void setMethod(String method) {
     selectedMethod = method;
     isMethodSelected = true;
+    checkAddition();
     notifyListeners();
   }
 
@@ -166,7 +187,6 @@ class MissionCreateState extends ChangeNotifier {
       );
 
       if (apiResponse.data != null) {
-        print('mission 추천: ${apiResponse.data!}');
         switch(apiResponse.data!) {
           case 'SPORTS':
             textList = sportsList;
@@ -295,6 +315,7 @@ class MissionCreateState extends ChangeNotifier {
                   itemExtent: 48,
                   onSelectedItemChanged: (int index) {
                     missionCountIndex = index;
+                    checkAddition();
                     notifyListeners();
                   },
                   children: missionCountList
@@ -331,13 +352,30 @@ class MissionCreateState extends ChangeNotifier {
 
   /// 마감 날짜 선택 시 IOS 날짜 선택 모달
   void datePicker() {
+    DateTime now = DateTime.now();
     DatePicker.showDatePicker(context,
         showTitleActions: true,
-        minTime: DateTime(2018, 1, 1),
-        maxTime: DateTime(2024, 12, 31), onConfirm: (date) {
-      today = date;
-      formattedDate =
-          "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
+        minTime: now,
+        maxTime: DateTime(now.year + 3, now.month, now.day),
+        onConfirm: (date) {
+      formattedDate = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+      isPickedToday = (now.year == date.year && now.month == date.month && now.day == date.day)
+      ? true : false;
+
+      // 만약 당일 날짜를 설정한 경우
+      if (isPickedToday) {
+        DateTime oneHourAgo = now.add(Duration(hours: 1));
+        int afterOneHour = oneHourAgo.hour;
+        timeCountIndex = afterOneHour;
+        timeList = timeCountList.sublist(afterOneHour, 24);
+        formattedTime = timeList[0].replaceAll("시", ":00");
+      }
+      else {
+        timeList = List.from(timeCountList);
+        timeCountIndex = 12;
+        formattedTime = timeList[12].replaceAll("시", ":00");
+      }
+      checkAddition();
       notifyListeners();
     }, currentTime: DateTime.now(), locale: LocaleType.ko);
   }
@@ -345,8 +383,8 @@ class MissionCreateState extends ChangeNotifier {
   /// 마감 시간 선택 시 IOS 시간 선택 모달
   void timePicker() {
     timeScrollController.dispose();
-    timeScrollController =
-        FixedExtentScrollController(initialItem: timeCountIndex);
+    timeScrollController = FixedExtentScrollController(initialItem: timeCountIndex);
+    timeList = timeList.length < 1 ? List.from(timeCountList) : timeList;
 
     showCupertinoModalPopup(
       context: context,
@@ -369,7 +407,18 @@ class MissionCreateState extends ChangeNotifier {
                   CupertinoButton(
                     child: Text('확인'),
                     onPressed: () {
-                      formattedTime = timeCountList[timeCountIndex].replaceAll("시", ":00");
+                      /// 날짜 지정 안했을 때
+                      if(formattedDate.length < 1) {
+                        DateTime now = DateTime.now();
+                        int currentHour = now.hour;
+                        // 현재 시간이 선택한 시간보다 큰 경우
+                        if(int.parse(timeList[timeCountIndex].replaceAll("시", "")) <= currentHour) {
+                          DateTime tomorrow = now.add(Duration(days: 1));
+                          formattedDate = "${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}";
+                        }
+                      }
+                      formattedTime = timeList[timeCountIndex].replaceAll("시", ":00");
+                      checkAddition();
                       notifyListeners();
                       Navigator.of(context).pop(); // Picker 닫기
                     },
@@ -386,8 +435,7 @@ class MissionCreateState extends ChangeNotifier {
                   timeCountIndex = index;
                   notifyListeners();
                 },
-                children: timeCountList
-                    .map(
+                children: timeList.map(
                       (item) => Center(
                     child: Text(
                       item,
@@ -460,6 +508,7 @@ class MissionCreateState extends ChangeNotifier {
                           return GestureDetector(
                             onTap: () {
                               setTitle(textList[index]);
+                              checkAddition();
                               Navigator.of(context).pop();
                             },
                             child: Container(
@@ -483,11 +532,34 @@ class MissionCreateState extends ChangeNotifier {
         });
   }
 
+  /// 성공 조건인지 확인하기
+  void checkAddition() {
+    /// 반복 미션인 경우
+    if(isRepeatSelected) {
+      if(titleController.text.isNotEmpty && contentController.text.isNotEmpty &&
+      isMethodSelected && ruleController.text.isNotEmpty) {
+        isSuccess = true;
+      }
+      else {
+        isSuccess = false;
+      }
+    }
+    /// 한번 미션인 경우
+    else {
+      /// TODO : formattedTime 설정 해줘야 함.
+      if(titleController.text.isNotEmpty && contentController.text.isNotEmpty &&
+          formattedDate.length > 1 && isMethodSelected && ruleController.text.isNotEmpty) {
+        isSuccess = true;
+      }
+      else {
+        isSuccess = false;
+      }
+    }
+    notifyListeners();
+  }
+
   void submit() async {
-    if (isMethodSelected &&
-        titleController.text.isNotEmpty &&
-        contentController.text.isNotEmpty &&
-        ruleController.text.isNotEmpty) {
+    if (isSuccess) {
       int repeatMission;
       String way = '';
       String dueTo = '';
@@ -508,10 +580,7 @@ class MissionCreateState extends ChangeNotifier {
         repeatMission = missionCountIndex + 2;
         dueTo = '2099-12-31 00:00:00.000';
       } else {
-        if(formattedDate.length < 1) {
-          print('날짜를 선택해주세요...');
-          return ;
-        } else if (formattedTime.length < 1) {
+        if (formattedTime.length < 1) {
           formattedTime = '12:00';
         }
         repeatMission = 1;
@@ -519,9 +588,6 @@ class MissionCreateState extends ChangeNotifier {
       }
 
       apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions';
-
-
-      // 단일 미션 시
       MakeMissionData data = MakeMissionData(
           title: title,
           dueTo: dueTo,
@@ -530,12 +596,6 @@ class MissionCreateState extends ChangeNotifier {
           number: repeatMission,
           type: isRepeatSelected == true ? 'REPEAT' : 'ONCE',
           way: way);
-
-      print('------ 미션 생성 -----');
-      print('repeatMission : $repeatMission');
-      print('인증 방법 : $way');
-      print('마감 시간 : $dueTo');
-      print('타입 : ${data.type}');
 
       try {
         ApiResponse<Map<String, dynamic>> apiResponse =
@@ -550,6 +610,47 @@ class MissionCreateState extends ChangeNotifier {
       } catch (e) {
         log('미션 생성 실패: $e');
       }
+    }
+    String warningText = '미션이 등록되었어요.';
+
+    if (warningText.isNotEmpty) {
+      fToast.showToast(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 51,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        warningText,
+                        style: bodyTextStyle.copyWith(
+                          color: grayScaleGrey700,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          toastDuration: const Duration(milliseconds: 3000),
+          positionedToastBuilder: (context, child) {
+            return Positioned(
+              top: 114.0,
+              left: 0.0,
+              right: 0,
+              child: child,
+            );
+          });
     }
   }
 }

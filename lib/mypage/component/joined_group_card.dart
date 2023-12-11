@@ -9,40 +9,36 @@ class JoinedGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String imageAsset = '';
-
-    print(teamBlock.category);
-    switch(teamBlock.category) {
-      case 'SPORTS':
-        break;
-      case 'HABIT':
-        break;
-      case 'TEST':
-        break;
-      case 'STUDY':
-        break;
-      case 'READING':
-        break;
-      case 'ETC':
-        break;
-    }
-    return Column(
-      children: [
-        Image.asset(
-          'asset/image/icon_book.png',
-          width: 80,
-          height: 80,
-        ),
-        const SizedBox(height: 12.0),
-        Text(
-          teamBlock.teamName,
-          style: const TextStyle(
-            color: grayScaleWhite,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
+    return Container(
+      width: 80,
+      height: 126,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ClipOval(
+            child: Image.network(
+              teamBlock.profileImgUrl,
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 12.0),
+          Container(
+            width: 65,
+            height: 34,
+            alignment: Alignment.topCenter,
+            child: Text(
+              teamBlock.teamName,
+              style: const TextStyle(
+                color: grayScaleWhite,
+                fontSize: 14.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

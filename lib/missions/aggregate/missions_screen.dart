@@ -24,7 +24,9 @@ class MissionsScreen extends StatefulWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MissionsState(context: context)),
-        ChangeNotifierProvider(create: (_) => MissionsGroupState(context: context, selectedTeamId: selectedTeamId)),
+        ChangeNotifierProvider(
+            create: (_) => MissionsGroupState(
+                context: context, selectedTeamId: selectedTeamId)),
       ],
       builder: (context, _) {
         return const MissionsScreen();
@@ -49,7 +51,6 @@ class _MissionsScreenState extends State<MissionsScreen>
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     List<TeamList> teams = Provider.of<MissionsState>(context).teams;
@@ -63,7 +64,7 @@ class _MissionsScreenState extends State<MissionsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               HomeAppBar(
-                notificationCount: '3',
+                notificationCount: context.watch<MissionsState>().alarmCount ?? '0',
                 onTap: context.watch<MissionsState>().alarmPressed,
               ),
               const SizedBox(
@@ -81,7 +82,7 @@ class _MissionsScreenState extends State<MissionsScreen>
                       indicator: const BoxDecoration(
                         border: Border(
                           bottom:
-                              BorderSide(color: Colors.transparent, width: 0),
+                          BorderSide(color: Colors.transparent, width: 0),
                         ),
                       ),
                       tabs: [
@@ -99,7 +100,7 @@ class _MissionsScreenState extends State<MissionsScreen>
                         setState(() {});
                       },
                       overlayColor:
-                          MaterialStateProperty.all(Colors.transparent),
+                      MaterialStateProperty.all(Colors.transparent),
                     ),
                   ),
                   const Spacer(),
@@ -181,6 +182,8 @@ class _MyDropdownState extends State<MyDropdown> {
   String? _selectedValue;
   String? _selectedTeamName;
 
+  bool _isMenuOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -191,20 +194,32 @@ class _MyDropdownState extends State<MyDropdown> {
       var missionsState = Provider.of<MissionsState>(context, listen: false);
       missionsState.setSelectedTeamId(widget.teams[0].teamId);
 
-      var missionsGroupState = Provider.of<MissionsGroupState>(context, listen: false);
+      var missionsGroupState =
+      Provider.of<MissionsGroupState>(context, listen: false);
       missionsGroupState.updateSelectedTeamId(widget.teams[0].teamId);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    String displayTeamName = _selectedTeamName ?? "Select a team";
+
+    if (displayTeamName.length > 5) {
+      displayTeamName = '${displayTeamName.substring(0, 5)}...';
+    }
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Flexible(
           child: Text(
-            _selectedTeamName ?? "Select a team",
-            style: TextStyle(color: _selectedValue != null ? grayScaleGrey100 : grayScaleGrey400),
+            displayTeamName,
+            style: TextStyle(
+                color: _selectedValue != null
+                    ? grayScaleGrey100
+                    : grayScaleGrey400),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
         Theme(
@@ -213,36 +228,52 @@ class _MyDropdownState extends State<MyDropdown> {
               color: grayScaleGrey900,
             ),
           ),
-          child: InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            child: PopupMenuButton<String>(
-              icon: Image.asset('asset/image/arrow_icon.png', width: 14.45, height: 7.16),
+          child: PopupMenuButton<String>(
+              offset: const Offset(0, 60),
+              icon: Image.asset(
+                  _isMenuOpen
+                      ? 'asset/image/arrow_icon.png'
+                      : 'asset/image/arrow_not_icon.png',
+                  width: 20,
+                  height: 20),
               onSelected: (String value) {
                 var selectedTeam = widget.teams.firstWhere(
                         (team) => team.teamId.toString() == value,
-                    orElse: () => widget.teams[0]
-                );
+                    orElse: () => widget.teams[0]);
+
+                _isMenuOpen = false;
 
                 setState(() {
                   _selectedValue = value;
                   _selectedTeamName = selectedTeam.teamName;
                 });
 
-                var missionsState = Provider.of<MissionsState>(context, listen: false);
+                var missionsState =
+                Provider.of<MissionsState>(context, listen: false);
                 missionsState.setSelectedTeamId(selectedTeam.teamId);
 
-                var missionsGroupState = Provider.of<MissionsGroupState>(context, listen: false);
+                var missionsGroupState =
+                Provider.of<MissionsGroupState>(context, listen: false);
                 missionsGroupState.updateSelectedTeamId(selectedTeam.teamId);
               },
+              onCanceled: () {
+                setState(() {
+                  _isMenuOpen = false;
+                });
+              },
               itemBuilder: (BuildContext context) {
+                setState(() {
+                  _isMenuOpen = true;
+                });
                 return widget.teams.map((TeamList team) {
                   return PopupMenuItem<String>(
                     value: team.teamId.toString(),
                     child: Text(
                       team.teamName,
                       style: TextStyle(
-                        color: team.teamId.toString() == _selectedValue ? grayScaleGrey100 : grayScaleGrey400,
+                        color: team.teamId.toString() == _selectedValue
+                            ? grayScaleGrey100
+                            : grayScaleGrey400,
                       ),
                     ),
                   );
@@ -250,7 +281,6 @@ class _MyDropdownState extends State<MyDropdown> {
               },
             ),
           ),
-        ),
       ],
     );
   }

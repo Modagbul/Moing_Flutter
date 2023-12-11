@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/profile/profile_model.dart';
 
@@ -19,6 +21,8 @@ import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 
+import '../const/color/colors.dart';
+import '../const/style/text.dart';
 import '../model/request/fix_profile_request.dart';
 import '../model/response/get_my_page_data_response.dart';
 
@@ -28,12 +32,11 @@ class ProfileSettingState extends ChangeNotifier {
   final APICall call = APICall();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController introduceController = TextEditingController();
-  final TextEditingController resolutionController = TextEditingController();
 
   MyPageData? myPageData;
 
   String nameGroupText = '';
-  String introduceTextCount='(0/300)';
+  String introduceTextCount = '(0/300)';
 
   bool isNameChanged = false;
   bool isIntroduceChanged = false;
@@ -41,6 +44,7 @@ class ProfileSettingState extends ChangeNotifier {
 
   /// 클릭 제어
   bool onLoading = false;
+
   /// 사진 업로드
   XFile? avatarFile;
   String? getProfileImageUrl;
@@ -51,6 +55,8 @@ class ProfileSettingState extends ChangeNotifier {
   ProfileData? profileData;
 
   final ApiCode apiCode = ApiCode();
+
+  final FToast fToast = FToast();
 
   ProfileSettingState({
     required this.context,
@@ -73,27 +79,26 @@ class ProfileSettingState extends ChangeNotifier {
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (json) => json as Map<String, dynamic>,
       );
 
-      if(apiResponse.isSuccess == true) {
+      if (apiResponse.isSuccess == true) {
         nameController.text = apiResponse.data?['name'];
         introduceController.text = apiResponse.data?['introduction'];
         getProfileImageUrl = apiResponse.data?['profileImage'];
-      }
-      else {
-        if(apiResponse.errorCode == 'J0003') {
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
           loadFixData(teamId);
-        }
-        else {
-          throw Exception('loadFixData is Null, error code : ${apiResponse.errorCode}');
+        } else {
+          throw Exception(
+              'loadFixData is Null, error code : ${apiResponse.errorCode}');
         }
       }
     } catch (e) {
-      print('소모임 생성 실패: $e');
+      print('프로필 수정 전 조회 실패: $e');
     }
   }
 
@@ -101,19 +106,17 @@ class ProfileSettingState extends ChangeNotifier {
   void _onNameTextChanged() {
     nameGroupText = nameController.text;
     isNameChanged = profileData?.nickName != nameController.text;
-    print('isNameChanged: $isNameChanged');
     notifyListeners();
   }
 
   void _onIntroduceTextChanged() {
     isIntroduceChanged = profileData?.introduction != introduceController.text;
-    print('isIntroduceChanged: $isIntroduceChanged');
     notifyListeners();
   }
 
   // 텍스트 필드 초기화 메소드
   void clearResolutionTextField() {
-    resolutionController.clear();
+    introduceController.clear();
     notifyListeners();
   }
 
@@ -127,7 +130,6 @@ class ProfileSettingState extends ChangeNotifier {
     log('Instance "GroupFinishExitState" has been removed');
     super.dispose();
   }
-
 
   // 이름 텍스트 필드 초기화 메소드
   void clearNameTextField() {
@@ -151,29 +153,25 @@ class ProfileSettingState extends ChangeNotifier {
     Navigator.pop(context);
   }
 
-  void pressSubmitButton() {
-    if(profileData != null){
-      apiCode.putProfileData(profileData: profileData!);
-    }
-  }
-
-/// 프로필 사진
+  /// 프로필 사진
   Future<void> imageUpload(BuildContext context) async {
     if (onLoading) return;
     try {
       onLoading = true;
-      notifyListeners();
       await Permission.photos.request();
-      final XFile? assetFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final XFile? assetFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
 
       if (assetFile != null) {
         avatarFile = assetFile;
-        isAvatarChanged = true; // 여기에 플래그를 설정합니다.
+        isAvatarChanged = true;
+      } else {
+        isAvatarChanged = false;
       }
-
     } catch (e) {
       print(e.toString());
       viewUtil.showAlertDialog(context: context, message: e.toString());
+      isAvatarChanged = false;
     } finally {
       onLoading = false;
       notifyListeners();
@@ -182,36 +180,45 @@ class ProfileSettingState extends ChangeNotifier {
 
   /// 저장 버튼 클릭
   void savePressed() async {
-    print('savePressed called');
+    try {
+      if (onLoading) return;
+      if (!isAvatarChanged && !isNameChanged && !isIntroduceChanged) return;
 
-    // 이름, 소개글 또는 사진 변경이 있는지 확인
-    if (isNameChanged || isIntroduceChanged || (isAvatarChanged && avatarFile != null)) {
-      // 파일 확장자 얻기 (사진이 변경된 경우에만)
-      if (isAvatarChanged && avatarFile != null) {
-        extension = avatarFile!.path.split('.').last;
-        String fileExtension = '';
-        if (extension == 'jpg') {
-          fileExtension = 'JPG';
-        } else if (extension == 'jpeg') {
-          fileExtension = 'JPEG';
-        } else if (extension == 'png') {
-          fileExtension = 'PNG';
-        }
+      print('savePressed called');
+      onLoading = true;
+      // 이름, 소개글 또는 사진 변경이 있는지 확인
+      if (isNameChanged ||
+          isIntroduceChanged ||
+          (isAvatarChanged && avatarFile != null)) {
+        // 파일 확장자 얻기 (사진이 변경된 경우에만)
+        if (isAvatarChanged && avatarFile != null) {
+          extension = avatarFile!.path.split('.').last;
+          String fileExtension = '';
+          if (extension == 'jpg') {
+            fileExtension = 'JPG';
+          } else if (extension == 'jpeg') {
+            fileExtension = 'JPEG';
+          } else if (extension == 'png') {
+            fileExtension = 'PNG';
+          }
 
-        // presigned url 발급 및 프로필 수정 API 호출
-        if (await getPresignedUrl(fileExtension)) {
+          // presigned url 발급 및 프로필 수정 API 호출
+          if (await getPresignedUrl(fileExtension)) {
+            await fixProfileAPI();
+          }
+        } else {
+          // 사진 변경이 없는 경우에도 프로필 수정 API 호출
           await fixProfileAPI();
         }
       } else {
-        // 사진 변경이 없는 경우에도 프로필 수정 API 호출
-        await fixProfileAPI();
+        print('No changes to save');
       }
-    } else {
-      print('No changes to save');
+    } catch (e) {
+      print('수정 실패 : ${e.toString()}');
+    } finally {
+      onLoading = false;
     }
   }
-
-
 
   /// presignedURL 발급받기
   Future<bool> getPresignedUrl(String fileExtension) async {
@@ -222,7 +229,7 @@ class ProfileSettingState extends ChangeNotifier {
       };
 
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
         body: data,
@@ -230,23 +237,19 @@ class ProfileSettingState extends ChangeNotifier {
       );
 
       if (apiResponse.isSuccess == true) {
-        print(apiResponse.data?.toString());
         presignedUrl = apiResponse.data?['presignedUrl'];
         putProfileImageUrl = apiResponse.data?['imgUrl'];
 
         await uploadImageToS3(presignedUrl, avatarFile!);
         return true;
       } else {
-        if(apiResponse.errorCode == 'J0003') {
+        if (apiResponse.errorCode == 'J0003') {
           getPresignedUrl(fileExtension);
-        }
-        else {
-          throw Exception('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
         }
         return false;
       }
     } catch (e) {
-      print('소모임 생성 실패: $e');
+      print('presigned url 발급 실패: $e');
       return false;
     }
   }
@@ -276,34 +279,76 @@ class ProfileSettingState extends ChangeNotifier {
   // 프로필 수정 API 연동
   Future<void> fixProfileAPI() async {
     final String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
-      try {
-        FixProfile data = FixProfile(
-            nickName: isNameChanged ? nameController.text : null,
-            introduction: isIntroduceChanged ? introduceController.text : null,
-            profileImage: isAvatarChanged ? putProfileImageUrl : null);
+    try {
+      FixProfile data = FixProfile(
+          nickName: isNameChanged ? nameController.text : null,
+          introduction: isIntroduceChanged ? introduceController.text : null,
+          profileImage: isAvatarChanged ? putProfileImageUrl : null);
 
-        ApiResponse<Map<String, dynamic>> apiResponse =
-        await call.makeRequest<Map<String, dynamic>>(
-          url: apiUrl,
-          method: 'PUT',
-          body: data.toJson(),
-          fromJson: (json) => json as Map<String, dynamic>,
-        );
+      print('프로필 수정 data : ${data.toString()}');
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'PUT',
+        body: data.toJson(),
+        fromJson: (json) => json as Map<String, dynamic>,
+      );
 
-        if(apiResponse.isSuccess == true) {
-          Navigator.of(context).pop(true);
+      if (apiResponse.isSuccess == true) {
+        print('프로필 수정이 완료되었습니다.');
+        Navigator.of(context).pop(true);
+
+        String warningText = '프로필 수정이 완료되었어요.';
+
+        if (warningText.isNotEmpty) {
+          fToast.showToast(
+              child: Material(
+                type: MaterialType.transparency,
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 51,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            warningText,
+                            style: bodyTextStyle.copyWith(
+                              color: grayScaleGrey700,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              ),
+              toastDuration: const Duration(milliseconds: 3000),
+              positionedToastBuilder: (context, child) {
+                return Positioned(
+                  top: 114.0,
+                  left: 0.0,
+                  right: 0,
+                  child: child,
+                );
+              });
         }
-        else {
-          if(apiResponse.errorCode == 'J0003') {
-            fixProfileAPI();
-          }
-          else {
-            throw Exception('fixProfileAPI is Null, error code : ${apiResponse.errorCode}');
-          }
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
+          fixProfileAPI();
+        } else {
+          throw Exception(
+              'fixProfileAPI is Null, error code : ${apiResponse.errorCode}');
         }
-      } catch (e) {
-        print('프로필 수정 실패: $e');
       }
+    } catch (e) {
+      print('프로필 수정 실패: $e');
+    }
   }
 }
-

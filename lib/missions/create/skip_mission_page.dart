@@ -32,7 +32,7 @@ class SkipMissionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: '미션 건너뛰기'),
       body: const Padding(
         padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -93,7 +93,7 @@ class _InfoTextFields extends StatelessWidget {
           maxLines: 10,
           labelText: '사유 작성하기',
           hintText:
-              '이번 미션을 건너뛰는 적절한 사유를 알려주세요. 작성한 사유는 모든 모임원들에게 공개되니 신중하게 작성해주세요!.',
+              '이번 미션을 건너뛰는 적절한 사유를 알려주세요. 작성한 사유는 모든 모임원들에게 공개되니 신중하게 작성해주세요!',
           counterText:
               '(${context.watch<SkipMissionState>().textController.text.length}/50)',
           onChanged: (value) =>

@@ -187,8 +187,8 @@ class MyPageRevokeState extends ChangeNotifier {
         print('회원탈퇴 성공!');
         Navigator.of(context).pop();
         final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
-        sharedPreferencesInfo.removePreferencesData('old');
         sharedPreferencesInfo.removePreferencesData('sign');
+        sharedPreferencesInfo.removePreferencesData('ACCESS_TOKEN');
         Navigator.of(context).pushNamedAndRemoveUntil(InitPage.routeName, (route) => false);
         notifyListeners();
       }

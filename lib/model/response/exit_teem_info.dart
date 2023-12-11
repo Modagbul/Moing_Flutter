@@ -5,6 +5,8 @@ class ExitTeamInfo {
   final int duration;
   final int levelOfFire;
   final int numOfMission;
+  final bool isLeader;
+  final String memberName;
 
   ExitTeamInfo({
     required this.teamId,
@@ -13,6 +15,8 @@ class ExitTeamInfo {
     required this.duration,
     required this.levelOfFire,
     required this.numOfMission,
+    required this.isLeader,
+    required this.memberName,
   });
 
   factory ExitTeamInfo.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,8 @@ class ExitTeamInfo {
       duration: json['duration'] as int,
       levelOfFire: json['levelOfFire'] as int,
       numOfMission: json['numOfMission'] as int,
+      isLeader: json['isLeader'] as bool,
+      memberName: json['memberName'] as String,
     );
   }
 }

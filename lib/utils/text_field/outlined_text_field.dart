@@ -86,6 +86,11 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
             widget.onChanged(value);
           },
 
+          // 엔터 입력 시 unfocus
+          onEditingComplete: () {
+            _focusNode.unfocus();
+          },
+
           // 포커스 컨트롤
           focusNode: _focusNode,
 

@@ -11,8 +11,7 @@ import 'completed_mission_state.dart';
 
 class CompletedMissionPage extends StatelessWidget {
   static const routeName = '/board/mission/completed';
-
-  const CompletedMissionPage({super.key});
+  const CompletedMissionPage({Key? key}) : super(key: key);
 
   static route(BuildContext context) {
     final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
@@ -25,7 +24,7 @@ class CompletedMissionPage extends StatelessWidget {
                 CompletedMissionState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
-        return const CompletedMissionPage();
+        return CompletedMissionPage();
       },
     );
   }
@@ -93,7 +92,7 @@ class CompletedMissionPage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: const _BottomButton(),
+      floatingActionButton: (state.isLeader != null && state.isLeader!) ? const _BottomButton() : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

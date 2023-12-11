@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../const/color/colors.dart';
 
@@ -13,9 +14,11 @@ class BoardRepeatMissionCard extends StatelessWidget {
   final int missionId;
   final VoidCallback onTap;
   final Animation<double> fadeAnimation;
+  final FToast ftoast;
+  final Function(String) onShowToast;
 
   const BoardRepeatMissionCard({
-    super.key,
+    Key ? key,
     required this.title,
     required this.dueTo,
     required this.status,
@@ -24,13 +27,22 @@ class BoardRepeatMissionCard extends StatelessWidget {
     required this.missionId,
     required this.onTap,
     required this.fadeAnimation,
-  });
+    required this.ftoast,
+    required this.onShowToast,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String tagText = _getTagText(status);
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        if (tagText == '내일 리셋' || tagText.isEmpty) {
+          onTap();
+        } else {
+          onShowToast('반복 미션은 다음 주 월요일에 시작해요.');
+        }
+      },
       child: Stack(
         children: [
           Column(
@@ -96,6 +108,8 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8, top: 12),
                 child: Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,
@@ -145,6 +159,27 @@ class BoardRepeatMissionCard extends StatelessWidget {
       ),
     );
   }
+
+  String _getTagText(String status) {
+    DateTime now = DateTime.now();
+    String tagText = '';
+
+    if (status == 'WAIT') {
+      if (now.weekday == DateTime.sunday) {
+        tagText = '내일 시작';
+      } else {
+        int daysToSunday = DateTime.sunday - now.weekday;
+        if (daysToSunday > 0) {
+          tagText = '${daysToSunday}일 후 시작';
+        }
+      }
+    } else if (status == 'ONGOING' && now.weekday == DateTime.sunday) {
+      tagText = '내일 리셋';
+    }
+
+    return tagText;
+  }
+
 }
 
 class _Tag extends StatelessWidget {

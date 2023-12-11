@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/login/register_success/guide.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
   static const routeName = '/register/welcome';
-
   const WelcomePage({super.key});
 
   @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  @override
   Widget build(BuildContext context) {
-    /// 1.2초 후에 안내 페이지로 이동
-    Future.delayed(const Duration(milliseconds: 1200), () {
-      Navigator.of(context).pushNamed(
-        RegisterGuide.routeName,
-      );
+    final String nickname = ModalRoute.of(context)?.settings.arguments as String;
+    /// 2초 후에 안내 페이지로 이동
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      if (mounted) {
+        Navigator.of(context).pushNamed(
+          RegisterGuide.routeName,
+        );
+      }
     });
 
     return Scaffold(
@@ -28,8 +35,8 @@ class WelcomePage extends StatelessWidget {
               fit: BoxFit.fill,
             ),
             const SizedBox(height: 20.0,),
-            const Text(
-              '환영해요, 모닥불님!',
+            Text(
+              '환영해요, $nickname님!',
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.w600,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
@@ -92,7 +93,9 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
 
   Widget _buildMissionButton() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        context.read<BoardMainState>().tabController.animateTo(1);
+      },
       style: brightButtonStyle.copyWith(
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -104,8 +107,8 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('미션 인증하고 불 키우기'),
-          Image.asset(
-            'asset/image/icon_fire_black.png',
+          SvgPicture.asset(
+            'asset/image/icon_fire_black.svg',
             width: 24.0,
             height: 24.0,
             fit: BoxFit.contain,
@@ -142,7 +145,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                 color: grayScaleGrey500,
               ),
               child: Text(
-                '${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 100}',
+                '${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 0}',
                 style: const TextStyle(
                   color: grayScaleGrey100,
                   fontSize: 16.0,
@@ -181,9 +184,14 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '모닥모닥불',
-              style: TextStyle(
+            Text(
+              context
+                      .watch<BoardMainState>()
+                      .singleBoardData
+                      ?.teamInfo
+                      .teamName ??
+                  '',
+              style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w600,
                 color: grayScaleGrey100,
@@ -209,12 +217,13 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                   ),
                   const SizedBox(width: 12.0),
                   Text(
-                    context
-                            .watch<BoardMainState>()
-                            .singleBoardData
-                            ?.teamInfo
-                            .category ??
-                        '',
+                    context.read<BoardMainState>().convertCategoryName(
+                        category: context
+                                .watch<BoardMainState>()
+                                .singleBoardData
+                                ?.teamInfo
+                                .category ??
+                            ''),
                     style: bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
@@ -301,13 +310,36 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                       borderRadius: BorderRadius.circular(24.0),
                       color: grayScaleGrey500,
                     ),
-                    child: Text(
-                      name,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        color: grayScaleGrey100,
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
+                    child: IntrinsicWidth(
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: memberList?[index].profileImage != null
+                                ? Image.network(
+                                    memberList?[index].profileImage ?? '',
+                                    fit: BoxFit.cover,
+                                    width: 20,
+                                    height: 20,
+                                  )
+                                : Image.asset(
+                                    'asset/image/icon_user_profile.png',
+                                    fit: BoxFit.cover,
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                          ),
+                          const SizedBox(width: 4.0),
+                          Text(
+                            name,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              color: grayScaleGrey100,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -359,7 +391,7 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                   .singleBoardData
                   ?.teamInfo
                   .introduction ??
-              '',
+              '아직 한줄다짐이 없어요',
           style: const TextStyle(
             color: grayScaleGrey400,
             fontSize: 14.0,

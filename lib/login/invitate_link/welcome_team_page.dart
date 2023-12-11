@@ -9,14 +9,21 @@ class InvitationWelcomePage extends StatelessWidget {
   static const routeName = '/invitation/welcome';
 
   static route(BuildContext context) {
-    final String teamName = ModalRoute.of(context)?.settings.arguments as String;
+    final Map<String, dynamic> data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final String teamName = data['teamName'] as String;
+    final String teamLeaderName = data['teamLeaderName'] as String;
+    final String memberName = data['memberName'] as String;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (_) => WelcomeTeamState(
-              context: context,
-              teamName: teamName,
-            )),
+                  context: context,
+                  teamName: teamName,
+                  teamLeaderName: teamLeaderName,
+                  memberName: memberName,
+                )),
       ],
       builder: (context, _) {
         return InvitationWelcomePage();
@@ -40,7 +47,8 @@ class InvitationWelcomePage extends StatelessWidget {
                   SizedBox(height: 128),
                   Center(
                     child: Text('모임에 오신 걸 환영해요!',
-                    style: headerTextStyle.copyWith(color: grayScaleGrey100)),
+                        style:
+                            headerTextStyle.copyWith(color: grayScaleGrey100)),
                   ),
                   SizedBox(height: 16),
                   Container(
@@ -48,7 +56,7 @@ class InvitationWelcomePage extends StatelessWidget {
                     height: 54,
                     alignment: Alignment.center,
                     child: Text(
-                      '챙귤님이 모닥불님을\n${context.watch<WelcomeTeamState>().teamName} 모임에 초대했어요',
+                      '${context.watch<WelcomeTeamState>().teamLeaderName}님이 ${context.watch<WelcomeTeamState>().memberName}님을\n${context.watch<WelcomeTeamState>().teamName} 모임에 초대했어요',
                       style: contentTextStyle.copyWith(height: 1.68),
                       textAlign: TextAlign.center,
                     ),
@@ -65,9 +73,8 @@ class InvitationWelcomePage extends StatelessWidget {
               Positioned(
                 bottom: 32,
                 child: ElevatedButton(
-                  onPressed: (){
-                    Navigator.of(context).pushNamed(
-                        MainPage.routeName);
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(MainPage.routeName);
                   },
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all(

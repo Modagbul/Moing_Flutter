@@ -31,11 +31,13 @@ class TeamBlock {
   final int teamId;
   final String teamName;
   final String category;
+  final String profileImgUrl;
 
   TeamBlock({
     required this.teamId,
     required this.teamName,
     required this.category,
+    required this.profileImgUrl,
   });
 
   factory TeamBlock.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,7 @@ class TeamBlock {
       teamId: json['teamId'],
       teamName: json['teamName'],
       category: json['category'],
+      profileImgUrl: json['profileImgUrl'],
     );
   }
 }

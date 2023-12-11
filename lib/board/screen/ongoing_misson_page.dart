@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
@@ -14,16 +15,15 @@ import 'ongoing_misson_state.dart';
 
 class OngoingMissionPage extends StatefulWidget {
   static const routeName = '/board/mission/ongoing';
-
   const OngoingMissionPage({Key? key}) : super(key: key);
+
 
   static route(BuildContext context) {
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
-    log(arguments.runtimeType.toString());
-    log(arguments['teamId'].runtimeType.toString());
     final int teamId = arguments['teamId'];
+    print('미션 인증에서 teamId : $teamId');
 
     return MultiProvider(
       providers: [
@@ -32,7 +32,7 @@ class OngoingMissionPage extends StatefulWidget {
                 OngoingMissionState(context: context, teamId: teamId)),
       ],
       builder: (context, _) {
-        return const OngoingMissionPage();
+        return OngoingMissionPage();
       },
     );
   }
@@ -59,9 +59,12 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
     });
   }
 
+  final FToast fToast = FToast();
+
   @override
   void initState() {
     super.initState();
+    fToast.init(context);
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -73,13 +76,50 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
   @override
   void dispose() {
     _animationController.dispose();
+    fToast.removeCustomToast();
     super.dispose();
+  }
+
+  void showToast(String message) {
+    fToast.showToast(
+      child: Material(
+        type: MaterialType.transparency,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: 51,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+            ),
+            child: Text(
+              message,
+              style: bodyTextStyle.copyWith(
+                color: grayScaleGrey700,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      ),
+      toastDuration: const Duration(milliseconds: 3000),
+      positionedToastBuilder: (context, child) {
+        return Positioned(
+          top: 114.0,
+          left: 0.0,
+          right: 0,
+          child: child,
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<OngoingMissionState>();
-
     final data = state.repeatMissionStatus?.data;
     if (data == null) {
       log('repeatMissionData is null');
@@ -131,10 +171,12 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                     itemCount: state.repeatMissionStatus!.data.length,
                     itemBuilder: (context, index) {
                       final e = state.repeatMissionStatus!.data[index];
+                      fToast.init(context);
                       return Stack(
                         clipBehavior: Clip.none,
                         children: [
                           BoardRepeatMissionCard(
+                            ftoast: fToast,
                             title: e.title,
                             dueTo: e.dueTo,
                             done: e.done,
@@ -142,6 +184,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                             missionId: e.missionId,
                             status: e.status,
                             fadeAnimation: _fadeAnimation,
+                            onShowToast: showToast,
                             onTap: () {
                               Navigator.of(context).pushNamed(
                                 MissionProvePage.routeName,
@@ -185,12 +228,19 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                     },
                   )
                 else
-                  const Center(
-                    child: Text(
-                      '아직 미션이 없어요.',
-                      style: TextStyle(
-                        color: grayScaleGrey400,
-                        fontSize: 14.0,
+                  Visibility(
+                    visible: state.repeatMissionStatus?.data.isEmpty ?? true,
+                    replacement: const SizedBox(height: 182),
+                    child: const SizedBox(
+                      height: 182,
+                      child: Center(
+                        child: Text(
+                          '아직 미션이 없어요.',
+                          style: TextStyle(
+                            color: grayScaleGrey400,
+                            fontSize: 14.0,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -264,12 +314,19 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                       )
                       .toList()
                 else
-                  const Center(
-                    child: Text(
-                      '아직 미션이 없어요.',
-                      style: TextStyle(
-                        color: grayScaleGrey400,
-                        fontSize: 14.0,
+                  Visibility(
+                    visible: state.singleMissionStatus?.data.isEmpty ?? true,
+                    replacement: const SizedBox(height: 126),
+                    child: const SizedBox(
+                      height: 126,
+                      child: Center(
+                        child: Text(
+                          '아직 미션이 없어요.',
+                          style: TextStyle(
+                            color: grayScaleGrey400,
+                            fontSize: 14.0,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -279,7 +336,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
           ),
         ),
       ),
-      floatingActionButton: const _BottomButton(),
+      floatingActionButton: (state.isLeader != null && state.isLeader!) ? const _BottomButton() : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -366,6 +423,16 @@ String formatDueTo(String dueToString) {
 
   if (difference.isNegative) {
     return '기한 종료';
+  } else if (difference.inDays == 0) {
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes % 60;
+    if (hours > 0) {
+      return '${hours}시간 ${minutes}분 후 종료';
+    } else if (minutes > 0) {
+      return '${minutes}분 후 종료';
+    } else {
+      return '기한 종료';
+    }
   } else {
     String formattedString = '';
     if (difference.inDays > 0) {

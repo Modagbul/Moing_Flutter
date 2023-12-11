@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
+import 'package:moing_flutter/board/screen/completed_mission_state.dart';
 import 'package:moing_flutter/board/screen/ongoing_misson_state.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:provider/provider.dart';
@@ -12,30 +13,7 @@ import 'ongoing_misson_page.dart';
 
 class BoardMissionScreen extends StatefulWidget {
   static const routeName = '/board/mission';
-
-  const BoardMissionScreen({super.key});
-
-  static route(BuildContext context) {
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-
-    log(arguments.runtimeType.toString());
-    log(arguments['teamId'].runtimeType.toString());
-    final int teamId = arguments['teamId'];
-
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (_) => BoardMissionState(context: context)),
-        ChangeNotifierProvider(
-            create: (_) =>
-                OngoingMissionState(context: context, teamId: teamId)),
-      ],
-      builder: (context, _) {
-        return const BoardMissionScreen();
-      },
-    );
-  }
+  BoardMissionScreen({Key? key}) : super(key: key);
 
   @override
   State<BoardMissionScreen> createState() => _BoardMissionScreenState();
@@ -43,6 +21,7 @@ class BoardMissionScreen extends StatefulWidget {
 
 class _BoardMissionScreenState extends State<BoardMissionScreen>
     with SingleTickerProviderStateMixin {
+
   @override
   void initState() {
     super.initState();
@@ -65,11 +44,16 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
     if (tabController == null) {
       return Container();
     }
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => OngoingMissionState(
+            context: context,
+            teamId: context.watch<BoardMainState>().teamId,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CompletedMissionState(
             context: context,
             teamId: context.watch<BoardMainState>().teamId,
           ),
@@ -91,7 +75,7 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 170), // 오른쪽에 여백 주기
+                  padding: const EdgeInsets.only(right: 150), // 오른쪽에 여백 주기
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: TabBar(
@@ -113,8 +97,9 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  OngoingMissionPage.route(context),
-                  CompletedMissionPage.route(context),
+                  OngoingMissionPage(),
+                  // CompletedMissionPage.route(context),
+                  CompletedMissionPage(),
                 ],
               ),
             ),

@@ -2,21 +2,17 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:moing_flutter/fcm/fcm_state.dart';
 import 'package:moing_flutter/login/register_success/welcome_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/request/sign_up_request.dart';
-import 'package:moing_flutter/utils/api/api_error.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
 
 class SignUpDateState extends ChangeNotifier {
   final BuildContext context;
   final SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
   final TokenManagement tokenManagement = TokenManagement();
-  final ApiException apiException = ApiException();
   final APICall call = APICall();
   DateTime selectedDate = DateTime.now();
 
@@ -43,6 +39,7 @@ class SignUpDateState extends ChangeNotifier {
     if (result == true) {
       Navigator.of(context).pushNamed(
         WelcomePage.routeName,
+        arguments: nickname,
       );
     }
   }

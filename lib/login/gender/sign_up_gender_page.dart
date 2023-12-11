@@ -37,7 +37,8 @@ class SignUpGenderPage extends StatelessWidget {
       ),
       backgroundColor: grayBackground,
       body: SafeArea(
-        child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
               const SizedBox(
@@ -60,8 +61,8 @@ class SignUpGenderPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Text(
-                '모닥불님의',
+              Text(
+                '${context.watch<SignUpGenderState>().nickname}님의',
                 style: headerTextStyle,
               ),
               const SizedBox(

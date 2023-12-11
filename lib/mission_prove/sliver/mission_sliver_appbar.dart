@@ -25,7 +25,7 @@ class MissionSliverAppBar extends StatelessWidget {
             // ),
             Spacer(),
             GestureDetector(
-                onTap: context.read<MissionProveState>().showMissionRuleBottomModal,
+                onTap: () => context.read<MissionProveState>().showModal('content'),
                 child: Text(
                   '미션내용',
                   style: ts,
@@ -34,9 +34,7 @@ class MissionSliverAppBar extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: GestureDetector(
-                  onTap: () {
-                    print('더보기 클릭');
-                  },
+                  onTap: context.read<MissionProveState>().clickMoreModal,
                   child: Text(
                     '더보기',
                     style: ts,

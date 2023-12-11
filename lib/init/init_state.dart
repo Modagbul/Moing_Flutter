@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
 import 'package:moing_flutter/login/invitate_link/welcome_team_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/mypage/profile_setting_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
@@ -21,6 +23,8 @@ class InitState extends ChangeNotifier {
   String apiUrl = '';
   String? teamId;
   String? teamName;
+  String? teamLeaderName;
+  String? memberName;
   String errorCode = '';
   int? numOfTeam;
 
@@ -67,9 +71,16 @@ class InitState extends ChangeNotifier {
             await getTeamNameAndNumber();
             if(numOfTeam != null && numOfTeam! < 3) {
               bool? isRegistered = await registerTeam();
+              // 가입 완료되었을 때
               if(isRegistered != null && isRegistered) {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, InvitationWelcomePage.routeName, (route) => false);
+                    context,
+                    InvitationWelcomePage.routeName,
+                        (route) => false,
+                arguments: {
+                      'teamName': teamName,
+                  'teamLeaderName': teamLeaderName,
+                'memberName': memberName});
               }
               else {
                 /// TODO : 메인 페이지로 이동하면서 추가 조건 넣어줘야 함.
@@ -77,7 +88,12 @@ class InitState extends ChangeNotifier {
                 if(errorCode == 'T0004') {
                   /// 이미 가입된 유저라 가입하지 못했을 때
                   Navigator.pushNamedAndRemoveUntil(
-                      context, MainPage.routeName, (route) => false);
+                      context, MainPage.routeName, (route) => false, arguments: 'isRegistered');
+                }
+                else {
+                  print('다이나믹 링크로 진입했지만 에러났을 때 : $errorCode');
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MainPage.routeName, (route) => false, arguments: errorCode);
                 }
               }
             }
@@ -85,17 +101,22 @@ class InitState extends ChangeNotifier {
               /// Team 개수가 3개 초과했을 때
               Navigator.pushNamedAndRemoveUntil(
                 /// TODO : 추가 초건 넣어줘야 함
-                  context, MainPage.routeName, (route) => false);
+                  context, MainPage.routeName, (route) => false , arguments: 'full');
             }
           }
         }
 
-        /// 일반적으로 접속한 사람
+        /// 일반적으로 접속한 사람 (teamId = null)
         else {
           bool? isUser = await checkUser();
           if(isUser != null && isUser) {
             Navigator.pushNamedAndRemoveUntil(
                 context, MainPage.routeName, (route) => false);
+          }
+          else {
+            print(1);
+            Navigator.pushNamedAndRemoveUntil(
+                context, LoginPage.routeName, (route) => false);
           }
         }
       }
@@ -124,7 +145,6 @@ class InitState extends ChangeNotifier {
         print('errorCode : ${apiResponse?.errorCode}');
         // 토큰 갱신 여부 확인
         if(apiResponse?.errorCode == 'J0003') {
-          print('이거 실행해야 되는데?');
           checkUser();
           return true;
         } else if (apiResponse?.errorCode == 'J0007' || apiResponse?.errorCode == 'J0008') {
@@ -153,9 +173,15 @@ class InitState extends ChangeNotifier {
         fromJson: (data) => data as Map<String, dynamic>,
       );
 
+      print('가입 상태 확인 : ${apiResponse?.errorCode}');
+      print('가입 상태 확인2 : ${apiResponse.data.toString()}');
       if (apiResponse.isSuccess) {
+        print('가입하려는 팀 이름과 소모임 개수는 다음과 같습니다.');
+
         teamName = apiResponse.data?['teamName'];
         numOfTeam = apiResponse.data?['numOfTeam'] as int;
+        teamLeaderName = apiResponse.data?['leaderName'];
+        memberName = apiResponse.data?['memberName'];
       } else {
         if(apiResponse?.errorCode == 'J0003') {
           getTeamNameAndNumber();

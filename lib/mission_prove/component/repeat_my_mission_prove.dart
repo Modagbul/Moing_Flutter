@@ -99,6 +99,7 @@ class RepeatMyMissionProved extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
+                  width: 172,
                   height: 155,
                   child: Image.network(
                     context

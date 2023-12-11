@@ -14,20 +14,9 @@ class MissionNotProveButton extends StatelessWidget {
       bottom: 20,
       left: 20,
       right: 20,
-      child: Column(
-        children: [
-          BlackButton(
-            onPressed: context.read<MissionProveState>().missionSkip,
-            text: '이번 미션 건너뛰기',
-            borderSide: false,
-          ),
-          SizedBox(height: 8),
-          WhiteButton(
-              onPressed: context.read<MissionProveState>().submit,
-              text: '미션 인증하기'
-          ),
-        ],
-      ),
+      child: WhiteButton(
+          onPressed: () => context.read<MissionProveState>().showModal('mission'),
+          text: '미션 인증하기'),
     );
   }
 }

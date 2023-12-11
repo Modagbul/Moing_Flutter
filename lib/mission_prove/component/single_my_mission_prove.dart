@@ -3,6 +3,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SingleMyMissionProved extends StatelessWidget {
   const SingleMyMissionProved({Key? key}) : super(key: key);
@@ -74,47 +75,50 @@ class SingleMyMissionProved extends StatelessWidget {
                     style: contentTextStyle.copyWith(color: grayScaleGrey200),),
                   )
               /// 링크 인증
-                  : Padding(
-                    padding: const EdgeInsets.only(top: 80.0, left: 16, right: 16, bottom: 24),
-                    child: Container(
-                      width: double.infinity,
-                      height: 88,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: grayScaleGrey600,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16.0, right: 12, top: 34, bottom: 34),
-                            child: Image.asset(
-                              'asset/image/icon_hyperlink.png',
-                              color: grayScaleGrey400,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16.0, top: 25.5, bottom: 4),
-                                child: Text('링크 바로가기', style: contentTextStyle.copyWith(color: grayScaleGrey100),),
+                  : GestureDetector(
+                    onTap: context.read<MissionProveState>().singleMissionLink,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 80.0, left: 16, right: 16, bottom: 24),
+                      child: Container(
+                        width: double.infinity,
+                        height: 88,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: grayScaleGrey600,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0, right: 12, top: 34, bottom: 34),
+                              child: Image.asset(
+                                'asset/image/icon_hyperlink.png',
+                                color: grayScaleGrey400,
                               ),
-                              Text(
-                                context.watch<MissionProveState>().myMissionList![0].archive,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: grayScaleGrey400,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 16.0, top: 25.5, bottom: 4),
+                                  child: Text('링크 바로가기', style: contentTextStyle.copyWith(color: grayScaleGrey100),),
                                 ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                                Text(
+                                  context.watch<MissionProveState>().myMissionList![0].archive,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: grayScaleGrey400,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
               ),
+                    ),
                   )
             ),
             Positioned(
@@ -153,14 +157,9 @@ class SingleMyMissionProved extends StatelessWidget {
                       iconEnabledColor: Colors.white,
                       items: <DropdownMenuItem<String>>[
                         DropdownMenuItem(
+                            value: 'retry',
                             child: Container(
-                                padding: EdgeInsets.only(right: 8),
-                                alignment: Alignment.centerRight,
-                                child: Text('인증 수정하기')),
-                            value: 'fix'),
-                        DropdownMenuItem(
-                            child: Container(
-                              padding: EdgeInsets.only(right: 8),
+                              padding: EdgeInsets.only(top: 8, right: 8),
                               alignment: Alignment.centerRight,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -173,12 +172,11 @@ class SingleMyMissionProved extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            ),
-                            value: 'retry'),
+                            )),
                       ],
                       isDense: true,
                       onChanged: (String? val) {
-                        context.read<MissionProveState>().setMission(val);
+                        context.read<MissionProveState>().setMission(val: val);
                       },
                     ),
                   ],

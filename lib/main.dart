@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,6 +19,7 @@ void main() async {
   await initializeDefault();
   // 화면 세로로 고정
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MoingApp());
 }
 
@@ -75,4 +77,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     ),
     payload: message.data['landing'],
   );
+}
+
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36';
+  }
 }

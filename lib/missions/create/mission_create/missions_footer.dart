@@ -13,7 +13,7 @@ class MissionsFooter extends StatelessWidget {
     return GestureDetector(
       onTap: context.read<MissionCreateState>().openBottomModal,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0, left: 100, top: 8),
+        padding: const EdgeInsets.only(bottom: 8.0, left: 85, top: 8),
         child: Container(
           width: 222,
           height: 54,

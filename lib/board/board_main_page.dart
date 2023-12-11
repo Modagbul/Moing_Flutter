@@ -64,7 +64,7 @@ class _BoardMainPageState extends State<BoardMainPage>
 
   @override
   Widget build(BuildContext context) {
-    final TeamInfo? teamInfo = context.read<BoardMainState>().teamInfo;
+    final TeamInfo? teamInfo = context.watch<BoardMainState>().teamInfo;
     final String teamName = teamInfo?.teamName ?? '';
     final int teamId = context.read<BoardMainState>().teamId;
 
@@ -75,7 +75,7 @@ class _BoardMainPageState extends State<BoardMainPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.6,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: _CustomTabBar(
               tabs: const [
                 '목표보드',
@@ -87,8 +87,8 @@ class _BoardMainPageState extends State<BoardMainPage>
           Expanded(
             child: TabBarView(
               controller: context.read<BoardMainState>().tabController,
-              children: const [
-                BoardGoalScreen(),
+              children: [
+                const BoardGoalScreen(),
                 BoardMissionScreen(),
               ],
             ),

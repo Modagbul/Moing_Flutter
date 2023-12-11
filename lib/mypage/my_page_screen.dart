@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
@@ -8,12 +10,12 @@ import 'package:provider/provider.dart';
 class MyPageScreen extends StatelessWidget {
   static const routeName = '/mypage';
 
-  const MyPageScreen({Key? key}) : super(key: key);
+  const MyPageScreen({super.key});
 
-  static route({required BuildContext context, int? teamCount}) {
+  static route({required BuildContext context}) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => MyPageState(context: context, teamCount: teamCount!)),
+        ChangeNotifierProvider(create: (_) => MyPageState(context: context)),
       ],
       builder: (context, _) {
         return const MyPageScreen();
@@ -25,13 +27,13 @@ class MyPageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: grayBackground,
-        appBar: _renderAppBar(context: context),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                const SizedBox(height: 64.0),
+                _renderAppBar(context: context),
+                const SizedBox(height: 40.0),
                 _Profile(),
                 const SizedBox(height: 36.0),
                 _HashTag(),
@@ -44,42 +46,40 @@ class MyPageScreen extends StatelessWidget {
       );
   }
 
-  PreferredSizeWidget _renderAppBar({required BuildContext context}) {
-    final Image moingLogoImg = Image.asset(
-      'asset/image/logo_text.png',
-      width: 80.0,
-      height: 32.0,
-    );
-
-    final Image notificationImg = Image.asset(
-      'asset/image/notification.png',
-      width: 24.0,
-      height: 24.0,
-    );
-
-    final Image settingImg = Image.asset(
-      'asset/image/icon_setting.png',
-      width: 24.0,
-      height: 24.0,
-    );
-
-    return AppBar(
-      backgroundColor: grayBackground,
-      elevation: 0.0,
-      title: moingLogoImg,
-      centerTitle: false,
-      automaticallyImplyLeading: false,
-      actions: [
-        IconButton(onPressed: () {}, icon: notificationImg),
-        Builder(
-          builder: (newContext) {
-            return IconButton(
-              onPressed: newContext.read<MyPageState>().settingPressed,
-              icon: settingImg,
-            );
-          },
-        ),
-      ],
+  Widget _renderAppBar({required BuildContext context}) {
+    return Container(
+      height: 48,
+      color: grayBackground,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SvgPicture.asset(
+            'asset/icons/home_moing_logo.svg',
+            width: 80,
+            height: 32,
+          ),
+          const Spacer(),
+          GestureDetector(
+            onTap: (){
+              Navigator.of(context).pushNamed(AlarmPage.routeName);
+            },
+            child: SvgPicture.asset(
+              'asset/icons/home_notification.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+          SizedBox(width: 24),
+          GestureDetector(
+            onTap: () => context.read<MyPageState>().settingPressed(),
+            child: SvgPicture.asset(
+              'asset/icons/mypage_setting.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -89,8 +89,6 @@ class _Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MyPageData? myPageData = context.watch<MyPageState>().myPageData;
-
     return Row(
       children: [
         GestureDetector(
@@ -99,9 +97,10 @@ class _Profile extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
-                child: myPageData?.profileImage != null
+                child: context.watch<MyPageState>().myPageData != null &&
+                context.watch<MyPageState>().myPageData!.profileImage != null
                     ? Image.network(
-                  myPageData!.profileImage!,
+                  context.watch<MyPageState>().myPageData!.profileImage!,
                   fit: BoxFit.cover,
                   width: 80,
                   height: 80,
@@ -112,6 +111,7 @@ class _Profile extends StatelessWidget {
                   height: 80,
                 ),
               ),
+
               Positioned(
                 right: 0,
                 bottom: 0,
@@ -130,7 +130,7 @@ class _Profile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              myPageData?.nickName ?? '',
+              context.watch<MyPageState>().myPageData?.nickName ?? '',
               style: const TextStyle(
                 color: grayScaleGrey100,
                 fontSize: 18.0,
@@ -138,12 +138,15 @@ class _Profile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4.0),
-            Text(
-              myPageData?.introduction ?? '아직 한줄다짐이 없어요',
-              style: const TextStyle(
-                color: grayScaleGrey400,
-                fontSize: 14.0,
-                fontWeight: FontWeight.w500,
+            Container(
+              width: 250,
+              child: Text(
+                context.watch<MyPageState>().myPageData?.introduction ?? '아직 한줄다짐이 없어요',
+                style: const TextStyle(
+                  color: grayScaleGrey400,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
@@ -220,7 +223,7 @@ class _HashTag extends StatelessWidget {
                                 .take(2)
                                 .map(
                                   (category) => Text(
-                                    '# $category',
+                                    '# ${context.read<MyPageState>().convertCategoryName(category: category)}',
                                     style: const TextStyle(
                                       color: grayScaleWhite,
                                       fontSize: 28.0,

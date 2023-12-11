@@ -16,14 +16,14 @@ class MissionFireAppBar extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
             },
-            child: Icon(Icons.close, size: 28, color: Colors.white,),
+            child: const Icon(Icons.close, size: 28, color: Colors.white,),
           ),
           const SizedBox(width: 32),
           Text('불 던지기', style: buttonTextStyle.copyWith(color: grayScaleGrey300)),
-          Spacer(),
+          const Spacer(),
           GestureDetector(
               onTap: (){},
-              child: Icon(Icons.more_vert, size: 24, color: grayScaleGrey300)),
+              child: const Icon(Icons.more_vert, size: 24, color: grayScaleGrey300)),
         ],
       ),
     );

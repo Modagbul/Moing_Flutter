@@ -143,6 +143,7 @@ class EveryMissionProved extends StatelessWidget {
                         .everyMissionList![index]
                         .archive,
                     fit: BoxFit.cover,
+                    width: 172,
                     height: 155,
                   ),
                 ),

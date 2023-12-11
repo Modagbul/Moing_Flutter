@@ -43,8 +43,12 @@ class MissionCurrentSituation extends StatelessWidget {
                             radius: 36.0,
                             lineWidth: 3.0,
                             animation: true,
-                            percent: context.read<MissionProveState>().repeatMissionMyCount/
-                                context.read<MissionProveState>().repeatMissionTotalCount,
+                            percent: context
+                                    .read<MissionProveState>()
+                                    .repeatMissionMyCount /
+                                context
+                                    .read<MissionProveState>()
+                                    .repeatMissionTotalCount,
                             center: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -82,6 +86,7 @@ class MissionCurrentSituation extends StatelessWidget {
                             progressColor: coralGrey500,
                           ),
                         ),
+
                       /// 반복 미션이면서 내가 인증 안했을 때
                       if (context.watch<MissionProveState>().isRepeated &&
                           !context.watch<MissionProveState>().isMeProved)
@@ -93,8 +98,12 @@ class MissionCurrentSituation extends StatelessWidget {
                             radius: 36.0,
                             lineWidth: 3.0,
                             animation: true,
-                            percent: context.read<MissionProveState>().repeatMissionMyCount/
-                                context.read<MissionProveState>().repeatMissionTotalCount,
+                            percent: context
+                                    .read<MissionProveState>()
+                                    .repeatMissionMyCount /
+                                context
+                                    .read<MissionProveState>()
+                                    .repeatMissionTotalCount,
                             center: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -134,45 +143,66 @@ class MissionCurrentSituation extends StatelessWidget {
                         ),
                       // 한번 미션이면서 내가 인증했을 때
                       if (!context.watch<MissionProveState>().isRepeated &&
-                          context.watch<MissionProveState>().myMissionList != null &&
-                          context.watch<MissionProveState>().myMissionList!.isNotEmpty)
+                          context.watch<MissionProveState>().myMissionList !=
+                              null &&
+                          context
+                              .watch<MissionProveState>()
+                              .myMissionList!
+                              .isNotEmpty)
                         Image.asset('asset/image/icon_mission_prove.png'),
                       // 한번 미션이면서 내가 인증 안 했을 때
                       if (!context.watch<MissionProveState>().isRepeated &&
-                          (context.watch<MissionProveState>().myMissionList == null ||
-                              (context.watch<MissionProveState>().myMissionList != null &&
-                                context.watch<MissionProveState>().myMissionList!.isEmpty)))
+                          (context.watch<MissionProveState>().myMissionList ==
+                                  null ||
+                              (context
+                                          .watch<MissionProveState>()
+                                          .myMissionList !=
+                                      null &&
+                                  context
+                                      .watch<MissionProveState>()
+                                      .myMissionList!
+                                      .isEmpty)))
                         Image.asset('asset/image/icon_mission_not_yet.png'),
                       SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 2.0),
-                                child:
-                                    Image.asset('asset/image/icon_clock.png'),
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                !context.watch<MissionProveState>().isRepeated
-                                    ? (context.watch<MissionProveState>().missionRemainTime.length < 2
-                                        ? ""
-                                        : context.watch<MissionProveState>().missionRemainTime)
-                                    : '주 ${context.watch<MissionProveState>().repeatMissionTotalCount}회',
-                                style: bodyTextStyle,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: Text(
-                                context.watch<MissionProveState>().missionTitle,
-                                style: middleTextStyle),
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 2.0),
+                                  child:
+                                      Image.asset('asset/image/icon_clock.png'),
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  !context.watch<MissionProveState>().isRepeated
+                                      ? (context
+                                                  .watch<MissionProveState>()
+                                                  .missionRemainTime
+                                                  .length <
+                                              2
+                                          ? ""
+                                          : context
+                                              .watch<MissionProveState>()
+                                              .missionRemainTime)
+                                      : '주 ${context.watch<MissionProveState>().repeatMissionTotalCount}회',
+                                  style: bodyTextStyle,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Text(
+                                  context.watch<MissionProveState>().missionTitle,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: middleTextStyle),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   )

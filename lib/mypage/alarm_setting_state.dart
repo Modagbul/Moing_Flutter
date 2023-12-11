@@ -9,10 +9,10 @@ class AlarmSettingState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
 
-  bool isTotalAlarmOn = true;
-  bool isNewUploadPushOn = true;
-  bool isRemindPushOn = true;
-  bool isFirePushOn = true;
+  bool? isTotalAlarmOn;
+  bool? isNewUploadPushOn;
+  bool? isRemindPushOn;
+  bool? isFirePushOn;
 
   AlarmSettingsResponse? getAlarmSettings;
   AlarmSettingsEditor? updateAlarmSettings;
@@ -36,6 +36,7 @@ class AlarmSettingState extends ChangeNotifier {
   }
 
   AlarmSettingState({required this.context}) {
+    fetchAlarmSettings();
     initState();
   }
 
@@ -49,87 +50,87 @@ class AlarmSettingState extends ChangeNotifier {
       isNewUploadPushOn = response.newUploadPush;
       isRemindPushOn = response.remindPush;
       isFirePushOn = response.firePush;
-      isTotalAlarmOn = isNewUploadPushOn && isRemindPushOn && isFirePushOn;
+      isTotalAlarmOn = isNewUploadPushOn! && isRemindPushOn! && isFirePushOn!;
 
       notifyListeners();
     }
   }
 
+  /// 저장 버튼 클릭 시
   Future<void> saveAlarmSettings() async {
     try {
-      await updateSingleAlarmSetting('isNewUploadPush', isNewUploadPushOn);
-      await updateSingleAlarmSetting('isRemindPush', isRemindPushOn);
-      await updateSingleAlarmSetting('isFirePush', isFirePushOn);
+      print('TotalPush : $isTotalAlarmOn');
+      print('isNewUploadPushOn : $isNewUploadPushOn');
+      print('isRemindPushOn : $isRemindPushOn');
+      print('isFirePushOn : $isFirePushOn');
 
-      log('알람 설정이 성공적으로 업데이트되었습니다.');
+      await apiCode.updateAlarmSettings('isNewUploadPush', isNewUploadPushOn!);
+      await apiCode.updateAlarmSettings('isRemindPush', isRemindPushOn!);
+      await apiCode.updateAlarmSettings('isFirePush', isFirePushOn!);
+
+      print('알람 설정이 성공적으로 업데이트되었습니다.');
       fetchAlarmSettings();
     } catch (e) {
       log('Error updating alarm settings: $e');
     }
   }
 
-  Future<void> updateSingleAlarmSetting(String type, bool status) async {
-    await apiCode.updateAlarmSettings(type, status);
-  }
-
-  // void changeAlarmSettings(bool newUploadPush, bool remindPush, bool firePush) {
-  //   isNewUploadPushOn = newUploadPush;
-  //   isRemindPushOn = remindPush;
-  //   isFirePushOn = firePush;
-  //
-  //   isTotalAlarmOn = newUploadPush || remindPush || firePush;
-  //   notifyListeners();
-  // }
-
-  void changeTotalAlarm(bool isTotalOn) {
-    isTotalAlarmOn = isTotalOn;
-    if (isTotalOn) {
-      isNewUploadPushOn = true;
-      isRemindPushOn = true;
-      isFirePushOn = true;
-    } else {
-      isNewUploadPushOn = false;
-      isRemindPushOn = false;
-      isFirePushOn = false;
-    }
-    saveAlarmSettings();
-    notifyListeners();
-  }
-
-  void changeAlarmSettings(bool newUploadPush, bool remindPush, bool firePush) {
-    isNewUploadPushOn = newUploadPush;
-    isRemindPushOn = remindPush;
-    isFirePushOn = firePush;
-
-    isTotalAlarmOn = newUploadPush && remindPush && firePush;
-    saveAlarmSettings();
-    notifyListeners();
-  }
-
+  /// 전체 불 변화
   void changeAllAlarms(bool isTotalOn) {
     isNewUploadPushOn = isRemindPushOn = isFirePushOn = isTotalOn;
-    print('iisNewUploadPushOn : $isNewUploadPushOn');
+    print('isNewUploadPushOn : $isNewUploadPushOn');
     print('isRemindPushOn : $isRemindPushOn');
     print('isFirePushOn : $isFirePushOn');
+    checkAllAlarms();
+  }
 
+  /// 전체 ON/OFF 확인
+  void checkAllAlarms() {
+    if(isNewUploadPushOn! && isRemindPushOn! && isFirePushOn!) {
+      isTotalAlarmOn = true;
+    } else {
+      isTotalAlarmOn = false;
+    }
+    print('isTotalAlarmOn : $isTotalAlarmOn');
     notifyListeners();
   }
 
-  bool changeNewAlarm(bool isChecked) {
+  /// 각 알림 ON/OFF에 따라 함수 작동
+  void alarmSettings({required String title, required bool isFixed}) {
+    switch(title) {
+      case '전체 알림':
+        changeAllAlarms(isFixed);
+        break;
+      case '신규 공지 알림':
+        changeNewAlarm(isFixed);
+        break;
+      case '미션 리마인드 알림':
+        changeRemindAlarm(isFixed);
+        break;
+      case '불 던지기 알림':
+        changeFireAlarm(isFixed);
+        break;
+    }
+  }
+
+  void changeNewAlarm(bool isChecked) {
     isNewUploadPushOn = isChecked;
+    print('신규 공지 알림 : $isNewUploadPushOn');
+    checkAllAlarms();
     notifyListeners();
-    return isNewUploadPushOn;
   }
 
-  bool changeRemindAlarm(bool isChecked) {
+  void changeRemindAlarm(bool isChecked) {
     isRemindPushOn = isChecked;
+    print('미션 리마인드 알림 : $isNewUploadPushOn');
+    checkAllAlarms();
     notifyListeners();
-    return isRemindPushOn;
   }
 
-  bool changeFireAlarm(bool isChecked) {
+  void changeFireAlarm(bool isChecked) {
     isFirePushOn = isChecked;
+    print('불던지기 알림 : $isNewUploadPushOn');
+    checkAllAlarms();
     notifyListeners();
-    return isFirePushOn;
   }
 }

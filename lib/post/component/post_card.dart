@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/post/post_model.dart';
 
@@ -21,7 +22,10 @@ class PostCard extends StatelessWidget {
           _renderNoticeCardHeader(nickName: postData.writerNickName),
           const SizedBox(height: 8.0),
           _renderNoticeCardBody(
-              title: postData.title, content: postData.content),
+            title: postData.title,
+            content: postData.content,
+            isRead: postData.isRead,
+          ),
           const SizedBox(height: 12.0),
           _renderNoticeCardFooter(commentNum: postData.commentNum),
         ],
@@ -32,13 +36,21 @@ class PostCard extends StatelessWidget {
   Widget _renderNoticeCardHeader({required String nickName}) {
     return Row(
       children: [
-        Container(
-          width: 20.0,
-          height: 20.0,
-          decoration: BoxDecoration(
-            color: grayScaleGrey500,
-            borderRadius: BorderRadius.circular(50),
-          ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: postData.writerProfileImage != null
+              ? Image.network(
+                  postData.writerProfileImage!,
+                  fit: BoxFit.cover,
+                  width: 20,
+                  height: 20,
+                )
+              : Image.asset(
+                  'asset/image/icon_user_profile.png',
+                  fit: BoxFit.cover,
+                  width: 20,
+                  height: 20,
+                ),
         ),
         const SizedBox(width: 8.0),
         Text(
@@ -57,28 +69,38 @@ class PostCard extends StatelessWidget {
             height: 14.0,
           ),
         const Spacer(),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.more_vert, size: 24.0),
-          color: grayScaleGrey400,
-        )
+        const SizedBox(height: 48.0),
       ],
     );
   }
 
-  Widget _renderNoticeCardBody(
-      {required String title, required String content}) {
+  Widget _renderNoticeCardBody({
+    required String title,
+    required String content,
+    required bool isRead,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: grayScaleWhite,
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-          ),
-          overflow: TextOverflow.ellipsis,
+        Row(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: grayScaleWhite,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(width: 4.0),
+            if (!isRead)
+              SvgPicture.asset(
+                'asset/image/icon_new.svg',
+                width: 16,
+                height: 16,
+              ),
+          ],
         ),
         Text(
           content,

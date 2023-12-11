@@ -5,6 +5,7 @@ import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/mypage/setting_state.dart';
 import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
+import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
@@ -75,7 +76,7 @@ class SettingPage extends StatelessWidget {
                       int teamCount =
                           Provider.of<SettingState>(context, listen: false)
                               .teamCount;
-                      print('teamCount : $teamCount');
+                      print('회원 탈퇴를 위해 teamCount 조회 : $teamCount');
                       if (teamCount != 0) {
                         Navigator.push(
                           context,
@@ -102,28 +103,40 @@ class SettingPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return WarningDialog(
-          title: '정말 로그아웃하시겠어요?',
-          content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
-          onConfirm: () async {
-            Navigator.of(context).pop();
-            await _logout(context);
-          },
-          onCanceled: () => Navigator.of(context).pop(),
-          leftText: '로그아웃',
-          rightText: '남아있기',
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            WarningDialog(
+              title: '정말 로그아웃하시겠어요?',
+              content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
+              onConfirm: () async {
+                _logout(context);
+              },
+              onCanceled: () => Navigator.of(context).pop(),
+              leftText: '로그아웃',
+              rightText: '남아있기',
+            ),
+          ],
         );
       },
     );
   }
 
-  Future<void> _logout(BuildContext context) async {
+   _logout(BuildContext context) async {
     bool? signOutResponse = await apiCode.signOut();
     print('로그아웃 Response : ${signOutResponse.toString()}');
     if (signOutResponse != null && signOutResponse) {
       print('settingPage에서 로그아웃 성공 : ${signOutResponse.toString()}');
+
+      SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
+      sharedPreferencesInfo.removePreferencesData('ACCESS_TOKEN');
+      sharedPreferencesInfo.removePreferencesData('REFRESH_TOKEN');
+      Navigator.of(context).pop();
       Navigator.pushNamedAndRemoveUntil(
           context, InitPage.routeName, (route) => false);
+    } else {
+      print('로그아웃 재실행');
+      _logout(context);
     }
   }
 }

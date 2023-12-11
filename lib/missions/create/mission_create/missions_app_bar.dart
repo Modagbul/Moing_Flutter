@@ -11,6 +11,7 @@ class MissionAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: grayBackground,
+      padding: EdgeInsets.symmetric(horizontal: 20),
       height: 56,
       child: Row(
         children: [
@@ -30,11 +31,11 @@ class MissionAppBar extends StatelessWidget {
           GestureDetector(
             onTap: context.read<MissionCreateState>().submit,
             child: Text('만들기', style: buttonTextStyle.copyWith(
-                color: (context.watch<MissionCreateState>().isMethodSelected &&
-                     context.watch<MissionCreateState>().titleController.text.isNotEmpty &&
-                    context.watch<MissionCreateState>().contentController.text.isNotEmpty &&
-                    context.watch<MissionCreateState>().ruleController.text.isNotEmpty
-                ) ? grayScaleGrey100 : grayScaleGrey500),),),
+                color: context.watch<MissionCreateState>().isSuccess
+                    ? grayScaleGrey100
+                    : grayScaleGrey500),
+            ),
+          ),
         ],
       ),
     );

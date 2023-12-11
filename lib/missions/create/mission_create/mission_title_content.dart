@@ -70,8 +70,8 @@ class MissionTitleContent extends StatelessWidget {
           counterText:
               '(${context.watch<MissionCreateState>().contentController.text.length}/300)',
           inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
-          onClearButtonPressed:
-              context.read<MissionCreateState>().clearContentTextField,
+          // onClearButtonPressed:
+          //     context.read<MissionCreateState>().clearContentTextField,
         ),
       ],
     );

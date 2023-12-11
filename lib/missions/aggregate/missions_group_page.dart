@@ -111,12 +111,19 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                   ),
                 )
               else
-                const Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
+                Visibility(
+                  visible: state.aggregateTeamSingleMissionStatus?.data.isEmpty ?? true,
+                  replacement: const SizedBox(height: 126),
+                  child: const SizedBox(
+                    height: 126,
+                    child: Center(
+                      child: Text(
+                        '아직 미션이 없어요.',
+                        style: TextStyle(
+                          color: grayScaleGrey400,
+                          fontSize: 14.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -169,12 +176,19 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                   },
                 )
               else
-                const Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
+                Visibility(
+                  visible: state.aggregateTeamRepeatMissionStatus?.data.isEmpty ?? true,
+                  replacement: const SizedBox(height: 182),
+                  child: const SizedBox(
+                    height: 182,
+                    child: Center(
+                      child: Text(
+                        '아직 미션이 없어요.',
+                        style: TextStyle(
+                          color: grayScaleGrey400,
+                          fontSize: 14.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),
