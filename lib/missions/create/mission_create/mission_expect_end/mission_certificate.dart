@@ -81,7 +81,7 @@ class MissionCertificate extends StatelessWidget {
             onTap: context.read<MissionCreateState>().datePicker,
             child: Container(
               padding: EdgeInsets.only(left: 16),
-              width: 271,
+              width: 250,
               height: 60,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
@@ -26,13 +27,13 @@ class MyPageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: grayBackground,
-        appBar: _renderAppBar(context: context),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                const SizedBox(height: 64.0),
+                _renderAppBar(context: context),
+                const SizedBox(height: 40.0),
                 _Profile(),
                 const SizedBox(height: 36.0),
                 _HashTag(),
@@ -45,46 +46,40 @@ class MyPageScreen extends StatelessWidget {
       );
   }
 
-  PreferredSizeWidget _renderAppBar({required BuildContext context}) {
-    final Image moingLogoImg = Image.asset(
-      'asset/image/logo_text.png',
-      width: 80.0,
-      height: 32.0,
-    );
-
-    final Image notificationImg = Image.asset(
-      'asset/image/notification.png',
-      width: 24.0,
-      height: 24.0,
-    );
-
-    final Image settingImg = Image.asset(
-      'asset/image/icon_setting.png',
-      width: 24.0,
-      height: 24.0,
-    );
-
-    return AppBar(
-      backgroundColor: grayBackground,
-      elevation: 0.0,
-      title: moingLogoImg,
-      centerTitle: false,
-      automaticallyImplyLeading: false,
-      actions: [
-        IconButton(onPressed: () {
-          Navigator.of(context).pushNamed(
-              AlarmPage.routeName
-          );
-        }, icon: notificationImg),
-        Builder(
-          builder: (newContext) {
-            return IconButton(
-              onPressed: newContext.read<MyPageState>().settingPressed,
-              icon: settingImg,
-            );
-          },
-        ),
-      ],
+  Widget _renderAppBar({required BuildContext context}) {
+    return Container(
+      height: 48,
+      color: grayBackground,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SvgPicture.asset(
+            'asset/icons/home_moing_logo.svg',
+            width: 80,
+            height: 32,
+          ),
+          const Spacer(),
+          GestureDetector(
+            onTap: (){
+              Navigator.of(context).pushNamed(AlarmPage.routeName);
+            },
+            child: SvgPicture.asset(
+              'asset/icons/home_notification.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+          SizedBox(width: 24),
+          GestureDetector(
+            onTap: () => context.read<MyPageState>().settingPressed(),
+            child: SvgPicture.asset(
+              'asset/icons/mypage_setting.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -143,12 +138,15 @@ class _Profile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4.0),
-            Text(
-              context.watch<MyPageState>().myPageData?.introduction ?? '아직 한줄다짐이 없어요',
-              style: const TextStyle(
-                color: grayScaleGrey400,
-                fontSize: 14.0,
-                fontWeight: FontWeight.w500,
+            Container(
+              width: 250,
+              child: Text(
+                context.watch<MyPageState>().myPageData?.introduction ?? '아직 한줄다짐이 없어요',
+                style: const TextStyle(
+                  color: grayScaleGrey400,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],

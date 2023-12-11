@@ -65,12 +65,7 @@ class FixGroupState extends ChangeNotifier {
         checkSave();
       }
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          loadFixData(teamId);
-        }
-        else {
-          throw Exception('loadFixData is Null, error code : ${apiResponse.errorCode}');
-        }
+        throw Exception('loadFixData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
@@ -193,9 +188,7 @@ class FixGroupState extends ChangeNotifier {
         await uploadImageToS3(presignedUrl, avatarFile!);
         return true;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getPresignedUrl(fileExtension);
-        }
+        print('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
         return false;
       }
     } catch (e) {

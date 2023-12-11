@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
 import 'package:http/http.dart' as http;
-import 'package:moing_flutter/utils/api/api_error.dart';
 
 class SignUpState extends ChangeNotifier {
   final BuildContext context;
@@ -16,8 +15,6 @@ class SignUpState extends ChangeNotifier {
   String nicknameInfo = '(0/10)';
   String nicknameCheckButtonText = '닉네임 중복 확인';
   String prevSubmitNickname = '';
-
-  ApiException apiException = ApiException();
 
   // 닉네임 중복 확인을 위한 더미 데이터 - 삭제 예정
   final nicknameList = ["A", "aB", "ABC"];
@@ -155,7 +152,7 @@ class SignUpState extends ChangeNotifier {
     }
     /// 에러 처리
     else {
-      apiException.throwErrorMessage(responseBody['errorCode']);
+      throw Exception('에러 발생 : ${responseBody['errorCode']}');
     }
   }
 }

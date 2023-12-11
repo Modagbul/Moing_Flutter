@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeAppBar extends StatelessWidget {
   final String notificationCount;
@@ -12,45 +13,27 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Image.asset(
-          'asset/image/logo_moing.png',
-          width: 65,
-          height: 15,
-        ),
-        const Spacer(),
-        // Stack(
-        //   alignment: Alignment.center,
-        //   children: [
-        //     Container(
-        //       width: 21,
-        //       height: 25,
-        //       decoration: const BoxDecoration(
-        //         color: Color(0xffFF6464),
-        //         shape: BoxShape.circle,
-        //       ),
-        //     ),
-        //     Text(
-        //       notificationCount,
-        //       style: const TextStyle(
-        //         color: Colors.white,
-        //         fontWeight: FontWeight.w700,
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        // const SizedBox(width: 4.0,),
-        GestureDetector(
-          onTap: onTap,
-          child: Image.asset(
-            'asset/image/notification.png',
-            width: 24.0,
-            height: 24.0,
+    return Container(
+      height: 48,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SvgPicture.asset(
+            'asset/icons/home_moing_logo.svg',
+            width: 80,
+            height: 32,
           ),
-        ),
-      ],
+          const Spacer(),
+          GestureDetector(
+            onTap: onTap,
+            child: SvgPicture.asset(
+              'asset/icons/home_notification.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

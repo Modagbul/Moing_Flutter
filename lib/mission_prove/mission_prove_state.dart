@@ -329,6 +329,7 @@ class MissionProveState with ChangeNotifier {
         // 오늘 미션 인증했는지 조회
         isMeProved = apiResponse.data?.today as bool;
         myMissionList = apiResponse.data?.archives;
+        print('내 인증 리스트 개수 : ${myMissionList?.length}');
         if(myMissionList != null && myMissionList!.isNotEmpty) {
           for(MyMissionProveData data in myMissionList!) {
             myRepeatMissionTime.add(formatDateTime(data.createdDate));
@@ -542,7 +543,7 @@ class MissionProveState with ChangeNotifier {
       });
       if (result != null && result is bool && result) {
         // 미션 인증 성공 모달
-        showMissionSuccessDialog();
+        await showMissionSuccessDialog();
         initState();
       }
     }
@@ -555,7 +556,7 @@ class MissionProveState with ChangeNotifier {
       });
       if (result != null && result is bool && result) {
         // 미션 인증 성공 모달
-        showMissionSuccessDialog();
+        await showMissionSuccessDialog();
         initState();
       }
     }
@@ -577,7 +578,7 @@ class MissionProveState with ChangeNotifier {
         if (imageUrl.isNotEmpty) {
           bool? isSuccess = await submitMission(url: imageUrl);
           if(isSuccess != null && isSuccess) {
-            showMissionSuccessDialog();
+            await showMissionSuccessDialog();
             initState();
           }
         }
@@ -842,7 +843,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 미션 인증 시 모달
-  void showMissionSuccessDialog() {
+  Future<void> showMissionSuccessDialog() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {

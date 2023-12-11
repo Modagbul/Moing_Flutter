@@ -40,13 +40,19 @@ class HomeScreenState extends ChangeNotifier {
   bool isNotification = false;
 
 
-  HomeScreenState({required this.context, this.newCreated}) {
+  HomeScreenState({required this.context, this.newCreated}){
+    initState();
+  }
+
+  void initState() async {
     log('Instance "HomeScreenState" has been created');
     fToast.init(context);
-    loadTeamData();
+    await loadTeamData();
     getTeamMissionPhotoListData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkUserRegister();
+      if(newCreated != "new") {
+        checkUserRegister();
+      }
     });
   }
 
@@ -85,7 +91,7 @@ class HomeScreenState extends ChangeNotifier {
                         Row(
                           children: [
                             SvgPicture.asset(
-                              'asset/icons/danger.svg',
+                              'asset/icons/toast_danger.svg',
                               width: 24,
                               height: 24,
                             ),
@@ -115,7 +121,7 @@ class HomeScreenState extends ChangeNotifier {
   }
 
   /// API 데이터 로딩
-  void loadTeamData() async {
+  Future<void> loadTeamData() async {
     futureData = await fetchApiData();
     if (futureData != null) {
       print('futureData length : ${futureData?.teamBlocks.length}');
@@ -146,13 +152,14 @@ class HomeScreenState extends ChangeNotifier {
       if (apiResponse.isSuccess == true) {
         nickname = apiResponse.data!.memberNickName;
         return apiResponse.data!;
-      } else {
-        if(apiResponse.errorCode == 'J0003') {
-          fetchApiData();
-        }
+      }
+      // else {
+      //   if(apiResponse.errorCode == 'J0003') {
+      //     fetchApiData();
+      //   }
         else {
           throw Exception('fetchApiData is Null, error code : ${apiResponse.errorCode}');
-        }
+        //}
       }
     } catch (e) {
       print('홈 화면 받아 오는 중 에러 발생 : ${e.toString()}');
