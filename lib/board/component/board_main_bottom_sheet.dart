@@ -6,6 +6,7 @@ import '../../const/style/elevated_button.dart';
 
 class BoardMainBottomSheet extends StatelessWidget {
   final int teamId;
+
   const BoardMainBottomSheet({required this.teamId, super.key});
 
   @override
@@ -34,7 +35,9 @@ class BoardMainBottomSheet extends StatelessWidget {
               text: '소모임 탈퇴하기',
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               style: defaultButtonStyle,
               child: const Text('닫기'),
             )
