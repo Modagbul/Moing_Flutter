@@ -64,7 +64,7 @@ class _MissionsScreenState extends State<MissionsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               HomeAppBar(
-                notificationCount: '3',
+                notificationCount: context.watch<MissionsState>().alarmCount ?? '0',
                 onTap: context.watch<MissionsState>().alarmPressed,
               ),
               const SizedBox(

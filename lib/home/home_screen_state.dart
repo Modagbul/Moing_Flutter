@@ -21,6 +21,7 @@ class HomeScreenState extends ChangeNotifier {
   final BuildContext context;
   final TokenManagement tokenManagement = TokenManagement();
   final APICall call = APICall();
+
   // 토스트 문구
   final FToast fToast = FToast();
   String? newCreated;
@@ -39,6 +40,7 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
+  String? alarmCount;
 
   HomeScreenState({required this.context, this.newCreated}){
     initState();
@@ -48,6 +50,7 @@ class HomeScreenState extends ChangeNotifier {
     log('Instance "HomeScreenState" has been created');
     fToast.init(context);
     await loadTeamData();
+    getNotReadAlarmCount();
     getTeamMissionPhotoListData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(newCreated != "new") {
@@ -60,18 +63,17 @@ class HomeScreenState extends ChangeNotifier {
   void checkUserRegister() {
     String warningText = '';
     // 이미 가입한 유저일 때
-    if(newCreated == 'isRegistered') {
+    if (newCreated == 'isRegistered') {
       warningText = '이미 가입한 소모임이에요';
-    }
-    else if (newCreated == 'full') {
+    } else if (newCreated == 'full') {
       warningText = '최대 3개의 소모임에서만 활동할 수 있어요';
     } else if (newCreated == 'T0003') {
       warningText = '한번 탈퇴한 소모임에 다시 가입할 수 없어요';
-    } else if (newCreated!= null && newCreated!.isNotEmpty){
+    } else if (newCreated != null && newCreated!.isNotEmpty) {
       warningText = '소모임 가입에 실패했어요';
       print('소모임 가입 실패 에러 확인 : $newCreated');
     }
-    if(warningText.length > 1) {
+    if (warningText.length > 1) {
       fToast.showToast(
           child: Material(
             type: MaterialType.transparency,
@@ -104,8 +106,7 @@ class HomeScreenState extends ChangeNotifier {
                       ),
                     ],
                   ),
-                )
-            ),
+                )),
           ),
           toastDuration: Duration(milliseconds: 3000),
           positionedToastBuilder: (context, child) {
@@ -127,18 +128,19 @@ class HomeScreenState extends ChangeNotifier {
       print('futureData length : ${futureData?.teamBlocks.length}');
       teamList = futureData!.teamBlocks.reversed.toList();
       SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
-      sharedPreferencesInfo.savePreferencesData('teamCount', teamList.length.toString());
+      sharedPreferencesInfo.savePreferencesData(
+          'teamCount', teamList.length.toString());
     }
     notifyListeners();
   }
 
   void getTeamMissionPhotoListData() async {
     futureTeamMissionPhotoList = await apiCode.getTeamMissionPhotoList();
-    if(futureTeamMissionPhotoList != null){
+    if (futureTeamMissionPhotoList != null) {
       teamMissionPhotoList = futureTeamMissionPhotoList!;
       loadTeamData();
     }
-}
+  }
 
   Future<TeamData?> fetchApiData() async {
     try {
@@ -169,10 +171,14 @@ class HomeScreenState extends ChangeNotifier {
   }
 
   // 알람 클릭
-  void alarmPressed() {
-    Navigator.of(context).pushNamed(
+  void alarmPressed() async {
+    final result = await Navigator.of(context).pushNamed(
       AlarmPage.routeName,
     );
+
+    if (result as bool) {
+      getNotReadAlarmCount();
+    }
   }
 
   // 모임 만들기 클릭
@@ -187,5 +193,11 @@ class HomeScreenState extends ChangeNotifier {
     /// 목표보드 페이지로 이동
     Navigator.pushNamed(context, BoardMainPage.routeName,
         arguments: {'teamId': teamId});
+  }
+
+  // 안읽음 알림 개수 조회
+  void getNotReadAlarmCount() async {
+    alarmCount = await apiCode.getNotReadAlarmCount();
+    notifyListeners();
   }
 }

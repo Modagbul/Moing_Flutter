@@ -426,7 +426,6 @@ class ApiCode {
 
       if (apiResponse.isSuccess) {
         log('게시글 댓글 삭제 성공');
-
       } else {
         if (apiResponse.errorCode == 'J0003') {
           deleteComment(
@@ -892,8 +891,7 @@ class ApiCode {
   Future<bool?> postReportPost({required int boardId}) async {
     String apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$boardId';
     try {
-      ApiResponse<int> apiResponse =
-          await call.makeRequest<int>(
+      ApiResponse<int> apiResponse = await call.makeRequest<int>(
         url: apiUrl,
         method: 'POST',
         fromJson: (data) => data as int,
@@ -913,6 +911,32 @@ class ApiCode {
     } catch (e) {
       log('게시글 신고 실패: $e');
       return false;
+    }
+  }
+
+  Future<String?> getNotReadAlarmCount() async {
+    String apiUrl = '${dotenv.env['MOING_API']}/api/history/alarm/count';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        log('안읽음 알림 개수 조회 성공!');
+        return apiResponse.data!['count'];
+      } else {
+        if (apiResponse?.errorCode == 'J0003') {
+        } else {
+          throw Exception(
+              'getNotReadAlarmCount is Null, error code : ${apiResponse?.errorCode}');
+        }
+      }
+    } catch (e) {
+      log('안읽음 알림 개수 조회 실패: $e');
     }
   }
 }

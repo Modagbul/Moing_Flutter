@@ -13,15 +13,42 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SvgPicture.asset(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SvgPicture.asset(
             'asset/icons/home_moing_logo.svg',
-            width: 80,
-            height: 32,
+          width: 80,
+          height: 32,
+        ),
+        const Spacer(),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: 21,
+              height: 25,
+              decoration: const BoxDecoration(
+                color: Color(0xffFF6464),
+                shape: BoxShape.circle,
+              ),
+            ),
+            Text(
+              notificationCount,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(width: 4.0,),
+        GestureDetector(
+          onTap: onTap,
+          child: SvgPicture.asset(
+            'asset/image/icon_notification.svg',
+            width: 24.0,
+            height: 24.0,
           ),
           const Spacer(),
           GestureDetector(
