@@ -21,7 +21,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: grayBackground,
       title: SvgPicture.asset(
-        'asset/icons/moing_logo.svg',
+        'asset/icons/home_moing_logo.svg',
         width: 80,
         height: 32,
       ),
