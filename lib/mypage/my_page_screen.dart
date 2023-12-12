@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
-import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
@@ -26,7 +25,6 @@ class MyPageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: grayBackground,
-        appBar: _renderAppBar(context: context),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -43,49 +41,6 @@ class MyPageScreen extends StatelessWidget {
           ),
         ),
       );
-  }
-
-  PreferredSizeWidget _renderAppBar({required BuildContext context}) {
-    final Image moingLogoImg = Image.asset(
-      'asset/image/logo_text.png',
-      width: 80.0,
-      height: 32.0,
-    );
-
-    final Image notificationImg = Image.asset(
-      'asset/image/notification.png',
-      width: 24.0,
-      height: 24.0,
-    );
-
-    final Image settingImg = Image.asset(
-      'asset/image/icon_setting.png',
-      width: 24.0,
-      height: 24.0,
-    );
-
-    return AppBar(
-      backgroundColor: grayBackground,
-      elevation: 0.0,
-      title: moingLogoImg,
-      centerTitle: false,
-      automaticallyImplyLeading: false,
-      actions: [
-        IconButton(onPressed: () {
-          Navigator.of(context).pushNamed(
-              AlarmPage.routeName
-          );
-        }, icon: notificationImg),
-        Builder(
-          builder: (newContext) {
-            return IconButton(
-              onPressed: newContext.read<MyPageState>().settingPressed,
-              icon: settingImg,
-            );
-          },
-        ),
-      ],
-    );
   }
 }
 
