@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
-import 'package:moing_flutter/home/component/home_appbar.dart';
 import 'package:moing_flutter/home/component/home_card_scroll.dart';
 import 'package:moing_flutter/home/component/home_my_meeting.dart';
 import 'package:moing_flutter/home/component/home_nickname_and_encourage.dart';
@@ -46,13 +45,6 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeAppBar(
-                notificationCount: context.watch<HomeScreenState>().alarmCount ?? '0',
-                onTap: context.watch<HomeScreenState>().alarmPressed,
-              ),
-              const SizedBox(
-                height: 32.0,
-              ),
               HomeText(
                   nickName:
                       '${context.watch<HomeScreenState>().futureData?.memberNickName ?? '모닥불'}님,',

@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
-import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
@@ -40,8 +39,6 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  String? alarmCount;
-
   HomeScreenState({required this.context, this.newCreated}){
     initState();
   }
@@ -50,7 +47,6 @@ class HomeScreenState extends ChangeNotifier {
     log('Instance "HomeScreenState" has been created');
     fToast.init(context);
     await loadTeamData();
-    getNotReadAlarmCount();
     getTeamMissionPhotoListData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(newCreated != "new") {
@@ -170,17 +166,6 @@ class HomeScreenState extends ChangeNotifier {
     return null;
   }
 
-  // 알람 클릭
-  void alarmPressed() async {
-    final result = await Navigator.of(context).pushNamed(
-      AlarmPage.routeName,
-    );
-
-    if (result as bool) {
-      getNotReadAlarmCount();
-    }
-  }
-
   // 모임 만들기 클릭
   void makeGroupPressed() {
     Navigator.of(context).pushNamed(
@@ -193,11 +178,5 @@ class HomeScreenState extends ChangeNotifier {
     /// 목표보드 페이지로 이동
     Navigator.pushNamed(context, BoardMainPage.routeName,
         arguments: {'teamId': teamId});
-  }
-
-  // 안읽음 알림 개수 조회
-  void getNotReadAlarmCount() async {
-    alarmCount = await apiCode.getNotReadAlarmCount();
-    notifyListeners();
   }
 }

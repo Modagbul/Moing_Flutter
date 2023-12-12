@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
@@ -6,7 +5,6 @@ import 'package:moing_flutter/missions/aggregate/missions_state.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
-import '../../home/component/home_appbar.dart';
 import '../../model/response/team_list_response.dart';
 import 'missions_all_page.dart';
 import 'missions_group_state.dart';
@@ -63,12 +61,8 @@ class _MissionsScreenState extends State<MissionsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeAppBar(
-                notificationCount: context.watch<MissionsState>().alarmCount ?? '0',
-                onTap: context.watch<MissionsState>().alarmPressed,
-              ),
               const SizedBox(
-                height: 32.0,
+                height: 16.0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

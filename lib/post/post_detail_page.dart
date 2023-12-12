@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:moing_flutter/board/component/icon_text_button.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
@@ -57,10 +58,13 @@ class PostDetailPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
+                      controller:
+                          context.read<PostDetailState>().scrollController,
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -78,15 +82,18 @@ class PostDetailPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 32.0),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12.0),
                                   child: Row(
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(50),
-                                        child: postDetailData?.writerProfileImage !=
+                                        child: postDetailData
+                                                    ?.writerProfileImage !=
                                                 null
                                             ? Image.network(
-                                                postDetailData?.writerProfileImage ??
+                                                postDetailData
+                                                        ?.writerProfileImage ??
                                                     '',
                                                 fit: BoxFit.cover,
                                                 width: 20,
@@ -109,7 +116,8 @@ class PostDetailPage extends StatelessWidget {
                                         ),
                                       ),
                                       const SizedBox(width: 4.0),
-                                      if (postDetailData?.writerIsLeader ?? false)
+                                      if (postDetailData?.writerIsLeader ??
+                                          false)
                                         Image.asset(
                                           'asset/image/icon_crown.png',
                                           width: 14.0,
@@ -143,10 +151,11 @@ class PostDetailPage extends StatelessWidget {
                           ),
                           Container(
                             height: 8.0,
-                            decoration: const BoxDecoration(color: grayScaleGrey600),
+                            decoration:
+                                const BoxDecoration(color: grayScaleGrey600),
                           ),
                           _renderCommentScrollBody(context: context),
-                          const SizedBox(height: 100),
+                          const SizedBox(height: 150),
                         ],
                       ),
                     ),
@@ -336,7 +345,6 @@ class PostDetailPage extends StatelessWidget {
     );
   }
 
-
   Widget _renderCommentScrollBody({required BuildContext context}) {
     AllCommentData? allCommentData =
         context.watch<PostDetailState>().allCommentData;
@@ -377,6 +385,7 @@ class _CommentsInputWidget extends StatelessWidget {
       controller: context.watch<PostDetailState>().commentController,
       onChanged: (value) => context.read<PostDetailState>().updateTextField(),
       maxLines: 1,
+      inputFormatters: [LengthLimitingTextInputFormatter(200)],
       decoration: InputDecoration(
         filled: true,
         fillColor: grayScaleGrey600,

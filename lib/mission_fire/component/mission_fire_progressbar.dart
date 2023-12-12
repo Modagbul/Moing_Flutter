@@ -41,7 +41,7 @@ class MissionFireProgressBar extends StatelessWidget {
               ? (singleMissionMyCount) *
               100 /
               singleMissionTotalCount
-              : 100,
+              : 0,
 
           style: RoundedProgressBarStyle(
             colorBorder: Colors.transparent,

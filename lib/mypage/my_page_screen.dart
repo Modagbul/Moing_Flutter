@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
-import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
@@ -32,8 +31,7 @@ class MyPageScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                _renderAppBar(context: context),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 64.0),
                 _Profile(),
                 const SizedBox(height: 36.0),
                 _HashTag(),
@@ -44,43 +42,6 @@ class MyPageScreen extends StatelessWidget {
           ),
         ),
       );
-  }
-
-  Widget _renderAppBar({required BuildContext context}) {
-    return Container(
-      height: 48,
-      color: grayBackground,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SvgPicture.asset(
-            'asset/icons/home_moing_logo.svg',
-            width: 80,
-            height: 32,
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: (){
-              Navigator.of(context).pushNamed(AlarmPage.routeName);
-            },
-            child: SvgPicture.asset(
-              'asset/icons/home_notification.svg',
-              width: 24,
-              height: 24,
-            ),
-          ),
-          SizedBox(width: 24),
-          GestureDetector(
-            onTap: () => context.read<MyPageState>().settingPressed(),
-            child: SvgPicture.asset(
-              'asset/icons/mypage_setting.svg',
-              width: 24,
-              height: 24,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
