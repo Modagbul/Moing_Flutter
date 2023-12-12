@@ -20,7 +20,7 @@ class FixGroupState extends ChangeNotifier {
   final TextEditingController introduceController = TextEditingController();
 
   String nameGroupText = '';
-  String introduceTextCount='(0/300)';
+  String introduceTextCount = '(0/300)';
 
   /// 클릭 제어
   bool onLoading = false;
@@ -28,8 +28,10 @@ class FixGroupState extends ChangeNotifier {
   bool isIntroduceChanged = false;
   bool isImageChanged = false;
   bool isSuccess = true;
+  bool _isGetPresignedUrlInProgress = false;
+  bool _isFixTeamInProgress = false;
 
-  String name='';
+  String name = '';
   String introduce = '';
 
   /// 사진 업로드
@@ -52,20 +54,21 @@ class FixGroupState extends ChangeNotifier {
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (json) => json as Map<String, dynamic>,
       );
 
-      if(apiResponse.isSuccess == true) {
+      if (apiResponse.isSuccess == true) {
         name = nameController.text = apiResponse.data?['name'];
-        introduce = introduceController.text = apiResponse.data?['introduction'];
+        introduce =
+            introduceController.text = apiResponse.data?['introduction'];
         getProfileImageUrl = apiResponse.data?['profileImgUrl'];
         checkSave();
-      }
-      else {
-        throw Exception('loadFixData is Null, error code : ${apiResponse.errorCode}');
+      } else {
+        throw Exception(
+            'loadFixData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
@@ -90,7 +93,6 @@ class FixGroupState extends ChangeNotifier {
     super.dispose();
   }
 
-
   // 이름 텍스트 필드 초기화 메소드
   void clearNameTextField() {
     nameController.clear();
@@ -108,7 +110,8 @@ class FixGroupState extends ChangeNotifier {
   // 텍스트 필드 변경 감지 메소드
   void updateTextField() {
     isNameChanged = nameController.value.text != name ? true : false;
-    isIntroduceChanged= introduceController.value.text != introduce ? true : false;
+    isIntroduceChanged =
+        introduceController.value.text != introduce ? true : false;
     checkSave();
     notifyListeners();
   }
@@ -120,7 +123,7 @@ class FixGroupState extends ChangeNotifier {
       onLoading = true;
       await Permission.photos.request();
       final XFile? assetFile =
-      await ImagePicker().pickImage(source: ImageSource.gallery);
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       avatarFile = assetFile;
       isImageChanged = true;
       checkSave();
@@ -137,10 +140,12 @@ class FixGroupState extends ChangeNotifier {
   /// 저장 버튼 클릭
   void savePressed() async {
     print('저장 버튼 클릭');
-    if(onLoading) return ;
+    if (onLoading) return;
     onLoading = true;
+    if (_isFixTeamInProgress) return;
+    if (_isGetPresignedUrlInProgress) return;
 
-    if(isSuccess) {
+    if (isSuccess) {
       if (avatarFile != null) {
         // 파일 확장자 얻기
         extension = avatarFile!.path.split(".").last;
@@ -157,8 +162,7 @@ class FixGroupState extends ChangeNotifier {
         if (await getPresignedUrl(fileExtension)) {
           await fixTeamAPI();
         }
-      }
-      else {
+      } else {
         await fixTeamAPI();
       }
     }
@@ -167,6 +171,8 @@ class FixGroupState extends ChangeNotifier {
 
   /// presignedURL 발급받기
   Future<bool> getPresignedUrl(String fileExtension) async {
+    _isGetPresignedUrlInProgress = true;
+
     try {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/image/presigned';
       Map<String, dynamic> data = {
@@ -174,7 +180,7 @@ class FixGroupState extends ChangeNotifier {
       };
 
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
         body: data,
@@ -194,6 +200,8 @@ class FixGroupState extends ChangeNotifier {
     } catch (e) {
       print('presigned url 발급 실패: $e');
       return false;
+    } finally {
+      _isGetPresignedUrlInProgress = false;
     }
   }
 
@@ -221,6 +229,8 @@ class FixGroupState extends ChangeNotifier {
 
   // 소모임 수정 API 연동
   Future<void> fixTeamAPI() async {
+    _isFixTeamInProgress = true;
+
     final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId';
     try {
       FixTeam data = FixTeam(
@@ -249,13 +259,15 @@ class FixGroupState extends ChangeNotifier {
       }
     } catch (e) {
       print('소모임 수정 실패: $e');
+    } finally {
+      _isFixTeamInProgress = false;
     }
   }
 
   /// 저장 버튼 누를 수 있는지 확인
   void checkSave() {
-    isSuccess = (isNameChanged || isIntroduceChanged || isImageChanged)
-    ? true : false;
+    isSuccess =
+        (isNameChanged || isIntroduceChanged || isImageChanged) ? true : false;
     notifyListeners();
   }
 }

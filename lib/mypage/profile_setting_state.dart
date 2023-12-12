@@ -1,22 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/profile/profile_model.dart';
 
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
-import 'package:moing_flutter/model/request/fix_team_request.dart';
-import 'package:moing_flutter/mypage/my_page_screen.dart';
-import 'package:moing_flutter/mypage/setting_page.dart';
 import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
@@ -44,6 +37,8 @@ class ProfileSettingState extends ChangeNotifier {
 
   /// 클릭 제어
   bool onLoading = false;
+  bool _isGetPresignedUrlInProgress = false;
+  bool _isFixProfileInProgress = false;
 
   /// 사진 업로드
   XFile? avatarFile;
@@ -182,6 +177,8 @@ class ProfileSettingState extends ChangeNotifier {
   void savePressed() async {
     try {
       if (onLoading) return;
+      if (_isFixProfileInProgress) return;
+      if (_isGetPresignedUrlInProgress) return;
       if (!isAvatarChanged && !isNameChanged && !isIntroduceChanged) return;
 
       print('savePressed called');
@@ -222,6 +219,7 @@ class ProfileSettingState extends ChangeNotifier {
 
   /// presignedURL 발급받기
   Future<bool> getPresignedUrl(String fileExtension) async {
+    _isGetPresignedUrlInProgress = true;
     try {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/image/presigned';
       Map<String, dynamic> data = {
@@ -251,6 +249,8 @@ class ProfileSettingState extends ChangeNotifier {
     } catch (e) {
       print('presigned url 발급 실패: $e');
       return false;
+    } finally {
+      _isGetPresignedUrlInProgress = false;
     }
   }
 
@@ -278,6 +278,8 @@ class ProfileSettingState extends ChangeNotifier {
 
   // 프로필 수정 API 연동
   Future<void> fixProfileAPI() async {
+    _isFixProfileInProgress = true;
+
     final String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
     try {
       FixProfile data = FixProfile(
@@ -349,6 +351,8 @@ class ProfileSettingState extends ChangeNotifier {
       }
     } catch (e) {
       print('프로필 수정 실패: $e');
+    } finally {
+      _isFixProfileInProgress = false;
     }
   }
 }

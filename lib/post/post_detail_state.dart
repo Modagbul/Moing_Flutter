@@ -25,6 +25,10 @@ class PostDetailState extends ChangeNotifier {
 
   final FToast fToast = FToast();
 
+  bool _isCreateCommentInProgress = false;
+  bool _isDeleteCommentInProgress = false;
+  bool _isReportPostInProgress = false;
+
   PostDetailState({
     required this.context,
     required this.teamId,
@@ -74,6 +78,9 @@ class PostDetailState extends ChangeNotifier {
   }
 
   Future<void> postCreateComment() async {
+    if(_isCreateCommentInProgress) return;
+
+    _isCreateCommentInProgress = true;
     await apiCode.postCreateComment(
       teamId: teamId,
       boardId: boardId,
@@ -86,10 +93,15 @@ class PostDetailState extends ChangeNotifier {
     FocusScope.of(context).unfocus(); // 키보드 닫힘
     scrollToBottom(); // 화면 아래로 이동
     notifyListeners();
+    _isCreateCommentInProgress = false;
   }
 
-  void deleteComment({required int boardCommentId}) {
-    apiCode.deleteComment(
+  void deleteComment({required int boardCommentId}) async {
+    if(_isDeleteCommentInProgress) return;
+
+    _isDeleteCommentInProgress = true;
+
+    await apiCode.deleteComment(
         teamId: teamId, boardId: boardId, boardCommentId: boardCommentId);
     allCommentData?.commentBlocks.removeWhere((commentBlock) {
       return commentBlock.boardCommentId == boardCommentId;
@@ -137,6 +149,8 @@ class PostDetailState extends ChangeNotifier {
             );
           });
     }
+
+    _isDeleteCommentInProgress = false;
   }
 
   void deletePost() async {
@@ -249,6 +263,9 @@ class PostDetailState extends ChangeNotifier {
   }
 
   void reportPost() async {
+    if(_isReportPostInProgress) return;
+
+    _isReportPostInProgress = true;
     final bool? isSuccess = await apiCode.postReportPost(boardId: boardId);
 
     if (isSuccess != null && isSuccess) {
@@ -292,5 +309,6 @@ class PostDetailState extends ChangeNotifier {
 
       Navigator.of(context).pop();
     }
+    _isReportPostInProgress = false;
   }
 }
