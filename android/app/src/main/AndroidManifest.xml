@@ -17,7 +17,7 @@
     </queries>
 
     <application
-        android:label="모잉"
+        android:label="MOING"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
