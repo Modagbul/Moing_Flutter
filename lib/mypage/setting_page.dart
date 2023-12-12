@@ -113,8 +113,8 @@ class SettingPage extends StatelessWidget {
                 _logout(context);
               },
               onCanceled: () => Navigator.of(context).pop(),
-              leftText: '로그아웃',
-              rightText: '남아있기',
+              leftText: '남아있기',
+              rightText: '로그아웃',
             ),
           ],
         );

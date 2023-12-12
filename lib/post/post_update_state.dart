@@ -19,6 +19,8 @@ class PostUpdateState extends ChangeNotifier {
   bool isCheckedNotice = false;
   bool isButtonEnabled = false;
 
+  bool isRequestUpdatePostInProgress = false;
+
   PostUpdateState({
     required this.teamId,
     required this.boardId,
@@ -64,6 +66,9 @@ class PostUpdateState extends ChangeNotifier {
   }
 
   void requestUpdatePost() async {
+    if(isRequestUpdatePostInProgress) return;
+
+    isRequestUpdatePostInProgress = true;
     await apiCode.putUpdatePostOrNotice(
       teamId: teamId,
       boardId: boardId,
@@ -73,6 +78,7 @@ class PostUpdateState extends ChangeNotifier {
         isNotice: isCheckedNotice,
       ),
     );
+    isRequestUpdatePostInProgress = false;
     Navigator.pop(context, true);
   }
 }

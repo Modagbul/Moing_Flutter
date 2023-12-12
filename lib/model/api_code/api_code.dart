@@ -408,7 +408,7 @@ class ApiCode {
     return;
   }
 
-  void deleteComment({
+  Future<void> deleteComment({
     required int teamId,
     required int boardId,
     required int boardCommentId,

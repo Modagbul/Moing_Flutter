@@ -23,6 +23,8 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
   /// 클릭 제어
   bool onLoading = false;
+  bool _isGetPresignedUrlInProgress = false;
+  bool _isMakeTeamInProgress = false;
 
   /// 사진 업로드
   XFile? avatarFile;
@@ -53,12 +55,11 @@ class GroupCreatePhotoState extends ChangeNotifier {
       notifyListeners();
       var status = await Permission.photos.request();
       print('status : ${status.toString()}');
-      if(status.isGranted) {
+      if (status.isGranted) {
         final XFile? assetFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+            await ImagePicker().pickImage(source: ImageSource.gallery);
         avatarFile = assetFile;
-      }
-      else {
+      } else {
         openAppSettings();
       }
     } catch (e) {
@@ -72,6 +73,9 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
   // 만들기 버튼 클릭
   void makePressed() async {
+    if (_isMakeTeamInProgress) return;
+    if (_isGetPresignedUrlInProgress) return;
+
     if (avatarFile != null) {
       // 파일 확장자 얻기
       extension = avatarFile!.path.split(".").last;
@@ -92,6 +96,8 @@ class GroupCreatePhotoState extends ChangeNotifier {
   }
 
   Future<bool> getPresignedUrl(String fileExtension) async {
+    _isGetPresignedUrlInProgress = true;
+
     try {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/image/presigned';
       Map<String, dynamic> data = {
@@ -114,17 +120,19 @@ class GroupCreatePhotoState extends ChangeNotifier {
         await uploadImageToS3(presignedUrl, avatarFile!);
         return true;
       } else {
-        if(apiResponse.errorCode == 'J0003') {
+        if (apiResponse.errorCode == 'J0003') {
           getPresignedUrl(fileExtension);
-        }
-        else {
-          throw Exception('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
+        } else {
+          throw Exception(
+              'getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
         }
         return false;
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
       return false;
+    } finally {
+      _isGetPresignedUrlInProgress = false;
     }
   }
 
@@ -152,6 +160,7 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
   // API 연동
   Future<void> makeTeam() async {
+    _isMakeTeamInProgress = true;
     final String apiUrl = '${dotenv.env['MOING_API']}/api/team';
 
     MakeTeamData data = MakeTeamData(
@@ -176,17 +185,18 @@ class GroupCreatePhotoState extends ChangeNotifier {
         Navigator.of(context).pushNamed(
           GroupCreateSuccessPage.routeName,
         );
-      }
-      else {
-        if(apiResponse.errorCode == 'J0003') {
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
           makeTeam();
-        }
-        else {
-          throw Exception('makeTeam is Null, error code : ${apiResponse.errorCode}');
+        } else {
+          throw Exception(
+              'makeTeam is Null, error code : ${apiResponse.errorCode}');
         }
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
+    } finally {
+      _isMakeTeamInProgress = false;
     }
   }
 }

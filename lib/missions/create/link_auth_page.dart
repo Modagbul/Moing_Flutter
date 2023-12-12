@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/missions/create/text_auth_state.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
@@ -12,13 +11,15 @@ class LinkAuthPage extends StatelessWidget {
   const LinkAuthPage({super.key});
 
   static route(BuildContext context) {
-    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final Map<String, dynamic> data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final int teamId = data['teamId'] as int;
     final int missionId = data['missionId'] as int;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => LinkAuthState(context: context, teamId: teamId, missionId: missionId),
+          create: (context) => LinkAuthState(
+              context: context, teamId: teamId, missionId: missionId),
           lazy: false,
         ),
       ],
@@ -33,29 +34,35 @@ class LinkAuthPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: '링크로 인증하기'),
-      body: const Padding(
-        padding: EdgeInsets.only(left: 10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 34.0),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '링크를 첨부하여\n미션을 인증해주세요!',
-                style: TextStyle(
-                  color: grayScaleGrey100,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: const Padding(
+          padding: EdgeInsets.only(left: 10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 34.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '링크를 첨부하여\n미션을 인증해주세요!',
+                  style: TextStyle(
+                    color: grayScaleGrey100,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 52.0),
-            _InfoTextFields(),
-            Spacer(),
-            _NextBtn(),
-            SizedBox(height: 32.0),
-          ],
+              SizedBox(height: 52.0),
+              _InfoTextFields(),
+              Spacer(),
+              _NextBtn(),
+              SizedBox(height: 32.0),
+            ],
+          ),
         ),
       ),
     );
@@ -103,13 +110,13 @@ class _InfoTextFields extends StatelessWidget {
 }
 
 class _NextBtn extends StatelessWidget {
-  const _NextBtn({super.key});
+  const _NextBtn();
 
   @override
   Widget build(BuildContext context) {
     final categoryState = Provider.of<LinkAuthState>(context);
 
-    return Container(
+    return SizedBox(
       width: 353,
       height: 62,
       child: ElevatedButton(
@@ -124,8 +131,8 @@ class _NextBtn extends StatelessWidget {
         ),
         onPressed: categoryState.isCategorySelected()
             ? () {
-          categoryState.submit();
-        }
+                categoryState.submit();
+              }
             : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
         child: Text(
           '인증하기',
