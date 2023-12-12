@@ -48,6 +48,7 @@ class MissionCreateState extends ChangeNotifier {
   bool isSuccess = false;
   // 오늘 날짜 선택 여부
   bool isPickedToday = false;
+  bool onLoading = false;
 
   // 미션 추천 문구 리스트
   List<String> textList = [];
@@ -352,6 +353,8 @@ class MissionCreateState extends ChangeNotifier {
 
   /// 마감 날짜 선택 시 IOS 날짜 선택 모달
   void datePicker() {
+    if(onLoading) return;
+    onLoading = true;
     DateTime now = DateTime.now();
     DatePicker.showDatePicker(context,
         showTitleActions: true,
@@ -378,10 +381,14 @@ class MissionCreateState extends ChangeNotifier {
       checkAddition();
       notifyListeners();
     }, currentTime: DateTime.now(), locale: LocaleType.ko);
+    onLoading = false;
   }
 
   /// 마감 시간 선택 시 IOS 시간 선택 모달
   void timePicker() {
+    if(onLoading) return;
+    onLoading = true;
+
     timeScrollController.dispose();
     timeScrollController = FixedExtentScrollController(initialItem: timeCountIndex);
     timeList = timeList.length < 1 ? List.from(timeCountList) : timeList;
@@ -453,6 +460,7 @@ class MissionCreateState extends ChangeNotifier {
         ),
       ),
     );
+    onLoading = false;
   }
 
 
@@ -559,6 +567,9 @@ class MissionCreateState extends ChangeNotifier {
   }
 
   void submit() async {
+    if(onLoading) return;
+    onLoading = true;
+
     if (isSuccess) {
       int repeatMission;
       String way = '';
@@ -611,6 +622,8 @@ class MissionCreateState extends ChangeNotifier {
         log('미션 생성 실패: $e');
       }
     }
+    onLoading = false;
+
     String warningText = '미션이 등록되었어요.';
 
     if (warningText.isNotEmpty) {

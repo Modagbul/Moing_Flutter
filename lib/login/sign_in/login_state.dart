@@ -76,7 +76,7 @@ class LoginState extends ChangeNotifier {
       await sendKakaoTokenToBackend(token.accessToken);
 
     } catch (error) {
-      showErrorDialog(error.toString());
+      // showErrorDialog(error.toString());
       print('카카오톡으로 로그인 실패 $error');
     } finally {
       onLoading = false;
@@ -194,7 +194,7 @@ class LoginState extends ChangeNotifier {
         print(' ====');
         await appleLoginSendToken(appleCredential.identityToken!);
       } catch (e) {
-        showErrorDialog(e.toString());
+        // showErrorDialog(e.toString());
         print('애플 로그인 실패 : ${e.toString()}');
       } finally {
         onLoading = false;
@@ -203,7 +203,7 @@ class LoginState extends ChangeNotifier {
 
     /// IOS 13 버전이 아닌 경우
     else {
-      showErrorDialog('Sign in With Apple is not available on this device.');
+      // showErrorDialog('Sign in With Apple is not available on this device.');
       throw PlatformException(
         code: 'APPLE_SIGN_IN_NOT_AVAILABLE',
         message: 'Sign in With Apple is not available on this device.',

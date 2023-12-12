@@ -53,15 +53,18 @@ class HomeCardScroll extends StatelessWidget {
                     children: [
                       const SizedBox(height: 36.0),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipOval(
-                            child: Image.network(
-                              teamList[index].profileImgUrl,
-                              width: 52.0,
-                              height: 52.0,
-                              fit: BoxFit.cover,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 26.0),
+                            child: ClipOval(
+                              child: Image.network(
+                                teamList[index].profileImgUrl,
+                                width: 52.0,
+                                height: 52.0,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           const SizedBox(

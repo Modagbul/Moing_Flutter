@@ -34,8 +34,9 @@ class MissionFixState extends ChangeNotifier {
   bool isContentChanged = false;
   bool isRuleChanged = false;
 
-  // 완료 버
+  // 완료 버튼
   bool checkSubmit = true;
+  bool onLoading = false;
 
   final FToast fToast = FToast();
 
@@ -73,6 +74,8 @@ class MissionFixState extends ChangeNotifier {
   }
 
   void datePicker() {
+    if(onLoading) return;
+    onLoading = true;
     DateTime now = DateTime.now();
     DatePicker.showDatePicker(context,
         showTitleActions: true,
@@ -99,10 +102,13 @@ class MissionFixState extends ChangeNotifier {
           // checkAddition();
           notifyListeners();
         }, currentTime: DateTime.now(), locale: LocaleType.ko);
+    onLoading = false;
   }
 
   /// 마감 시간 선택 시 IOS 시간 선택 모달
   void timePicker() {
+    if(onLoading) return;
+    onLoading = true;
     timeScrollController.dispose();
     timeScrollController = FixedExtentScrollController(initialItem: timeCountIndex);
     timeList = timeList.length < 1 ? List.from(timeCountList) : timeList;
@@ -174,9 +180,13 @@ class MissionFixState extends ChangeNotifier {
         ),
       ),
     );
+    onLoading = false;
   }
 
   void submit() async {
+    if(onLoading) return;
+    onLoading = true;
+
     if(checkSubmit) {
       String teamId = fixData.teamId.toString();
       String missionId = fixData.missionId.toString();
@@ -228,20 +238,16 @@ class MissionFixState extends ChangeNotifier {
           Navigator.of(context).pop(true);
         }
         else {
-          if(apiResponse.errorCode == 'J0003') {
-            submit();
-          }
-          else {
-            throw Exception('미션 수정 실패1, error code : ${apiResponse.errorCode}');
-          }
+          throw Exception('미션 수정 실패1, error code : ${apiResponse.errorCode}');
         }
       } catch (e) {
         log('미션 수정 실패2: $e');
+      } finally {
+        onLoading = false;
       }
     }
 
     String warningText = '미션이 수정되었어요.';
-
     if (warningText.isNotEmpty) {
       fToast.showToast(
           child: Material(

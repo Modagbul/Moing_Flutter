@@ -7,6 +7,7 @@ import 'package:moing_flutter/mypage/setting_state.dart';
 import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../const/color/colors.dart';
 import '../make_group/component/warning_dialog.dart';
@@ -62,7 +63,14 @@ class SettingPage extends StatelessWidget {
                   ListCustomTile(
                     listName: '개인정보 처리 방침',
                     imagePath: 'asset/image/right_arrow.png',
-                    onTap: () {},
+                    onTap: () async {
+                      String link = 'https://docs.google.com/document/d/18R3xXUVD_c2GCowrmo4KdMHkkosFkMQFqXD_1TaJSgs/edit';
+                      Uri _url = Uri.parse(link);
+                      if (!await launchUrl(_url, mode: LaunchMode.externalApplication,)) {
+                        throw ArgumentError("해당 링크에 접속할 수 없습니다.");
+                      }
+                      print('개인정보 처리 방침 클릭!');
+                    },
                   ),
                   ListCustomTile(
                     listName: '로그아웃',

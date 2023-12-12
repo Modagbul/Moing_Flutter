@@ -61,7 +61,8 @@ class GroupCreateStartPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 24.0),
                   Text(
-                    '모잉과 함께 새로운 불씨를 키워봐요\n모임 개설 후 1-2일 승인 대기시간이 필요해요',
+                    '모잉과 함께 새로운 불씨를 키워봐요',
+                    // \n모임 개설 후 1-2일 승인 대기시간이 필요해요
                     style: bodyTextStyle.copyWith(
                       height: 1.5,
                       fontSize: 16.0,

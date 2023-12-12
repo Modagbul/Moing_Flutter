@@ -35,7 +35,7 @@ class SkipMissionPage extends StatelessWidget {
       backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: '미션 건너뛰기'),
       body: const Padding(
-        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -67,7 +67,8 @@ class SkipMissionPage extends StatelessWidget {
     required String title,
   }) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: grayScaleGrey900,
+      elevation: 0,
       title: Text(title),
       centerTitle: false,
       leading: IconButton(

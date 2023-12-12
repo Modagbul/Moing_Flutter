@@ -99,7 +99,7 @@ class _MissionProvePageState extends State<MissionProvePage>
                 if(!state.isMeOrEveryProved && state.everyMissionList != null &&
                     state.everyMissionList!.isNotEmpty)
                 EveryMissionProved(),
-                /// 인증 한 경우
+                /// 인증 한 경우 버튼
                 if(!state.isRepeated && state.myMissionList != null
                     && state.myMissionList!.isNotEmpty && state.isMeOrEveryProved)
                   MissionLikeShare(),

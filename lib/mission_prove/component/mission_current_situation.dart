@@ -14,6 +14,8 @@ class MissionCurrentSituation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var state = context.watch<MissionProveState>();
+    
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverToBoxAdapter(
@@ -32,8 +34,8 @@ class MissionCurrentSituation extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // 반복 미션이면서 내가 인증했을 때
-                      if (context.watch<MissionProveState>().isRepeated &&
-                          context.watch<MissionProveState>().isMeProved)
+                      if (state.isRepeated &&
+                          state.isMeProved)
                         Container(
                           width: 72,
                           height: 72,
@@ -43,17 +45,12 @@ class MissionCurrentSituation extends StatelessWidget {
                             radius: 36.0,
                             lineWidth: 3.0,
                             animation: true,
-                            percent: context
-                                    .read<MissionProveState>()
-                                    .repeatMissionMyCount /
-                                context
-                                    .read<MissionProveState>()
-                                    .repeatMissionTotalCount,
+                            percent: state.repeatMissionMyCount / state.repeatMissionTotalCount,
                             center: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '${context.watch<MissionProveState>().repeatMissionMyCount}',
+                                  '${state.repeatMissionMyCount}',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 20.0,
@@ -71,7 +68,7 @@ class MissionCurrentSituation extends StatelessWidget {
                                             color: grayScaleGrey400),
                                       ),
                                       Text(
-                                        '${context.watch<MissionProveState>().repeatMissionTotalCount}',
+                                        '${state.repeatMissionTotalCount}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 14.0,
@@ -88,8 +85,8 @@ class MissionCurrentSituation extends StatelessWidget {
                         ),
 
                       /// 반복 미션이면서 내가 인증 안했을 때
-                      if (context.watch<MissionProveState>().isRepeated &&
-                          !context.watch<MissionProveState>().isMeProved)
+                      if (state.isRepeated &&
+                          !state.isMeProved)
                         Container(
                           width: 72,
                           height: 72,
@@ -98,17 +95,12 @@ class MissionCurrentSituation extends StatelessWidget {
                             radius: 36.0,
                             lineWidth: 3.0,
                             animation: true,
-                            percent: context
-                                    .read<MissionProveState>()
-                                    .repeatMissionMyCount /
-                                context
-                                    .read<MissionProveState>()
-                                    .repeatMissionTotalCount,
+                            percent: state.repeatMissionMyCount / state.repeatMissionTotalCount,
                             center: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '${context.read<MissionProveState>().repeatMissionMyCount}',
+                                  '${state.repeatMissionMyCount}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 20.0,
@@ -126,7 +118,7 @@ class MissionCurrentSituation extends StatelessWidget {
                                             color: grayScaleGrey400),
                                       ),
                                       Text(
-                                        '${context.watch<MissionProveState>().repeatMissionTotalCount}',
+                                        '${state.repeatMissionTotalCount}',
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 14.0,
@@ -142,26 +134,13 @@ class MissionCurrentSituation extends StatelessWidget {
                           ),
                         ),
                       // 한번 미션이면서 내가 인증했을 때
-                      if (!context.watch<MissionProveState>().isRepeated &&
-                          context.watch<MissionProveState>().myMissionList !=
-                              null &&
-                          context
-                              .watch<MissionProveState>()
-                              .myMissionList!
-                              .isNotEmpty)
+                      if (!state.isRepeated && state.myMissionList != null &&
+                          state.myMissionList!.isNotEmpty)
                         Image.asset('asset/image/icon_mission_prove.png'),
                       // 한번 미션이면서 내가 인증 안 했을 때
-                      if (!context.watch<MissionProveState>().isRepeated &&
-                          (context.watch<MissionProveState>().myMissionList ==
-                                  null ||
-                              (context
-                                          .watch<MissionProveState>()
-                                          .myMissionList !=
-                                      null &&
-                                  context
-                                      .watch<MissionProveState>()
-                                      .myMissionList!
-                                      .isEmpty)))
+                      if (!state.isRepeated &&
+                          (state.myMissionList == null ||
+                              (state.myMissionList != null && state.myMissionList!.isEmpty)))
                         Image.asset('asset/image/icon_mission_not_yet.png'),
                       SizedBox(width: 16),
                       Expanded(
@@ -177,17 +156,11 @@ class MissionCurrentSituation extends StatelessWidget {
                                 ),
                                 SizedBox(width: 4),
                                 Text(
-                                  !context.watch<MissionProveState>().isRepeated
-                                      ? (context
-                                                  .watch<MissionProveState>()
-                                                  .missionRemainTime
-                                                  .length <
-                                              2
+                                  !state.isRepeated
+                                      ? (state.missionRemainTime.length < 2
                                           ? ""
-                                          : context
-                                              .watch<MissionProveState>()
-                                              .missionRemainTime)
-                                      : '주 ${context.watch<MissionProveState>().repeatMissionTotalCount}회',
+                                          : state.missionRemainTime)
+                                      : '주 ${state.repeatMissionTotalCount}회',
                                   style: bodyTextStyle,
                                 ),
                               ],
@@ -196,7 +169,7 @@ class MissionCurrentSituation extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(left: 4.0),
                               child: Text(
-                                  context.watch<MissionProveState>().missionTitle,
+                                  state.missionTitle,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: middleTextStyle),
@@ -210,23 +183,16 @@ class MissionCurrentSituation extends StatelessWidget {
               ),
             ),
             // 한번 미션인 경우
-            if (!context.watch<MissionProveState>().isRepeated)
+            if (!state.isRepeated)
               RoundedProgressBar(
                 milliseconds: 1000,
                 borderRadius: BorderRadius.circular(24),
                 childLeft: Text(
-                  '${context.watch<MissionProveState>().singleMissionMyCount}/${context.watch<MissionProveState>().singleMissionTotalCount}명 인증성공',
+                  '${state.singleMissionMyCount}/${state.singleMissionTotalCount}명 인증성공',
                   style: bodyTextStyle.copyWith(color: grayScaleGrey100),
                 ),
-                percent: context
-                            .read<MissionProveState>()
-                            .singleMissionTotalCount !=
-                        0
-                    ? context.read<MissionProveState>().singleMissionMyCount *
-                        100 /
-                        context
-                            .read<MissionProveState>()
-                            .singleMissionTotalCount
+                percent: state.singleMissionTotalCount != 0
+                    ? state.singleMissionMyCount * 100 / state.singleMissionTotalCount
                     : 0,
                 style: RoundedProgressBarStyle(
                   colorBorder: Colors.transparent,
@@ -236,9 +202,9 @@ class MissionCurrentSituation extends StatelessWidget {
                 ),
               ),
             // 반복 미션이면서 내가 인증했을 때
-            if (context.watch<MissionProveState>().isRepeated)
+            if (state.isRepeated)
               MissionFireButton(
-                onPressed: context.read<MissionProveState>().firePressed,
+                onPressed: state.firePressed,
               ),
             SizedBox(height: 24),
           ],

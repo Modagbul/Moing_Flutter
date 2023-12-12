@@ -101,7 +101,7 @@ class AlarmSettingState extends ChangeNotifier {
       case '전체 알림':
         changeAllAlarms(isFixed);
         break;
-      case '신규 공지 알림':
+      case '신규 업로드 알림':
         changeNewAlarm(isFixed);
         break;
       case '미션 리마인드 알림':
