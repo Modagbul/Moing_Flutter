@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/mypage/component/list_toggle_tile.dart';
+import 'package:moing_flutter/mypage/component/alarm_setting.dart';
 import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../const/color/colors.dart';
 import 'alarm_setting_state.dart';
-import 'component/list_toggle_tile_no_sub.dart';
 
 class AlarmSettingPage extends StatelessWidget {
   const AlarmSettingPage({super.key});
@@ -26,12 +25,6 @@ class AlarmSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var alarmSettingState = context.watch<AlarmSettingState>();
-
-    if (alarmSettingState.isTotalAlarmOn == null) {
-      return const CircularProgressIndicator();
-    }
-
     return Scaffold(
       appBar: MoingAppBar(
         title: '알림설정',
@@ -40,34 +33,23 @@ class AlarmSettingPage extends StatelessWidget {
       ),
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
-        child: Column(
-          children: [
-            ListToggleTileNoSub(
-              listName: '전체 알림',
-              initialValue: context.watch<AlarmSettingState>().isTotalAlarmOn!,
-              onToggle: (value) => context.read<AlarmSettingState>().changeAllAlarms(value),
-            ),
-            ListToggleTile(
-              listName: '신규 공지 알림',
-              subText: '빠른 공지 확인을 위해\n알림 ON을 유지해주세요!',
-              initialValue: context.watch<AlarmSettingState>().isNewUploadPushOn!,
-              onToggle: (value) => context.read<AlarmSettingState>().changeNewAlarm(value),
-            ),
-            ListToggleTile(
-              listName: '미션 리마인드 알림',
-              subText: '매일 오전 8시, 미션에 대한\n리마인드 알림을 드릴게요!',
-              initialValue: context.watch<AlarmSettingState>().isRemindPushOn!,
-              onToggle: (value) => context.read<AlarmSettingState>().changeRemindAlarm(value),
-            ),
-            ListToggleTileNoSub(
-              listName: '불 던지기 알림',
-              initialValue: context.watch<AlarmSettingState>().isFirePushOn!,
-              onToggle: (value) => context.read<AlarmSettingState>().changeFireAlarm(value),
-            ),
-            const Spacer(),
-            const _NextBtn(),
-            const SizedBox(height: 32.0),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              SizedBox(height: 12),
+              AlarmComponent(title: '전체 알림',),
+              SizedBox(height: 32),
+              AlarmComponent(title: '신규 공지 알림', height: 66, subTitle: '빠른 공지 확인을 위해\n알림 ON을 유지해주세요!',),
+              SizedBox(height: 32),
+              AlarmComponent(title: '미션 리마인드 알림', height: 66, subTitle: '매일 오전 8시, 미션에 대한\n리마인드 알림을 드릴게요!',),
+              SizedBox(height: 32),
+              AlarmComponent(title: '불 던지기 알림',),
+              const Spacer(),
+              _NextBtn(context: context),
+              const SizedBox(height: 32.0),
+            ],
+          ),
         ),
       ),
     );
@@ -75,12 +57,12 @@ class AlarmSettingPage extends StatelessWidget {
 }
 
 class _NextBtn extends StatelessWidget {
-  const _NextBtn({super.key});
+  final BuildContext context;
+  const _NextBtn({required this.context, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final alarmSettingsState =
-        Provider.of<AlarmSettingState>(context, listen: false);
+    final alarmSettingsState = context.watch<AlarmSettingState>();
 
     return SizedBox(
       width: 353,

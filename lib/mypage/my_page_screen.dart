@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
@@ -98,12 +99,15 @@ class _Profile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4.0),
-            Text(
-              context.watch<MyPageState>().myPageData?.introduction ?? '아직 한줄다짐이 없어요',
-              style: const TextStyle(
-                color: grayScaleGrey400,
-                fontSize: 14.0,
-                fontWeight: FontWeight.w500,
+            Container(
+              width: 250,
+              child: Text(
+                context.watch<MyPageState>().myPageData?.introduction ?? '아직 한줄다짐이 없어요',
+                style: const TextStyle(
+                  color: grayScaleGrey400,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],

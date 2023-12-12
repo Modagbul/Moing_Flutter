@@ -131,7 +131,7 @@ class MainPage extends StatelessWidget {
                         EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
                     child: Icon(Icons.tour),
                   ),
-                  label: '미션목록',
+                  label: '진행 중 미션',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(

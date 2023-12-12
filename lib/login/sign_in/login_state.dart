@@ -9,9 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:moing_flutter/fcm/fcm_state.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
-import 'package:moing_flutter/utils/api/api_error.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
-import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -26,7 +24,6 @@ class LoginState extends ChangeNotifier {
   bool? _isRegistered;
   TokenManagement tokenManagement = TokenManagement();
   SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
-  ApiException apiException = ApiException();
 
   bool onLoading = false;
 
@@ -79,10 +76,24 @@ class LoginState extends ChangeNotifier {
       await sendKakaoTokenToBackend(token.accessToken);
 
     } catch (error) {
+      showErrorDialog(error.toString());
       print('카카오톡으로 로그인 실패 $error');
     } finally {
       onLoading = false;
     }
+  }
+
+  void showErrorDialog(String error) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text(
+          error,
+          style: TextStyle(fontSize: 14, color: Colors.indigo),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
   }
 
   /// 카카오 토큰을 백엔드에 전송하는 함수
@@ -128,7 +139,6 @@ class LoginState extends ChangeNotifier {
       /// 에러 처리
       else {
         print('에러 코드 : ${response.statusCode}');
-        apiException.throwErrorMessage(responseBody['errorCode']);
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
@@ -184,6 +194,7 @@ class LoginState extends ChangeNotifier {
         print(' ====');
         await appleLoginSendToken(appleCredential.identityToken!);
       } catch (e) {
+        showErrorDialog(e.toString());
         print('애플 로그인 실패 : ${e.toString()}');
       } finally {
         onLoading = false;
@@ -192,6 +203,7 @@ class LoginState extends ChangeNotifier {
 
     /// IOS 13 버전이 아닌 경우
     else {
+      showErrorDialog('Sign in With Apple is not available on this device.');
       throw PlatformException(
         code: 'APPLE_SIGN_IN_NOT_AVAILABLE',
         message: 'Sign in With Apple is not available on this device.',
@@ -234,7 +246,6 @@ class LoginState extends ChangeNotifier {
       }
       /// 에러 처리
       else {
-        apiException.throwErrorMessage(responseBody['errorCode']);
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
@@ -319,7 +330,6 @@ class LoginState extends ChangeNotifier {
       /// 에러 처리
       else {
         print('에러 코드 : ${response.statusCode}');
-        apiException.throwErrorMessage(responseBody['errorCode']);
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');

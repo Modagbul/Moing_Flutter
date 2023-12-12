@@ -14,6 +14,7 @@ class HomeCardScroll extends StatelessWidget {
   Widget build(BuildContext context) {
     List<TeamMissionPhotoData> teamMissionPhotoList =
         context.watch<HomeScreenState>().teamMissionPhotoList;
+    List<TeamBlock> teamList = context.watch<HomeScreenState>().teamList;
     PageController pageController = PageController(
       viewportFraction: 0.95,
     );
@@ -55,23 +56,13 @@ class HomeCardScroll extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                width: 52.0,
-                                height: 52.0,
-                                decoration: BoxDecoration(
-                                  color: grayScaleGrey500,
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              Image.asset(
-                                'asset/image/category_book.png',
-                                width: 24.0,
-                                height: 24.0,
-                              ),
-                            ],
+                          ClipOval(
+                            child: Image.network(
+                              teamList[index].profileImgUrl,
+                              width: 52.0,
+                              height: 52.0,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                           const SizedBox(
                             width: 9.0,
