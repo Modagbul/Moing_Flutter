@@ -15,6 +15,7 @@ class OutlinedTextField extends StatefulWidget {
   final TextStyle labelTextStyle;
   final TextStyle counterTextStyle;
   final TextStyle inputTextStyle;
+  final Color? borderSideColor;
 
   const OutlinedTextField({
     super.key,
@@ -29,6 +30,7 @@ class OutlinedTextField extends StatefulWidget {
     this.labelTextStyle = style.backgroundTextFieldStyle,
     this.counterTextStyle = style.backgroundTextFieldStyle,
     this.inputTextStyle = style.inputTextFieldStyle,
+    this.borderSideColor = coralGrey200,
   });
 
   @override
@@ -116,16 +118,16 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
             filled: true,
             // 배경색
             fillColor: grayScaleGrey700,
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.transparent),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color:widget.borderSideColor != null ? widget.borderSideColor! : Colors.transparent),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-            disabledBorder: const OutlineInputBorder(
+            disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.transparent),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
             // 외각선 색상 - 포커스
-            focusedBorder: const OutlineInputBorder(
+            focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: coralGrey200),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),

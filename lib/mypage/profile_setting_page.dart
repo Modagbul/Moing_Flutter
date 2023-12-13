@@ -139,19 +139,33 @@ class _TextFields extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        OutlinedTextField(
-          maxLength: 10,
-          maxLines: 1,
-          labelText: '닉네임',
-          counterText:
-              '(${context.watch<ProfileSettingState>().nameController.text.length}/10)',
-          hintText: '나를 잘 표현하는 닉네임으로 설정해주세요.',
-          onChanged: (value) =>
-              context.read<ProfileSettingState>().updateTextField(),
-          controller: context.read<ProfileSettingState>().nameController,
-          inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
-          onClearButtonPressed:
-              context.read<ProfileSettingState>().clearNameTextField,
+        Stack(
+          children: [
+            OutlinedTextField(
+              maxLength: 10,
+              maxLines: 1,
+              labelText: '닉네임',
+              counterText:
+                  '(${context.watch<ProfileSettingState>().nameController.text.length}/10)',
+              hintText: '나를 잘 표현하는 닉네임으로 설정해주세요.',
+              onChanged: (value) =>
+                  context.read<ProfileSettingState>().updateTextField(),
+              controller: context.read<ProfileSettingState>().nameController,
+              inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
+              onClearButtonPressed:
+                  context.read<ProfileSettingState>().clearNameTextField,
+              borderSideColor: context.watch<ProfileSettingState>().isNickNameOverlapped ? errorColor : null,
+            ),
+            if(context.watch<ProfileSettingState>().isNickNameOverlapped)
+            Positioned(
+                left: 0,
+                bottom: 0,
+                child: Text(
+                  '중복된 닉네임이에요',
+                  style: bodyTextStyle.copyWith(color: errorColor, fontWeight: FontWeight.w500),
+                ),
+            ),
+          ],
         ),
         const SizedBox(height: 32),
         OutlinedTextField(
@@ -164,8 +178,6 @@ class _TextFields extends StatelessWidget {
               context.read<ProfileSettingState>().updateTextField(),
           controller: context.read<ProfileSettingState>().introduceController,
           inputTextStyle: bodyTextStyle.copyWith(color: grayBlack2),
-          onClearButtonPressed:
-              context.read<ProfileSettingState>().clearIntroduceTextField,
         ),
       ],
     );
@@ -184,9 +196,7 @@ class _SubmitButton extends StatelessWidget {
         height: 62,
         child: ElevatedButton(
           style: ButtonStyle(
-              backgroundColor: (context.watch<ProfileSettingState>().isAvatarChanged ||
-                  context.watch<ProfileSettingState>().isIntroduceChanged ||
-                  context.watch<ProfileSettingState>().isNameChanged )
+              backgroundColor: (context.watch<ProfileSettingState>().isSubmit)
                   ? MaterialStateProperty.all(grayScaleWhite)
                   : MaterialStateProperty.all(grayScaleGrey700),
             shape: MaterialStateProperty.all(
@@ -202,9 +212,7 @@ class _SubmitButton extends StatelessWidget {
           ),
           onPressed: context.read<ProfileSettingState>().savePressed,
           child: Text('수정 완료', style: TextStyle(
-        color: (context.watch<ProfileSettingState>().isAvatarChanged ||
-            context.watch<ProfileSettingState>().isIntroduceChanged ||
-            context.watch<ProfileSettingState>().isNameChanged )
+        color: (context.watch<ProfileSettingState>().isSubmit)
          ? grayScaleGrey900 : grayScaleGrey500,
         fontSize: 18.0,
         fontWeight: FontWeight.w600,

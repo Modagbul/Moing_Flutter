@@ -76,12 +76,13 @@ class APICall {
           Navigator.of(GetIt.I.get<GlobalKey<NavigatorState>>().currentContext!)
               .pushNamedAndRemoveUntil(LoginPage.routeName, (route) => false);
           throw Exception('리프레시 토큰이 만료되어 로그인 이동 : $errorCode');
-        } else {
+        }
+        else {
           String msg = '';
           switch (errorCode) {
           // ... 다른 예외 처리 ...
           }
-          throw Exception(msg);
+          return ApiResponse.fromJson(responseBody, fromJson);
         }
       }
     } catch (e) {

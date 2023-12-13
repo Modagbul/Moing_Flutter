@@ -18,7 +18,7 @@ class MyPageState extends ChangeNotifier {
 
   void initState() async {
     log('Instance "MyPageState" has been created');
-    getMyPageData();
+    await getMyPageData();
   }
 
   @override
@@ -33,11 +33,11 @@ class MyPageState extends ChangeNotifier {
     );
 
     if (result != null && result == true) {
-      getMyPageData();
+      await getMyPageData();
     }
   }
 
-  void getMyPageData() async {
+  Future<void> getMyPageData() async {
     myPageData = await apiCode.getMyPageData();
     notifyListeners();
   }

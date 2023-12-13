@@ -27,13 +27,13 @@ class ProfileSettingState extends ChangeNotifier {
   final TextEditingController introduceController = TextEditingController();
 
   MyPageData? myPageData;
-
-  String nameGroupText = '';
   String introduceTextCount = '(0/300)';
 
   bool isNameChanged = false;
   bool isIntroduceChanged = false;
   bool isAvatarChanged = false;
+  bool isNickNameOverlapped = false;
+  bool isSubmit = false;
 
   /// 클릭 제어
   bool onLoading = false;
@@ -56,12 +56,16 @@ class ProfileSettingState extends ChangeNotifier {
   ProfileSettingState({
     required this.context,
   }) {
-    getProfileData();
+    initState();
+  }
+
+  void initState() async {
+    await getProfileData();
     nameController.addListener(_onNameTextChanged);
     introduceController.addListener(_onIntroduceTextChanged);
   }
 
-  void getProfileData() async {
+  Future<void> getProfileData() async {
     profileData = await apiCode.getProfileData();
     nameController.text = profileData?.nickName ?? '';
     introduceController.text = profileData?.introduction ?? '';
@@ -99,13 +103,15 @@ class ProfileSettingState extends ChangeNotifier {
 
   // nameController 텍스트 변경 감지
   void _onNameTextChanged() {
-    nameGroupText = nameController.text;
     isNameChanged = profileData?.nickName != nameController.text;
+    isNickNameOverlapped = false;
+    checkSubmit();
     notifyListeners();
   }
 
   void _onIntroduceTextChanged() {
     isIntroduceChanged = profileData?.introduction != introduceController.text;
+    checkSubmit();
     notifyListeners();
   }
 
@@ -129,6 +135,7 @@ class ProfileSettingState extends ChangeNotifier {
   // 이름 텍스트 필드 초기화 메소드
   void clearNameTextField() {
     nameController.clear();
+    checkSubmit();
     notifyListeners();
   }
 
@@ -141,6 +148,7 @@ class ProfileSettingState extends ChangeNotifier {
 
   // 텍스트 필드 변경 감지 메소드
   void updateTextField() {
+    checkSubmit();
     notifyListeners();
   }
 
@@ -160,6 +168,7 @@ class ProfileSettingState extends ChangeNotifier {
       if (assetFile != null) {
         avatarFile = assetFile;
         isAvatarChanged = true;
+        checkSubmit();
       } else {
         isAvatarChanged = false;
       }
@@ -173,12 +182,27 @@ class ProfileSettingState extends ChangeNotifier {
     }
   }
 
+  void checkSubmit() {
+    if (isNameChanged || isIntroduceChanged || isAvatarChanged) {
+      if (nameController.value.text.length > 0 &&
+          introduceController.value.text.length > 0) {
+        isSubmit = true;
+      } else {
+        isSubmit = false;
+      }
+    } else {
+      isSubmit = false;
+    }
+    notifyListeners();
+  }
+
   /// 저장 버튼 클릭
   void savePressed() async {
     try {
       if (onLoading) return;
       if (_isFixProfileInProgress) return;
       if (_isGetPresignedUrlInProgress) return;
+      if(nameController.value.text.isEmpty || introduceController.value.text.isEmpty) return;
       if (!isAvatarChanged && !isNameChanged && !isIntroduceChanged) return;
 
       print('savePressed called');
@@ -342,11 +366,11 @@ class ProfileSettingState extends ChangeNotifier {
               });
         }
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          fixProfileAPI();
-        } else {
-          throw Exception(
-              'fixProfileAPI is Null, error code : ${apiResponse.errorCode}');
+        String? errorCode = apiResponse.errorCode;
+        if(errorCode != null && errorCode == 'AU0004') {
+        print('닉네임 중복 발생!');
+        isNickNameOverlapped = true;
+        notifyListeners();
         }
       }
     } catch (e) {
