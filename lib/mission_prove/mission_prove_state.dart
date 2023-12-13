@@ -219,10 +219,15 @@ class MissionProveState with ChangeNotifier {
 
   /// 단일 미션 링크 이동
   void singleMissionLink() async {
-    if(onLoading) return;
-    onLoading = true;
-    launchUrl(Uri.parse(myMissionList![0].archive));
-    onLoading = false;
+    try {
+      if(onLoading) return;
+      onLoading = true;
+      launchUrl(Uri.parse(myMissionList![0].archive));
+    } catch (e) {
+      print('단일 미션 링크 이동 중 에러 발생 : ${e}');
+    } finally {
+      onLoading = false;
+    }
   }
 
 
@@ -401,9 +406,6 @@ class MissionProveState with ChangeNotifier {
 
   /// 미션 삭제 API
   void missionDelete({int? index}) async {
-    if(onLoading) return;
-    onLoading = true;
-
     int count = -1;
     if(isRepeated) {
       if(index != null) {
@@ -440,7 +442,6 @@ class MissionProveState with ChangeNotifier {
     } catch (e) {
       log('미션 삭제 실패: $e');
     }
-    onLoading = false;
   }
 
   /// 미션 내용(규칙) 조회 API
@@ -543,61 +544,66 @@ class MissionProveState with ChangeNotifier {
 
   /// 미션 인증하기 버튼 클릭
   void submit() async {
-    if(onLoading) return;
-    onLoading = true;
+    try {
+      if(onLoading) return;
+      onLoading = true;
 
-    // 텍스트 인증 시
-    if (missionWay.contains('텍스트')) {
-      var result = await Navigator.of(context)
-          .pushNamed(TextAuthPage.routeName, arguments: {
-        'teamId': teamId,
-        'missionId': missionId,
-      });
-      if (result != null && result is bool && result) {
-        // 미션 인증 성공 모달
-        await showMissionSuccessDialog();
-        initState();
-      }
-    }
-    // 링크 인증 시
-    else if (missionWay.contains('링크')) {
-      var result = await Navigator.of(context)
-          .pushNamed(LinkAuthPage.routeName, arguments: {
-        'teamId': teamId,
-        'missionId': missionId,
-      });
-      if (result != null && result is bool && result) {
-        // 미션 인증 성공 모달
-        await showMissionSuccessDialog();
-        initState();
-      }
-    }
-    // 사진 인증 시
-    else {
-      print('사진 인증 시작!');
-      await Permission.photos.request();
-      final XFile? assetFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      avatarFile = assetFile;
-      if (avatarFile != null) {
-        String extension = imageUpload.getFileExtension(avatarFile!);
-        String? tmpUrl =
-            await imageUpload.getPresignedUrl(extension, avatarFile!);
-
-        /// 이미지 url 받기
-        imageUrl = tmpUrl ?? '';
-        // presigned url 발급 성공 시
-        if (imageUrl.isNotEmpty) {
-          bool? isSuccess = await submitMission(url: imageUrl);
-          if(isSuccess != null && isSuccess) {
-            await showMissionSuccessDialog();
-            initState();
-          }
+      // 텍스트 인증 시
+      if (missionWay.contains('텍스트')) {
+        var result = await Navigator.of(context)
+            .pushNamed(TextAuthPage.routeName, arguments: {
+          'teamId': teamId,
+          'missionId': missionId,
+        });
+        if (result != null && result is bool && result) {
+          // 미션 인증 성공 모달
+          await showMissionSuccessDialog();
+          initState();
         }
       }
-      notifyListeners();
+      // 링크 인증 시
+      else if (missionWay.contains('링크')) {
+        var result = await Navigator.of(context)
+            .pushNamed(LinkAuthPage.routeName, arguments: {
+          'teamId': teamId,
+          'missionId': missionId,
+        });
+        if (result != null && result is bool && result) {
+          // 미션 인증 성공 모달
+          await showMissionSuccessDialog();
+          initState();
+        }
+      }
+      // 사진 인증 시
+      else {
+        print('사진 인증 시작!');
+        await Permission.photos.request();
+        final XFile? assetFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+        avatarFile = assetFile;
+        if (avatarFile != null) {
+          String extension = imageUpload.getFileExtension(avatarFile!);
+          String? tmpUrl =
+          await imageUpload.getPresignedUrl(extension, avatarFile!);
+
+          /// 이미지 url 받기
+          imageUrl = tmpUrl ?? '';
+          // presigned url 발급 성공 시
+          if (imageUrl.isNotEmpty) {
+            bool? isSuccess = await submitMission(url: imageUrl);
+            if(isSuccess != null && isSuccess) {
+              await showMissionSuccessDialog();
+              initState();
+            }
+          }
+        }
+        notifyListeners();
+      }
+    } catch (e) {
+      print('미션 인증 도중 에러 발생 : ${e}');
+    } finally {
+      onLoading = false;
     }
-    onLoading = false;
   }
 
   /// 불 던지러 가기 버튼 클릭 시
