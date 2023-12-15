@@ -11,7 +11,7 @@ class JoinedGroupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 80,
-      height: 126,
+      height: 140,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -26,15 +26,17 @@ class JoinedGroupCard extends StatelessWidget {
           const SizedBox(height: 12.0),
           Container(
             width: 65,
-            height: 34,
+            height: 44,
             alignment: Alignment.topCenter,
             child: Text(
               teamBlock.teamName,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 color: grayScaleWhite,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w600,
               ),
+              maxLines: 2,
             ),
           ),
         ],

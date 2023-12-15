@@ -112,7 +112,7 @@ class MissionsAllPage extends StatelessWidget {
                     height: 126,
                     child: Center(
                       child: Text(
-                        '아직 미션이 없어요.',
+                        '진행 중인 한번 미션이 없어요.',
                         style: TextStyle(
                           color: grayScaleGrey400,
                           fontSize: 14.0,
@@ -176,7 +176,7 @@ class MissionsAllPage extends StatelessWidget {
                     height: 182,
                     child: Center(
                       child: Text(
-                        '아직 미션이 없어요.',
+                        '진행 중인 반복 미션이 없어요.',
                         style: TextStyle(
                           color: grayScaleGrey400,
                           fontSize: 14.0,

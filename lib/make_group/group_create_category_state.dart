@@ -58,7 +58,7 @@ class GroupCreateCategoryState extends ChangeNotifier {
 
     selectedCategory = null;
 
-    isSelected = false;  // 카테고리 선택이 해제되었으므로 isSelected를 false로 설정
+    isSelected = false;
 
     notifyListeners();
   }
@@ -86,6 +86,22 @@ class GroupCreateCategoryState extends ChangeNotifier {
 
   /// 모임 정보 작성 페이지 이동 (테스트 코드)
   void moveInfoPage() {
-    Navigator.pushNamed(context, GroupCreateInfoPage.routeName, arguments: selectedCategoryEnglish);
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) => GroupCreateInfoPage.route(context),
+        settings: RouteSettings(
+          arguments: selectedCategoryEnglish,
+        ),
+        transitionsBuilder: (context, animation1, animation2, child) {
+          return child;
+        },
+        transitionDuration: Duration(milliseconds: 0),
+      ),
+    ).then((_) {
+      Navigator.of(context).removeRouteBelow(_);
+    });
   }
+
+
 }

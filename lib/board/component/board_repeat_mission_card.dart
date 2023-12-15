@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/board/screen/ongoing_misson_state.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import '../../const/color/colors.dart';
+import '../../mission_prove/mission_prove_state.dart';
 
 class BoardRepeatMissionCard extends StatelessWidget {
   final String title;
@@ -18,7 +21,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
   final Function(String) onShowToast;
 
   const BoardRepeatMissionCard({
-    Key ? key,
+    Key? key,
     required this.title,
     required this.dueTo,
     required this.status,
@@ -37,6 +40,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        // onTap();
         if (tagText == '내일 리셋' || tagText.isEmpty) {
           onTap();
         } else {
@@ -119,13 +123,43 @@ class BoardRepeatMissionCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8, top: 4),
-                child: Text(
-                  '주 ${number}회',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.0,
-                    color: grayScaleGrey550,
-                  ),
+                child: Row(
+                  children: [
+                    Text(
+                      '주 ${number}회',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.0,
+                        color: grayScaleGrey550,
+                      ),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () async {
+                        final ongoingMissionState = Provider.of<OngoingMissionState>(context, listen: false);
+                        await ongoingMissionState.missionDelete(missionId);
+                        ongoingMissionState.reloadMissionStatus();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          color: grayScaleGrey100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Text(
+                            '삭제',
+                            style: TextStyle(
+                              fontSize: 11.0,
+                              fontWeight: FontWeight.w600,
+                              color: grayScaleGrey700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -135,7 +169,11 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 ? MediaQuery.of(context).size.height * 0.1
                 : MediaQuery.of(context).size.height * 0.125,
             left: MediaQuery.of(context).size.width * 0.03,
-            child: _Tag(status: status),
+            child: Row(
+              children: [
+                _Tag(status: status),
+              ],
+            ),
           ),
           Positioned.fill(
             child: FadeTransition(
@@ -179,7 +217,6 @@ class BoardRepeatMissionCard extends StatelessWidget {
 
     return tagText;
   }
-
 }
 
 class _Tag extends StatelessWidget {
