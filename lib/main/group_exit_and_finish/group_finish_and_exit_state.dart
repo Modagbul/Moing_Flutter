@@ -28,12 +28,15 @@ class GroupFinishExitState extends ChangeNotifier {
   ExitTeamInfo? teamInfo;
 
   GroupFinishExitState({required this.context, required this.teamId}) {
-    log('Instance "GroupFinishExitState" has been created');
-    loadExitData();
+    initState();
+  }
+
+  void initState() async {
+    await loadExitData();
   }
 
   /// 삭제 전 조회 API
-  void loadExitData() async {
+  Future<void> loadExitData() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/review';
 
     try {
@@ -62,12 +65,7 @@ class GroupFinishExitState extends ChangeNotifier {
         }
 
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          loadExitData();
-        }
-        else {
-          throw Exception('loadExitData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('loadExitData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');

@@ -25,8 +25,8 @@ class CompletedMissionState extends ChangeNotifier {
 
   void initState() async {
     log('Instance "CompletedMissionState" has been created');
-    getCompletedMissionStatus();
-    checkMeIsLeader();
+    await getCompletedMissionStatus();
+    await checkMeIsLeader();
   }
 
   @override
@@ -35,7 +35,7 @@ class CompletedMissionState extends ChangeNotifier {
     super.dispose();
   }
 
-  void checkMeIsLeader() async {
+  Future<void> checkMeIsLeader() async {
     try {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/isLeader';
       ApiResponse<bool> apiResponse =
@@ -50,19 +50,14 @@ class CompletedMissionState extends ChangeNotifier {
         isLeader = apiResponse.data;
       }
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          checkMeIsLeader();
-        }
-        else {
-          throw Exception('CompletedIsLeader is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('CompletedIsLeaeder Error : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('CompletedIsLeader - 내가 리더인지 조회 실패: $e');
     }
   }
 
-  void getCompletedMissionStatus() async {
+  Future<void> getCompletedMissionStatus() async {
     var response = await apiCode.getCompletedMissionStatus(teamId: teamId);
 
     if (response != null && response.isSuccess) {

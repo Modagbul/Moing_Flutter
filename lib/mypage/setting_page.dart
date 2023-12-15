@@ -118,7 +118,7 @@ class SettingPage extends StatelessWidget {
               title: '정말 로그아웃하시겠어요?',
               content: '데이터는 그대로 보존되지만 푸시알림을 받을 수 없어요',
               onConfirm: () async {
-                _logout(context);
+                await _logout(context);
               },
               onCanceled: () => Navigator.of(context).pop(),
               leftText: '남아있기',
@@ -142,9 +142,9 @@ class SettingPage extends StatelessWidget {
       Navigator.of(context).pop();
       Navigator.pushNamedAndRemoveUntil(
           context, InitPage.routeName, (route) => false);
-    } else {
-      print('로그아웃 재실행');
-      _logout(context);
+    }
+    else {
+      print('로그아웃 에러 발생');
     }
   }
 }

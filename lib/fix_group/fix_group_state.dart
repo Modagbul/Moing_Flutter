@@ -42,14 +42,17 @@ class FixGroupState extends ChangeNotifier {
   String extension = '';
 
   FixGroupState({required this.context, required this.teamId}) {
-    print('Instance "GroupFinishExitState" has been created');
-    loadFixData(teamId);
+    initState();
+  }
+
+  void initState() async {
+    await loadFixData(teamId);
     // nameController에 리스너 추가
     nameController.addListener(_onNameTextChanged);
   }
 
-  void loadFixData(int teamId) async {
-    print('teamId : $teamId');
+  Future<void> loadFixData(int teamId) async {
+    print('FixGroupState teamId : $teamId');
     final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId';
 
     try {
@@ -67,8 +70,7 @@ class FixGroupState extends ChangeNotifier {
         getProfileImageUrl = apiResponse.data?['profileImgUrl'];
         checkSave();
       } else {
-        throw Exception(
-            'loadFixData is Null, error code : ${apiResponse.errorCode}');
+        print('loadFixData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
@@ -223,7 +225,7 @@ class FixGroupState extends ChangeNotifier {
       print('S3에 업로드 성공!');
     } else {
       print('S3에 업로드 실패: ${response.statusCode}.');
-      print('S3에 업로드 실패 사유 : ${response.reasonPhrase}');
+      print('S3에 업로드 실패 사유2 : ${response.reasonPhrase}');
     }
   }
 
@@ -255,7 +257,7 @@ class FixGroupState extends ChangeNotifier {
           arguments: {'teamId': fixTeamId, 'isSuccess': true},
         );
       } else {
-        print('에러 발생..');
+        print('fixTeamAPI 에러 발생..');
       }
     } catch (e) {
       print('소모임 수정 실패: $e');

@@ -63,7 +63,7 @@ class SkipMissionState extends ChangeNotifier {
     return isCategorySelected() ? grayScaleGrey700 : grayScaleGrey500;
   }
 
-  void submit() async {
+  Future<void> submit() async {
     if (!isCategorySelected()) return;
     if(onLoading) return;
     onLoading = true;
@@ -89,7 +89,7 @@ class SkipMissionState extends ChangeNotifier {
         skipSuccess();
       }
       else {
-        throw Exception('submit is Null, error code : ${apiResponse.errorCode}');
+        print('submit is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('텍스트 인증 실패: $e');

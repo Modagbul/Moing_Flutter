@@ -30,7 +30,7 @@ class OutlinedTextField extends StatefulWidget {
     this.labelTextStyle = style.backgroundTextFieldStyle,
     this.counterTextStyle = style.backgroundTextFieldStyle,
     this.inputTextStyle = style.inputTextFieldStyle,
-    this.borderSideColor = coralGrey200,
+    this.borderSideColor = Colors.transparent,
   });
 
   @override

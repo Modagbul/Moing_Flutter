@@ -45,12 +45,7 @@ class ImageUpload {
         await uploadImageToS3(presignedUrl, avatarFile, fileExtension);
         return putProfileImageUrl;
       } else {
-        if(apiResponse.errorCode == 'J0003') {
-          getPresignedUrl(fileExtension, avatarFile);
-        }
-        else {
-          throw Exception('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
         return null;
       }
     } catch (e) {

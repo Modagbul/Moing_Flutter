@@ -13,7 +13,11 @@ class MainState extends ChangeNotifier {
   MainState({required this.context}) {
     print('Instance "MainState" has been created');
     DynamicLinkService(context: context);
-    getNotReadAlarmCount();
+    initState();
+  }
+
+  void initState() async {
+    await getNotReadAlarmCount();
   }
 
   // 알람 클릭
@@ -23,12 +27,12 @@ class MainState extends ChangeNotifier {
     );
 
     if (result as bool) {
-      getNotReadAlarmCount();
+      await getNotReadAlarmCount();
     }
   }
 
   // 안읽음 알림 개수 조회
-  void getNotReadAlarmCount() async {
+  Future<void> getNotReadAlarmCount() async {
     alarmCount = await apiCode.getNotReadAlarmCount();
     notifyListeners();
   }

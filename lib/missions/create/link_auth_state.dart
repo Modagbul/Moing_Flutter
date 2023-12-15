@@ -59,7 +59,7 @@ class LinkAuthState extends ChangeNotifier {
     return isCategorySelected() ? grayScaleGrey700 : grayScaleGrey500;
   }
 
-  void submit() async {
+  Future<void> submit() async {
     if(onLoading) return;
     onLoading = true;
 
@@ -83,12 +83,7 @@ class LinkAuthState extends ChangeNotifier {
         Navigator.of(context).pop(true);
       }
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          submit();
-        }
-        else {
-          throw Exception('submit is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('submit is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('링크 인증 실패: $e');

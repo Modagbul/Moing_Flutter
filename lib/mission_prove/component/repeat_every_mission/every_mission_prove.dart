@@ -80,10 +80,10 @@ class EveryMissionProved extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 8, right: 8),
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             int archiveId = context.read<MissionProveState>().everyMissionList![index].archiveId;
                             String heartStatus = context.read<MissionProveState>().everyMissionList![index].heartStatus;
-                            context.read<MissionProveState>().likePressed(index: index, archiveId: archiveId, heartStatus: heartStatus);
+                            await context.read<MissionProveState>().likePressed(index: index, archiveId: archiveId, heartStatus: heartStatus);
                           },
                           child: Image.asset(
                             context.watch<MissionProveState>().everyMissionList![index].heartStatus == "true"
@@ -179,10 +179,10 @@ class EveryMissionProved extends StatelessWidget {
             right: 8,
             top: 8,
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
                 int archiveId = context.read<MissionProveState>().everyMissionList![index].archiveId;
                 String heartStatus = context.read<MissionProveState>().everyMissionList![index].heartStatus;
-                context.read<MissionProveState>().likePressed(index: index, archiveId: archiveId, heartStatus: heartStatus);
+                await context.read<MissionProveState>().likePressed(index: index, archiveId: archiveId, heartStatus: heartStatus);
               },
               child: Image.asset(
                 context.watch<MissionProveState>().everyMissionList![index].heartStatus == "true"
@@ -238,10 +238,10 @@ class EveryMissionProved extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 8, right: 8),
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             int archiveId = context.read<MissionProveState>().everyMissionList![index].archiveId;
                             String heartStatus = context.read<MissionProveState>().everyMissionList![index].heartStatus;
-                            context.read<MissionProveState>().likePressed(index: index, archiveId: archiveId, heartStatus: heartStatus);
+                            await context.read<MissionProveState>().likePressed(index: index, archiveId: archiveId, heartStatus: heartStatus);
                           },
                           child: Image.asset(
                             context.watch<MissionProveState>().everyMissionList![index].heartStatus == "true"

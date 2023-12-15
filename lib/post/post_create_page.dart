@@ -197,10 +197,13 @@ class _PostCreateButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var state = context.watch<PostCreateState>();
     return ElevatedButton(
-      onPressed: context.watch<PostCreateState>().isButtonEnabled
-          ? context.read<PostCreateState>().requestCreatePost
-          : null,
+      onPressed: () async {
+        if(state.isButtonEnabled) {
+          await context.read<PostCreateState>().requestCreatePost();
+        }
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: grayScaleWhite,
         foregroundColor: grayScaleGrey900,
