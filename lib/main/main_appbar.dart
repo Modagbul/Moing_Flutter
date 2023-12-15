@@ -25,6 +25,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         width: 80,
         height: 32,
       ),
+      elevation: 0,
       actions: [
         Stack(
           alignment: Alignment.center,

@@ -69,8 +69,8 @@ class _Header extends StatelessWidget {
         const Spacer(),
         if (commentData.isWriter)
           GestureDetector(
-            onTap: () {
-              context
+            onTap: () async {
+              await context
                   .read<PostDetailState>()
                   .deleteComment(boardCommentId: commentData.boardCommentId);
             },

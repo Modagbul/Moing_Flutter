@@ -25,8 +25,8 @@ class MissionsGroupState extends ChangeNotifier {
   }
 
   void initState() async {
-    getAggregateTeamRepeatMissionStatus();
-    getAggregateTeamSingleMissionStatus();
+    await getAggregateTeamRepeatMissionStatus();
+    await getAggregateTeamSingleMissionStatus();
     log('Instance "OngoingMissionState" has been created');
     notifyListeners();
   }

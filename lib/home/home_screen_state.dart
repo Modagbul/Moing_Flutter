@@ -47,16 +47,16 @@ class HomeScreenState extends ChangeNotifier {
     log('Instance "HomeScreenState" has been created');
     fToast.init(context);
     await loadTeamData();
-    getTeamMissionPhotoListData();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    await getTeamMissionPhotoListData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if(newCreated != "new") {
-        checkUserRegister();
+        await checkUserRegister();
       }
     });
   }
 
   /// 소모임에 가입된 유저인지 확인
-  void checkUserRegister() {
+  Future<void> checkUserRegister() async {
     String warningText = '';
     // 이미 가입한 유저일 때
     if (newCreated == 'isRegistered') {
@@ -130,7 +130,7 @@ class HomeScreenState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getTeamMissionPhotoListData() async {
+  Future<void> getTeamMissionPhotoListData() async {
     futureTeamMissionPhotoList = await apiCode.getTeamMissionPhotoList();
     if (futureTeamMissionPhotoList != null) {
       teamMissionPhotoList = futureTeamMissionPhotoList!;
@@ -151,13 +151,8 @@ class HomeScreenState extends ChangeNotifier {
         nickname = apiResponse.data!.memberNickName;
         return apiResponse.data!;
       }
-      // else {
-      //   if(apiResponse.errorCode == 'J0003') {
-      //     fetchApiData();
-      //   }
-        else {
-          throw Exception('fetchApiData is Null, error code : ${apiResponse.errorCode}');
-        //}
+      else {
+        print('fetchApiData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('홈 화면 받아 오는 중 에러 발생 : ${e.toString()}');

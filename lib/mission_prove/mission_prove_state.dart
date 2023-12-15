@@ -127,17 +127,17 @@ class MissionProveState with ChangeNotifier {
     // 나의 인증 현황 조회하기
     await loadMissionData();
     // 모두의 인증 현황 조회하기
-    loadEveryMissionData();
+    await loadEveryMissionData();
     // 미션 내용, 규칙 조회 --> 미션 제목, 기한, 규칙, 내용, 반복 or 한번 미션, 인증 방식(텍스트, 링크, 사진) 리턴
-    getMissionContent();
+    await getMissionContent();
     // 반복 미션인 경우, 나의 성공횟수 조회
     if (isRepeated) {
-      loadMyMissionProveCount();
+      await loadMyMissionProveCount();
     }
     // 한번 미션인 경우,
     if (!isRepeated) {
       // 모임원 성공횟수 조회
-      loadTeamMissionProveCount();
+      await loadTeamMissionProveCount();
     }
   }
 
@@ -229,7 +229,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 모임원 미션 인증 성공 인원 조회 API
-  void loadTeamMissionProveCount() async {
+  Future<void> loadTeamMissionProveCount() async {
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/status';
 
@@ -246,12 +246,7 @@ class MissionProveState with ChangeNotifier {
         singleMissionTotalCount = int.parse(apiResponse.data?['total']);
         notifyListeners();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          loadTeamMissionProveCount();
-        } else {
-          throw Exception(
-              'loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -259,7 +254,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 반복 미션 시 나의 성공 횟수 조회 API
-  void loadMyMissionProveCount() async {
+  Future<void> loadMyMissionProveCount() async {
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/my-status';
 
@@ -276,12 +271,7 @@ class MissionProveState with ChangeNotifier {
         repeatMissionTotalCount = int.parse(apiResponse.data?['total']);
         notifyListeners();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          loadMyMissionProveCount();
-        } else {
-          throw Exception(
-              'loadMyMissionProveCount is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('loadMyMissionProveCount is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -356,7 +346,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 모임원 미션 인증 조회
-  void loadEveryMissionData() async {
+  Future<void> loadEveryMissionData() async {
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/others';
 
@@ -376,12 +366,7 @@ class MissionProveState with ChangeNotifier {
       if (apiResponse.isSuccess == true) {
         everyMissionList = apiResponse.data;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          loadEveryMissionData();
-        } else {
-          throw Exception(
-              'loadEveryMissionData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('loadEveryMissionData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('모임원 인증 조회 실패: $e');
@@ -389,21 +374,21 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 더보기 버튼 클릭 시
-  void setMission({String? val, int? index}) {
+  void setMission({String? val, int? index}) async {
     if (onLoading) return;
     onLoading = true;
     missionMoreButton = val!;
     // 다시 인증하기 버튼 클릭 시..
     if (missionMoreButton.contains('retry')) {
       print('인증 다시 버튼 클릭!');
-      missionDelete(index: index);
+      await missionDelete(index: index);
     }
     onLoading = false;
     notifyListeners();
   }
 
   /// 미션 삭제 API
-  void missionDelete({int? index}) async {
+  Future<void> missionDelete({int? index}) async {
     int count = -1;
     if (isRepeated) {
       if (index != null) {
@@ -429,12 +414,7 @@ class MissionProveState with ChangeNotifier {
         print('${apiResponse.data} 미션 삭제가 완료되었습니다.');
         initState();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          missionDelete();
-        } else {
-          throw Exception(
-              'missionDelete is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('missionDelete is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('미션 삭제 실패: $e');
@@ -442,7 +422,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 미션 내용(규칙) 조회 API
-  void getMissionContent() async {
+  Future<void> getMissionContent() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId';
 
     try {
@@ -475,12 +455,7 @@ class MissionProveState with ChangeNotifier {
         calculateTimeLeft(missionDueTo);
         notifyListeners();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getMissionContent();
-        } else {
-          throw Exception(
-              'getMissionContent is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getMissionContent is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -507,17 +482,12 @@ class MissionProveState with ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          submitMission(url: url);
-        } else {
-          throw Exception(
-              'submitMission is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('submitMission is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('미션인증 실패: $e');
-      return false;
     }
+    return false;
   }
 
   // 미션 스킵 화면으로 이동
@@ -635,7 +605,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 미션 인증물 좋아요
-  likePressed(
+  Future<void> likePressed(
       {required int archiveId,
       required int index,
       required String heartStatus}) async {
@@ -663,13 +633,7 @@ class MissionProveState with ChangeNotifier {
         print('index : $index, hearts : ${everyMissionList![index].hearts}');
         notifyListeners();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          likePressed(
-              archiveId: archiveId, index: index, heartStatus: heartStatus);
-        } else {
-          throw Exception(
-              'likePressed is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('likePressed is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('미션인증 실패: $e');
@@ -996,7 +960,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 신고하기 API
-  void doReport() async {
+  Future<void> doReport() async {
     if (onLoading) return;
     onLoading = true;
 
@@ -1013,12 +977,7 @@ class MissionProveState with ChangeNotifier {
         print('${apiResponse.data} 미션 삭제가 완료되었습니다.');
         initState();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          missionDelete();
-        } else {
-          throw Exception(
-              'missionDelete is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('doReport is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('미션 삭제 실패: $e');
@@ -1168,7 +1127,7 @@ class MissionProveState with ChangeNotifier {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  '신고가 완료되었어요',
+                                                  '신고가 접수되었어요. 24시간 이내에 확인 후 조치할게요.',
                                                   style: bodyTextStyle.copyWith(
                                                       color: grayScaleGrey700),
                                                 ),

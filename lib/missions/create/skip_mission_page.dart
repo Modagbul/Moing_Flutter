@@ -128,7 +128,9 @@ class _NextBtn extends StatelessWidget {
             borderRadius: BorderRadius.circular(15.0),
           ),
         ),
-        onPressed: categoryState.submit,
+        onPressed: () async {
+          await categoryState.submit();
+        },
         child: Text(
           '사유작성 완료하기',
           style: TextStyle(

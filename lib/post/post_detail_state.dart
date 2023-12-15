@@ -35,13 +35,13 @@ class PostDetailState extends ChangeNotifier {
     required this.boardId,
   }) {
     initState();
-    getDetailPostData();
-    getAllCommentData();
   }
 
-  void initState() {
+  void initState() async {
     fToast.init(context);
     log('Instance "PostDetailState" has been created');
+    await getDetailPostData();
+    await getAllCommentData();
   }
 
   @override
@@ -65,7 +65,7 @@ class PostDetailState extends ChangeNotifier {
     );
   }
 
-  void getDetailPostData() async {
+  Future<void> getDetailPostData() async {
     postData =
         await apiCode.getDetailPostData(teamId: teamId, boardId: boardId);
     notifyListeners();
@@ -96,7 +96,7 @@ class PostDetailState extends ChangeNotifier {
     _isCreateCommentInProgress = false;
   }
 
-  void deleteComment({required int boardCommentId}) async {
+  Future<void> deleteComment({required int boardCommentId}) async {
     if(_isDeleteCommentInProgress) return;
 
     _isDeleteCommentInProgress = true;
@@ -153,7 +153,7 @@ class PostDetailState extends ChangeNotifier {
     _isDeleteCommentInProgress = false;
   }
 
-  void deletePost() async {
+  Future<void> deletePost() async {
     await apiCode.deletePost(teamId: teamId, boardId: boardId);
     notifyListeners();
     Navigator.pop(context);
@@ -286,7 +286,7 @@ class PostDetailState extends ChangeNotifier {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '신고가 완료되었어요',
+                        '신고가 접수되었어요. 24시간 이내에 확인 후 조치할게요.',
                         style: TextStyle(
                           color: grayBlack8,
                           fontSize: 16.0,

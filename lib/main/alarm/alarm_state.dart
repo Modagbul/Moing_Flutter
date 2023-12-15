@@ -42,12 +42,7 @@ class AlarmState extends ChangeNotifier {
         alarmList = apiResponse.data;
         notifyListeners();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getAllAlarmData();
-        } else {
-          throw Exception(
-              'getAllAlarmData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getAllAlarmData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알림 모아보기 실패: $e');
@@ -71,12 +66,7 @@ class AlarmState extends ChangeNotifier {
         log('알림 단건 조회 성공');
         return true;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          postSingleAlarmData(alarmHistoryId: alarmHistoryId);
-        } else {
-          throw Exception(
-              'postSingleAlarmData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('postSingleAlarmData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알림 단건 조회 실패: $e');

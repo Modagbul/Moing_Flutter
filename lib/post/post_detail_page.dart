@@ -333,7 +333,7 @@ class PostDetailPage extends StatelessWidget {
               content: '한번 삭제한 게시글은 복구할 수 없게 됩니다',
               onConfirm: () async {
                 Navigator.of(dialogContext).pop();
-                context.read<PostDetailState>().deletePost();
+                await context.read<PostDetailState>().deletePost();
               },
               onCanceled: () => Navigator.of(dialogContext).pop(),
               leftText: '취소하기',
@@ -420,7 +420,9 @@ class _CommentsInputWidget extends StatelessWidget {
           width: 24.0,
           height: 24.0,
         ),
-        onPressed: context.watch<PostDetailState>().postCreateComment,
+        onPressed: () async {
+          await context.watch<PostDetailState>().postCreateComment;
+        },
       ),
     );
   }

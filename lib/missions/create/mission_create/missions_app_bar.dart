@@ -31,9 +31,11 @@ class MissionAppBar extends StatelessWidget {
               style: buttonTextStyle.copyWith(color: grayScaleGrey300)),
           Spacer(),
           GestureDetector(
-            onTap: isSuccess
-                ? context.read<MissionCreateState>().submit
-                : null,
+            onTap: () async {
+              if(isSuccess) {
+                await context.read<MissionCreateState>().submit();
+              }
+            },
             child: Text('만들기', style: buttonTextStyle.copyWith(
                 color: context.watch<MissionCreateState>().isSuccess
                     ? grayScaleGrey100

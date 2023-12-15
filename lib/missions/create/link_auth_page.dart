@@ -131,8 +131,8 @@ class _NextBtn extends StatelessWidget {
           ),
         ),
         onPressed: categoryState.isCategorySelected()
-            ? () {
-                categoryState.submit();
+            ? () async {
+                await categoryState.submit();
               }
             : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
         child: Text(

@@ -74,10 +74,10 @@ class MissionCreateState extends ChangeNotifier {
     initState();
   }
 
-  void initState() {
+  void initState() async {
     log('Instance "MissionCreateState" has been created');
     print('teamId : $teamId, repeatMissions : $repeatMissions');
-    getMissionRecommend();
+    await getMissionRecommend();
 
     titleController.addListener(_onTitleTextChanged);
     titleFocusNode.addListener(onTitleFocusChanged);
@@ -176,7 +176,7 @@ class MissionCreateState extends ChangeNotifier {
   }
 
   /// 미션 추천 API
-  void getMissionRecommend() async {
+  Future<void> getMissionRecommend() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/recommend';
 
     try {
@@ -218,12 +218,7 @@ class MissionCreateState extends ChangeNotifier {
       }
 
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          getMissionRecommend();
-        }
-        else {
-          throw Exception('getMissionRecommend is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getMissionRecommend is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -566,7 +561,7 @@ class MissionCreateState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void submit() async {
+  Future<void> submit() async {
     if(onLoading) return;
     onLoading = true;
 

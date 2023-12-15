@@ -29,9 +29,9 @@ class OngoingMissionState extends ChangeNotifier {
   }
 
   void initState() async {
-    getRepeatMissionStatus();
-    getSingleMissionStatus();
-    checkMeIsLeader();
+    await getRepeatMissionStatus();
+    await getSingleMissionStatus();
+    await checkMeIsLeader();
     log('Instance "OngoingMissionState" has been created');
   }
 
@@ -51,7 +51,7 @@ class OngoingMissionState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void checkMeIsLeader() async {
+  Future<void> checkMeIsLeader() async {
     try {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/isLeader';
       ApiResponse<bool> apiResponse =
@@ -65,12 +65,7 @@ class OngoingMissionState extends ChangeNotifier {
         isLeader = apiResponse.data;
       }
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          checkMeIsLeader();
-        }
-        else {
-          throw Exception('OnGoingIsLeader is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('OnGoingIsLeader is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('OnGoingIsLeader - 내가 리더인지 조회 실패: $e');

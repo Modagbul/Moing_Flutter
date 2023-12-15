@@ -65,7 +65,7 @@ class PostCreateState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void requestCreatePost() async {
+  Future<void> requestCreatePost() async {
     if(_isCreatePostInProgress) return;
 
     _isCreatePostInProgress = true;

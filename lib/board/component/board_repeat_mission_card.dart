@@ -36,17 +36,8 @@ class BoardRepeatMissionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String tagText = _getTagText(status);
-
     return GestureDetector(
-      onTap: () {
-        // onTap();
-        if (tagText == '내일 리셋' || tagText.isEmpty) {
-          onTap();
-        } else {
-          onShowToast('반복 미션은 다음 주 월요일에 시작해요.');
-        }
-      },
+      onTap: onTap,
       child: Stack(
         children: [
           Column(
@@ -133,32 +124,6 @@ class BoardRepeatMissionCard extends StatelessWidget {
                         color: grayScaleGrey550,
                       ),
                     ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () async {
-                        final ongoingMissionState = Provider.of<OngoingMissionState>(context, listen: false);
-                        await ongoingMissionState.missionDelete(missionId);
-                        ongoingMissionState.reloadMissionStatus();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          color: grayScaleGrey100,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Text(
-                            '삭제',
-                            style: TextStyle(
-                              fontSize: 11.0,
-                              fontWeight: FontWeight.w600,
-                              color: grayScaleGrey700,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -196,26 +161,6 @@ class BoardRepeatMissionCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _getTagText(String status) {
-    DateTime now = DateTime.now();
-    String tagText = '';
-
-    if (status == 'WAIT') {
-      if (now.weekday == DateTime.sunday) {
-        tagText = '내일 시작';
-      } else {
-        int daysToSunday = DateTime.sunday - now.weekday;
-        if (daysToSunday > 0) {
-          tagText = '${daysToSunday}일 후 시작';
-        }
-      }
-    } else if (status == 'ONGOING' && now.weekday == DateTime.sunday) {
-      tagText = '내일 리셋';
-    }
-
-    return tagText;
   }
 }
 
