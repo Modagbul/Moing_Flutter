@@ -82,33 +82,33 @@ class GroupCreateCategoryPage extends StatelessWidget {
                     _Title(),
                     SizedBox(height: 76.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_sport.png', // 이미지 경로
-                      buttonText: '스포츠/운동', // 버튼 텍스트
+                      imagePath: 'asset/image/icon_sport.png',
+                      buttonText: '스포츠/운동',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_life.png', // 이미지 경로
-                      buttonText: '생활습관 개선', // 버튼 텍스트
+                      imagePath: 'asset/image/icon_life.png',
+                      buttonText: '생활습관 개선',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_test.png', // 이미지 경로
-                      buttonText: '시험/취업준비', // 버튼 텍스트
+                      imagePath: 'asset/image/icon_test.png',
+                      buttonText: '시험/취업준비',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_study.png', // 이미지 경로
-                      buttonText: '스터디/공부', // 버튼 텍스트
+                      imagePath: 'asset/image/icon_study.png',
+                      buttonText: '스터디/공부',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_read.png', // 이미지 경로
-                      buttonText: '독서', // 버튼 텍스트
+                      imagePath: 'asset/image/icon_read.png',
+                      buttonText: '독서',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_etc.png', // 이미지 경로
-                      buttonText: '그외 자기계발', // 버튼 텍스트
+                      imagePath: 'asset/image/icon_etc.png',
+                      buttonText: '그외 자기계발',
                     ),
                   ],
                 ),
@@ -118,7 +118,7 @@ class GroupCreateCategoryPage extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 버튼 중앙 정렬
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Container(
@@ -138,18 +138,17 @@ class GroupCreateCategoryPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            /// 버버벅 없앰 --> 시뮬레이터만 그런거 일수도 있어서 나중에 폰으로 봤을 때 괜찮으면 기존 간단 코드로 수정
                             Navigator.of(context).push(
                               PageRouteBuilder(
                                 pageBuilder: (context, animation1, animation2) =>
                                     ChangeNotifierProvider(
                                       create: (_) => GroupCreateStartState(context: context),
-                                      child: GroupCreateStartPage(),
+                                      child: const GroupCreateStartPage(),
                                     ),
                                 transitionsBuilder: (context, animation1, animation2, child) {
-                                  return child; // 애니메이션 없이 바로 child 위젯을 반환
+                                  return child;
                                 },
-                                transitionDuration: Duration(milliseconds: 0), // 전환 시간을 0으로 설정
+                                transitionDuration: const Duration(milliseconds: 0),
                               ),
                             );
                           },
@@ -172,10 +171,9 @@ class GroupCreateCategoryPage extends StatelessWidget {
                           ),
                           onPressed: categoryState.isCategorySelected()
                               ? () {
-                            // 임시로 **
                             categoryState.moveInfoPage();
                           }
-                              : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
+                              : null,
                           child: Text(
                             '다음으로',
                             style: TextStyle(

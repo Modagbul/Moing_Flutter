@@ -10,12 +10,14 @@ class EveryMissionProved extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final missionProveState = context.watch<MissionProveState>();
+
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
               (context, index) {
-            return renderContainer(index: index, context: context);
+            return renderContainer(index: index, context: context, isRepeated: missionProveState.isRepeated);
           },
           childCount: context.watch<MissionProveState>().everyMissionList!.length,
         ),
@@ -32,6 +34,7 @@ class EveryMissionProved extends StatelessWidget {
   Widget renderContainer({
     required int index,
     required BuildContext context,
+    required bool isRepeated,
   }) {
     TextStyle ts = bodyTextStyle.copyWith(
         fontWeight: FontWeight.w500, color: grayScaleGrey200);
@@ -55,7 +58,8 @@ class EveryMissionProved extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Padding(
+                      if (isRepeated)
+                        Padding(
                         padding: const EdgeInsets.only(top: 12.0, left: 12),
                         child: Container(
                           width: 24,
@@ -152,6 +156,7 @@ class EveryMissionProved extends StatelessWidget {
               ],
             ),
           ),
+          if (isRepeated)
           Positioned(
             left: 12,
             top: 12,
@@ -211,7 +216,8 @@ class EveryMissionProved extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Padding(
+                      if (isRepeated)
+                        Padding(
                         padding: const EdgeInsets.only(top: 12.0, left: 12),
                         child: Container(
                           width: 24,
@@ -327,7 +333,8 @@ class EveryMissionProved extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
+                    if (isRepeated)
+                      Padding(
                       padding: const EdgeInsets.only(top: 12.0, left: 12),
                       child: Container(
                         width: 24,

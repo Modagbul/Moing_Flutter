@@ -19,6 +19,8 @@ class OngoingMissionState extends ChangeNotifier {
   BoardSingleMissionResponse? singleMissionStatus;
   APICall call = APICall();
 
+  String apiUrl = '';
+
   OngoingMissionState({
     required this.context,
     required this.teamId,
@@ -80,4 +82,31 @@ class OngoingMissionState extends ChangeNotifier {
     await getSingleMissionStatus();
     notifyListeners();
   }
+
+  Future<void>  missionDelete(int missionId) async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId';
+
+    try {
+      ApiResponse<int> apiResponse = await call.makeRequest<int>(
+        url: apiUrl,
+        method: 'DELETE',
+        fromJson: (dataJson) => dataJson as int,
+      );
+
+      if (apiResponse.isSuccess) {
+        print('${apiResponse.data} 미션 삭제가 완료되었습니다.');
+
+        notifyListeners();
+      } else {
+        throw Exception('미션 삭제 실패, error code : ${apiResponse.errorCode}');
+      }
+    } catch (e) {
+      log('미션 삭제 실패: $e');
+    }
+
+    notifyListeners();
+
+  }
+
 }
+

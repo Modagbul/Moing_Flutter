@@ -151,7 +151,7 @@ class AlarmPage extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
-                                  '받은 알림은 90일동안 보관해요',
+                                  '받은 알림은 일주일 동안 보관해요',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,

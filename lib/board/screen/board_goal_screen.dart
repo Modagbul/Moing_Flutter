@@ -218,6 +218,8 @@ class BoardGoalScreen extends StatelessWidget {
               color: grayScaleGrey400,
             ),
             onPressed: context.read<BoardMainState>().getTeamFireLevel,
+            splashRadius: 1,
+            splashColor: Colors.transparent,
           ),
         ],
       ),
