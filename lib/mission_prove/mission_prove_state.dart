@@ -1212,8 +1212,8 @@ class MissionProveState with ChangeNotifier {
                                       left: 16.0, top: 20),
                                   child: Row(
                                     children: [
-                                      Image.asset(
-                                        'asset/image/icon_link.png',
+                                      SvgPicture.asset(
+                                        'asset/icons/icon_link.svg',
                                         width: 20,
                                         height: 20,
                                       ),

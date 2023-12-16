@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
@@ -33,9 +34,8 @@ class MissionsFooter extends StatelessWidget {
               SizedBox(
                 width: 8,
               ),
-              Image.asset(
-                'asset/image/icon_arrow_circle_up.png',
-                color: Colors.white,
+              SvgPicture.asset(
+                'asset/icons/icon_arrow_circle_up.svg',
               ),
             ],
           ),

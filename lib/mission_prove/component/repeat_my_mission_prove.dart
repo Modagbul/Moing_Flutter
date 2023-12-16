@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
@@ -306,8 +307,8 @@ class RepeatMyMissionProved extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'asset/image/icon_link_white.png',
+                      SvgPicture.asset(
+                        'asset/icons/icon_link_white.svg',
                         width: 20,
                         height: 20,
                       ),

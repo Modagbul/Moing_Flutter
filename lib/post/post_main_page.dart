@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
@@ -133,10 +134,10 @@ class _Notice extends StatelessWidget {
   Widget _renderNoticeHeader({required int noticeNum}) {
     return Row(
       children: [
-        Image.asset(
-          'asset/image/icon_solar_pin_bold.png',
-          width: 20.0,
-          height: 20.0,
+        SvgPicture.asset(
+          'asset/icons/icon_solar_pin_bold.svg',
+          width: 20,
+          height: 20,
         ),
         const SizedBox(width: 4.0),
         Text(

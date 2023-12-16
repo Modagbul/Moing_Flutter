@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
@@ -49,10 +50,11 @@ class MissionProveButton extends StatelessWidget {
               style: buttonTextStyle,
             ),
             SizedBox(width: 8),
-            Image.asset(
-              'asset/image/icon_fire_black.png',
-              height: 20,
-              width: 20,
+            SvgPicture.asset(
+              'asset/icons/icon_fire_black.svg',
+              width: 24.0,
+              height: 24.0,
+              fit: BoxFit.contain,
             ),
           ],
         ),

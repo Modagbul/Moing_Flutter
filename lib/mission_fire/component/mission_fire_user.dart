@@ -116,8 +116,8 @@ class MissionFireUser extends StatelessWidget {
                                                   }
                                                 },
                                               )
-                                            : Image.asset(
-                                                'asset/image/icon_user_profile.png',
+                                            : SvgPicture.asset(
+                                                'asset/icons/icon_user_profile.svg',
                                                 fit: BoxFit.cover,
                                               ),
                                         if (userList[index].fireStatus ==
@@ -126,7 +126,7 @@ class MissionFireUser extends StatelessWidget {
                                             top: 0,
                                             left: 0,
                                             child: SvgPicture.asset(
-                                              'asset/image/icon_fire_graphic.svg',
+                                              'asset/icons/icon_fire_graphic.svg',
                                               width: 90,
                                               height: 90,
                                               fit: BoxFit.cover,
@@ -166,8 +166,8 @@ class MissionFireUser extends StatelessWidget {
                                                 }
                                               },
                                             )
-                                          : Image.asset(
-                                              'asset/image/icon_user_profile.png',
+                                          : SvgPicture.asset(
+                                              'asset/icons/icon_user_profile.svg',
                                               fit: BoxFit.cover,
                                             ),
                                       if (userList[index].fireStatus == "False")
@@ -175,7 +175,7 @@ class MissionFireUser extends StatelessWidget {
                                           top: 0,
                                           left: 0,
                                           child: SvgPicture.asset(
-                                            'asset/image/icon_fire_graphic.svg',
+                                            'asset/icons/icon_fire_graphic.svg',
                                             width: 90,
                                             height: 90,
                                             fit: BoxFit.cover,

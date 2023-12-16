@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/missions/create/missions_create_state.dart';
@@ -19,11 +20,11 @@ class MissionChoose extends StatelessWidget {
               fontWeight: FontWeight.w600, color: grayScaleGrey200),
         ),
         SizedBox(height: 24),
-        _missionChooseButton(context: context, imagePath: 'asset/image/icon_picture.png', text: '사진으로 인증하기'),
+        _missionChooseButton(context: context, imagePath: 'asset/icons/icon_picture.svg', text: '사진으로 인증하기'),
         SizedBox(height: 12),
-        _missionChooseButton(context: context, imagePath: 'asset/image/icon_text.png', text: '텍스트로 인증하기'),
+        _missionChooseButton(context: context, imagePath: 'asset/icons/icon_text.svg', text: '텍스트로 인증하기'),
         SizedBox(height: 12),
-        _missionChooseButton(context: context, imagePath: 'asset/image/icon_hyperlink.png', text: '하이퍼링크로 인증하기'),
+        _missionChooseButton(context: context, imagePath: 'asset/icons/icon_hyperlink.svg', text: '하이퍼링크로 인증하기'),
       ],
     );
   }
@@ -48,7 +49,7 @@ class MissionChoose extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Image.asset(
+              child: SvgPicture.asset(
                 imagePath,
                 width: 24, height: 24,
                 color: isSelected ? grayScaleGrey900 : grayScaleGrey550,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/board_goal_state.dart';
@@ -70,10 +71,10 @@ class BoardGoalScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Image.asset(
-                                        'asset/image/icon_warning_circle.png',
-                                        width: 20.0,
-                                        height: 20.0,
+                                      SvgPicture.asset(
+                                        'asset/icons/icon_warning_circle.svg',
+                                        width: 20,
+                                        height: 20,
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
@@ -180,26 +181,29 @@ class BoardGoalScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Image.asset(
-                'asset/image/icon_fire_level.png',
-                width: 52.0,
-                height: 52.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  level.toString(),
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SvgPicture.asset(
+                  'asset/icons/icon_fire_level.svg',
+                  width: 33.58,
+                  height: 40.56,
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    level.toString(),
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
           const SizedBox(width: 10.0),
           Expanded(

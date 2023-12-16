@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/board/screen/ongoing_misson_state.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -203,10 +204,10 @@ class _Tag extends StatelessWidget {
                 padding: const EdgeInsets.all(5),
                 child: Row(
                   children: [
-                    Image.asset(
-                      'asset/image/timer.png',
-                      width: 16.0,
-                      height: 16.0,
+                    SvgPicture.asset(
+                      'asset/icons/mission_repeat_timer.svg',
+                      width: 16,
+                      height: 16,
                     ),
                     const SizedBox(width: 1.0),
                     Flexible(

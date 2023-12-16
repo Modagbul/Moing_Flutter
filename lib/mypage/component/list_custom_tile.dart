@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 
 class ListCustomTile extends StatelessWidget {
@@ -12,7 +13,6 @@ class ListCustomTile extends StatelessWidget {
     required this.imagePath,
     required this.onTap,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,9 @@ class ListCustomTile extends StatelessWidget {
           ),
         ),
         trailing: Container(
-          height: 24.0,
-          width: 24.0,
-          child: Image.asset(imagePath),
+          height: 14.0,
+          width: 8.0,
+          child: SvgPicture.asset(imagePath),
         ),
         onTap: onTap,
       ),

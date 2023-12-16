@@ -25,23 +25,23 @@ class MyPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: grayBackground,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 64.0),
-                _Profile(),
-                const SizedBox(height: 36.0),
-                _HashTag(),
-                const SizedBox(height: 52.0),
-                const _GroupList(),
-              ],
-            ),
+      backgroundColor: grayBackground,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 64.0),
+              _Profile(),
+              const SizedBox(height: 36.0),
+              _HashTag(),
+              const SizedBox(height: 52.0),
+              const _GroupList(),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 }
 
@@ -59,25 +59,26 @@ class _Profile extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
                 child: context.watch<MyPageState>().myPageData != null &&
-                context.watch<MyPageState>().myPageData!.profileImage != null
+                        context.watch<MyPageState>().myPageData!.profileImage !=
+                            null
                     ? Image.network(
-                  context.watch<MyPageState>().myPageData!.profileImage!,
-                  fit: BoxFit.cover,
-                  width: 80,
-                  height: 80,
-                ) : Image.asset(
-                    'asset/image/icon_user_profile.png',
-                  fit: BoxFit.cover,
-                  width: 80,
-                  height: 80,
-                ),
+                        context.watch<MyPageState>().myPageData!.profileImage!,
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      )
+                    : SvgPicture.asset(
+                        'asset/icons/icon_user_profile.svg',
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      ),
               ),
-
               Positioned(
                 right: 0,
                 bottom: 0,
-                child: Image.asset(
-                  'asset/image/icon_edit_circle.png',
+                child: SvgPicture.asset(
+                  'asset/icons/icon_edit_circle.svg',
                   fit: BoxFit.cover,
                   width: 32.0,
                   height: 32.0,
@@ -102,7 +103,8 @@ class _Profile extends StatelessWidget {
             Container(
               width: 250,
               child: Text(
-                context.watch<MyPageState>().myPageData?.introduction ?? '아직 한줄다짐이 없어요',
+                context.watch<MyPageState>().myPageData?.introduction ??
+                    '아직 한줄다짐이 없어요',
                 style: const TextStyle(
                   color: grayScaleGrey400,
                   fontSize: 14.0,
@@ -120,16 +122,16 @@ class _Profile extends StatelessWidget {
 class _HashTag extends StatelessWidget {
   _HashTag();
 
-  final Image blackFireImg = Image.asset(
-    'asset/image/icon_fire_mono_black.png',
-    width: 100.0,
-    height: 100.0,
+  final Widget blackFireImg = SvgPicture.asset(
+    'asset/icons/icon_fire_mono_black.svg',
+    width: 100,
+    height: 100,
   );
 
-  final Image whiteFireImg = Image.asset(
-    'asset/image/icon_fire_mono_white.png',
-    width: 100.0,
-    height: 100.0,
+  final Widget whiteFireImg = SvgPicture.asset(
+    'asset/icons/icon_fire_mono_white.svg',
+    width: 100,
+    height: 100,
   );
 
   final String titleGroupNone = '내 열정의 불이 아직 없어요';

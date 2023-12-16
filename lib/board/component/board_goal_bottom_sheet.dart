@@ -107,10 +107,11 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('미션 인증하고 불 키우기'),
+          const SizedBox(width: 8.25),
           SvgPicture.asset(
-            'asset/image/icon_fire_black.svg',
-            width: 24.0,
-            height: 24.0,
+            'asset/icons/icon_fire_black.svg',
+            width: 15.0,
+            height: 18.0,
             fit: BoxFit.contain,
           ),
         ],
@@ -206,8 +207,10 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset(
-                    'asset/image/icon_user.png',
+                  SvgPicture.asset(
+                    'asset/icons/home_card_user.svg',
+                    width: 14,
+                    height: 14,
                   ),
                   const SizedBox(width: 4.0),
                   Text(
@@ -324,8 +327,8 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
                                     width: 20,
                                     height: 20,
                                   )
-                                : Image.asset(
-                                    'asset/image/icon_user_profile.png',
+                                : SvgPicture.asset(
+                                    'asset/icons/icon_user_profile.svg',
                                     fit: BoxFit.cover,
                                     width: 20,
                                     height: 20,

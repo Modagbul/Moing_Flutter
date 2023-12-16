@@ -40,10 +40,10 @@ class BoardSingleMissionCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 16.0, top: 20, bottom: 20),
                 child: Row(
                   children: [
-                    Image.asset(
+                    SvgPicture.asset(
                       status == 'COMPLETE' || status == 'SKIP'
-                          ? 'asset/image/board_icon_pass.png'
-                          : 'asset/image/board_icon_nopass.png',
+                          ? 'asset/icons/board_icon_pass.svg'
+                          : 'asset/icons/board_icon_nopass.svg',
                       width: 36.0,
                       height: 36.0,
                     ),
@@ -145,6 +145,7 @@ class _SkipButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
+          elevation: 0,
         ),
         onPressed: onTap,
         child: const Text(
@@ -180,6 +181,7 @@ class _CompleteButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
+          elevation: 0,
         ),
         onPressed: onTap,
         child: const Text(

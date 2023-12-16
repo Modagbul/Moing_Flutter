@@ -28,7 +28,7 @@ class AlarmSettingPage extends StatelessWidget {
     return Scaffold(
       appBar: MoingAppBar(
         title: '알림설정',
-        imagePath: 'asset/image/arrow_left.png',
+        imagePath: 'asset/icons/arrow_left.svg',
         onTap: () => Navigator.pop(context),
       ),
       backgroundColor: grayScaleGrey900,

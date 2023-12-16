@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/response/single_board_team_member_info.dart';
 
@@ -20,8 +21,8 @@ class TeamMemeberCard extends StatelessWidget {
                   width: 56,
                   height: 56,
                 )
-              : Image.asset(
-                  'asset/image/icon_user_profile.png',
+              : SvgPicture.asset(
+                  'asset/icons/icon_user_profile.svg',
                   fit: BoxFit.cover,
                   width: 56,
                   height: 56,
@@ -44,10 +45,10 @@ class TeamMemeberCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4.0),
                   if (teamMemberInfo.isLeader)
-                    Image.asset(
-                      'asset/image/icon_crown.png',
-                      width: 14.0,
-                      height: 14.0,
+                    SvgPicture.asset(
+                      'asset/icons/icon_crown.svg',
+                      width: 14,
+                      height: 14,
                     ),
                 ],
               ),

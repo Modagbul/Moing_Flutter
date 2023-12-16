@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
@@ -15,8 +16,11 @@ class MissionFireButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        animationDuration: (context.watch<MissionProveState>().myMissionList == null ||
-            context.watch<MissionProveState>().myMissionList!.isNotEmpty) ? Duration(milliseconds: 200): Duration(milliseconds: 0),
+        animationDuration: (context.watch<MissionProveState>().myMissionList ==
+                    null ||
+                context.watch<MissionProveState>().myMissionList!.isNotEmpty)
+            ? Duration(milliseconds: 200)
+            : Duration(milliseconds: 0),
         fixedSize: MaterialStateProperty.all(
           Size(MediaQuery.of(context).size.width, 56),
         ),
@@ -37,20 +41,29 @@ class MissionFireButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-          (context.watch<MissionProveState>().myMissionList == null ||
-              context.watch<MissionProveState>().myMissionList!.isNotEmpty)
-              ? '친구들에게 불 던지러 가기'
-              : '인증을 완료하고 불을 던져요',
-          style: contentTextStyle.copyWith(
-            fontWeight: FontWeight.w600,
-            color: (context.watch<MissionProveState>().myMissionList == null ||
-                context.watch<MissionProveState>().myMissionList!.isNotEmpty)
-                ? grayScaleGrey200 : grayScaleGrey550,
-          ),),
+            (context.watch<MissionProveState>().myMissionList == null ||
+                    context
+                        .watch<MissionProveState>()
+                        .myMissionList!
+                        .isNotEmpty)
+                ? '친구들에게 불 던지러 가기'
+                : '인증을 완료하고 불을 던져요',
+            style: contentTextStyle.copyWith(
+              fontWeight: FontWeight.w600,
+              color:
+                  (context.watch<MissionProveState>().myMissionList == null ||
+                          context
+                              .watch<MissionProveState>()
+                              .myMissionList!
+                              .isNotEmpty)
+                      ? grayScaleGrey200
+                      : grayScaleGrey550,
+            ),
+          ),
           if ((context.watch<MissionProveState>().myMissionList == null ||
               context.watch<MissionProveState>().myMissionList!.isNotEmpty))
-            Image.asset(
-              'asset/image/icon_fire_mono_white.png',
+            SvgPicture.asset(
+              'asset/icons/icon_fire_mono_white.svg',
               width: 24,
               height: 24,
             ),

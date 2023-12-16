@@ -10,8 +10,7 @@ import '../../const/style/elevated_button.dart';
 class BoardMainBottomSheetLeader extends StatelessWidget {
   final int teamId;
 
-  const BoardMainBottomSheetLeader({
-    required this.teamId, super.key});
+  const BoardMainBottomSheetLeader({required this.teamId, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +26,16 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
           children: [
             IconTextButton(
               onPressed: () async {
-                DynamicLinkService dynamicLinkService = DynamicLinkService(context: context);
+                DynamicLinkService dynamicLinkService =
+                    DynamicLinkService(context: context);
 
                 String link = await dynamicLinkService.getShortLink(
-                    route: "teamId=$teamId",);
+                  route: "teamId=$teamId",
+                );
                 print('dynamic link : $link');
                 Share.share(link, subject: '모잉 테스트!');
               },
-              icon: 'asset/image/icon_link.png',
+              icon: 'asset/icons/icon_link_copy.svg',
               text: '소모임 초대 링크 복사하기',
             ),
             IconTextButton(
@@ -42,10 +43,10 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(
                   FixGroupPage.routeName,
-                    arguments: teamId,
+                  arguments: teamId,
                 );
               },
-              icon: 'asset/image/icon_edit.png',
+              icon: 'asset/icons/icon_edit.svg',
               text: '소모임 정보 수정하기',
             ),
             IconTextButton(
@@ -56,14 +57,16 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
                   arguments: teamId,
                 );
               },
-              icon: 'asset/image/icon_delete.png',
+              icon: 'asset/icons/icon_delete.svg',
               text: '소모임 삭제하기',
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              style: defaultButtonStyle,
+              style: defaultButtonStyle.copyWith(
+                elevation: MaterialStateProperty.all(0.0),
+              ),
               child: const Text('닫기'),
             )
           ],
