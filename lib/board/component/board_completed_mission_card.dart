@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../const/color/colors.dart';
 
 import 'package:intl/intl.dart';
-
 
 class BoardCompletedMissionCard extends StatelessWidget {
   final String title;
@@ -71,8 +71,10 @@ class BoardCompletedMissionCard extends StatelessWidget {
                               const SizedBox(
                                 width: 6.0,
                               ),
-                              Image.asset(
-                                'asset/image/clock.png',
+                              SvgPicture.asset(
+                                'asset/icons/mission_single_clock.svg',
+                                width: 14,
+                                height: 14,
                               ),
                               const SizedBox(
                                 width: 4.0,
@@ -94,11 +96,11 @@ class BoardCompletedMissionCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
                     child: GestureDetector(
-                      onTap: onTap,  // Use the onTap callback passed to the BoardCompletedMissionCard
-                      child: Image.asset(
-                        'asset/image/plus_btn.png',
-                        width: 48.0,
-                        height: 48.0,
+                      onTap: onTap,
+                      child: SvgPicture.asset(
+                        'asset/icons/mission_repeat_plus_btn.svg',
+                        width: 48,
+                        height: 48,
                       ),
                     ),
                   ),
@@ -111,7 +113,6 @@ class BoardCompletedMissionCard extends StatelessWidget {
     );
   }
 }
-
 
 class _MissionTag extends StatelessWidget {
   final String missionType;
@@ -155,5 +156,6 @@ class _MissionTag extends StatelessWidget {
 
 String formatDate(String dueTo) {
   DateTime dueDate = DateTime.parse(dueTo);
-  return DateFormat('yyyy.MM.dd').format(dueDate) + ' 종료'; // "yyyy.MM.dd" 형식으로 변환
+  return DateFormat('yyyy.MM.dd').format(dueDate) +
+      ' 종료'; // "yyyy.MM.dd" 형식으로 변환
 }

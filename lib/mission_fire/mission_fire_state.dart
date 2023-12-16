@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
@@ -203,8 +204,10 @@ class MissionFireState extends ChangeNotifier {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Image.asset(
-                    'asset/image/icon_fire_notification.png',
+                  SvgPicture.asset(
+                    'asset/icons/icon_fire_graphic.svg',
+                    width: 160,
+                    height: 160,
                   ),
                 ],
               ),

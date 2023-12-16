@@ -3,10 +3,8 @@ import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/make_group/component/category_button.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/make_group/group_create_category_state.dart';
-import 'package:moing_flutter/make_group/group_create_info_page.dart';
 import 'package:provider/provider.dart';
 import '../const/color/colors.dart';
-import '../home/home_screen.dart';
 import 'group_create_start_page.dart';
 import 'group_create_start_state.dart';
 
@@ -82,32 +80,32 @@ class GroupCreateCategoryPage extends StatelessWidget {
                     _Title(),
                     SizedBox(height: 76.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_sport.png',
+                      imagePath: 'asset/icons/icon_sport.svg',
                       buttonText: '스포츠/운동',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_life.png',
+                      imagePath: 'asset/icons/icon_life.svg',
                       buttonText: '생활습관 개선',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_test.png',
+                      imagePath: 'asset/icons/icon_test.svg',
                       buttonText: '시험/취업준비',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_study.png',
+                      imagePath: 'asset/icons/icon_study.svg',
                       buttonText: '스터디/공부',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_read.png',
+                      imagePath: 'asset/icons/icon_read.svg',
                       buttonText: '독서',
                     ),
                     SizedBox(height: 8.0),
                     CategoryButton(
-                      imagePath: 'asset/image/icon_etc.png',
+                      imagePath: 'asset/icons/icon_etc.svg',
                       buttonText: '그외 자기계발',
                     ),
                   ],

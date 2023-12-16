@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
@@ -169,10 +170,11 @@ class _NoticeCheckContainer extends StatelessWidget {
             onTap: context.read<PostCreateState>().toggleCheckedNotice,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
+              child:
+              SvgPicture.asset(
                 context.watch<PostCreateState>().isCheckedNotice
-                    ? 'asset/image/icon_check_box_active.png'
-                    : 'asset/image/icon_check_box_default.png',
+                    ? 'asset/icons/icon_check_box_active.svg'
+                    : 'asset/icons/icon_check_box_default.svg',
                 width: 24.0,
                 height: 24.0,
               ),

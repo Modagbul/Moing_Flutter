@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/post/post_detail_state.dart';
@@ -43,8 +44,8 @@ class _Header extends StatelessWidget {
                   width: 20,
                   height: 20,
                 )
-              : Image.asset(
-                  'asset/image/icon_user_profile.png',
+              : SvgPicture.asset(
+                  'asset/icons/icon_user_profile.svg',
                   fit: BoxFit.cover,
                   width: 20,
                   height: 20,
@@ -61,10 +62,10 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(width: 4.0),
         if (commentData.writerIsLeader)
-          Image.asset(
-            'asset/image/icon_crown.png',
-            width: 14.0,
-            height: 14.0,
+          SvgPicture.asset(
+            'asset/icons/icon_crown.svg',
+            width: 14,
+            height: 14,
           ),
         const Spacer(),
         if (commentData.isWriter)

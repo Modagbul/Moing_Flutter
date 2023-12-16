@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
@@ -106,8 +107,8 @@ class SingleMyMissionProved extends StatelessWidget {
                                       right: 12,
                                       top: 34,
                                       bottom: 34),
-                                  child: Image.asset(
-                                    'asset/image/icon_hyperlink.png',
+                                  child: SvgPicture.asset(
+                                    'asset/icons/icon_hyperlink.svg',
                                     color: grayScaleGrey400,
                                   ),
                                 ),

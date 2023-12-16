@@ -54,7 +54,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
         GestureDetector(
           onTap: onTapAlarm,
           child: SvgPicture.asset(
-            'asset/image/icon_notification.svg',
+            'asset/icons/icon_notification.svg',
             width: 24.0,
             height: 24.0,
           ),
@@ -64,7 +64,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
           GestureDetector(
             onTap: onTapSetting,
             child: SvgPicture.asset(
-              'asset/image/main_setting.svg',
+              'asset/icons/main_setting.svg',
               width: 24.0,
               height: 24.0,
             ),

@@ -77,15 +77,15 @@ class AlarmState extends ChangeNotifier {
   String convertAlarmTypeToImage({required String type}) {
     switch (type) {
       case 'NEW_UPLOAD':
-        return 'asset/image/icon_new_upload.svg';
+        return 'asset/icons/icon_new_upload.svg';
       case 'FIRE':
-        return 'asset/image/icon_throw_fire.svg';
+        return 'asset/icons/icon_throw_fire.svg';
       case 'REMIND':
-        return 'asset/image/icon_remind_alarm.svg';
+        return 'asset/icons/icon_remind_alarm.svg';
       case 'APPROVE_TEAM':
-        return 'asset/image/icon_approve_team.svg';
+        return 'asset/icons/icon_approve_team.svg';
       case 'REJECT_TEAM':
-        return 'asset/image/icon_reject_team.svg';
+        return 'asset/icons/icon_reject_team.svg';
       default:
         throw ArgumentError('Invalid alarm type: $type');
     }

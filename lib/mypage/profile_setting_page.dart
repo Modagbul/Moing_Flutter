@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/mypage/profile_setting_state.dart';
 import 'package:moing_flutter/utils/text_field/outlined_text_field.dart';
@@ -93,19 +94,25 @@ class _Profile extends StatelessWidget {
       child: Stack(
         children: [
           // 프로필 사진이 없을 때
-          if(context.watch<ProfileSettingState>().profileData?.profileImage == null ||
-              context.watch<ProfileSettingState>().profileData!.profileImage!.isEmpty)
+          if (context.watch<ProfileSettingState>().profileData?.profileImage ==
+                  null ||
+              context
+                  .watch<ProfileSettingState>()
+                  .profileData!
+                  .profileImage!
+                  .isEmpty)
             ClipRRect(
               borderRadius: BorderRadius.circular(40),
-              child: Image.asset(
-                'asset/image/icon_user_profile.png',
-                width: 80.0,
-                height: 80.0,
+              child: SvgPicture.asset(
+                'asset/icons/icon_user_profile.svg',
+                width: 80,
+                height: 80,
               ),
             ),
           // 프로필 사진이 있고, 수정 전일 때
           if (context.watch<ProfileSettingState>().avatarFile == null &&
-              context.watch<ProfileSettingState>().profileData?.profileImage != null)
+              context.watch<ProfileSettingState>().profileData?.profileImage !=
+                  null)
             ClipRRect(
               borderRadius: BorderRadius.circular(40),
               child: Image.network(
@@ -115,7 +122,7 @@ class _Profile extends StatelessWidget {
                 height: 80.0,
               ),
             ),
-          if(context.watch<ProfileSettingState>().avatarFile != null)
+          if (context.watch<ProfileSettingState>().avatarFile != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(40),
               child: Image.file(
@@ -127,12 +134,12 @@ class _Profile extends StatelessWidget {
             ),
           Positioned(
             bottom: 0,
-              right: 0,
-              child: Image.asset(
-                'asset/image/icon_gallery.png',
-                width: 32.0,
-                height: 32.0,
-              ),
+            right: 0,
+            child: SvgPicture.asset(
+              'asset/icons/icon_gallery.svg',
+              width: 32,
+              height: 32,
+            ),
           ),
         ],
       ),
@@ -162,17 +169,21 @@ class _TextFields extends StatelessWidget {
               inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
               onClearButtonPressed:
                   context.read<ProfileSettingState>().clearNameTextField,
-              borderSideColor: context.watch<ProfileSettingState>().isNickNameOverlapped ? errorColor : null,
+              borderSideColor:
+                  context.watch<ProfileSettingState>().isNickNameOverlapped
+                      ? errorColor
+                      : null,
             ),
-            if(context.watch<ProfileSettingState>().isNickNameOverlapped)
-            Positioned(
+            if (context.watch<ProfileSettingState>().isNickNameOverlapped)
+              Positioned(
                 left: 0,
                 bottom: 0,
                 child: Text(
                   '중복된 닉네임이에요',
-                  style: bodyTextStyle.copyWith(color: errorColor, fontWeight: FontWeight.w500),
+                  style: bodyTextStyle.copyWith(
+                      color: errorColor, fontWeight: FontWeight.w500),
                 ),
-            ),
+              ),
           ],
         ),
         const SizedBox(height: 32),
@@ -204,27 +215,33 @@ class _SubmitButton extends StatelessWidget {
         height: 62,
         child: ElevatedButton(
           style: ButtonStyle(
-              backgroundColor: (context.watch<ProfileSettingState>().isSubmit)
-                  ? MaterialStateProperty.all(grayScaleWhite)
-                  : MaterialStateProperty.all(grayScaleGrey700),
+            backgroundColor: (context.watch<ProfileSettingState>().isSubmit)
+                ? MaterialStateProperty.all(grayScaleWhite)
+                : MaterialStateProperty.all(grayScaleGrey700),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),
               ),
             ),
-            overlayColor: (context.watch<ProfileSettingState>().isAvatarChanged ||
-                context.watch<ProfileSettingState>().isIntroduceChanged ||
-                context.watch<ProfileSettingState>().isNameChanged )
-              ? null
+            overlayColor: (context
+                        .watch<ProfileSettingState>()
+                        .isAvatarChanged ||
+                    context.watch<ProfileSettingState>().isIntroduceChanged ||
+                    context.watch<ProfileSettingState>().isNameChanged)
+                ? null
                 : MaterialStateProperty.all(Colors.transparent),
           ),
           onPressed: context.read<ProfileSettingState>().savePressed,
-          child: Text('수정 완료', style: TextStyle(
-        color: (context.watch<ProfileSettingState>().isSubmit)
-         ? grayScaleGrey900 : grayScaleGrey500,
-        fontSize: 18.0,
-        fontWeight: FontWeight.w600,
-      ),),
+          child: Text(
+            '수정 완료',
+            style: TextStyle(
+              color: (context.watch<ProfileSettingState>().isSubmit)
+                  ? grayScaleGrey900
+                  : grayScaleGrey500,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ),
     );

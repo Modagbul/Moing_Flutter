@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
@@ -23,8 +24,8 @@ class MyPageRevokePage extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).pop();
                     },
-                    child: Image.asset(
-                      'asset/image/arrow_left.png',
+                    child: SvgPicture.asset(
+                      'asset/icons/arrow_left.svg',
                     ),
                   ),
                   SizedBox(width: 32),

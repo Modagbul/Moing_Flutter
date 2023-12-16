@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 
 class MoingAppBar extends StatelessWidget implements PreferredSizeWidget{
@@ -23,7 +24,7 @@ class MoingAppBar extends StatelessWidget implements PreferredSizeWidget{
             padding: const EdgeInsets.only(left: 20.0,top: 12.0,bottom: 12.0,),
             child: GestureDetector(
               onTap: () => onTap(),
-              child: Image.asset(imagePath),
+              child: SvgPicture.asset(imagePath),
             ),
           ),
           SizedBox(width: spacing,),

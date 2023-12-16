@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/make_group/group_create_category_state.dart';
 import 'package:provider/provider.dart';
 
@@ -37,10 +38,10 @@ class _CategoryButtonState extends State<CategoryButton> {
 
     if (categoryState.selectedCategory == widget.buttonText) {
       // 현재 선택된 카테고리의 이미지 경로 업데이트
-      currentImagePath = widget.imagePath.replaceAll('.png', '_col.png');
+      currentImagePath = widget.imagePath.replaceAll('.svg', '_col.svg');
     } else {
       // 다른 카테고리의 이미지 경로 업데이트
-      currentImagePath = widget.imagePath.replaceAll('_col.png', '.png');
+      currentImagePath = widget.imagePath.replaceAll('_col.svg', '.svg');
     }
 
     return GestureDetector(
@@ -75,8 +76,8 @@ class _CategoryButtonState extends State<CategoryButton> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(width: 38),
-              Image.asset(
-                currentImagePath, // 현재 이미지 경로 사용
+              SvgPicture.asset(
+                currentImagePath, // SVG 이미지 로드
                 fit: BoxFit.contain,
                 width: 24,
                 height: 24,

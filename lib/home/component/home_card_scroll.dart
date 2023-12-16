@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
 import 'package:moing_flutter/model/response/get_team_mission_photo_list_response.dart';
@@ -236,8 +237,8 @@ class HomeCardScroll extends StatelessWidget {
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  Image.asset(
-                                    'asset/image/fire.png',
+                                  SvgPicture.asset(
+                                    'asset/icons/home_card_fire.svg',
                                     width: 45,
                                     height: 56,
                                   ),
@@ -275,8 +276,10 @@ class HomeCardScroll extends StatelessWidget {
                                     padding: const EdgeInsets.only(top: 12.0),
                                     child: Row(
                                       children: [
-                                        Image.asset(
-                                          'asset/image/user.png',
+                                        SvgPicture.asset(
+                                          'asset/icons/home_card_user.svg',
+                                          width: 14,
+                                          height: 14,
                                         ),
                                         const SizedBox(
                                           width: 4.0,
@@ -292,8 +295,10 @@ class HomeCardScroll extends StatelessWidget {
                                         const SizedBox(
                                           width: 12.0,
                                         ),
-                                        Image.asset(
-                                          'asset/image/clock.png',
+                                        SvgPicture.asset(
+                                          'asset/icons/mission_single_clock.svg',
+                                          width: 14,
+                                          height: 14,
                                         ),
                                         const SizedBox(
                                           width: 4.0,

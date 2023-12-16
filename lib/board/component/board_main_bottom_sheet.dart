@@ -30,7 +30,7 @@ class BoardMainBottomSheet extends StatelessWidget {
                   arguments: teamId,
                 );
               },
-              icon: 'asset/image/icon_delete.png',
+              icon: 'asset/icons/icon_delete.svg',
               text: '소모임 탈퇴하기',
             ),
             Padding(
@@ -39,7 +39,9 @@ class BoardMainBottomSheet extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                style: defaultButtonStyle,
+                style: defaultButtonStyle.copyWith(
+              elevation: MaterialStateProperty.all(0.0),
+            ),
                 child: const Text('닫기'),
               ),
             )

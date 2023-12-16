@@ -223,7 +223,7 @@ class MissionCurrentSituation extends StatelessWidget {
               MissionFireButton(
                 onPressed: state.firePressed,
               ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
           ],
         ),
       ),

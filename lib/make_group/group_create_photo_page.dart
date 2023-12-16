@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/group_create_photo_state.dart';
@@ -232,8 +233,8 @@ Widget _ContainerText() {
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Image.asset(
-        'asset/image/image_upload.png',
+      SvgPicture.asset(
+        'asset/icons/image_upload.svg',
       ),
       const SizedBox(
         width: 12.0,

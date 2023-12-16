@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/board/component/icon_text_button.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
@@ -99,8 +100,8 @@ class PostDetailPage extends StatelessWidget {
                                                 width: 20,
                                                 height: 20,
                                               )
-                                            : Image.asset(
-                                                'asset/image/icon_user_profile.png',
+                                            : SvgPicture.asset(
+                                                'asset/icons/icon_user_profile.svg',
                                                 fit: BoxFit.cover,
                                                 width: 20,
                                                 height: 20,
@@ -118,10 +119,10 @@ class PostDetailPage extends StatelessWidget {
                                       const SizedBox(width: 4.0),
                                       if (postDetailData?.writerIsLeader ??
                                           false)
-                                        Image.asset(
-                                          'asset/image/icon_crown.png',
-                                          width: 14.0,
-                                          height: 14.0,
+                                        SvgPicture.asset(
+                                          'asset/icons/icon_crown.svg',
+                                          width: 14,
+                                          height: 14,
                                         ),
                                       const Spacer(),
                                       Text(
@@ -185,10 +186,10 @@ class PostDetailPage extends StatelessWidget {
   Widget _renderNoticeTag() {
     return Row(
       children: [
-        Image.asset(
-          'asset/image/icon_solar_pin_bold.png',
-          width: 20.0,
-          height: 20.0,
+        SvgPicture.asset(
+          'asset/icons/icon_solar_pin_bold.svg',
+          width: 20,
+          height: 20,
         ),
         const SizedBox(width: 4.0),
         const Text(
@@ -298,12 +299,12 @@ class PostDetailPage extends StatelessWidget {
                   onPressed: () {
                     context.read<PostDetailState>().navigatePostUpdatePage();
                   },
-                  icon: 'asset/image/icon_edit.png',
+                  icon: 'asset/icons/icon_edit.svg',
                   text: '게시글 수정하기',
                 ),
                 IconTextButton(
                   onPressed: () => _showDeleteDialog(context),
-                  icon: 'asset/image/icon_delete.png',
+                  icon: 'asset/icons/icon_delete.svg',
                   text: '게시글 삭제하기',
                 ),
                 ElevatedButton(
@@ -415,10 +416,10 @@ class _CommentsInputWidget extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(6.0),
       child: IconButton(
-        icon: Image.asset(
-          'asset/image/icon_message.png',
-          width: 24.0,
-          height: 24.0,
+        icon: SvgPicture.asset(
+          'asset/icons/icon_send.svg',
+          width: 24,
+          height: 24,
         ),
         onPressed: () async {
           await context.watch<PostDetailState>().postCreateComment;

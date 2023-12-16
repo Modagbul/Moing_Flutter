@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/login/date/component/custom_date_picker_scroll_view_options.dart';
@@ -35,8 +36,8 @@ class SignUpDatePage extends StatelessWidget {
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.of(context).pop(),
-          child: Image.asset(
-            'asset/image/arrow_left.png',
+          child: SvgPicture.asset(
+            'asset/icons/arrow_left.svg',
           ),
         ),
       ),

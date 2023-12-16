@@ -40,7 +40,7 @@ class SettingPage extends StatelessWidget {
     return Scaffold(
       appBar: MoingAppBar(
         title: '환경설정',
-        imagePath: 'asset/image/arrow_left.png',
+        imagePath: 'asset/icons/arrow_left.svg',
         onTap: () => Navigator.pop(context),
       ),
       backgroundColor: grayScaleGrey900,
@@ -53,7 +53,7 @@ class SettingPage extends StatelessWidget {
                   SizedBox(height: 8.0),
                   ListCustomTile(
                       listName: '알림설정',
-                      imagePath: 'asset/image/right_arrow.png',
+                      imagePath: 'asset/icons/right_arrow.svg',
                       onTap: () {
                         Navigator.push(
                           context,
@@ -62,7 +62,7 @@ class SettingPage extends StatelessWidget {
                       }),
                   ListCustomTile(
                     listName: '개인정보 처리 방침',
-                    imagePath: 'asset/image/right_arrow.png',
+                    imagePath: 'asset/icons/right_arrow.svg',
                     onTap: () async {
                       String link = 'https://docs.google.com/document/d/18R3xXUVD_c2GCowrmo4KdMHkkosFkMQFqXD_1TaJSgs/edit';
                       Uri _url = Uri.parse(link);
@@ -74,12 +74,12 @@ class SettingPage extends StatelessWidget {
                   ),
                   ListCustomTile(
                     listName: '로그아웃',
-                    imagePath: 'asset/image/right_arrow.png',
+                    imagePath: 'asset/icons/right_arrow.svg',
                     onTap: () => _showLogoutDialog(context),
                   ),
                   ListCustomTile(
                     listName: '회원탈퇴',
-                    imagePath: 'asset/image/right_arrow.png',
+                    imagePath: 'asset/icons/right_arrow.svg',
                     onTap: () {
                       int teamCount =
                           Provider.of<SettingState>(context, listen: false)

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_fire/component/mission_fire_appbar.dart';
@@ -88,12 +89,13 @@ class MissionFirePage extends StatelessWidget {
                               color: grayScaleGrey900,
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          Image.asset(
-                            'asset/image/icon_fire_black.png',
-                            width: 24,
-                            height: 24,
-                          )
+                          const SizedBox(width: 5),
+                          SvgPicture.asset(
+                            'asset/icons/icon_fire_black.svg',
+                            width: 15.0,
+                            height: 18.0,
+                            fit: BoxFit.contain,
+                          ),
                         ],
                       ),
                     ),
