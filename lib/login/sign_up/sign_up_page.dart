@@ -123,6 +123,9 @@ class _NicknameTextField extends StatelessWidget {
                 color: context.watch<SignUpState>().nicknameColor,
               ),
             ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: context.watch<SignUpState>().nicknameColor),
+            ),
           ),
           controller: context.read<SignUpState>().nicknameController,
           onChanged: (_) => context.read<SignUpState>().updateNickname(),

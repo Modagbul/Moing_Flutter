@@ -54,7 +54,7 @@ class TeamMemeberCard extends StatelessWidget {
               ),
               const SizedBox(height: 4.0),
               Text(
-                teamMemberInfo.introduction ?? '',
+                teamMemberInfo.introduction ?? '아직 한 줄 다짐이 없어요',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: const TextStyle(
