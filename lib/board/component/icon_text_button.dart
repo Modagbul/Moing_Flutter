@@ -7,12 +7,14 @@ class IconTextButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String icon;
   final String text;
+  final Color? color;
 
   const IconTextButton({
     super.key,
     required this.onPressed,
     required this.icon,
     required this.text,
+    this.color,
   });
 
   @override
@@ -35,10 +37,10 @@ class IconTextButton extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w600,
-                color: grayScaleGrey200,
+                color: color != null ? color : grayScaleGrey200,
               ),
             ),
           ),

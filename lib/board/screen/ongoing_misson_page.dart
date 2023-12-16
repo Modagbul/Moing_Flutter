@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
@@ -45,20 +46,6 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-
-  void handleMissionTap(BuildContext context, int missionId, bool isRepeated) {
-    Navigator.of(context).pushNamed(
-      MissionProvePage.routeName,
-      arguments: {
-        'isRepeated': isRepeated,
-        'teamId': context.read<OngoingMissionState>().teamId,
-        'missionId': missionId,
-      },
-    ).then((_) {
-      context.read<OngoingMissionState>().reloadMissionStatus();
-    });
-  }
-
   final FToast fToast = FToast();
 
   @override
@@ -120,22 +107,6 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
   @override
   Widget build(BuildContext context) {
     final state = context.watch<OngoingMissionState>();
-    final data = state.repeatMissionStatus?.data;
-    if (data == null) {
-      log('repeatMissionData is null');
-    } else if (data.isEmpty) {
-      log('data is empty');
-    } else {
-      log('data is not empty: $data');
-    }
-
-    final singleMissionData = state.singleMissionStatus?.data;
-    if (singleMissionData == null) {
-      log('singleMissionData is null');
-    } else {
-      log('singleMissionData is not empty: $singleMissionData');
-    }
-
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
@@ -188,13 +159,11 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                             onTap: () {
                               Navigator.of(context).pushNamed(
                                 MissionProvePage.routeName,
-                                arguments: {
-                                  'isRepeated': true,
-                                  'teamId': context
-                                      .read<OngoingMissionState>()
-                                      .teamId,
-                                  'missionId': e.missionId,
-                                },
+                                arguments: MissionProveArgument(
+                                    isRepeated: true,
+                                    teamId: context.read<OngoingMissionState>().teamId,
+                                    missionId: e.missionId,
+                                    status: e.status)
                               ).then((_) {
                                 Provider.of<OngoingMissionState>(context,
                                         listen: false)
@@ -272,13 +241,11 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                 onTap: () {
                                   Navigator.of(context).pushNamed(
                                     MissionProvePage.routeName,
-                                    arguments: {
-                                      'isRepeated': false,
-                                      'teamId': context
-                                          .read<OngoingMissionState>()
-                                          .teamId,
-                                      'missionId': e.missionId,
-                                    },
+                                    arguments: MissionProveArgument(
+                                        isRepeated: false,
+                                        teamId: context.read<OngoingMissionState>().teamId,
+                                        missionId: e.missionId,
+                                        status: e.status)
                                   ).then((_) {
                                     Provider.of<OngoingMissionState>(context,
                                             listen: false)

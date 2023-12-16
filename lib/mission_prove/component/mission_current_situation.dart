@@ -6,6 +6,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_fire_button.dart';
+import 'package:moing_flutter/mission_prove/component/repeat_mission_tag/repeat_mission_start_tag.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -177,8 +178,8 @@ class MissionCurrentSituation extends StatelessWidget {
                                   style: bodyTextStyle,
                                 ),
                                 const Spacer(),
-                                /// 백에 status 추가 되면 로직 수정 해야함
-                                // const _Tag(),
+                                if(state.repeatMissionStatus == 'WAIT' && state.isRepeated)
+                                RepeatMissionTag(),
                               ],
                             ),
                             SizedBox(height: 8),

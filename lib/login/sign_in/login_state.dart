@@ -125,20 +125,15 @@ class LoginState extends ChangeNotifier {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
 
-        print('Access Token: $accessToken');
-        print('Refresh Token: $refreshToken');
-
         // sharedPreferences를 이용하여 accessToken, refreshToken 저장
         await tokenManagement.saveToken(accessToken, refreshToken);
-        print('카카오JWT : $accessToken');
+        // print('카카오JWT : $accessToken');
         _isRegistered = responseBody['data']['registrationStatus'];
         sharedPreferencesInfo.savePreferencesData('sign', 'kakao');
-        print('카카오 회원가입 여부 : $_isRegistered');
         checkRegister(_isRegistered!);
       }
       /// 에러 처리
       else {
-        print('에러 코드 : ${response.statusCode}');
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
@@ -188,10 +183,6 @@ class LoginState extends ChangeNotifier {
             AppleIDAuthorizationScopes.fullName,
           ],
         );
-
-        // decodeJWT(appleCredential!.identityToken!);
-        print('애플 액세스 토큰 : ${appleCredential.identityToken}');
-        print(' ====');
         await appleLoginSendToken(appleCredential.identityToken!);
       } catch (e) {
         // showErrorDialog(e.toString());
@@ -236,7 +227,7 @@ class LoginState extends ChangeNotifier {
       if(responseBody['isSuccess'] == true) {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
-        print('애플JWT : $accessToken');
+        // print('애플JWT : $accessToken');
         // sharedPreferences를 이용하여 accessToken, refreshToken 저장
         await tokenManagement.saveToken(accessToken, refreshToken);
 
@@ -280,7 +271,7 @@ class LoginState extends ChangeNotifier {
         ),
       );
 
-      print("Google ID Token: ${googleAuth?.idToken}");
+      // print("Google ID Token: ${googleAuth?.idToken}");
 
       // 구글 토큰을 백엔드 서버로 전송
       if (googleAuth?.idToken != null) {
@@ -317,19 +308,17 @@ class LoginState extends ChangeNotifier {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
 
-        print('Access Token: $accessToken');
-        print('Refresh Token: $refreshToken');
+        // print('Access Token: $accessToken');
+        // print('Refresh Token: $refreshToken');
 
         await tokenManagement.saveToken(accessToken, refreshToken);
-        print('구글 JWT : $accessToken');
+        // print('구글 JWT : $accessToken');
         _isRegistered = responseBody['data']['registrationStatus'];
         sharedPreferencesInfo.savePreferencesData('sign', 'google');
-        print('구글 회원가입 여부 : $_isRegistered');
         checkRegister(_isRegistered!);
       }
       /// 에러 처리
       else {
-        print('에러 코드 : ${response.statusCode}');
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
@@ -349,7 +338,6 @@ class LoginState extends ChangeNotifier {
 
   /// 회원가입 여부 판단
   void checkRegister(bool isRegistered) {
-    print('연동 성공!');
     // 가입되어 있는 경우
     if(isRegistered) {
       Navigator.of(context).pushNamed(

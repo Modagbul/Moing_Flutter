@@ -19,7 +19,7 @@ class GroupFinishPage extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
             create: (_) =>
-                GroupFinishExitState(context: context, teamId: teamId)),
+                GroupFinishExitState(context: context, teamId: teamId, text: '', teamName: null)),
       ],
       builder: (context, _) {
         return const GroupFinishPage();
@@ -29,6 +29,7 @@ class GroupFinishPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var state = context.watch<GroupFinishExitState>();
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
@@ -53,10 +54,9 @@ class GroupFinishPage extends StatelessWidget {
                           )),
                       SizedBox(width: 40),
                       Text(
-                        context.watch<GroupFinishExitState>().teamInfo?.isLeader == true
+                        state.teamInfo?.isLeader == true
                         ? '소모임 강제종료' : '소모임 탈퇴',
-                        style:
-                            buttonTextStyle.copyWith(color: grayScaleGrey300),
+                        style: buttonTextStyle.copyWith(color: grayScaleGrey300),
                       ),
                     ],
                   ),
@@ -65,7 +65,7 @@ class GroupFinishPage extends StatelessWidget {
                   height: 44,
                 ),
                 Text(
-                  '정말 ${context.watch<GroupFinishExitState>().teamInfo?.teamName ?? '해당'} 모임과\n이별하시겠어요?',
+                  '정말 ${state.teamInfo?.teamName ?? '해당'} 모임과\n이별하시겠어요?',
                   style: headerTextStyle.copyWith(
                     color: grayScaleGrey100,
                     height: 1.5,
@@ -90,8 +90,7 @@ class GroupFinishPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (context.watch<GroupFinishExitState>().finishCount == 0 &&
-                        context.watch<GroupFinishExitState>().teamInfo != null)
+                    if (state.finishCount == 0 && state.teamInfo != null)
                       Positioned(
                         top: 101,
                         left: 0,
@@ -100,14 +99,14 @@ class GroupFinishPage extends StatelessWidget {
                           width: double.infinity,
                           height: 137,
                           child: ExitCard(
-                            number: context.watch<GroupFinishExitState>().teamInfo!.numOfMember.toString(),
-                            time: context.watch<GroupFinishExitState>().teamInfo!.duration.toString(),
-                            missionClear: context.watch<GroupFinishExitState>().teamInfo!.numOfMission.toString(),
-                            level: 'Lv.${context.watch<GroupFinishExitState>().teamInfo!.levelOfFire}',
+                            number: state.teamInfo!.numOfMember.toString(),
+                            time: state.teamInfo!.duration.toString(),
+                            missionClear: state.teamInfo!.numOfMission.toString(),
+                            level: 'Lv.${state.teamInfo!.levelOfFire}',
                           ),
                         ),
                       ),
-                    if (context.watch<GroupFinishExitState>().finishCount != 0)
+                    if (state.finishCount != 0)
                       Positioned(
                         top: 101,
                         left: 0,
@@ -115,7 +114,7 @@ class GroupFinishPage extends StatelessWidget {
                         child: SizedBox(
                           width: double.infinity,
                           height: 137,
-                          child: ExitCard(isLeader : context.watch<GroupFinishExitState>().teamInfo!.isLeader),
+                          child: ExitCard(isLeader : state.teamInfo!.isLeader),
                         ),
                       ),
                   ],
@@ -137,11 +136,8 @@ class GroupFinishPage extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: BlackButton(
                       color: grayScaleGrey900,
-                      onPressed:
-                          context.read<GroupFinishExitState>().finishPressed,
-                      text: context
-                          .watch<GroupFinishExitState>()
-                          .finishButtonText,
+                      onPressed: context.read<GroupFinishExitState>().finishPressed,
+                      text: state.finishButtonText,
                     ),
                   ),
                 ),

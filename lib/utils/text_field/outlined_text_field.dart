@@ -9,6 +9,7 @@ class OutlinedTextField extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final VoidCallback? onClearButtonPressed;
   final TextEditingController controller;
+  final VoidCallback? onTap;
   final String labelText;
   final String counterText;
   final String hintText;
@@ -31,6 +32,7 @@ class OutlinedTextField extends StatefulWidget {
     this.counterTextStyle = style.backgroundTextFieldStyle,
     this.inputTextStyle = style.inputTextFieldStyle,
     this.borderSideColor = Colors.transparent,
+    this.onTap,
   });
 
   @override
@@ -87,6 +89,8 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
           onChanged: (value) {
             widget.onChanged(value);
           },
+
+          onTap: widget.onTap,
 
           // 엔터 입력 시 unfocus
           onEditingComplete: () {

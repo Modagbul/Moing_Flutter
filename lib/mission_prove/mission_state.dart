@@ -269,6 +269,7 @@ class MissionState {
                  },
                  child: Container(
                    width: double.infinity,
+                   color: Colors.transparent,
                    height: 64,
                    padding: EdgeInsets.symmetric(vertical: 16),
                    child: Row(

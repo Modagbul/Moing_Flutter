@@ -33,23 +33,6 @@ class MissionsAllPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<MissionsAllState>();
-
-    final data = state.aggregateRepeatMissionStatus?.data;
-    if (data == null) {
-      log('data is null');
-    } else if (data.isEmpty) {
-      log('data is empty');
-    } else {
-      log('data is not empty: $data');
-    }
-
-    final singleMissionData = state.aggregateSingleMissionStatus?.data;
-    if (singleMissionData == null) {
-      log('singleMissionData is null');
-    } else {
-      log('singleMissionData is not empty: $singleMissionData');
-    }
-
     return Scaffold(
       backgroundColor: grayBackground,
       body: SafeArea(

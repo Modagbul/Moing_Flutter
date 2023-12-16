@@ -33,6 +33,7 @@ class InvitationWelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var state = context.watch<WelcomeTeamState>();
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
@@ -47,16 +48,15 @@ class InvitationWelcomePage extends StatelessWidget {
                   SizedBox(height: 128),
                   Center(
                     child: Text('모임에 오신 걸 환영해요!',
-                        style:
-                            headerTextStyle.copyWith(color: grayScaleGrey100)),
+                        style: headerTextStyle.copyWith(color: grayScaleGrey100)),
                   ),
                   SizedBox(height: 16),
                   Container(
-                    width: 200,
+                    width: 250,
                     height: 54,
                     alignment: Alignment.center,
                     child: Text(
-                      '${context.watch<WelcomeTeamState>().teamLeaderName}님이 ${context.watch<WelcomeTeamState>().memberName}님을\n${context.watch<WelcomeTeamState>().teamName} 모임에 초대했어요',
+                      '${state.teamLeaderName}님이 ${state.memberName}님을\n${state.teamName} 모임에 초대했어요',
                       style: contentTextStyle.copyWith(height: 1.68),
                       textAlign: TextAlign.center,
                     ),

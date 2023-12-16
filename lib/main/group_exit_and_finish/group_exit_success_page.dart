@@ -3,6 +3,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_and_exit_state.dart';
+import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 import 'package:provider/provider.dart';
 
@@ -12,9 +13,14 @@ class GroupExitApplyPage extends StatelessWidget {
 
   static route(BuildContext context) {
     final int teamId = ModalRoute.of(context)?.settings.arguments as int;
+    final String text = '소모임 탈퇴가 완료되었어요.';
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => GroupFinishExitState(context: context, teamId: teamId)),
+        ChangeNotifierProvider(create: (_) => GroupFinishExitState(
+            context: context,
+            teamId: teamId,
+            text: text,
+        teamName: null)),
       ],
       builder: (context, _) {
         return const GroupExitApplyPage();
@@ -35,7 +41,7 @@ class GroupExitApplyPage extends StatelessWidget {
               children: [
                 const Spacer(),
                 Text(
-                  '소모임 탈퇴가 완료되었어요.',
+                  context.read<GroupFinishExitState>().text,
                   style: headerTextStyle.copyWith(
                       color: grayScaleGrey100,
                       height: 1.5
@@ -54,7 +60,7 @@ class GroupExitApplyPage extends StatelessWidget {
                     child: WhiteButton(
                       onPressed: (){
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                            HomeScreen.routeName, (route) => false);
+                            MainPage.routeName, (route) => false);
                       },
                       text: '홈으로 돌아가기',
                     ),

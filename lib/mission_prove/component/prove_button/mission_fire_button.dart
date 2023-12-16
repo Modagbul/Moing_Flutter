@@ -24,7 +24,7 @@ class MissionFireButton extends StatelessWidget {
         fixedSize: MaterialStateProperty.all(
           Size(MediaQuery.of(context).size.width, 56),
         ),
-        backgroundColor: MaterialStateProperty.all(grayScaleGrey900),
+        backgroundColor: MaterialStateProperty.all(Colors.transparent),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(48.0),

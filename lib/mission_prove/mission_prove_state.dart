@@ -43,6 +43,7 @@ class MissionProveState with ChangeNotifier {
   final int teamId;
   final int missionId;
   final bool isRepeated; // 반복 미션 여부
+  final String repeatMissionStatus; // 반복 미션 State
   final MissionState missionState = MissionState();
 
   late TabController tabController;
@@ -115,13 +116,15 @@ class MissionProveState with ChangeNotifier {
       {required this.context,
       required this.isRepeated,
       required this.teamId,
-      required this.missionId}) {
+      required this.missionId,
+      required this.repeatMissionStatus}) {
+    print('반복미션 상태 : $repeatMissionStatus');
     initState();
   }
 
   void initState() async {
     log('Instance "MissionProveState" has been created');
-    print('isRepeated : $isRepeated, teamId : $teamId, missionId: $missionId');
+    print('isRepeated : $isRepeated, teamId : $teamId, missionId: $missionId, MissionRepeatStatus : $repeatMissionStatus');
     fToast.init(context);
 
     // 나의 인증 현황 조회하기
@@ -133,12 +136,26 @@ class MissionProveState with ChangeNotifier {
     // 반복 미션인 경우, 나의 성공횟수 조회
     if (isRepeated) {
       await loadMyMissionProveCount();
+      if(repeatMissionStatus == 'WAIT') {
+        toastMessage.showToastMessage(
+          fToast: fToast,
+          warningText: '반복 미션은 다음 주 월요일에 시작해요.',
+          isWarning: false,
+          toastTop: 130.0,
+          toastLeft: 0,
+          toastRight: 0,
+        );
+      }
     }
     // 한번 미션인 경우,
     if (!isRepeated) {
       // 모임원 성공횟수 조회
       await loadTeamMissionProveCount();
     }
+  }
+
+  void test() {
+    print('HI~');
   }
 
   // 남은 시간 조회
@@ -995,6 +1012,8 @@ class MissionProveState with ChangeNotifier {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             var currentMission = getCurrentMission(index);
+            // 오늘 인증했는지 여부
+            bool isTodayCreated = isSameDate(currentMission.createdDate);
             return Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.6,
@@ -1046,7 +1065,7 @@ class MissionProveState with ChangeNotifier {
                               fontWeight: FontWeight.w500),
                         ),
                         Spacer(),
-                        if (isMeOrEveryProved)
+                        if (isMeOrEveryProved && isTodayCreated)
                           DropdownButton<String>(
                             underline: SizedBox.shrink(),
                             style: contentTextStyle.copyWith(
@@ -1458,6 +1477,22 @@ class MissionProveState with ChangeNotifier {
             submit();
           }
         }
+    }
+  }
+
+  // 같은 날짜인지 확인
+  bool isSameDate(String createdDate) {
+    DateTime created = DateTime.parse(createdDate);
+    DateTime now = DateTime.now();
+    int year = created.year;
+    int month = created.month;
+    int day = created.day;
+    // 같은 날짜인 경우
+    if(year == now.year && month == now.month && day == now.day) {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 
