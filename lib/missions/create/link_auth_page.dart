@@ -34,6 +34,7 @@ class LinkAuthPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: '링크로 인증하기'),
+      resizeToAvoidBottomInset: false,
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -44,23 +45,30 @@ class LinkAuthPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 34.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '링크를 첨부하여\n미션을 인증해주세요!',
-                  style: TextStyle(
-                    color: grayScaleGrey100,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w600,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 34.0),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '링크를 첨부하여\n미션을 인증해주세요!',
+                          style: TextStyle(
+                            color: grayScaleGrey100,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 52.0),
+                      _InfoTextFields(),
+                      SizedBox(height: 240.0),
+                    ],
                   ),
                 ),
               ),
-              SizedBox(height: 52.0),
-              _InfoTextFields(),
-              Spacer(),
               _NextBtn(),
-              SizedBox(height: 32.0),
             ],
           ),
         ),
@@ -117,30 +125,33 @@ class _NextBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoryState = Provider.of<LinkAuthState>(context);
 
-    return SizedBox(
-      width: 353,
-      height: 62,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: categoryState.getNextButtonColor(),
-          disabledBackgroundColor: grayScaleGrey700,
-          disabledForegroundColor: grayScaleGrey500,
-          padding: const EdgeInsets.all(16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 32),
+      child: SizedBox(
+        width: 353,
+        height: 62,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: categoryState.getNextButtonColor(),
+            disabledBackgroundColor: grayScaleGrey700,
+            disabledForegroundColor: grayScaleGrey500,
+            padding: const EdgeInsets.all(16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
           ),
-        ),
-        onPressed: categoryState.isCategorySelected()
-            ? () async {
-                await categoryState.submit();
-              }
-            : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
-        child: Text(
-          '인증하기',
-          style: TextStyle(
-            color: categoryState.getNextButtonTextColor(),
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
+          onPressed: categoryState.isCategorySelected()
+              ? () async {
+                  await categoryState.submit();
+                }
+              : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
+          child: Text(
+            '인증하기',
+            style: TextStyle(
+              color: categoryState.getNextButtonTextColor(),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),

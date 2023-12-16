@@ -126,14 +126,16 @@ class SingleMyMissionProved extends StatelessWidget {
                                             color: grayScaleGrey100),
                                       ),
                                     ),
-                                    Text(
-                                      state.myMissionList![0].archive,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: grayScaleGrey400,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12,
+                                    Container(
+                                      width: 265,
+                                      child: Text(
+                                        state.myMissionList![0].archive,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: grayScaleGrey400,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     )
                                   ],

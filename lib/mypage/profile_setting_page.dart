@@ -31,9 +31,9 @@ class ProfileSettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: _renderAppBar(context: context),
       backgroundColor: grayBackground,
+      resizeToAvoidBottomInset: false,
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -44,12 +44,20 @@ class ProfileSettingPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                const SizedBox(height: 40),
-                _Profile(),
-                const SizedBox(height: 32),
-                const _TextFields(),
-                Spacer(),
-                _SubmitButton(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 40),
+                        _Profile(),
+                        const SizedBox(height: 32),
+                        const _TextFields(),
+                        SizedBox(height: 100),
+                        _SubmitButton(),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -185,12 +193,12 @@ class _TextFields extends StatelessWidget {
 }
 
 class _SubmitButton extends StatelessWidget {
-  const _SubmitButton();
+  const _SubmitButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 32.0),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 16),
       child: SizedBox(
         width: double.infinity,
         height: 62,

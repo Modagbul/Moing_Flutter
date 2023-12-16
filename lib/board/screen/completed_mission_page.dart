@@ -32,16 +32,6 @@ class CompletedMissionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CompletedMissionState>();
-
-    final data = state.completedMissionStatus?.data;
-    if (data == null) {
-      log('completed is null');
-    } else if (data.isEmpty) {
-      log('data is empty');
-    } else {
-      log('data is not empty: $data');
-    }
-
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(

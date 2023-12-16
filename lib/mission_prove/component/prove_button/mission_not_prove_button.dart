@@ -13,7 +13,6 @@ class MissionNotProveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var state = context.watch<MissionProveState>();
-    print('isMeProved ? ${state.isMeProved}');
       return Positioned(
         bottom: 20,
         left: 20,

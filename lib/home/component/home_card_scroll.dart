@@ -16,7 +16,7 @@ class HomeCardScroll extends StatelessWidget {
         context.watch<HomeScreenState>().teamMissionPhotoList;
     List<TeamBlock> teamList = context.watch<HomeScreenState>().teamList;
     PageController pageController = PageController(
-      viewportFraction: 0.95,
+      viewportFraction: 0.9,
     );
 
     return Container(
@@ -213,7 +213,7 @@ class HomeCardScroll extends StatelessWidget {
                               height: 64.0,
                             ),
                       Container(
-                        width: 280,
+                        width: 302,
                         height: 96,
                         decoration: BoxDecoration(
                           color: grayScaleGrey600,

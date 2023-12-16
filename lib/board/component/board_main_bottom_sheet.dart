@@ -23,7 +23,6 @@ class BoardMainBottomSheet extends StatelessWidget {
           children: [
             IconTextButton(
               onPressed: () {
-                // TODO(): 소모임 탈퇴하기 구현 후 연결
                 print('소모임원 탈퇴 구현하기!');
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(
@@ -34,12 +33,15 @@ class BoardMainBottomSheet extends StatelessWidget {
               icon: 'asset/image/icon_delete.png',
               text: '소모임 탈퇴하기',
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: defaultButtonStyle,
-              child: const Text('닫기'),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: defaultButtonStyle,
+                child: const Text('닫기'),
+              ),
             )
           ],
         ),

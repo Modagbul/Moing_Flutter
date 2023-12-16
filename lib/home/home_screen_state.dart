@@ -40,11 +40,12 @@ class HomeScreenState extends ChangeNotifier {
   bool isNotification = false;
 
   HomeScreenState({required this.context, this.newCreated}){
-    initState();
+    // initState();
   }
 
-  void initState() async {
+  Future<void> initState() async {
     log('Instance "HomeScreenState" has been created');
+    print('newCreated : $newCreated');
     fToast.init(context);
     await loadTeamData();
     await getTeamMissionPhotoListData();

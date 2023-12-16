@@ -72,35 +72,6 @@ class ProfileSettingState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void loadFixData(int teamId) async {
-    print('teamId : $teamId');
-    final String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
-
-    try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-          await call.makeRequest<Map<String, dynamic>>(
-        url: apiUrl,
-        method: 'GET',
-        fromJson: (json) => json as Map<String, dynamic>,
-      );
-
-      if (apiResponse.isSuccess == true) {
-        nameController.text = apiResponse.data?['name'];
-        introduceController.text = apiResponse.data?['introduction'];
-        getProfileImageUrl = apiResponse.data?['profileImage'];
-      } else {
-        if (apiResponse.errorCode == 'J0003') {
-          loadFixData(teamId);
-        } else {
-          throw Exception(
-              'loadFixData is Null, error code : ${apiResponse.errorCode}');
-        }
-      }
-    } catch (e) {
-      print('프로필 수정 전 조회 실패: $e');
-    }
-  }
-
   // nameController 텍스트 변경 감지
   void _onNameTextChanged() {
     isNameChanged = profileData?.nickName != nameController.text;

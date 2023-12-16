@@ -180,7 +180,7 @@ class _Tag extends StatelessWidget {
       } else {
         int daysToSunday = DateTime.sunday - now.weekday;
         if (daysToSunday > 0) {
-          tagText = '${daysToSunday}일 후 시작';
+          tagText = '${daysToSunday+1}일 후 시작';
         }
       }
     } else if (status == 'ONGOING' && now.weekday == DateTime.sunday) {

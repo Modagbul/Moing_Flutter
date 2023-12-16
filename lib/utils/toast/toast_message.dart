@@ -14,6 +14,7 @@ class ToastMessage {
     double? toastLeft,
     double? toastRight,
     double? toastTop,
+    bool? isWarning,
   }) {
     fToast.showToast(
         child: Material(
@@ -33,12 +34,17 @@ class ToastMessage {
                   children: [
                     Row(
                       children: [
-                        SvgPicture.asset(
-                          'asset/icons/toast_danger.svg',
-                          width: 24,
-                          height: 24,
+                        if(isWarning ?? true)
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              'asset/icons/toast_danger.svg',
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(width: 10),
+                          ],
                         ),
-                        SizedBox(width: 10),
                       ],
                     ),
                     Text(

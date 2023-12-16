@@ -40,17 +40,20 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: grayBackground,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              HomeText(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: HomeText(
                   nickName:
                       '${context.watch<HomeScreenState>().futureData?.memberNickName ?? '모닥불'}님,',
                   encourage: '오늘도 모잉이 응원해요!'),
-              const SizedBox(height: 40.0),
-              HomeMyMeeting(
+            ),
+            const SizedBox(height: 40.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: HomeMyMeeting(
                 meetingCount: context
                         .watch<HomeScreenState>()
                         .futureData
@@ -58,50 +61,50 @@ class HomeScreen extends StatelessWidget {
                         .toString() ??
                     '0',
               ),
-              const SizedBox(height: 12.0),
-              (context.watch<HomeScreenState>().futureData?.numOfTeam ?? 0) > 0
-                  //   ? const HomeCard()
-                  ? const HomeCardScroll()
-                  : const HomeNoCard(),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    onPressed: teamBlockLength < maxTeamBlockLength
-                        ? context.read<HomeScreenState>().makeGroupPressed
-                        : () {
-                            ViewUtil().showErrorSnackBar(
-                              context: context,
-                              message: '모임은 최대 3개까지 들어갈 수 있어요',
-                            );
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: teamBlockLength < maxTeamBlockLength
-                          ? grayScaleWhite
-                          : grayScaleGrey500,
-                      foregroundColor: teamBlockLength < maxTeamBlockLength
-                          ? grayScaleGrey900
-                          : grayScaleGrey700,
-                      textStyle: const TextStyle(
-                        color: grayScaleGrey300,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16.0,
-                        horizontal: 45.0,
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32.0)),
+            ),
+            const SizedBox(height: 12.0),
+            (context.watch<HomeScreenState>().futureData?.numOfTeam ?? 0) > 0
+                //   ? const HomeCard()
+                ? const HomeCardScroll()
+                : const HomeNoCard(),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: teamBlockLength < maxTeamBlockLength
+                      ? context.read<HomeScreenState>().makeGroupPressed
+                      : () {
+                          ViewUtil().showErrorSnackBar(
+                            context: context,
+                            message: '모임은 최대 3개까지 들어갈 수 있어요',
+                          );
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: teamBlockLength < maxTeamBlockLength
+                        ? grayScaleWhite
+                        : grayScaleGrey500,
+                    foregroundColor: teamBlockLength < maxTeamBlockLength
+                        ? grayScaleGrey900
+                        : grayScaleGrey700,
+                    textStyle: const TextStyle(
+                      color: grayScaleGrey300,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
                     ),
-                    child: const Text('모임 만들기'),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                      horizontal: 45.0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0)),
                   ),
+                  child: const Text('모임 만들기'),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

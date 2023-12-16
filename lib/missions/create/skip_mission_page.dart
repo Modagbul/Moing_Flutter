@@ -39,23 +39,30 @@ class SkipMissionPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 34.0),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '이번 미션을 건너뛰시겠어요?\n사유를 작성해주세요',
-                style: TextStyle(
-                  color: grayScaleGrey100,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 34.0),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '이번 미션을 건너뛰시겠어요?\n사유를 작성해주세요',
+                        style: TextStyle(
+                          color: grayScaleGrey100,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 52.0),
+                    _InfoTextFields(),
+                    Spacer(),
+                    _NextBtn(),
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: 52.0),
-            _InfoTextFields(),
-            Spacer(),
-            _NextBtn(),
-            SizedBox(height: 32.0),
           ],
         ),
       ),
@@ -115,28 +122,31 @@ class _NextBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoryState = Provider.of<SkipMissionState>(context);
 
-    return Container(
-      width: 353,
-      height: 62,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: categoryState.getNextButtonColor(),
-          disabledBackgroundColor: grayScaleGrey700,
-          disabledForegroundColor: grayScaleGrey500,
-          padding: const EdgeInsets.all(16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 32),
+      child: Container(
+        width: 353,
+        height: 62,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: categoryState.getNextButtonColor(),
+            disabledBackgroundColor: grayScaleGrey700,
+            disabledForegroundColor: grayScaleGrey500,
+            padding: const EdgeInsets.all(16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
           ),
-        ),
-        onPressed: () async {
-          await categoryState.submit();
-        },
-        child: Text(
-          '사유작성 완료하기',
-          style: TextStyle(
-            color: categoryState.getNextButtonTextColor(),
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
+          onPressed: () async {
+            await categoryState.submit();
+          },
+          child: Text(
+            '사유작성 완료하기',
+            style: TextStyle(
+              color: categoryState.getNextButtonTextColor(),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),

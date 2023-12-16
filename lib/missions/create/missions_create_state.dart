@@ -486,7 +486,7 @@ class MissionCreateState extends ChangeNotifier {
                         Text('#$recommendText', style: ts),
                         Text(' 인증미션 추천',
                             style: ts.copyWith(color: grayScaleGrey400)),
-                        const SizedBox(width: 44),
+                        Spacer(),
                         GestureDetector(
                             onTap: () {
                               Navigator.of(context).pop();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_like_share.dart';
 import 'package:moing_flutter/mission_prove/component/repeat_every_mission/every_mission_prove.dart';
 import 'package:moing_flutter/mission_prove/component/mission_current_situation.dart';
@@ -19,12 +20,12 @@ class MissionProvePage extends StatefulWidget {
   const MissionProvePage({super.key});
 
   static route(BuildContext context) {
-    final Map<String, dynamic> data =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    // 반복인지, 일회성인지
-    final bool isRepeated = data['isRepeated'] as bool;
-    final int teamId = data['teamId'] as int;
-    final int missionId = data['missionId'] as int;
+    final argument = ModalRoute.of(context)?.settings.arguments as MissionProveArgument;
+
+    final bool isRepeated = argument.isRepeated;
+    final int teamId = argument.teamId;
+    final int missionId = argument.missionId;
+    final String status = argument.status;
 
     return MultiProvider(
       providers: [
@@ -33,7 +34,9 @@ class MissionProvePage extends StatefulWidget {
                 context: context,
                 isRepeated: isRepeated,
                 teamId: teamId,
-                missionId: missionId)),
+                missionId: missionId,
+                repeatMissionStatus: status,
+            )),
       ],
       builder: (context, _) {
         return const MissionProvePage();
@@ -107,8 +110,8 @@ class _MissionProvePageState extends State<MissionProvePage>
               ],
             ),
             /// 인증 안한 경우
-            if((state.myMissionList != null && state.myMissionList!.isEmpty) ||
-                state.isRepeated)
+            if((state.repeatMissionStatus != 'WAIT' && state.isRepeated) ||
+                (state.myMissionList != null && state.myMissionList!.isEmpty))
              MissionNotProveButton(),
             /// 인증 한 경우
             if(!state.isRepeated && state.myMissionList != null && state.myMissionList!.isNotEmpty)

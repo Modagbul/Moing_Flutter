@@ -13,10 +13,10 @@ class MyPageState extends ChangeNotifier {
   MyPageState({
     required this.context,
   }) {
-    initState();
+    // initState();
   }
 
-  void initState() async {
+  Future<void> initState() async {
     log('Instance "MyPageState" has been created');
     await getMyPageData();
   }

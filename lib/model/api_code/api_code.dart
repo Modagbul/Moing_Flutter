@@ -136,7 +136,6 @@ class ApiCode {
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
-          log('반복 미션 Server response: $data');
           return (data as List<dynamic>)
               .map((item) =>
                   RepeatMission.fromJson(item as Map<String, dynamic>))
@@ -145,7 +144,6 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('반복 미션 상태 조회 성공: ${apiResponse.data}');
         return RepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
@@ -219,7 +217,6 @@ class ApiCode {
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
-          log('한번 미션 Server response: $data');
           return (data as List<dynamic>)
               .map((item) => Mission.fromJson(item as Map<String, dynamic>))
               .toList();
@@ -227,7 +224,6 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('한번 미션 상태 조회 성공: ${apiResponse.data}');
         return BoardSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
@@ -444,7 +440,6 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('한번 미션 상태 조회 성공: ${apiResponse.data}');
         return AggregateSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
@@ -477,7 +472,6 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('팀별 한번 미션 상태 조회 성공: ${apiResponse.data}');
         return AggregateTeamSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
@@ -508,7 +502,6 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('반복 미션 상태 조회 성공: ${apiResponse.data}');
         return AggregateRepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {

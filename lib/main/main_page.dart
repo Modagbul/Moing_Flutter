@@ -9,6 +9,7 @@ import 'package:moing_flutter/missions/aggregate/missions_group_state.dart';
 import 'package:moing_flutter/missions/aggregate/missions_screen.dart';
 import 'package:moing_flutter/missions/aggregate/missions_state.dart';
 import 'package:moing_flutter/mypage/my_page_screen.dart';
+import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
@@ -31,7 +32,7 @@ class MainPage extends StatelessWidget {
           lazy: false,
         ),
         ChangeNotifierProvider(
-          create: (_) => AppState(), // AppState를 추가합니다.
+          create: (_) => AppState(),
           lazy: false,
         ),
         ChangeNotifierProvider(
@@ -40,13 +41,12 @@ class MainPage extends StatelessWidget {
           lazy: false,
         ),
         ChangeNotifierProvider(
-          create: (_) => MissionsState(context: context), // MissionsState 추가
+          create: (_) => MissionsState(context: context),
           lazy: false,
         ),
         ChangeNotifierProvider(
           create: (_) => MissionsGroupState(
               context: context, selectedTeamId: selectedTeamId),
-          // MissionsState 추가
           lazy: false,
         ),
       ],
@@ -68,83 +68,93 @@ class MainPage extends StatelessWidget {
         }
         return true;
       },
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (_) => MissionsState(context: context),
-            lazy: false,
-          ),
-        ],
-        child: Scaffold(
-          appBar: MainAppBar(
-            notificationCount: context.watch<MainState>().alarmCount ?? '0',
-            onTapAlarm: context.read<MainState>().alarmPressed,
-            onTapSetting: context.read<MainState>().settingPressed,
-            screenIndex: context.watch<AppState>().mainIndex,
-          ),
-          backgroundColor: Colors.black,
-          body: Stack(
-            fit: StackFit.expand,
+      child: FutureBuilder(
+        future: _initializeStates(context),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return _mainContent(context);
+          } else {
+            return Center(
+              child: LoadingPage(),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Future<void> _initializeStates(BuildContext context) async {
+    await context.read<HomeScreenState>().initState();
+    await context.read<MissionsState>().initState();
+    await context.read<MissionsGroupState>().initState();
+  }
+
+  Widget _mainContent(BuildContext context) {
+    return Scaffold(
+      appBar: MainAppBar(
+        notificationCount: context.watch<MainState>().alarmCount ?? '0',
+        onTapAlarm: context.read<MainState>().alarmPressed,
+        onTapSetting: context.read<MainState>().settingPressed,
+        screenIndex: context.watch<AppState>().mainIndex,
+      ),
+      backgroundColor: Colors.black,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          IndexedStack(
+            sizing: StackFit.expand,
+            index: context.watch<AppState>().mainIndex,
             children: [
-              IndexedStack(
-                sizing: StackFit.expand,
-                index: context.watch<AppState>().mainIndex,
-                children: [
-                  HomeScreen(),
-                  MissionsScreen(),
-                  MyPageScreen.route(context: context),
-                ],
-              ),
+              HomeScreen(),
+              MissionsScreen(),
+              MyPageScreen.route(context: context),
             ],
           ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: BottomNavigationBar(
-              currentIndex: context.watch<AppState>().mainIndex,
-              onTap: (index) {
-                context.read<AppState>().mainIndex = index;
-              },
-              backgroundColor: grayBackground,
-              type: BottomNavigationBarType.fixed,
-              unselectedItemColor: grayScaleGrey550,
-              selectedItemColor: grayScaleGrey100,
-              selectedLabelStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: grayScaleGrey100),
-              unselectedLabelStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: grayScaleGrey550),
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding:
-                        EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
-                    child: Icon(Icons.home),
-                  ),
-                  label: '홈',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding:
-                        EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
-                    child: Icon(Icons.tour),
-                  ),
-                  label: '진행 중 미션',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding:
-                        EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
-                    child: Icon(Icons.person),
-                  ),
-                  label: '마이페이지',
-                ),
-              ],
+        ],
+      ),
+      bottomNavigationBar: _bottomNavigationBar(context),
+    );
+  }
+
+  Widget _bottomNavigationBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: BottomNavigationBar(
+        currentIndex: context.watch<AppState>().mainIndex,
+        onTap: (index) {
+          context.read<AppState>().mainIndex = index;
+        },
+        backgroundColor: grayBackground,
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: grayScaleGrey550,
+        selectedItemColor: grayScaleGrey100,
+        selectedLabelStyle: const TextStyle(
+            fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey100),
+        unselectedLabelStyle: const TextStyle(
+            fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey550),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
+              child: Icon(Icons.home),
             ),
+            label: '홈',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
+              child: Icon(Icons.tour),
+            ),
+            label: '진행 중 미션',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
+              child: Icon(Icons.person),
+            ),
+            label: '마이페이지',
+          ),
+        ],
       ),
     );
   }

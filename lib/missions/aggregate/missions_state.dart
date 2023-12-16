@@ -30,7 +30,7 @@ class MissionsState extends ChangeNotifier {
 
   MissionsState({required this.context}) {
     log('Instance "MissionsState" has been created');
-    initState();
+    // initState();
   }
 
   @override
@@ -39,7 +39,7 @@ class MissionsState extends ChangeNotifier {
     super.dispose();
   }
 
-  void initState() async {
+  Future<void> initState() async {
     await getTeamListStatus();
     log('Instance "OngoingMissionState" has been created');
     notifyListeners();

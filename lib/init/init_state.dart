@@ -85,6 +85,7 @@ class InitState extends ChangeNotifier {
               else {
                 /// TODO : 메인 페이지로 이동하면서 추가 조건 넣어줘야 함.
                 print('다이나믹 링크로 접속했지만 이미 가입된 유저라 가입하지 못했을 때~ 추가 전달 메세지 필요!');
+                print('errorCode : $errorCode');
                 if(errorCode == 'T0004') {
                   /// 이미 가입된 유저라 가입하지 못했을 때
                   Navigator.pushNamedAndRemoveUntil(
@@ -142,28 +143,16 @@ class InitState extends ChangeNotifier {
       if (apiResponse.isSuccess) {
         return true;
       } else {
-        print('errorCode : ${apiResponse?.errorCode}');
-        // 토큰 갱신 여부 확인
-        if(apiResponse?.errorCode == 'J0003') {
-          checkUser();
-          return true;
-        } else if (apiResponse?.errorCode == 'J0007' || apiResponse?.errorCode == 'J0008') {
-          /// 회원가입 안한 사람의 경우
-          Navigator.pushNamedAndRemoveUntil(
-              context, LoginPage.routeName, (route) => false);
-        }
-        else {
-          throw Exception('링크 클릭한 사람 에러 발생 : ${apiResponse?.errorCode}');
-        }
+        print('errorCode : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('initState - checkUser 중 에러 발생 : ${e.toString()}');
-      return false;
     }
+    return false;
   }
 
   /// 가입하려는 팀 이름과, 현재 가입되어 있는 소모임 개수 확인
-   getTeamNameAndNumber() async {
+   Future<void> getTeamNameAndNumber() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/count';
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -183,12 +172,7 @@ class InitState extends ChangeNotifier {
         teamLeaderName = apiResponse.data?['leaderName'];
         memberName = apiResponse.data?['memberName'];
       } else {
-        if(apiResponse?.errorCode == 'J0003') {
-          getTeamNameAndNumber();
-        }
-        else {
-          throw Exception('다이나믹 링크 후 팀 조회 실패 : ${apiResponse?.errorCode}');
-        }
+        print('다이나믹 링크 후 팀 조회 실패 : ${apiResponse?.errorCode}');
       }
     } catch (e) {
       print('다이나믹 링크 후 팀 조회 에러 발생 : ${e.toString()}');
@@ -210,18 +194,14 @@ class InitState extends ChangeNotifier {
         print('$teamId에 가입이 완료되었습니다.');
         return true;
       } else {
-        if(apiResponse?.errorCode == 'J0003') {
-          registerTeam();
-        }
-        else {
-          throw Exception('소모임 가입 실패1 : ${apiResponse?.errorCode}');
-        }
+        print('소모임 가입 실패1 : ${apiResponse?.errorCode}');
+        errorCode = apiResponse.errorCode!;
       }
     } catch (e) {
       print('소모임 가입 실패2 : ${e.toString()}');
       List<String> list = e.toString().split(": ");
       errorCode = list[3];
-      return false;
     }
+    return false;
   }
 }
