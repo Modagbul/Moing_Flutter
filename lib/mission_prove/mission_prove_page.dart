@@ -111,7 +111,7 @@ class _MissionProvePageState extends State<MissionProvePage>
             ),
             /// 인증 안한 경우
             if((state.repeatMissionStatus != 'WAIT' && state.isRepeated) ||
-                (state.myMissionList != null && state.myMissionList!.isEmpty))
+                (!state.isRepeated && state.myMissionList != null && state.myMissionList!.isEmpty))
              MissionNotProveButton(),
             /// 인증 한 경우
             if(!state.isRepeated && state.myMissionList != null && state.myMissionList!.isNotEmpty)
