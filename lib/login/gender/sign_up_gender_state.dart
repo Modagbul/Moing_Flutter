@@ -28,6 +28,7 @@ class SignUpGenderState extends ChangeNotifier {
         'nickname': nickname,
         'gender': selectedGender,
       });
+      notifyListeners();
     }
   }
 }

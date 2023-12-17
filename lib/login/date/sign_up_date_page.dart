@@ -14,9 +14,16 @@ class SignUpDatePage extends StatelessWidget {
   static const routeName = '/sign/up/date';
 
   static route(BuildContext context) {
-    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    final String nickname = data['nickname'] as String;
-    final String gender = data['gender'] as String;
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    String nickname = '';
+    String gender = '';
+
+    if (arguments is Map<String, dynamic>) {
+      nickname = arguments['nickname'] as String;
+      gender = arguments['gender'] as String;
+    } else {
+      // arguments가 String인 경우 또는 다른 타입인 경우 처리
+    }
 
     return MultiProvider(
       providers: [
@@ -66,8 +73,8 @@ class SignUpDatePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Text(
-                '모닥불님의',
+              Text(
+                '${context.watch<SignUpDateState>().nickname}님의',
                 style: headerTextStyle,
               ),
               const SizedBox(

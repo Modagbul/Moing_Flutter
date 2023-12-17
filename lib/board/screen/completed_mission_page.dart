@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/board_completed_mission_card.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
@@ -57,12 +58,12 @@ class CompletedMissionPage extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
-                              arguments: {
-                                'isRepeated': e.missionType == 'ONCE' ? false : true,
-                                'teamId':
-                                context.read<CompletedMissionState>().teamId,
-                                'missionId': e.missionId,
-                              });
+                              arguments: MissionProveArgument(
+                                  isRepeated: e.missionType == 'ONCE' ? false : true,
+                                  teamId: context.read<CompletedMissionState>().teamId,
+                                  missionId: e.missionId,
+                                  status: e.status)
+                          );
                         },
                       ),
                           ),

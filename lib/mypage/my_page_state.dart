@@ -39,6 +39,7 @@ class MyPageState extends ChangeNotifier {
 
   Future<void> getMyPageData() async {
     myPageData = await apiCode.getMyPageData();
+    print('마이페이지 데이터 : ${myPageData?.profileImage}');
     notifyListeners();
   }
 

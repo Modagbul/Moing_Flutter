@@ -172,8 +172,8 @@ class MissionCurrentSituation extends StatelessWidget {
                                 Text(
                                   !state.isRepeated
                                       ? (state.missionRemainTime.length < 2
-                                          ? ""
-                                          : state.missionRemainTime)
+                                      ? ""
+                                      : state.missionRemainTime)
                                       : '주 ${state.repeatMissionTotalCount}회',
                                   style: bodyTextStyle,
                                 ),
