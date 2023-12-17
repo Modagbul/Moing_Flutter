@@ -68,7 +68,6 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('마이페이지 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
         print('getMyPageData is Null, error code : ${apiResponse.errorCode}');

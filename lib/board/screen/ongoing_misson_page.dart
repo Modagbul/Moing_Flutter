@@ -353,8 +353,7 @@ class _BottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: () async {
-        final ongoingMissionState =
-            Provider.of<OngoingMissionState>(context, listen: false);
+        final ongoingMissionState = Provider.of<OngoingMissionState>(context, listen: false);
         var result = await Navigator.of(context)
             .pushNamed(MissionsCreatePage.routeName, arguments: {
           'teamId': ongoingMissionState.teamId,

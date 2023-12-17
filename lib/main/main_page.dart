@@ -9,6 +9,7 @@ import 'package:moing_flutter/missions/aggregate/missions_group_state.dart';
 import 'package:moing_flutter/missions/aggregate/missions_screen.dart';
 import 'package:moing_flutter/missions/aggregate/missions_state.dart';
 import 'package:moing_flutter/mypage/my_page_screen.dart';
+import 'package:moing_flutter/mypage/my_page_state.dart';
 import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +50,10 @@ class MainPage extends StatelessWidget {
               context: context, selectedTeamId: selectedTeamId),
           lazy: false,
         ),
+        ChangeNotifierProvider(
+          create: (_) => MyPageState(context: context),
+          lazy: false,
+        ),
       ],
       builder: (context, snapshot) {
         return const MainPage();
@@ -87,6 +92,7 @@ class MainPage extends StatelessWidget {
     await context.read<HomeScreenState>().initState();
     await context.read<MissionsState>().initState();
     await context.read<MissionsGroupState>().initState();
+    await context.read<MyPageState>().initState();
   }
 
   Widget _mainContent(BuildContext context) {
@@ -107,7 +113,7 @@ class MainPage extends StatelessWidget {
             children: [
               HomeScreen(),
               MissionsScreen(),
-              MyPageScreen.route(context: context),
+              MyPageScreen(),
             ],
           ),
         ],

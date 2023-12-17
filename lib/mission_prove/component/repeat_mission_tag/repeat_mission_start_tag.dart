@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 
 class RepeatMissionTag extends StatelessWidget {
@@ -22,25 +22,24 @@ class RepeatMissionTag extends StatelessWidget {
     }
 
     return tagText.isNotEmpty
-        ? IntrinsicWidth(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        decoration: BoxDecoration(
-          color: coralGrey900,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(5),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                'asset/icons/mission_repeat_timer.svg',
-                width: 16,
-                height: 16,
-              ),
-              const SizedBox(width: 1.0),
-              Flexible(
-                child: Text(
+        ? Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          decoration: BoxDecoration(
+            color: coralGrey900,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                  'asset/icons/mission_repeat_timer.svg',
+                  width: 16.0,
+                  height: 16.0,
+                  fit: BoxFit.cover,
+                ),
+                const SizedBox(width: 1.0),
+                Text(
                   tagText,
                   style: const TextStyle(
                     fontSize: 14.0,
@@ -48,12 +47,10 @@ class RepeatMissionTag extends StatelessWidget {
                     color: coralGrey300,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
-    )
+        )
     : const SizedBox.shrink();
   }
 }

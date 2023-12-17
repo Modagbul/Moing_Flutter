@@ -98,7 +98,6 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
                 controller: tabController,
                 children: [
                   OngoingMissionPage(),
-                  // CompletedMissionPage.route(context),
                   CompletedMissionPage(),
                 ],
               ),
