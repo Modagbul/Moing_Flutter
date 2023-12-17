@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 
 class RepeatMissionTag extends StatelessWidget {
@@ -32,10 +33,10 @@ class RepeatMissionTag extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           child: Row(
             children: [
-              Image.asset(
-                'asset/image/timer.png',
-                width: 16.0,
-                height: 16.0,
+              SvgPicture.asset(
+                'asset/icons/mission_repeat_timer.svg',
+                width: 16,
+                height: 16,
               ),
               const SizedBox(width: 1.0),
               Flexible(
