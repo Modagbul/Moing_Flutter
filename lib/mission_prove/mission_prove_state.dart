@@ -124,7 +124,8 @@ class MissionProveState with ChangeNotifier {
 
   void initState() async {
     log('Instance "MissionProveState" has been created');
-    print('isRepeated : $isRepeated, teamId : $teamId, missionId: $missionId, MissionRepeatStatus : $repeatMissionStatus');
+    print(
+        'isRepeated : $isRepeated, teamId : $teamId, missionId: $missionId, MissionRepeatStatus : $repeatMissionStatus');
     fToast.init(context);
 
     // 나의 인증 현황 조회하기
@@ -136,7 +137,7 @@ class MissionProveState with ChangeNotifier {
     // 반복 미션인 경우, 나의 성공횟수 조회
     if (isRepeated) {
       await loadMyMissionProveCount();
-      if(repeatMissionStatus == 'WAIT') {
+      if (repeatMissionStatus == 'WAIT') {
         toastMessage.showToastMessage(
           fToast: fToast,
           warningText: '반복 미션은 다음 주 월요일에 시작해요.',
@@ -263,7 +264,8 @@ class MissionProveState with ChangeNotifier {
         singleMissionTotalCount = int.parse(apiResponse.data?['total']);
         notifyListeners();
       } else {
-        print('loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
+        print(
+            'loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -288,7 +290,8 @@ class MissionProveState with ChangeNotifier {
         repeatMissionTotalCount = int.parse(apiResponse.data?['total']);
         notifyListeners();
       } else {
-        print('loadMyMissionProveCount is Null, error code : ${apiResponse.errorCode}');
+        print(
+            'loadMyMissionProveCount is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -383,7 +386,8 @@ class MissionProveState with ChangeNotifier {
       if (apiResponse.isSuccess == true) {
         everyMissionList = apiResponse.data;
       } else {
-        print('loadEveryMissionData is Null, error code : ${apiResponse.errorCode}');
+        print(
+            'loadEveryMissionData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('모임원 인증 조회 실패: $e');
@@ -472,7 +476,8 @@ class MissionProveState with ChangeNotifier {
         calculateTimeLeft(missionDueTo);
         notifyListeners();
       } else {
-        print('getMissionContent is Null, error code : ${apiResponse.errorCode}');
+        print(
+            'getMissionContent is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -981,25 +986,27 @@ class MissionProveState with ChangeNotifier {
     if (onLoading) return;
     onLoading = true;
 
-    apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$missionId/archive';
+    apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$missionId';
 
     try {
       ApiResponse<int> apiResponse = await call.makeRequest<int>(
         url: apiUrl,
-        method: 'DELETE',
+        method: 'POST',
         fromJson: (dataJson) => dataJson as int,
       );
 
-      if (apiResponse.isSuccess) {
-        print('${apiResponse.data} 미션 삭제가 완료되었습니다.');
-        initState();
+      if (apiResponse.isSuccess &&
+          apiResponse.data != null &&
+          apiResponse.data! > 0) {
+        print('${apiResponse.data}번 게시글 신고가 완료되었습니다.');
       } else {
-        print('doReport is Null, error code : ${apiResponse.errorCode}');
+        print('doReport 실패, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
-      log('미션 삭제 실패: $e');
+      log('신고 기능 실패: $e');
+    } finally {
+      onLoading = false;
     }
-    onLoading = false;
   }
 
   /// 미션 상세내용 확인
@@ -1124,8 +1131,12 @@ class MissionProveState with ChangeNotifier {
                                       ),
                                     )),
                               ],
-                              onChanged: (String? val) {
-                                print('신고하기 버튼 클릭');
+                              onChanged: (String? val) async {
+                                if (val == 'report') {
+                                  print('신고하기 버튼 클릭');
+                                  await doReport();
+                                  Navigator.of(context).pop();
+                                }
                                 fToast.showToast(
                                     child: Material(
                                       type: MaterialType.transparency,
@@ -1158,7 +1169,7 @@ class MissionProveState with ChangeNotifier {
                                     positionedToastBuilder: (context, child) {
                                       return Positioned(
                                         child: child,
-                                        bottom: 40.0,
+                                        top: 114.0,
                                         left: 0.0,
                                         right: 0,
                                       );
@@ -1488,10 +1499,9 @@ class MissionProveState with ChangeNotifier {
     int month = created.month;
     int day = created.day;
     // 같은 날짜인 경우
-    if(year == now.year && month == now.month && day == now.day) {
+    if (year == now.year && month == now.month && day == now.day) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
