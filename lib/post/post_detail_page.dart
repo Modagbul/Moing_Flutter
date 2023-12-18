@@ -251,12 +251,26 @@ class PostDetailPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                IconTextButton(
-                  onPressed: () {
-                    context.read<PostDetailState>().reportPost();
-                  },
-                  icon: 'asset/image/icon_edit.png',
-                  text: '게시글 신고하기',
+                GestureDetector(
+                  onTap: context.read<PostDetailState>().reportPost,
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'asset/icons/post_alarm.svg',
+                        width: 32,
+                        height: 32,
+                      ),
+                      const SizedBox(width: 24.0),
+                      const Text(
+                        '게시글 신고하기',
+                        style: TextStyle(
+                          color: grayScaleGrey200,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -422,7 +436,7 @@ class _CommentsInputWidget extends StatelessWidget {
           height: 24,
         ),
         onPressed: () async {
-          await context.watch<PostDetailState>().postCreateComment;
+          await context.read<PostDetailState>().postCreateComment();
         },
       ),
     );
