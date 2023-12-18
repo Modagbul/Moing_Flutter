@@ -19,7 +19,6 @@ class BoardGoalScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-
     final int level =
         context.watch<BoardMainState>().teamFireLevelData?.level ?? 0;
     final int score =
@@ -28,19 +27,27 @@ class BoardGoalScreen extends StatelessWidget {
         (context.watch<BoardMainState>().teamInfo?.category ?? '');
     final bool isDeleted =
         context.watch<BoardMainState>().teamInfo?.isDeleted ?? false;
+
+    bool leftLessThanOneHour = false;
     int daysRemaining = 0;
     int hoursRemaining = 0;
+    int minutesRemaining = 0;
 
-    if(isDeleted){
-      DateTime deletionTime =
-      DateTime.parse(context.watch<BoardMainState>().teamInfo!.deletionTime!);
+    if (isDeleted) {
+      DateTime deletionTime = DateTime.parse(
+          context.watch<BoardMainState>().teamInfo!.deletionTime!);
       DateTime threeDaysLater = deletionTime.add(const Duration(days: 3));
       DateTime now = DateTime.now();
       Duration difference = threeDaysLater.difference(now);
+
+      if (difference.inHours <= 1) {
+        leftLessThanOneHour = true;
+      }
+
       daysRemaining = difference.inDays;
       hoursRemaining = difference.inHours % 24;
+      minutesRemaining = difference.inMinutes % 60;
     }
-
 
     return MultiProvider(
       providers: [
@@ -66,10 +73,11 @@ class BoardGoalScreen extends StatelessWidget {
                       children: [
                         isDeleted
                             ? Column(
-                              children: [
-                                Row(
+                                children: [
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       SvgPicture.asset(
                                         'asset/icons/icon_warning_circle.svg',
@@ -78,7 +86,9 @@ class BoardGoalScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
-                                        '소모임 종료까지 $daysRemaining일 $hoursRemaining시간',
+                                        leftLessThanOneHour
+                                            ? '소모임 종료까지 $hoursRemaining시간 $minutesRemaining분'
+                                            : '소모임 종료까지 $daysRemaining일 $hoursRemaining시간',
                                         style: const TextStyle(
                                           color: errorColor,
                                           fontSize: 16.0,
@@ -87,9 +97,9 @@ class BoardGoalScreen extends StatelessWidget {
                                       )
                                     ],
                                   ),
-                                const SizedBox(height: 12.0),
-                              ],
-                            )
+                                  const SizedBox(height: 12.0),
+                                ],
+                              )
                             : SizedBox(height: screenHeight * 0.01),
                         _buildRandomMessageContainer(
                           level: level,
