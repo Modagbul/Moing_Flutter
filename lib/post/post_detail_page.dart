@@ -399,6 +399,7 @@ class _CommentsInputWidget extends StatelessWidget {
     return TextField(
       controller: context.watch<PostDetailState>().commentController,
       onChanged: (value) => context.read<PostDetailState>().updateTextField(),
+      maxLength: 255,
       maxLines: 1,
       inputFormatters: [LengthLimitingTextInputFormatter(200)],
       decoration: InputDecoration(
@@ -412,6 +413,7 @@ class _CommentsInputWidget extends StatelessWidget {
           vertical: 20.0,
           horizontal: 16.0,
         ),
+        counterText: ''
       ),
       style: const TextStyle(
         color: grayScaleGrey100,
