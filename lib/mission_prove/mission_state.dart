@@ -190,82 +190,82 @@ class MissionState {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return Container(
-          width: double.infinity,
-          height: 700,
-          decoration: const BoxDecoration(
-            color: grayScaleGrey600,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
+        return SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            height: 580,
+            decoration: const BoxDecoration(
+              color: grayScaleGrey600,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 32, right: 32, top: 36),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      '미션내용과 규칙',
-                      style: middleTextStyle.copyWith(color: grayScaleGrey100),
-                    ),
-                    Spacer(),
-                    Container(
-                      alignment: Alignment.center,
-                      width: 72,
-                      height: 33,
-                      decoration: BoxDecoration(
-                        color: grayScaleGrey500,
-                        borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 32, right: 32, top: 36),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '미션내용과 규칙',
+                        style: middleTextStyle.copyWith(color: grayScaleGrey100),
                       ),
-                      child: Text(
-                        missionWay,
-                        style: bodyTextStyle.copyWith(color: grayScaleGrey200),
+                      Spacer(),
+                      Container(
+                        alignment: Alignment.center,
+                        width: 72,
+                        height: 33,
+                        decoration: BoxDecoration(
+                          color: grayScaleGrey500,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          missionWay,
+                          style: bodyTextStyle.copyWith(color: grayScaleGrey200),
+                        ),
                       ),
+                    ],
+                  ),
+                  SizedBox(height: 24),
+                  Text('미션 내용',
+                    style: contentTextStyle.copyWith(
+                        fontWeight: FontWeight.w600, color: grayScaleGrey100),
+                  ),
+                  SizedBox(height: 4),
+                  Container(
+                    child: Text(
+                      missionContent,
+                      style: bodyTextStyle.copyWith(
+                          fontWeight: FontWeight.w500, color: grayScaleGrey400),
                     ),
-                  ],
-                ),
-                SizedBox(height: 24),
-                Text(
-                  '미션 내용',
-                  style: contentTextStyle.copyWith(
-                      fontWeight: FontWeight.w600, color: grayScaleGrey100),
-                ),
-                SizedBox(height: 4),
-                Container(
-                  child: Text(
-                    missionContent,
-                    style: bodyTextStyle.copyWith(
-                        fontWeight: FontWeight.w500, color: grayScaleGrey400),
                   ),
-                ),
-                SizedBox(height: 24),
-                Text(
-                  '미션 규칙',
-                  style: contentTextStyle.copyWith(
-                      fontWeight: FontWeight.w600, color: grayScaleGrey100),
-                ),
-                SizedBox(height: 4),
-                Container(
-                  child: Text(
-                    missionRule,
-                    style: bodyTextStyle.copyWith(
-                        fontWeight: FontWeight.w500, color: grayScaleGrey400),
+                  SizedBox(height: 24),
+                  Text(
+                    '미션 규칙',
+                    style: contentTextStyle.copyWith(
+                        fontWeight: FontWeight.w600, color: grayScaleGrey100),
                   ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 32.0),
-                  child: WhiteButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      text: '확인했어요'),
-                ),
-              ],
+                  SizedBox(height: 4),
+                  Container(
+                    child: Text(
+                      missionRule,
+                      style: bodyTextStyle.copyWith(
+                          fontWeight: FontWeight.w500, color: grayScaleGrey400),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 32.0),
+                    child: WhiteButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        text: '확인했어요'),
+                  ),
+                ],
+              ),
             ),
           ),
         );

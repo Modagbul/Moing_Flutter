@@ -101,7 +101,7 @@ class _Profile extends StatelessWidget {
             ),
             const SizedBox(height: 4.0),
             Container(
-              width: 250,
+              width: 235,
               child: Text(
                 context.watch<MyPageState>().myPageData?.introduction ??
                     '아직 한줄다짐이 없어요',

@@ -101,7 +101,7 @@ class _MissionProvePageState extends State<MissionProvePage>
                 if(!state.isMeOrEveryProved && state.everyMissionList != null &&
                     state.everyMissionList!.isNotEmpty)
                   EveryMissionProved(),
-                /// 인증 한 경우 버튼
+                /// 한번 미션에서 나의 인증 한 경우 좋아요, 이미지 저장 Row
                 if(!state.isRepeated && state.myMissionList != null
                     && state.myMissionList!.isNotEmpty && state.isMeOrEveryProved)
                   MissionLikeShare(),
@@ -115,8 +115,6 @@ class _MissionProvePageState extends State<MissionProvePage>
              MissionNotProveButton(),
             /// 인증 한 경우
             if(!state.isRepeated && state.myMissionList != null && state.myMissionList!.isNotEmpty)
-            // if(context.watch<MissionProveState>().isMeProved &&
-            //     !context.watch<MissionProveState>().isRepeated)
             MissionProveButton(),
           ],
         ),

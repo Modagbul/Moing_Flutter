@@ -83,8 +83,6 @@
 	<string>블루투스 사용 권한이 필요합니다.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>카메라를 사용하여 사진을 촬영합니다.</string>
-	<key>NSContactsUsageDescription</key>
-	<string>소모임 및 프로필 이미지 등록, 미션 인증을 위해 사진 라이브러리 접근 권한이 필요합니다.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>사용자 위치 권한을 항상 허가해주세요.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -92,9 +90,9 @@
 	<key>NSMotionUsageDescription</key>
 	<string>모션 감지를 위해 권한이 필요합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>이 앱의 사진을 갤러리에 저장하려고 합니다</string>
+	<string>미션 인증 사진을 갤러리에 저장하려고 합니다</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>사진 라이브러리에서 이미지를 선택합니다.</string>
+	<string>소모임 및 프로필 이미지 등록, 미션 인증을 위해 사진 라이브러리 접근 권한이 필요합니다.</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>리마인더 알림을 위한 권한이 필요합니다.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
