@@ -90,7 +90,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>모션 감지를 위해 권한이 필요합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>미션 인증 사진을 갤러리에 저장하려고 합니다</string>
+	<string>미션 인증 사진을 갤러리에 저장하기 위해 저장 권한이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>소모임 및 프로필 이미지 등록, 미션 인증을 위해 사진 라이브러리 접근 권한이 필요합니다.</string>
 	<key>NSRemindersUsageDescription</key>
@@ -100,7 +100,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
