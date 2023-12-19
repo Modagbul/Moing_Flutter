@@ -65,7 +65,7 @@ class PostUpdateState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void requestUpdatePost() async {
+  Future<void> requestUpdatePost() async {
     if(isRequestUpdatePostInProgress) return;
 
     isRequestUpdatePostInProgress = true;

@@ -208,7 +208,7 @@ class _PostCreateButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         if(state.isButtonEnabled) {
-          await context.read<PostUpdateState>().requestUpdatePost;
+          await context.read<PostUpdateState>().requestUpdatePost();
         }
       },
       style: ElevatedButton.styleFrom(

@@ -277,7 +277,7 @@ class PostDetailState extends ChangeNotifier {
                 child: Container(
                   alignment: Alignment.center,
                   width: double.infinity,
-                  height: 51,
+                  height: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white,
@@ -286,7 +286,7 @@ class PostDetailState extends ChangeNotifier {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '신고가 접수되었어요. 24시간 이내에 확인 후 조치할게요.',
+                        '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
                         style: TextStyle(
                           color: grayBlack8,
                           fontSize: 16.0,
