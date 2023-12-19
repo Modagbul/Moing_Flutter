@@ -33,8 +33,8 @@ class EveryMissionProved extends StatelessWidget {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-          childAspectRatio: 172 / 191,
+          mainAxisSpacing: 4,
+          childAspectRatio: 172 / 196,
         ),
       ),
     );
@@ -65,7 +65,7 @@ class EveryMissionProved extends StatelessWidget {
               if (watchState.everyMissionList![index].status == 'COMPLETE' &&
                   watchState.everyMissionList![index].way == 'LINK')
                 EveryMissionLink(index: index),
-              SizedBox(height: 4),
+              SizedBox(height: 3),
               EveryMissionProfile(index: index),
             ],
           ),

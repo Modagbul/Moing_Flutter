@@ -13,12 +13,11 @@ class MissionFireButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var state = context.watch<MissionProveState>();
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        animationDuration: (context.watch<MissionProveState>().myMissionList ==
-                    null ||
-                context.watch<MissionProveState>().myMissionList!.isNotEmpty)
+        animationDuration: (state.myMissionList == null || state.myMissionList!.isNotEmpty)
             ? Duration(milliseconds: 200)
             : Duration(milliseconds: 0),
         fixedSize: MaterialStateProperty.all(
@@ -30,7 +29,7 @@ class MissionFireButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(48.0),
             side: BorderSide(
               width: 1,
-              color: context.watch<MissionProveState>().isMeProved
+              color: state.isMeProved
                   ? Color(0xff9B9999)
                   : grayScaleGrey550,
             ),
@@ -41,27 +40,20 @@ class MissionFireButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            (context.watch<MissionProveState>().myMissionList == null ||
-                    context
-                        .watch<MissionProveState>()
-                        .myMissionList!
-                        .isNotEmpty)
+            (state.myMissionList == null ||
+                state.myMissionList!.isNotEmpty)
                 ? '친구들에게 불 던지러 가기'
                 : '인증을 완료하고 불을 던져요',
             style: contentTextStyle.copyWith(
               fontWeight: FontWeight.w600,
               color:
-                  (context.watch<MissionProveState>().myMissionList == null ||
-                          context
-                              .watch<MissionProveState>()
-                              .myMissionList!
-                              .isNotEmpty)
+                  (state.myMissionList == null ||
+                      state.myMissionList!.isNotEmpty)
                       ? grayScaleGrey200
                       : grayScaleGrey550,
             ),
           ),
-          if ((context.watch<MissionProveState>().myMissionList == null ||
-              context.watch<MissionProveState>().myMissionList!.isNotEmpty))
+          if (state.myMissionList == null || state.myMissionList!.isNotEmpty)
             SvgPicture.asset(
               'asset/icons/icon_fire_mono_white.svg',
               width: 24,

@@ -122,7 +122,7 @@ class MissionProveState with ChangeNotifier {
     initState();
   }
 
-  void initState() async {
+  Future<void> initState() async {
     log('Instance "MissionProveState" has been created');
     print(
         'isRepeated : $isRepeated, teamId : $teamId, missionId: $missionId, MissionRepeatStatus : $repeatMissionStatus');
@@ -348,7 +348,9 @@ class MissionProveState with ChangeNotifier {
           }
         }
         if (myMissionList != null && myMissionList!.isEmpty) {
-          nobodyText = '아직 인증하지 않았어요';
+          nobodyText = repeatMissionStatus == 'FAIL'
+              ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!'
+              : '아직 인증하지 않았어요';
         }
         print(
             '내가 오늘 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
@@ -566,7 +568,7 @@ class MissionProveState with ChangeNotifier {
         if (result != null && result is bool && result) {
           // 미션 인증 성공 모달
           await showMissionSuccessDialog();
-          initState();
+          await initState();
         }
       }
       // 링크 인증 시
@@ -616,21 +618,22 @@ class MissionProveState with ChangeNotifier {
 
   /// 불 던지러 가기 버튼 클릭 시
   void firePressed() {
-    if (onLoading) return;
-    onLoading = true;
-
-    /// 내가 인증했을 때
-    // if(context.read<MissionProveState>().isMeProved) {
-    //   print('불 던지러 가기 버튼 클릭1!');
-    // }
-    // else {
-    //   print('불 던지러 가기 버튼 클릭2!');
-    // }
-    onLoading = false;
-    Navigator.of(context).pushNamed(MissionFirePage.routeName, arguments: {
-      'teamId': teamId,
-      'missionId': missionId,
-    });
+    try {
+      if (onLoading) return;
+      onLoading = true;
+      /// 내가 인증했을 때
+      if(myMissionList != null && myMissionList!.isNotEmpty) {
+        Navigator.of(context).pushNamed(MissionFirePage.routeName, arguments: {
+          'teamId': teamId,
+          'missionId': missionId,
+        });
+      }
+    } catch (e) {
+      print('불 던지러 가기 버튼 클릭 실패 : ${e.toString()}');
+    } finally {
+      notifyListeners();
+      onLoading = false;
+    }
   }
 
   /// 미션 인증물 에러토스트 띄우기
@@ -1371,6 +1374,7 @@ class MissionProveState with ChangeNotifier {
                               ),
                             ),
                             Spacer(),
+                            if(isMeOrEveryProved)
                             GestureDetector(
                               onTap: missionShareDialog,
                               child: Row(

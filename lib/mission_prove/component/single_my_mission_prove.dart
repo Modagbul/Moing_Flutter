@@ -150,6 +150,13 @@ class SingleMyMissionProved extends StatelessWidget {
               child: Text('',),
             ),
             ),
+            if(state.myMissionList![0].status == 'SKIP')
+              Positioned(
+                  bottom: 24,
+                  left: 0,
+                  right: 0,
+                  child: Text('미션을 건너뛰었어요', style: contentTextStyle, textAlign: TextAlign.center,)
+              ),
             Positioned(
               top: 0,
               left: 0,
