@@ -155,10 +155,6 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
-  void test() {
-    print('HI~');
-  }
-
   // 남은 시간 조회
   calculateTimeLeft(String endTime) {
     DateTime now = DateTime.now();
@@ -481,6 +477,31 @@ class MissionProveState with ChangeNotifier {
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
+    }
+  }
+
+  /// 미션 종료 API
+  Future<void> endRepeatMission() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/end';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'PUT',
+        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
+      );
+
+      if(apiResponse.isSuccess) {
+        print('반복 미션 종료에 성공했습니다!');
+        Navigator.of(context).pop();
+      } else {
+        print('endRepeatMission error code : ${apiResponse.errorCode}');
+      }
+    } catch (e) {
+      log('반복미션 종료 실패: $e');
+    } finally {
+      notifyListeners();
     }
   }
 
@@ -1449,7 +1470,7 @@ class MissionProveState with ChangeNotifier {
     switch (value) {
       // 더보기 클릭
       case 'more':
-        bool result = await missionState.showMoreDetails(
+        String result = await missionState.showMoreDetails(
           context: context,
           missionTitle: missionTitle,
           missionContent: missionContent,
@@ -1462,8 +1483,10 @@ class MissionProveState with ChangeNotifier {
           missionWay: missionWay,
         );
 
-        if (result) {
+        if (result == 'true') {
           initState();
+        } else if (result == 'end') {
+          await endRepeatMission();
         }
         break;
       // 미션내용 클릭

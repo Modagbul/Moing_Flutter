@@ -64,7 +64,8 @@ class CompletedMissionState extends ChangeNotifier {
       var filteredMissions = response.data?.where((mission) {
         var dueToDate = DateTime.parse(mission.dueTo);
 
-        return dueToDate.isBefore(DateTime.now()) || mission.status == 'COMPLETE';
+        return dueToDate.isBefore(DateTime.now()) || mission.status == 'END'
+            || mission.status == 'FAIL' || mission.status == 'SUCCESS';
       }).toList() ?? [];
 
       completedMissionStatus = BoardCompletedMissionResponse(

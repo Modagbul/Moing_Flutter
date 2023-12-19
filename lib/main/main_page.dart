@@ -103,7 +103,7 @@ class MainPage extends StatelessWidget {
         onTapSetting: context.read<MainState>().settingPressed,
         screenIndex: context.watch<AppState>().mainIndex,
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: grayBackground,
       body: Stack(
         fit: StackFit.expand,
         children: [
