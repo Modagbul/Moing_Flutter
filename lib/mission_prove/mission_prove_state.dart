@@ -122,7 +122,7 @@ class MissionProveState with ChangeNotifier {
     initState();
   }
 
-  void initState() async {
+  Future<void> initState() async {
     log('Instance "MissionProveState" has been created');
     print(
         'isRepeated : $isRepeated, teamId : $teamId, missionId: $missionId, MissionRepeatStatus : $repeatMissionStatus');
@@ -153,10 +153,6 @@ class MissionProveState with ChangeNotifier {
       // 모임원 성공횟수 조회
       await loadTeamMissionProveCount();
     }
-  }
-
-  void test() {
-    print('HI~');
   }
 
   // 남은 시간 조회
@@ -352,7 +348,9 @@ class MissionProveState with ChangeNotifier {
           }
         }
         if (myMissionList != null && myMissionList!.isEmpty) {
-          nobodyText = '아직 인증하지 않았어요';
+          nobodyText = repeatMissionStatus == 'FAIL'
+              ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!'
+              : '아직 인증하지 않았어요';
         }
         print(
             '내가 오늘 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
@@ -484,6 +482,31 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
+  /// 미션 종료 API
+  Future<void> endRepeatMission() async {
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/end';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+          await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'PUT',
+        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
+      );
+
+      if(apiResponse.isSuccess) {
+        print('반복 미션 종료에 성공했습니다!');
+        Navigator.of(context).pop();
+      } else {
+        print('endRepeatMission error code : ${apiResponse.errorCode}');
+      }
+    } catch (e) {
+      log('반복미션 종료 실패: $e');
+    } finally {
+      notifyListeners();
+    }
+  }
+
   /// 미션 인증 API
   Future<bool?> submitMission({required String url}) async {
     apiUrl =
@@ -545,7 +568,7 @@ class MissionProveState with ChangeNotifier {
         if (result != null && result is bool && result) {
           // 미션 인증 성공 모달
           await showMissionSuccessDialog();
-          initState();
+          await initState();
         }
       }
       // 링크 인증 시
@@ -595,21 +618,22 @@ class MissionProveState with ChangeNotifier {
 
   /// 불 던지러 가기 버튼 클릭 시
   void firePressed() {
-    if (onLoading) return;
-    onLoading = true;
-
-    /// 내가 인증했을 때
-    // if(context.read<MissionProveState>().isMeProved) {
-    //   print('불 던지러 가기 버튼 클릭1!');
-    // }
-    // else {
-    //   print('불 던지러 가기 버튼 클릭2!');
-    // }
-    onLoading = false;
-    Navigator.of(context).pushNamed(MissionFirePage.routeName, arguments: {
-      'teamId': teamId,
-      'missionId': missionId,
-    });
+    try {
+      if (onLoading) return;
+      onLoading = true;
+      /// 내가 인증했을 때
+      if(myMissionList != null && myMissionList!.isNotEmpty) {
+        Navigator.of(context).pushNamed(MissionFirePage.routeName, arguments: {
+          'teamId': teamId,
+          'missionId': missionId,
+        });
+      }
+    } catch (e) {
+      print('불 던지러 가기 버튼 클릭 실패 : ${e.toString()}');
+    } finally {
+      notifyListeners();
+      onLoading = false;
+    }
   }
 
   /// 미션 인증물 에러토스트 띄우기
@@ -633,9 +657,10 @@ class MissionProveState with ChangeNotifier {
       required String heartStatus}) async {
     if (onLoading) return;
     onLoading = true;
+    print('좋아요 누르기 전 heartStatus : $heartStatus');
     String beforeHeartStatus = heartStatus != 'true' ? 'True' : 'False';
     apiUrl =
-        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$archiveId/heart/$beforeHeartStatus';
+    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$archiveId/heart/$beforeHeartStatus';
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -660,6 +685,7 @@ class MissionProveState with ChangeNotifier {
     } catch (e) {
       log('미션인증 실패: $e');
     }
+    notifyListeners();
     onLoading = false;
   }
 
@@ -1049,16 +1075,13 @@ class MissionProveState with ChangeNotifier {
                           ),
                           child: Text(
                             currentMission.count.toString(),
-                            // (myMissionList!.length - index).toString(),
                             style:
                                 bodyTextStyle.copyWith(color: grayScaleGrey700),
                           ),
                         ),
                         SizedBox(width: 12),
                         Text(
-                          DateFormat('yy.MM.dd').format(
-                              // DateTime.parse(myMissionList![index].createdDate)),
-                              DateTime.parse(currentMission.createdDate)),
+                          DateFormat('yy.MM.dd').format(DateTime.parse(currentMission.createdDate)),
                           style: bodyTextStyle.copyWith(
                               color: grayScaleGrey300,
                               fontWeight: FontWeight.w500),
@@ -1292,16 +1315,17 @@ class MissionProveState with ChangeNotifier {
                           if (currentMission.status == 'SKIP')
                             Positioned(
                               bottom: 16,
-                              left: MediaQuery.of(context).size.width / 3.2,
+                              left: 0,
+                              right: 0,
                               child: Text(
                                 '미션을 건너뛰었어요',
                                 style: contentTextStyle,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                         ],
                       ),
                     SizedBox(height: 12),
-
                     /// 버튼 구현
                     if (missionWay.contains('사진') &&
                         currentMission.status == 'COMPLETE')
@@ -1313,23 +1337,21 @@ class MissionProveState with ChangeNotifier {
                             GestureDetector(
                               onTap: () async {
                                 // 내 사진 좋아요 버튼 클릭
-                                if (currentMission.runtimeType.toString() ==
-                                    'MyMissionProveData') {
+                                if (currentMission.runtimeType.toString() == 'MyMissionProveData') {
                                   print('내 미션 바텀시트에서 좋아요 클릭');
                                   likePressedToast();
                                 }
                                 // 모두으 인증 좋아요 버튼 클릭
-                                else if (currentMission.runtimeType
-                                        .toString() ==
-                                    'EveryMissionProveData') {
+                                else if (currentMission.runtimeType.toString() == 'EveryMissionProveData') {
                                   int selectedIndex = index;
                                   await likePressed(
                                       archiveId: currentMission.archiveId,
                                       index: selectedIndex,
                                       heartStatus: currentMission.heartStatus);
                                   setState(() {
-                                    currentMission.hearts =
-                                        everyMissionList![index].hearts;
+                                    print('before CurrentMission HEartStatus : ${currentMission.heartStatus}');
+                                    currentMission.hearts = everyMissionList![index].hearts;
+                                    print('after CurrentMission HEartStatus : ${currentMission.heartStatus}');
                                   });
                                 }
                               },
@@ -1345,13 +1367,14 @@ class MissionProveState with ChangeNotifier {
                                   Text(
                                     currentMission.hearts.toString(),
                                     style: contentTextStyle.copyWith(
-                                      color: grayScaleGrey400,
+                                      color: currentMission.heartStatus == true ? coralGrey500 : grayScaleGrey400,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                             Spacer(),
+                            if(isMeOrEveryProved)
                             GestureDetector(
                               onTap: missionShareDialog,
                               child: Row(
@@ -1391,28 +1414,27 @@ class MissionProveState with ChangeNotifier {
                                     print('내 미션 바텀시트에서 좋아요 클릭');
                                     likePressedToast();
                                   }
-                                  // 모두으 인증 좋아요 버튼 클릭
-                                  else if (currentMission.runtimeType
-                                          .toString() ==
+                                  // 모두의 인증 좋아요 버튼 클릭
+                                  else if (currentMission.runtimeType.toString() ==
                                       'EveryMissionProveData') {
                                     int selectedIndex = index;
-                                    print(
-                                        'curMis heartStatus : ${currentMission.heartStatus}');
                                     await likePressed(
                                         archiveId: currentMission.archiveId,
                                         index: selectedIndex,
-                                        heartStatus:
-                                            currentMission.heartStatus);
-                                    setState(() {
-                                      currentMission.hearts =
-                                          everyMissionList![index].hearts;
+                                        heartStatus: currentMission.heartStatus).then((value) {
+                                      setState(() {
+                                        currentMission.hearts = everyMissionList![index].hearts;
+                                        print('currMission Hearts Status: ${currentMission.heartStatus}');
+                                      });
                                     });
                                   }
                                 },
                                 child: Row(
                                   children: [
                                     SvgPicture.asset(
-                                      'asset/icons/mission_like.svg',
+                                      currentMission.heartStatus == 'true'
+                                          ? 'asset/icons/mission_like_coral.svg'
+                                          : 'asset/icons/mission_like.svg',
                                       width: 20,
                                       height: 20,
                                       fit: BoxFit.cover,
@@ -1421,7 +1443,7 @@ class MissionProveState with ChangeNotifier {
                                     Text(
                                       currentMission.hearts.toString(),
                                       style: contentTextStyle.copyWith(
-                                        color: grayScaleGrey400,
+                                        color: currentMission.heartStatus == 'true' ? coralGrey500 : grayScaleGrey400,
                                       ),
                                     ),
                                   ],
@@ -1452,7 +1474,7 @@ class MissionProveState with ChangeNotifier {
     switch (value) {
       // 더보기 클릭
       case 'more':
-        bool result = await missionState.showMoreDetails(
+        String result = await missionState.showMoreDetails(
           context: context,
           missionTitle: missionTitle,
           missionContent: missionContent,
@@ -1465,8 +1487,10 @@ class MissionProveState with ChangeNotifier {
           missionWay: missionWay,
         );
 
-        if (result) {
+        if (result == 'true') {
           initState();
+        } else if (result == 'end') {
+          await endRepeatMission();
         }
         break;
       // 미션내용 클릭

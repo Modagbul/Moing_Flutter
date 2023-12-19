@@ -33,6 +33,7 @@ class CompletedMissionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CompletedMissionState>();
+    print('state.completedMissionStatus?.data.isNotEmpty : ${state.completedMissionStatus?.data.isNotEmpty}');
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
@@ -43,7 +44,7 @@ class CompletedMissionPage extends StatelessWidget {
               const SizedBox(
                 height: 40.0,
               ),
-              if (state.completedMissionStatus?.data.isNotEmpty ?? false)
+              if ((state.completedMissionStatus != null && state.completedMissionStatus!.data.isNotEmpty))
                 ...state.completedMissionStatus!.data
                     .map(
                       (e) => // ...
