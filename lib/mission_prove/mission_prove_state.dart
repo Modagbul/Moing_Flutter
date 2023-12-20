@@ -38,12 +38,14 @@ import 'package:speech_balloon/speech_balloon.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'mission_prove_page.dart';
+
 class MissionProveState with ChangeNotifier {
   final BuildContext context;
   final int teamId;
   final int missionId;
-  final bool isRepeated; // 반복 미션 여부
-  final String repeatMissionStatus; // 반복 미션 State
+  final bool isRepeated;
+  final String repeatMissionStatus;
   final MissionState missionState = MissionState();
 
   late TabController tabController;
@@ -726,7 +728,7 @@ class MissionProveState with ChangeNotifier {
                                     // scrim의 높이
                                     // height: 100,
                                     height: 313,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       gradient: LinearGradient(
                                         begin: Alignment.bottomCenter,
                                         end: Alignment.topCenter,
@@ -982,11 +984,11 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 신고하기 API
-  Future<void> doReport() async {
+  Future<void> doReport(int missionArchiveId) async {
     if (onLoading) return;
     onLoading = true;
 
-    apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$missionId';
+    apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$missionArchiveId';
 
     try {
       ApiResponse<int> apiResponse = await call.makeRequest<int>(
@@ -1134,7 +1136,8 @@ class MissionProveState with ChangeNotifier {
                               onChanged: (String? val) async {
                                 if (val == 'report') {
                                   print('신고하기 버튼 클릭');
-                                  await doReport();
+                                  await doReport(currentMission.archiveId);
+                                  Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                 }
                                 fToast.showToast(

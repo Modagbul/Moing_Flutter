@@ -125,6 +125,7 @@ class GroupCreateCategoryPage extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: grayScaleGrey700,
+                            foregroundColor: grayScaleWhite,
                             textStyle: const TextStyle(
                               color: grayScaleGrey550,
                               fontSize: 16.0,

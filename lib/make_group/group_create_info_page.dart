@@ -179,20 +179,28 @@ class _NavButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: ElevatedButton(
-            style: darkButtonStyle,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('이전으로'),
+          child: Container(
+            width: 172,
+            height: 62,
+            child: ElevatedButton(
+              style: darkButtonStyle,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('이전으로'),
+            ),
           ),
         ),
-        const SizedBox(width: 4.0),
+        const SizedBox(width: 5.0),
         Expanded(
-          child: ElevatedButton(
-            style: brightButtonStyle,
-            onPressed: context.read<GroupCreateInfoState>().nextPressed,
-            child: const Text('다음으로'),
+          child: Container(
+            width: 172,
+            height: 62,
+            child: ElevatedButton(
+              style: brightButtonStyle,
+              onPressed: context.read<GroupCreateInfoState>().nextPressed,
+              child: const Text('다음으로'),
+            ),
           ),
         ),
       ],

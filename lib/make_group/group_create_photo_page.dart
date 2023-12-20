@@ -79,7 +79,10 @@ class GroupCreatePhotoPage extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: context.watch<GroupCreatePhotoState>().avatarFile == null ? 104.0 : 49,
+                height:
+                    context.watch<GroupCreatePhotoState>().avatarFile == null
+                        ? 104.0
+                        : 49,
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -146,80 +149,81 @@ class GroupCreatePhotoPage extends StatelessWidget {
                       ),
                     ),
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 60,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: grayScaleGrey600,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(16), // 버튼의 모서리 둥글게
-                            ),
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: 172,
+                      height: 62,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: grayScaleGrey700,
+                          foregroundColor: grayScaleWhite,
+                          padding: const EdgeInsets.all(16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            '이전으로',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: grayScaleGrey300,
-                            ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(
+                          '이전으로',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 60,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.transparent),
-                            minimumSize: MaterialStateProperty.all<Size>(
-                                Size(double.infinity, 60)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      width: 172,
+                      height: 62,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          overlayColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                          minimumSize: MaterialStateProperty.all<Size>(
+                              Size(double.infinity, 60)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
                             ),
-                            backgroundColor: context
-                                        .watch<GroupCreatePhotoState>()
-                                        .avatarFile !=
-                                    null
-                                ? MaterialStateProperty.all(Colors.white)
-                                : MaterialStateProperty.all(grayScaleGrey700),
                           ),
-                          onPressed: () {
-                            context.read<GroupCreatePhotoState>().makePressed();
-                          },
-                          child: Text(
-                            '만들기',
-                            style: context
-                                        .watch<GroupCreatePhotoState>()
-                                        .avatarFile !=
-                                    null
-                                ? buttonTextStyle
-                                : buttonTextStyle.copyWith(
-                                    color: grayScaleGrey500,
-                                  ),
-                          ),
+                          backgroundColor: context
+                                      .watch<GroupCreatePhotoState>()
+                                      .avatarFile !=
+                                  null
+                              ? MaterialStateProperty.all(Colors.white)
+                              : MaterialStateProperty.all(grayScaleGrey700),
+                        ),
+                        onPressed: () {
+                          context.read<GroupCreatePhotoState>().makePressed();
+                        },
+                        child: Text(
+                          '만들기',
+                          style: context
+                                      .watch<GroupCreatePhotoState>()
+                                      .avatarFile !=
+                                  null
+                              ? buttonTextStyle
+                              : buttonTextStyle.copyWith(
+                                  color: grayScaleGrey500,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              )
+                  ),
+                ],
+              ),
             ],
           ),
         ),

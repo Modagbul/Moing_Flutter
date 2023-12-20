@@ -8,12 +8,12 @@ final ButtonStyle brightButtonStyle = ElevatedButton.styleFrom(
   disabledForegroundColor: grayScaleGrey500,
   textStyle: const TextStyle(
     color: grayScaleGrey900,
-    fontSize: 18.0,
+    fontSize: 16.0,
     fontWeight: FontWeight.w600,
   ),
   padding: const EdgeInsets.all(16.0),
   shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(16.0),
+    borderRadius: BorderRadius.circular(15.0),
   ),
 );
 
@@ -23,28 +23,28 @@ final ButtonStyle defaultButtonStyle = ElevatedButton.styleFrom(
   disabledBackgroundColor: grayScaleGrey700,
   disabledForegroundColor: grayScaleGrey500,
   textStyle: const TextStyle(
-    color: grayScaleGrey300,
-    fontSize: 18.0,
+    color: grayScaleWhite,
+    fontSize: 16.0,
     fontWeight: FontWeight.w600,
   ),
   padding: const EdgeInsets.all(16.0),
   shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(16.0),
+    borderRadius: BorderRadius.circular(15.0),
   ),
 );
 
 final ButtonStyle darkButtonStyle = ElevatedButton.styleFrom(
-  backgroundColor: grayScaleGrey600,
-  foregroundColor: grayScaleGrey300,
+  backgroundColor: grayScaleGrey700,
+  foregroundColor: grayScaleWhite,
   disabledBackgroundColor: grayScaleGrey700,
   disabledForegroundColor: grayScaleGrey500,
   textStyle: const TextStyle(
-    color: grayScaleGrey300,
-    fontSize: 18.0,
+    color: grayScaleWhite,
+    fontSize: 16.0,
     fontWeight: FontWeight.w600,
   ),
   padding: const EdgeInsets.all(16.0),
   shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(16.0),
+    borderRadius: BorderRadius.circular(15.0),
   ),
 );
