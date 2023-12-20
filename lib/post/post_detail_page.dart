@@ -413,7 +413,13 @@ class _CommentsInputWidget extends StatelessWidget {
           vertical: 20.0,
           horizontal: 16.0,
         ),
-        counterText: ''
+        counterText: '',
+        hintText: '댓글을 작성해주세요',
+        hintStyle: const TextStyle(
+          color: grayScaleGrey550,
+          fontSize: 16.0,
+          fontWeight: FontWeight.w500,
+        ),
       ),
       style: const TextStyle(
         color: grayScaleGrey100,
@@ -433,7 +439,9 @@ class _CommentsInputWidget extends StatelessWidget {
       padding: const EdgeInsets.all(6.0),
       child: IconButton(
         icon: SvgPicture.asset(
-          'asset/icons/icon_send.svg',
+          context.read<PostDetailState>().commentController.text.isNotEmpty
+              ? 'asset/icons/icon_send_white.svg'
+              : 'asset/icons/icon_send.svg',
           width: 24,
           height: 24,
         ),
