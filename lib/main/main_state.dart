@@ -8,7 +8,23 @@ import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 class MainState extends ChangeNotifier {
   final BuildContext context;
   final ApiCode apiCode = ApiCode();
+
   String? alarmCount;
+
+  int _mainIndex = 0;
+
+  int get mainIndex => _mainIndex;
+
+  set mainIndex(int index) {
+    _mainIndex = index;
+    notifyListeners();
+  }
+
+  moveToHomeScreen() => mainIndex = 0;
+
+  moveToMissionsScreen() => mainIndex = 1;
+
+  moveToMyPageScreen() => mainIndex = 2;
 
   MainState({required this.context}) {
     print('Instance "MainState" has been created');
@@ -26,8 +42,27 @@ class MainState extends ChangeNotifier {
       AlarmPage.routeName,
     );
 
-    if (result as bool) {
+    Map<String, dynamic> resultMap = result as Map<String, dynamic>;
+
+    bool resultValue = resultMap['result'] ?? false;
+    int screenIndexValue = resultMap['screenIndex'] ?? 0;
+
+    if (resultValue) {
       await getNotReadAlarmCount();
+    }
+
+    switch (screenIndexValue) {
+      case 0:
+        moveToHomeScreen();
+        break;
+      case 1:
+        moveToMissionsScreen();
+        break;
+      case 2:
+        moveToMyPageScreen();
+        break;
+      default:
+        throw ArgumentError('Invalid screenIndexValue: $screenIndexValue');
     }
   }
 

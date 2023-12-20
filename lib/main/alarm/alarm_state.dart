@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/response/alarm_model.dart';
@@ -66,7 +67,8 @@ class AlarmState extends ChangeNotifier {
         log('알림 단건 조회 성공');
         return true;
       } else {
-        print('postSingleAlarmData is Null, error code : ${apiResponse.errorCode}');
+        print(
+            'postSingleAlarmData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알림 단건 조회 실패: $e');
@@ -98,11 +100,53 @@ class AlarmState extends ChangeNotifier {
 
     // 알림 읽음 처리 성공 -> 화면 이동
     AlarmData alarmData = alarmList![index];
-    Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
     if (await postSingleAlarmData(alarmHistoryId: alarmData.alarmHistoryId)) {
       await getAllAlarmData();
       notifyListeners();
-      Navigator.pushNamed(context, alarmData.path, arguments: idInfoMap);
+
+      switch (alarmData.path) {
+        case '/post/detail': // 신규 공지 업로드 알림
+          navigatePostDetailPage(alarmData: alarmData);
+          break;
+        case '/missions/prove': // (한번/반복) 신규 미션 업로드, 불 던지기 알림
+          navigateMissionsProvePage(alarmData: alarmData);
+          break;
+        case '/missions': // (한번/반복) 미션 리마인드 알림
+          navigateMissionsScreen(alarmData: alarmData);
+          break;
+        case '/home': // 소모임 생성 (승인/반려) 알림
+          navigateHomeScreen(alarmData: alarmData);
+          break;
+        default:
+          throw ArgumentError('Invalid alarm path: ${alarmData.path}');
+      }
     }
+  }
+
+  void navigatePostDetailPage({required AlarmData alarmData}) {
+    Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
+    Navigator.pushNamed(context, alarmData.path, arguments: idInfoMap);
+  }
+
+  void navigateMissionsProvePage({required AlarmData alarmData}) {
+    Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
+
+    MissionProveArgument missionProveArgument = MissionProveArgument(
+      isRepeated: idInfoMap['isRepeated'] ?? false,
+      teamId: idInfoMap['teamId'] ?? 0,
+      missionId: idInfoMap['missionId'] ?? 0,
+      status: idInfoMap['status'] ?? '',
+    );
+
+    Navigator.pushNamed(context, alarmData.path,
+        arguments: missionProveArgument);
+  }
+
+  void navigateMissionsScreen({required AlarmData alarmData}) {
+    Navigator.pop(context, {'result': true, 'screenIndex': 1});
+  }
+
+  void navigateHomeScreen({required AlarmData alarmData}) {
+    Navigator.pop(context, {'result': true, 'screenIndex': 0});
   }
 }
