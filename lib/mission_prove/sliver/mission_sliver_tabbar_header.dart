@@ -26,7 +26,7 @@ class TabBarDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       color: grayBackground,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.only(left: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,20 +44,6 @@ class TabBarDelegate extends SliverPersistentHeaderDelegate {
               height: 0.1,
               color: grayScaleGrey600,
             ),
-            // Container(
-            //   width: double.infinity,
-            //   height: 300,
-            //   color: Colors.white,
-            //   child: TabBarView(
-            //     controller: context.read<MissionProveState>().tabController,
-            //     children: [
-            //       Text('HI~', style: TextStyle(color: Colors.white),),
-            //       Text('Hello~',style: TextStyle(color: Colors.white),),
-            //       // BoardGoalScreen(),
-            //       // BoardMissionScreen(),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -93,18 +79,19 @@ class _CustomTabBar extends StatelessWidget {
     return TabBar(
       labelColor: grayScaleGrey100,
       labelStyle: const TextStyle(
-        fontSize: 14.0,
+        fontSize: 13.0,
         fontWeight: FontWeight.w600,
       ),
       unselectedLabelColor: grayScaleGrey550,
       unselectedLabelStyle: const TextStyle(
-        fontSize: 14.0,
+        fontSize: 13.0,
         fontWeight: FontWeight.w600,
       ),
       indicatorColor: grayScaleGrey100,
       controller: tabController,
+      isScrollable: true,
       tabs: tabs.map((tabText) {
-        return Tab(text: tabText);
+        return Tab(text: tabText,);
       }).toList(),
     );
   }

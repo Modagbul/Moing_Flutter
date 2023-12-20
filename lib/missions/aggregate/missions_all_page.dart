@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/missions/aggregate/missions_all_state.dart';
 import 'package:provider/provider.dart';
 
@@ -71,11 +72,11 @@ class MissionsAllPage extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
-                              arguments: {
-                                'isRepeated': false,
-                                'teamId': e.teamId,
-                                'missionId': e.missionId,
-                              },
+                              arguments: MissionProveArgument(
+                                  isRepeated: false,
+                                  teamId: e.teamId,
+                                  missionId: e.missionId,
+                                  status: e.status)
                             ).then((_) {
                               Provider.of<MissionsAllState>(context,
                                       listen: false)
@@ -138,11 +139,11 @@ class MissionsAllPage extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).pushNamed(
                           MissionProvePage.routeName,
-                          arguments: {
-                            'isRepeated': true,
-                            'teamId': e.teamId,
-                            'missionId': e.missionId,
-                          },
+                            arguments: MissionProveArgument(
+                                isRepeated: true,
+                                teamId: e.teamId,
+                                missionId: e.missionId,
+                                status: e.status)
                         ).then((_) {
                           Provider.of<MissionsAllState>(context, listen: false)
                               .reloadMissionStatus();

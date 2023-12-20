@@ -63,6 +63,7 @@ class OngoingMissionState extends ChangeNotifier {
 
       if(apiResponse.isSuccess == true) {
         isLeader = apiResponse.data;
+        print('onGoing에서 isLeader : $isLeader');
       }
       else {
         print('OnGoingIsLeader is Null, error code : ${apiResponse.errorCode}');
@@ -70,6 +71,7 @@ class OngoingMissionState extends ChangeNotifier {
     } catch (e) {
       print('OnGoingIsLeader - 내가 리더인지 조회 실패: $e');
     }
+    notifyListeners();
   }
 
   void reloadMissionStatus() async {

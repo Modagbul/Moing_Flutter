@@ -60,15 +60,6 @@ class _BoardMainPageState extends State<BoardMainPage>
         );
       }
     });
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (context.read<BoardMainState>().isSuccess) {
-    //     ViewUtil().showSnackBar(
-    //       context: context,
-    //       message: '이미 소모임 삭제가 진행 중이에요',
-    //     );
-    //   }
-    // });
   }
 
   @override

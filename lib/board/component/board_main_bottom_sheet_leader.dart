@@ -3,6 +3,7 @@ import 'package:moing_flutter/board/component/icon_text_button.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/fix_group/fix_group_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_page.dart';
+import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -12,8 +13,8 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
   final int teamId;
   final bool isDeleted;
 
-  const BoardMainBottomSheetLeader({
-    required this.teamId, required this.isDeleted, super.key});
+  const BoardMainBottomSheetLeader(
+      {required this.teamId, required this.isDeleted, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +55,18 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
             IconTextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                if(!isDeleted) {
+                if (!isDeleted) {
                   Navigator.of(context).pushNamed(
                     GroupFinishPage.routeName,
                     arguments: teamId,
                   );
+                } else {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ViewUtil().showSnackBar(
+                      context: context,
+                      message: '이미 소모임 삭제가 진행 중이에요',
+                    );
+                  });
                 }
               },
               icon: 'asset/icons/icon_delete.svg',
@@ -72,8 +80,8 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 style: defaultButtonStyle.copyWith(
-                elevation: MaterialStateProperty.all(0.0),
-              ),
+                  elevation: MaterialStateProperty.all(0.0),
+                ),
                 child: const Text('닫기'),
               ),
             )

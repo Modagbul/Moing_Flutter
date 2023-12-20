@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/board_completed_mission_card.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
@@ -32,6 +33,7 @@ class CompletedMissionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CompletedMissionState>();
+    print('state.completedMissionStatus?.data.isNotEmpty : ${state.completedMissionStatus?.data.isNotEmpty}');
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
@@ -42,7 +44,7 @@ class CompletedMissionPage extends StatelessWidget {
               const SizedBox(
                 height: 40.0,
               ),
-              if (state.completedMissionStatus?.data.isNotEmpty ?? false)
+              if ((state.completedMissionStatus != null && state.completedMissionStatus!.data.isNotEmpty))
                 ...state.completedMissionStatus!.data
                     .map(
                       (e) => // ...
@@ -57,12 +59,12 @@ class CompletedMissionPage extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
-                              arguments: {
-                                'isRepeated': e.missionType == 'ONCE' ? false : true,
-                                'teamId':
-                                context.read<CompletedMissionState>().teamId,
-                                'missionId': e.missionId,
-                              });
+                              arguments: MissionProveArgument(
+                                  isRepeated: e.missionType == 'ONCE' ? false : true,
+                                  teamId: context.read<CompletedMissionState>().teamId,
+                                  missionId: e.missionId,
+                                  status: e.status)
+                          );
                         },
                       ),
                           ),

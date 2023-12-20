@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_like_share.dart';
-import 'package:moing_flutter/mission_prove/component/repeat_every_mission/every_mission_prove.dart';
 import 'package:moing_flutter/mission_prove/component/mission_current_situation.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_not_prove_button.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_prove_button.dart';
+import 'package:moing_flutter/mission_prove/component/repeat_every_mission/every_mission_prove_test.dart';
 import 'package:moing_flutter/mission_prove/component/repeat_my_mission_prove.dart';
 import 'package:moing_flutter/mission_prove/component/single_my_mission_not_prove.dart';
 import 'package:moing_flutter/mission_prove/component/single_my_mission_prove.dart';
@@ -117,29 +117,24 @@ class _MissionProvePageState extends State<MissionProvePage>
                     state.everyMissionList != null &&
                     state.everyMissionList!.isNotEmpty)
                   EveryMissionProved(),
+                
+                /// 한번 미션에서 나의 인증 한 경우 좋아요, 이미지 저장 Row
+                if(!state.isRepeated && state.myMissionList != null
+                    && state.myMissionList!.isNotEmpty && state.isMeOrEveryProved)
 
-                /// 인증 한 경우 버튼
-                if (!state.isRepeated &&
-                    state.myMissionList != null &&
-                    state.myMissionList!.isNotEmpty &&
-                    state.isMeOrEveryProved)
-                  MissionLikeShare(),
+                MissionLikeShare(),
                 if (!state.isMeOrEveryProved) sliverSizedBox(height: 160),
               ],
             ),
 
             /// 인증 안한 경우
-            if ((state.repeatMissionStatus != 'WAIT' && state.isRepeated) ||
-                (state.myMissionList != null && state.myMissionList!.isEmpty))
-              MissionNotProveButton(),
-
+            if((state.repeatMissionStatus != 'WAIT' && state.isRepeated) ||
+                (!state.isRepeated && state.myMissionList != null && state.myMissionList!.isEmpty))
+             MissionNotProveButton(),
             /// 인증 한 경우
-            if (!state.isRepeated &&
-                state.myMissionList != null &&
-                state.myMissionList!.isNotEmpty)
-              // if(context.watch<MissionProveState>().isMeProved &&
-              //     !context.watch<MissionProveState>().isRepeated)
-              MissionProveButton(),
+            if(!state.isRepeated && state.myMissionList != null && state.myMissionList!.isNotEmpty)
+            MissionProveButton(),
+
           ],
         ),
       ),

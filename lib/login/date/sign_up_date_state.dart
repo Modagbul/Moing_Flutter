@@ -17,7 +17,7 @@ class SignUpDateState extends ChangeNotifier {
   DateTime selectedDate = DateTime.now();
 
   String nickname = '';
-  String gender = '';
+  String? gender = '';
 
   SignUpDateState({
     required this.context,
@@ -37,26 +37,29 @@ class SignUpDateState extends ChangeNotifier {
     String formattedDate = selectedDate.toLocal().toString().split(' ')[0];
     bool? result = await signUp(formattedDate);
     if (result == true) {
-      Navigator.of(context).pushNamed(
-        WelcomePage.routeName,
-        arguments: nickname,
-      );
+      navigateToWelcomePage();
     }
   }
 
-  Future<bool?> signUp(String birthDate) async {
+  void skipPressed() async {
+    bool? result = await signUp(null);
+    if (result == true) {
+      navigateToWelcomePage();
+    }
+  }
+
+  void navigateToWelcomePage() {
+    Navigator.of(context).pushNamed(
+      WelcomePage.routeName,
+      arguments: nickname,
+    );
+  }
+
+  Future<bool?> signUp(String? birthDate) async {
     final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signUp';
 
-    switch (gender) {
-      case '남자':
-        gender = 'MAN';
-        break;
-      case '여자':
-        gender = 'WOMAN';
-        break;
-      case '기타':
-        gender = 'NEUTRALITY';
-        break;
+    if (gender != null) {
+      convertGenderText();
     }
 
     SignUpData data = SignUpData(
@@ -74,17 +77,30 @@ class SignUpDateState extends ChangeNotifier {
         fromJson: (json) => json as Map<String, dynamic>,
       );
 
-      if(apiResponse.isSuccess == true) {
+      if (apiResponse.isSuccess == true) {
         tokenManagement.saveToken(apiResponse.data?['accessToken'],
             apiResponse.data?['refreshToken']);
-        print('${apiResponse.data?['refreshToken']}');
+        log('${apiResponse.data?['refreshToken']}');
         return apiResponse.data?['registrationStatus'] == true ? true : false;
-      }
-      else {
-        print('signUp is Null, error code : ${apiResponse.errorCode}');
+      } else {
+        log('signUp is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
-      print('소모임 생성 실패: $e');
+      log('소모임 생성 실패: $e');
+    }
+  }
+
+  void convertGenderText() {
+    switch (gender) {
+      case '남자':
+        gender = 'MAN';
+        break;
+      case '여자':
+        gender = 'WOMAN';
+        break;
+      case '기타':
+        gender = 'NEUTRALITY';
+        break;
     }
   }
 }

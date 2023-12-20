@@ -21,6 +21,15 @@ class JoinedGroupCard extends StatelessWidget {
               width: 80,
               height: 80,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return ClipOval(
+                  child: Container(
+                    color: grayScaleGrey550,
+                    width: 80,
+                    height: 80,
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 12.0),

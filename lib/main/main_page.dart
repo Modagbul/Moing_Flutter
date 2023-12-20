@@ -9,6 +9,7 @@ import 'package:moing_flutter/missions/aggregate/missions_group_state.dart';
 import 'package:moing_flutter/missions/aggregate/missions_screen.dart';
 import 'package:moing_flutter/missions/aggregate/missions_state.dart';
 import 'package:moing_flutter/mypage/my_page_screen.dart';
+import 'package:moing_flutter/mypage/my_page_state.dart';
 import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -49,6 +50,10 @@ class MainPage extends StatelessWidget {
               context: context, selectedTeamId: selectedTeamId),
           lazy: false,
         ),
+        ChangeNotifierProvider(
+          create: (_) => MyPageState(context: context),
+          lazy: false,
+        ),
       ],
       builder: (context, snapshot) {
         return const MainPage();
@@ -60,10 +65,10 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        final appState = context.read<AppState>();
+        final mainState = context.read<MainState>();
 
-        if (appState.mainIndex > 0) {
-          appState.moveToHomeScreen();
+        if (mainState.mainIndex > 0) {
+          mainState.moveToHomeScreen();
           return false;
         }
         return true;
@@ -87,6 +92,7 @@ class MainPage extends StatelessWidget {
     await context.read<HomeScreenState>().initState();
     await context.read<MissionsState>().initState();
     await context.read<MissionsGroupState>().initState();
+    await context.read<MyPageState>().initState();
   }
 
   Widget _mainContent(BuildContext context) {
@@ -95,19 +101,19 @@ class MainPage extends StatelessWidget {
         notificationCount: context.watch<MainState>().alarmCount ?? '0',
         onTapAlarm: context.read<MainState>().alarmPressed,
         onTapSetting: context.read<MainState>().settingPressed,
-        screenIndex: context.watch<AppState>().mainIndex,
+        screenIndex: context.watch<MainState>().mainIndex,
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: grayBackground,
       body: Stack(
         fit: StackFit.expand,
         children: [
           IndexedStack(
             sizing: StackFit.expand,
-            index: context.watch<AppState>().mainIndex,
+            index: context.watch<MainState>().mainIndex,
             children: [
               HomeScreen(),
               MissionsScreen(),
-              MyPageScreen.route(context: context),
+              MyPageScreen(),
             ],
           ),
         ],
@@ -120,9 +126,9 @@ class MainPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: BottomNavigationBar(
-        currentIndex: context.watch<AppState>().mainIndex,
+        currentIndex: context.watch<MainState>().mainIndex,
         onTap: (index) {
-          context.read<AppState>().mainIndex = index;
+          context.read<MainState>().mainIndex = index;
         },
         backgroundColor: grayBackground,
         type: BottomNavigationBarType.fixed,
