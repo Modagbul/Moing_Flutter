@@ -128,8 +128,8 @@ class AlarmState extends ChangeNotifier {
     // 알림 읽음 처리 성공 -> 화면 이동
     AlarmData alarmData = alarmList![index];
     if (await postSingleAlarmData(alarmHistoryId: alarmData.alarmHistoryId)) {
-      await getAllAlarmData();
-      notifyListeners();
+      // await getAllAlarmData();
+      // notifyListeners();
 
       switch (alarmData.path) {
         case '/post/detail': // 신규 공지 업로드 알림
