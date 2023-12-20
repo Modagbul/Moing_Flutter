@@ -613,6 +613,9 @@ class MissionProveState with ChangeNotifier {
       }
     } catch (e) {
       print('미션 인증 도중 에러 발생 : ${e}');
+      if(e.toString().contains('photo access')) {
+        openAppSettings();
+      }
     } finally {
       onLoading = false;
     }

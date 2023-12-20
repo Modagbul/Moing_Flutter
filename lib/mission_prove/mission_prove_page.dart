@@ -20,9 +20,7 @@ class MissionProvePage extends StatefulWidget {
   const MissionProvePage({super.key});
 
   static route(BuildContext context) {
-    final argument =
-        ModalRoute.of(context)?.settings.arguments as MissionProveArgument;
-
+    final argument = ModalRoute.of(context)?.settings.arguments as MissionProveArgument;
     final bool isRepeated = argument.isRepeated;
     final int teamId = argument.teamId;
     final int missionId = argument.missionId;
@@ -92,17 +90,13 @@ class _MissionProvePageState extends State<MissionProvePage>
                   SingleMyMissionNotProved(),
 
                 /// 나의 인증이면서 반복 미션에서 인증한 경우
-                if (state.isMeOrEveryProved &&
-                    state.isRepeated &&
-                    state.myMissionList != null &&
-                    state.myMissionList!.isNotEmpty)
+                if (state.isMeOrEveryProved && state.isRepeated &&
+                    state.myMissionList != null && state.myMissionList!.isNotEmpty)
                   RepeatMyMissionProved(),
 
                 /// 나의 인증이면서 한번 미션에서 인증 한 경우
-                if (state.isMeOrEveryProved &&
-                    !state.isRepeated &&
-                    state.myMissionList != null &&
-                    state.myMissionList!.isNotEmpty)
+                if (state.isMeOrEveryProved && !state.isRepeated &&
+                    state.myMissionList != null && state.myMissionList!.isNotEmpty)
                   SingleMyMissionProved(),
 
                 /// 모두의 인증이면서 한번 미션에서 인증 안한 경우
@@ -114,16 +108,15 @@ class _MissionProvePageState extends State<MissionProvePage>
 
                 /// 모두의 인증이면서 인증 한 경우
                 if (!state.isMeOrEveryProved &&
-                    state.everyMissionList != null &&
-                    state.everyMissionList!.isNotEmpty)
+                    state.everyMissionList != null && state.everyMissionList!.isNotEmpty)
                   EveryMissionProved(),
                 
                 /// 한번 미션에서 나의 인증 한 경우 좋아요, 이미지 저장 Row
                 if(!state.isRepeated && state.myMissionList != null
                     && state.myMissionList!.isNotEmpty && state.isMeOrEveryProved)
-
                 MissionLikeShare(),
-                if (!state.isMeOrEveryProved) sliverSizedBox(height: 160),
+                if (!state.isMeOrEveryProved)
+                  sliverSizedBox(height: 160),
               ],
             ),
 

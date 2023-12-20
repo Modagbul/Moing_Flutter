@@ -55,17 +55,14 @@ class GroupCreatePhotoState extends ChangeNotifier {
       onLoading = true;
       notifyListeners();
       var status = await Permission.photos.request();
-      print('status : ${status.toString()}');
-      if (status.isGranted) {
-        final XFile? assetFile =
-            await ImagePicker().pickImage(source: ImageSource.gallery);
-        avatarFile = assetFile;
-      } else {
-        openAppSettings();
-      }
+      final XFile? assetFile =
+      await ImagePicker().pickImage(source: ImageSource.gallery);
+      avatarFile = assetFile;
     } catch (e) {
       print(e.toString());
-      viewUtil.showAlertDialog(context: context, message: e.toString());
+      if(e.toString().contains('photo access')) {
+        openAppSettings();
+      }
     } finally {
       onLoading = false;
       notifyListeners();

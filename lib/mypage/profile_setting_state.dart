@@ -145,7 +145,10 @@ class ProfileSettingState extends ChangeNotifier {
       }
     } catch (e) {
       print(e.toString());
-      viewUtil.showAlertDialog(context: context, message: e.toString());
+      // viewUtil.showAlertDialog(context: context, message: e.toString());
+      if(e.toString().contains('photo access')) {
+        openAppSettings();
+      }
       isAvatarChanged = false;
     } finally {
       onLoading = false;

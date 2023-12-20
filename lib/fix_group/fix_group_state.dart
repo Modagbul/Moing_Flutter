@@ -124,15 +124,17 @@ class FixGroupState extends ChangeNotifier {
     try {
       onLoading = true;
       await Permission.photos.request();
-      final XFile? assetFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final XFile? assetFile = await ImagePicker().pickImage(source: ImageSource.gallery);
       avatarFile = assetFile;
       isImageChanged = true;
       checkSave();
     } catch (e) {
-      print(e.toString());
-      viewUtil.showAlertDialog(context: context, message: e.toString());
       isImageChanged = false;
+      print(e.toString());
+      // viewUtil.showAlertDialog(context: context, message: e.toString());
+      if(e.toString().contains('photo access')) {
+        openAppSettings();
+      }
     } finally {
       onLoading = false;
       notifyListeners();
