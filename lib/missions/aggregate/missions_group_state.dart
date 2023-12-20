@@ -20,13 +20,11 @@ class MissionsGroupState extends ChangeNotifier {
     required this.context,
     required this.selectedTeamId,
   }) {
-    _initState();
-    notifyListeners();
   }
 
-  void initState() async {
-    getAggregateTeamRepeatMissionStatus();
-    getAggregateTeamSingleMissionStatus();
+  Future<void> initState() async {
+    await getAggregateTeamRepeatMissionStatus();
+    await getAggregateTeamSingleMissionStatus();
     log('Instance "OngoingMissionState" has been created');
     notifyListeners();
   }

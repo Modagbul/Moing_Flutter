@@ -28,7 +28,7 @@ class AlarmSettingPage extends StatelessWidget {
     return Scaffold(
       appBar: MoingAppBar(
         title: '알림설정',
-        imagePath: 'asset/image/arrow_left.png',
+        imagePath: 'asset/icons/arrow_left.svg',
         onTap: () => Navigator.pop(context),
       ),
       backgroundColor: grayScaleGrey900,
@@ -40,7 +40,7 @@ class AlarmSettingPage extends StatelessWidget {
               SizedBox(height: 12),
               AlarmComponent(title: '전체 알림',),
               SizedBox(height: 32),
-              AlarmComponent(title: '신규 공지 알림', height: 66, subTitle: '빠른 공지 확인을 위해\n알림 ON을 유지해주세요!',),
+              AlarmComponent(title: '신규 업로드 알림', height: 66, subTitle: '빠른 공지, 미션 확인을 위해\n알림 ON을 유지해주세요!',),
               SizedBox(height: 32),
               AlarmComponent(title: '미션 리마인드 알림', height: 66, subTitle: '매일 오전 8시, 미션에 대한\n리마인드 알림을 드릴게요!',),
               SizedBox(height: 32),

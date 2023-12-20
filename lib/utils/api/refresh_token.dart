@@ -16,6 +16,8 @@ class TokenManagement {
       return false;
     }
 
+    print('재발급받기 위한 refreshToken : $refreshToken');
+
     final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/reissue';
 
     final response = await http.get(
@@ -38,7 +40,7 @@ class TokenManagement {
     }
 
     else {
-      print('Token Management에서 액세스 토큰 갱신 실패 : ${response.statusCode}');
+      print('Token Management에서 액세스 토큰 갱신 실패 : ${responseBody['errorCode']}');
       return false;
     }
   }
@@ -57,19 +59,24 @@ class TokenManagement {
 
   /// Access Token 값 불러오기
   Future<String?> loadAccessToken() async {
-    return await sharedPreferencesInfo.loadPreferencesData('ACCESS_TOKEN');
+    String? accessToken = await sharedPreferencesInfo.loadPreferencesData('ACCESS_TOKEN');
+    return accessToken;
   }
 
   Future<void> SaveAccessToken(String accessToken) async {
+    print('access Token이 저장되었습니다 : $accessToken');
     return await sharedPreferencesInfo.savePreferencesData('ACCESS_TOKEN', accessToken);
   }
 
   /// Refresh Token 값 불러오기
   Future<String?> loadRefreshToken() async {
-    return await sharedPreferencesInfo.loadPreferencesData('REFRESH_TOKEN');
+    String? refreshToken = await sharedPreferencesInfo.loadPreferencesData('REFRESH_TOKEN');
+    print('Refresh Token : $refreshToken');
+    return refreshToken;
   }
 
   Future<void> SaveRefreshToken(String refreshToken) async {
+    print('refresh Token이 저장되었습니다 : $refreshToken');
     return await sharedPreferencesInfo.savePreferencesData('REFRESH_TOKEN', refreshToken);
   }
 }

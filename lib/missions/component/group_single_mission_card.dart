@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../const/color/colors.dart';
 
@@ -51,8 +52,10 @@ class GroupSingleMissionCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 12.0),
                     child: Row(
                       children: [
-                        Image.asset(
-                          'asset/image/clock.png',
+                        SvgPicture.asset(
+                          'asset/icons/mission_single_clock.svg',
+                          width: 14,
+                          height: 14,
                         ),
                         const SizedBox(
                           width: 4.0,

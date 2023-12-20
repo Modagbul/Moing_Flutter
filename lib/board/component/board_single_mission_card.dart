@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../const/color/colors.dart';
 
@@ -39,10 +40,10 @@ class BoardSingleMissionCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 16.0, top: 20, bottom: 20),
                 child: Row(
                   children: [
-                    Image.asset(
-                      status == 'COMPLETE'
-                          ? 'asset/image/board_icon_pass.png'
-                          : 'asset/image/board_icon_nopass.png',
+                    SvgPicture.asset(
+                      status == 'COMPLETE' || status == 'SKIP'
+                          ? 'asset/icons/board_icon_pass.svg'
+                          : 'asset/icons/board_icon_nopass.svg',
                       width: 36.0,
                       height: 36.0,
                     ),
@@ -55,7 +56,12 @@ class BoardSingleMissionCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Image.asset('asset/image/clock.png'),
+                              // Image.asset('asset/image/clock.png'),
+                              SvgPicture.asset(
+                                'asset/icons/mission_single_clock.svg',
+                                width: 14,
+                                height: 14,
+                              ),
                               const SizedBox(width: 4.0),
                               Text(
                                 formatDueTo(dueTo),
@@ -83,7 +89,7 @@ class BoardSingleMissionCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    status == 'COMPLETE'
+                    status == 'COMPLETE' || status == 'SKIP' // 현황보기
                         ? _CompleteButton(
                             onTap: onTap,
                           )
@@ -139,6 +145,7 @@ class _SkipButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
+          elevation: 0,
         ),
         onPressed: onTap,
         child: const Text(
@@ -174,6 +181,7 @@ class _CompleteButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
+          elevation: 0,
         ),
         onPressed: onTap,
         child: const Text(

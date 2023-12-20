@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/board_completed_mission_card.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
@@ -11,6 +12,7 @@ import 'completed_mission_state.dart';
 
 class CompletedMissionPage extends StatelessWidget {
   static const routeName = '/board/mission/completed';
+
   const CompletedMissionPage({Key? key}) : super(key: key);
 
   static route(BuildContext context) {
@@ -32,16 +34,8 @@ class CompletedMissionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CompletedMissionState>();
-
-    final data = state.completedMissionStatus?.data;
-    if (data == null) {
-      log('completed is null');
-    } else if (data.isEmpty) {
-      log('data is empty');
-    } else {
-      log('data is not empty: $data');
-    }
-
+    print(
+        'state.completedMissionStatus?.data.isNotEmpty : ${state.completedMissionStatus?.data.isNotEmpty}');
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
@@ -52,13 +46,13 @@ class CompletedMissionPage extends StatelessWidget {
               const SizedBox(
                 height: 40.0,
               ),
-              if (state.completedMissionStatus?.data.isNotEmpty ?? false)
+              if ((state.completedMissionStatus != null &&
+                  state.completedMissionStatus!.data.isNotEmpty))
                 ...state.completedMissionStatus!.data
                     .map(
-                      (e) => // ...
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: BoardCompletedMissionCard(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: BoardCompletedMissionCard(
                         title: e.title,
                         status: e.status,
                         dueTo: e.dueTo,
@@ -67,32 +61,35 @@ class CompletedMissionPage extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
-                              arguments: {
-                                'isRepeated': e.missionType == 'ONCE' ? false : true,
-                                'teamId':
-                                context.read<CompletedMissionState>().teamId,
-                                'missionId': e.missionId,
-                              });
+                              arguments: MissionProveArgument(
+                                  isRepeated: e.missionType == 'ONCE' ? false : true,
+                                  teamId: context
+                                      .read<CompletedMissionState>()
+                                      .teamId,
+                                  missionId: e.missionId,
+                                  status: e.status,
+                                  isEnded: true));
                         },
                       ),
-                          ),
-                    )
-                    .toList()
-              else
-                const Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
                     ),
+                  ).toList()
+            else
+              const Center(
+                child: Text(
+                  '아직 미션이 없어요.',
+                  style: TextStyle(
+                    color: grayScaleGrey400,
+                    fontSize: 14.0,
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
-      floatingActionButton: (state.isLeader != null && state.isLeader!) ? const _BottomButton() : null,
+    ),
+      floatingActionButton: (state.isLeader != null && state.isLeader!)
+          ? const _BottomButton()
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

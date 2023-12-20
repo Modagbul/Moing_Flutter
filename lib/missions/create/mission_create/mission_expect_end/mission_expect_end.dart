@@ -19,7 +19,7 @@ class MissionExpectEnd extends StatelessWidget {
           children: [
             Text(
               '반복미션 불가',
-              style: contentTextStyle.copyWith(
+              style: bodyTextStyle.copyWith(
                 fontWeight: FontWeight.w600,
                 color: errorColor,
               ),
@@ -27,7 +27,7 @@ class MissionExpectEnd extends StatelessWidget {
             SizedBox(width: 4),
             Text(
               '2개의 반복미션이 있어 더 만들 수 없어요',
-              style: contentTextStyle.copyWith(
+              style: bodyTextStyle.copyWith(
                 fontWeight: FontWeight.w600,
                 color: grayScaleGrey550,
               ),

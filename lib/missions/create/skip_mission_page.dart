@@ -13,13 +13,15 @@ class SkipMissionPage extends StatelessWidget {
   const SkipMissionPage({super.key});
 
   static route(BuildContext context) {
-    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final Map<String, dynamic> data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final int teamId = data['teamId'] as int;
     final int missionId = data['missionId'] as int;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => SkipMissionState(context: context, teamId: teamId, missionId: missionId),
+          create: (context) => SkipMissionState(
+              context: context, teamId: teamId, missionId: missionId),
           lazy: false,
         ),
       ],
@@ -34,29 +36,42 @@ class SkipMissionPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: '미션 건너뛰기'),
-      body: const Padding(
-        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 34.0),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '이번 미션을 건너뛰시겠어요?\n사유를 작성해주세요',
-                style: TextStyle(
-                  color: grayScaleGrey100,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 34.0),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '이번 미션을 건너뛰시겠어요?\n사유를 작성해주세요',
+                          style: TextStyle(
+                            color: grayScaleGrey100,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 52.0),
+                      _InfoTextFields(),
+                      SizedBox(height: 240.0),
+                      _NextBtn(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 52.0),
-            _InfoTextFields(),
-            Spacer(),
-            _NextBtn(),
-            SizedBox(height: 32.0),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -67,7 +82,8 @@ class SkipMissionPage extends StatelessWidget {
     required String title,
   }) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: grayScaleGrey900,
+      elevation: 0,
       title: Text(title),
       centerTitle: false,
       leading: IconButton(
@@ -114,26 +130,32 @@ class _NextBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoryState = Provider.of<SkipMissionState>(context);
 
-    return Container(
-      width: 353,
-      height: 62,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: categoryState.getNextButtonColor(),
-          disabledBackgroundColor: grayScaleGrey700,
-          disabledForegroundColor: grayScaleGrey500,
-          padding: const EdgeInsets.all(16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 32),
+      child: Container(
+        width: 353,
+        height: 62,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: categoryState.getNextButtonColor(),
+            disabledBackgroundColor: grayScaleGrey700,
+            disabledForegroundColor: grayScaleGrey500,
+            padding: const EdgeInsets.all(16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
           ),
-        ),
-        onPressed: categoryState.submit,
-        child: Text(
-          '사유작성 완료하기',
-          style: TextStyle(
-            color: categoryState.getNextButtonTextColor(),
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
+          onPressed: () async {
+            await categoryState.submit();
+          },
+          child: Text(
+            '사유작성 완료하기',
+            style: TextStyle(
+              color: categoryState.getNextButtonTextColor(),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),

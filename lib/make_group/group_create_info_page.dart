@@ -15,11 +15,13 @@ class GroupCreateInfoPage extends StatelessWidget {
   const GroupCreateInfoPage({super.key});
 
   static route(BuildContext context) {
-    final String category = ModalRoute.of(context)?.settings.arguments as String;
+    final String category =
+        ModalRoute.of(context)?.settings.arguments as String;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => GroupCreateInfoState(category: category, context: context)),
+            create: (_) =>
+                GroupCreateInfoState(category: category, context: context)),
       ],
       builder: (context, _) {
         return const GroupCreateInfoPage();
@@ -53,7 +55,7 @@ class GroupCreateInfoPage extends StatelessWidget {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           MainPage.routeName,
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                       leftText: '나가기',
@@ -64,22 +66,28 @@ class GroupCreateInfoPage extends StatelessWidget {
               },
             );
           },
-          child: Icon(
+          child: const Icon(
             Icons.close,
           ),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                const _Title(),
-                SizedBox(height: screenHeight * 0.04),
-                const _InfoTextFields(),
-                const _NavButtons(),
-              ],
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  const _Title(),
+                  SizedBox(height: screenHeight * 0.04),
+                  const _InfoTextFields(),
+                  const _NavButtons(),
+                ],
+              ),
             ),
           ),
         ),
@@ -171,20 +179,28 @@ class _NavButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: ElevatedButton(
-            style: darkButtonStyle,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('이전으로'),
+          child: Container(
+            width: 172,
+            height: 62,
+            child: ElevatedButton(
+              style: darkButtonStyle,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('이전으로'),
+            ),
           ),
         ),
-        const SizedBox(width: 4.0),
+        const SizedBox(width: 5.0),
         Expanded(
-          child: ElevatedButton(
-            style: brightButtonStyle,
-            onPressed: context.read<GroupCreateInfoState>().nextPressed,
-            child: const Text('다음으로'),
+          child: Container(
+            width: 172,
+            height: 62,
+            child: ElevatedButton(
+              style: brightButtonStyle,
+              onPressed: context.read<GroupCreateInfoState>().nextPressed,
+              child: const Text('다음으로'),
+            ),
           ),
         ),
       ],

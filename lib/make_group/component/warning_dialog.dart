@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../const/color/colors.dart';
 
@@ -22,7 +23,6 @@ class WarningDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      // 맨 아래에 어떻게 붙이지
       backgroundColor: const Color(0xFF272727),
       insetPadding: const EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
@@ -39,9 +39,8 @@ class WarningDialog extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: Image.asset(
-                    'asset/image/danger_icon.png',// 이미지의 세로 크기를 100으로 설정
-                    fit: BoxFit.contain,
+                  child: SvgPicture.asset(
+                    'asset/icons/danger_icon.svg',
                   ),
                 ),
                 Text(
@@ -59,6 +58,7 @@ class WarningDialog extends StatelessWidget {
                     color: grayScaleGrey400,
                     fontSize: 14,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

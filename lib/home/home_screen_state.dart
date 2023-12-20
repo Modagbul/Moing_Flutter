@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
-import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
@@ -40,27 +39,25 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  String? alarmCount;
-
   HomeScreenState({required this.context, this.newCreated}){
-    initState();
+    // initState();
   }
 
-  void initState() async {
+  Future<void> initState() async {
     log('Instance "HomeScreenState" has been created');
+    print('newCreated : $newCreated');
     fToast.init(context);
     await loadTeamData();
-    getNotReadAlarmCount();
-    getTeamMissionPhotoListData();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    await getTeamMissionPhotoListData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if(newCreated != "new") {
-        checkUserRegister();
+        await checkUserRegister();
       }
     });
   }
 
   /// 소모임에 가입된 유저인지 확인
-  void checkUserRegister() {
+  Future<void> checkUserRegister() async {
     String warningText = '';
     // 이미 가입한 유저일 때
     if (newCreated == 'isRegistered') {
@@ -134,7 +131,7 @@ class HomeScreenState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getTeamMissionPhotoListData() async {
+  Future<void> getTeamMissionPhotoListData() async {
     futureTeamMissionPhotoList = await apiCode.getTeamMissionPhotoList();
     if (futureTeamMissionPhotoList != null) {
       teamMissionPhotoList = futureTeamMissionPhotoList!;
@@ -155,30 +152,14 @@ class HomeScreenState extends ChangeNotifier {
         nickname = apiResponse.data!.memberNickName;
         return apiResponse.data!;
       }
-      // else {
-      //   if(apiResponse.errorCode == 'J0003') {
-      //     fetchApiData();
-      //   }
-        else {
-          throw Exception('fetchApiData is Null, error code : ${apiResponse.errorCode}');
-        //}
+      else {
+        print('fetchApiData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('홈 화면 받아 오는 중 에러 발생 : ${e.toString()}');
       return null;
     }
     return null;
-  }
-
-  // 알람 클릭
-  void alarmPressed() async {
-    final result = await Navigator.of(context).pushNamed(
-      AlarmPage.routeName,
-    );
-
-    if (result as bool) {
-      getNotReadAlarmCount();
-    }
   }
 
   // 모임 만들기 클릭
@@ -193,11 +174,5 @@ class HomeScreenState extends ChangeNotifier {
     /// 목표보드 페이지로 이동
     Navigator.pushNamed(context, BoardMainPage.routeName,
         arguments: {'teamId': teamId});
-  }
-
-  // 안읽음 알림 개수 조회
-  void getNotReadAlarmCount() async {
-    alarmCount = await apiCode.getNotReadAlarmCount();
-    notifyListeners();
   }
 }

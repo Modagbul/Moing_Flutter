@@ -24,7 +24,7 @@ class AlarmComponent extends StatelessWidget {
     if(title.contains('전체')) {
       isTrue = state.isTotalAlarmOn != null && state.isTotalAlarmOn!;
       isFalse = state.isTotalAlarmOn != null && !state.isTotalAlarmOn!;
-    } else if (title.contains('신규 공지')) {
+    } else if (title.contains('신규 업로드')) {
       isTrue = state.isNewUploadPushOn != null && state.isNewUploadPushOn!;
       isFalse = state.isNewUploadPushOn != null && !state.isNewUploadPushOn!;
     } else if (title.contains('미션 리마인드')) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class InvitationCard extends StatelessWidget {
   const InvitationCard({super.key});
@@ -24,11 +25,11 @@ class InvitationCard extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Image.asset(
-                    'asset/image/fire_circular.png',
+                  SvgPicture.asset(
+                    'asset/icons/fire_circular.svg',
                     fit: BoxFit.fill,
-                    width: 46.0,
-                    height: 46.0,
+                    width: 46,
+                    height: 46,
                   ),
                   const SizedBox(
                     height: 8,

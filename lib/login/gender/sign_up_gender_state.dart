@@ -28,6 +28,13 @@ class SignUpGenderState extends ChangeNotifier {
         'nickname': nickname,
         'gender': selectedGender,
       });
+      notifyListeners();
     }
+  }
+
+  void skipPressed() {
+    Navigator.pushNamed(context, SignUpDatePage.routeName, arguments: {
+      'nickname': nickname,
+    });
   }
 }

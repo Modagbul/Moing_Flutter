@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
@@ -71,7 +72,7 @@ class LoginPage extends StatelessWidget {
                     CustomButton(
                       onPressed: context.read<LoginState>().signInWithGoogle,
                       text: 'Google로 로그인',
-                      imagePath: 'asset/image/logo_google.png',
+                      imagePath: 'asset/icons/logo_google.svg',
                       buttonStyle: ButtonStyle(
                         fixedSize: MaterialStateProperty.all(
                           Size(MediaQuery.of(context).size.width, 60),
@@ -89,7 +90,7 @@ class LoginPage extends StatelessWidget {
                     CustomButton(
                       onPressed: context.read<LoginState>().signInWithApple,
                       text: 'Apple로 로그인',
-                      imagePath: 'asset/image/logo_apple.png',
+                      imagePath: 'asset/icons/logo_apple.svg',
                       buttonStyle: ButtonStyle(
                         fixedSize: MaterialStateProperty.all(
                           Size(MediaQuery.of(context).size.width, 60),
@@ -109,7 +110,7 @@ class LoginPage extends StatelessWidget {
                   CustomButton(
                     onPressed: context.read<LoginState>().signInWithKakao,
                     text: '카카오 로그인',
-                    imagePath: 'asset/image/logo_kakao.png',
+                    imagePath: 'asset/icons/logo_kakao.svg',
                     buttonStyle: ButtonStyle(
                       fixedSize: MaterialStateProperty.all(
                         Size(MediaQuery.of(context).size.width, 60),
@@ -127,9 +128,10 @@ class LoginPage extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 24.0, top: 40),
-                      child: Image.asset(
-                        'asset/image/modakbul_icon.png', // 이미지의 세로 크기를 100으로 설정
-                        fit: BoxFit.contain,
+                      child: SvgPicture.asset(
+                        'asset/icons/modakbul_icon.svg',
+                        width: 100,
+                        height: 30,
                       ),
                     ),
                   ),

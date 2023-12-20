@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
-import 'package:moing_flutter/mypage/setting_page.dart';
-import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 
 class MyPageState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
@@ -15,12 +13,12 @@ class MyPageState extends ChangeNotifier {
   MyPageState({
     required this.context,
   }) {
-    initState();
+    // initState();
   }
 
-  void initState() async {
+  Future<void> initState() async {
     log('Instance "MyPageState" has been created');
-    getMyPageData();
+    await getMyPageData();
   }
 
   @override
@@ -35,31 +33,16 @@ class MyPageState extends ChangeNotifier {
     );
 
     if (result != null && result == true) {
-      getMyPageData();
+      await getMyPageData();
     }
   }
 
-  void getMyPageData() async {
+  Future<void> getMyPageData() async {
     myPageData = await apiCode.getMyPageData();
+    print('마이페이지 데이터 : ${myPageData?.profileImage}');
     notifyListeners();
   }
 
-  void settingPressed() async {
-    SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
-    String? teamCountString = await sharedPreferencesInfo.loadPreferencesData('teamCount');
-    int? teamCount;
-    if (teamCountString == null || teamCountString.isEmpty || teamCountString.length < 1) {
-      teamCount = 0;
-    }
-    else {
-      teamCount = int.parse(teamCountString);
-    }
-    print('mypageScreen teamCount : $teamCount');
-    Navigator.of(context).pushNamed(
-      SettingPage.routeName,
-      arguments: teamCount,
-    );
-  }
 
   String convertCategoryName({required String category}) {
     String convertedCategory = '';

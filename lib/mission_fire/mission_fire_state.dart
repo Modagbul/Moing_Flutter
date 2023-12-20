@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
@@ -41,15 +42,15 @@ class MissionFireState extends ChangeNotifier {
     initState();
   }
 
-  void initState() {
+  void initState() async {
     log('Instance "MissionFireState" has been created');
     log('teamId : $teamId, missionId : $missionId');
-    loadFirePersonList();
-    loadTeamMissionProveCount();
+    await loadFirePersonList();
+    await loadTeamMissionProveCount();
   }
 
   /// 모임원 미션 인증 성공 인원 조회 API
-  void loadTeamMissionProveCount() async {
+  Future<void> loadTeamMissionProveCount() async {
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/status';
 
@@ -66,12 +67,7 @@ class MissionFireState extends ChangeNotifier {
         singleMissionTotalCount = int.parse(apiResponse.data?['total']);
         notifyListeners();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          loadTeamMissionProveCount();
-        } else {
-          throw Exception(
-              'loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -79,7 +75,7 @@ class MissionFireState extends ChangeNotifier {
   }
 
   /// 불 던질 인원 조회 API
-  void loadFirePersonList() async {
+  Future<void> loadFirePersonList() async {
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/fire';
 
@@ -99,12 +95,7 @@ class MissionFireState extends ChangeNotifier {
         userList = apiResponse.data;
         notifyListeners();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          loadFirePersonList();
-        } else {
-          throw Exception(
-              'loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('불 던질 사람 조회 실패: $e');
@@ -112,7 +103,7 @@ class MissionFireState extends ChangeNotifier {
   }
 
   /// 불 던지기 API
-  void throwFire() async {
+  Future<void> throwFire() async {
     _isThrowFireInProgress = true;
 
     if (selectedIndex == null || userList == null) {
@@ -135,12 +126,7 @@ class MissionFireState extends ChangeNotifier {
         compeleteThrowFireModal();
         initSelectedUser();
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          throwFire();
-        } else {
-          throw Exception(
-              'loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('불던지기 실패: $e');
@@ -171,7 +157,7 @@ class MissionFireState extends ChangeNotifier {
   }
 
   // 불 던지기 버튼 클릭
-  void firePressed() {
+  void firePressed() async {
     if (_isThrowFireInProgress) {
       return;
     }
@@ -181,7 +167,7 @@ class MissionFireState extends ChangeNotifier {
     }
 
     if (userList![selectedIndex!].fireStatus == "True") {
-      throwFire();
+      await throwFire();
     }
   }
 
@@ -218,8 +204,10 @@ class MissionFireState extends ChangeNotifier {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Image.asset(
-                    'asset/image/icon_fire_notification.png',
+                  SvgPicture.asset(
+                    'asset/icons/icon_fire_graphic.svg',
+                    width: 160,
+                    height: 160,
                   ),
                 ],
               ),

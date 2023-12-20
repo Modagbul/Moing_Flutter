@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
@@ -57,15 +58,12 @@ class _PostMainPageState extends State<PostMainPage> {
                       ),
                     ),
                   )
-                : const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 12.0),
-                      _Notice(),
-                      SizedBox(height: 32.0),
-                      Expanded(child: _Post()),
-                    ],
-                  ),
+                : ListView(children: const [
+                    SizedBox(height: 12.0),
+                    _Notice(),
+                    SizedBox(height: 32.0),
+                    _Post(),
+                  ]),
             Align(
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
@@ -133,10 +131,10 @@ class _Notice extends StatelessWidget {
   Widget _renderNoticeHeader({required int noticeNum}) {
     return Row(
       children: [
-        Image.asset(
-          'asset/image/icon_solar_pin_bold.png',
-          width: 20.0,
-          height: 20.0,
+        SvgPicture.asset(
+          'asset/icons/icon_solar_pin_bold.svg',
+          width: 20,
+          height: 20,
         ),
         const SizedBox(width: 4.0),
         Text(
@@ -209,7 +207,7 @@ class _Post extends StatelessWidget {
         children: [
           _renderPostHeader(),
           const SizedBox(height: 24.0),
-          Expanded(child: _renderPostScrollBody(context: context)),
+          _renderPostScrollBody(context: context),
         ],
       ),
     );
@@ -252,22 +250,27 @@ class _Post extends StatelessWidget {
               ),
             ),
           )
-        : ListView.builder(
-            itemCount: allPostData?.postBlocks.length ?? 0,
-            itemBuilder: (BuildContext context, int index) {
-              final post = allPostData!.postBlocks[index];
+        : Column(
+            children: List.generate(
+              allPostData?.postBlocks.length ?? 0,
+              (index) {
+                final post = allPostData!.postBlocks[index];
 
-              return GestureDetector(
-                onTap: () {
-                  context
-                      .read<PostMainState>()
-                      .navigatePostDetailPage(boardId: post.boardId);
-                },
-                child: PostCard(
-                  postData: post,
-                ),
-              );
-            },
+                return GestureDetector(
+                  onTap: () {
+                    context
+                        .read<PostMainState>()
+                        .navigatePostDetailPage(boardId: post.boardId);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: PostCard(
+                      postData: post,
+                    ),
+                  ),
+                );
+              },
+            ),
           );
   }
 }

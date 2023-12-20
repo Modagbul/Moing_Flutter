@@ -21,9 +21,13 @@ class AlarmSettingState extends ChangeNotifier {
 
   bool isLoading = true;
 
-  void initState() {
+  AlarmSettingState({required this.context}) {
+    initState();
+  }
+
+  void initState() async {
     log('Instance "AlarmSettingState" has been created');
-    fetchAlarmSettings().then((_) {
+    await fetchAlarmSettings().then((_) {
       isLoading = false;
       notifyListeners();
     });
@@ -33,11 +37,6 @@ class AlarmSettingState extends ChangeNotifier {
   void dispose() {
     _isDisposed = true;
     super.dispose();
-  }
-
-  AlarmSettingState({required this.context}) {
-    fetchAlarmSettings();
-    initState();
   }
 
   /// 알람 설정 조회
@@ -69,7 +68,7 @@ class AlarmSettingState extends ChangeNotifier {
       await apiCode.updateAlarmSettings('isFirePush', isFirePushOn!);
 
       print('알람 설정이 성공적으로 업데이트되었습니다.');
-      fetchAlarmSettings();
+      await fetchAlarmSettings();
     } catch (e) {
       log('Error updating alarm settings: $e');
     }
@@ -101,7 +100,7 @@ class AlarmSettingState extends ChangeNotifier {
       case '전체 알림':
         changeAllAlarms(isFixed);
         break;
-      case '신규 공지 알림':
+      case '신규 업로드 알림':
         changeNewAlarm(isFixed);
         break;
       case '미션 리마인드 알림':

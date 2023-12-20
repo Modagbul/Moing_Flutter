@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
@@ -169,10 +170,11 @@ class _NoticeCheckContainer extends StatelessWidget {
             onTap: context.read<PostCreateState>().toggleCheckedNotice,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
+              child:
+              SvgPicture.asset(
                 context.watch<PostCreateState>().isCheckedNotice
-                    ? 'asset/image/icon_check_box_active.png'
-                    : 'asset/image/icon_check_box_default.png',
+                    ? 'asset/icons/icon_check_box_active.svg'
+                    : 'asset/icons/icon_check_box_default.svg',
                 width: 24.0,
                 height: 24.0,
               ),
@@ -197,26 +199,32 @@ class _PostCreateButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: context.watch<PostCreateState>().isButtonEnabled
-          ? context.read<PostCreateState>().requestCreatePost
-          : null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: grayScaleWhite,
-        foregroundColor: grayScaleGrey900,
-        disabledBackgroundColor: grayScaleGrey700,
-        disabledForegroundColor: grayScaleGrey500,
-        textStyle: const TextStyle(
-          color: grayScaleGrey900,
-          fontSize: 18.0,
-          fontWeight: FontWeight.w600,
+    var state = context.watch<PostCreateState>();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: ElevatedButton(
+        onPressed: () async {
+          if(state.isButtonEnabled) {
+            await context.read<PostCreateState>().requestCreatePost();
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: grayScaleWhite,
+          foregroundColor: grayScaleGrey900,
+          disabledBackgroundColor: grayScaleGrey700,
+          disabledForegroundColor: grayScaleGrey500,
+          textStyle: const TextStyle(
+            color: grayScaleGrey900,
+            fontSize: 18.0,
+            fontWeight: FontWeight.w600,
+          ),
+          padding: const EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
         ),
-        padding: const EdgeInsets.all(16.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
+        child: const Text('업로드 하기'),
       ),
-      child: const Text('업로드 하기'),
     );
   }
 }

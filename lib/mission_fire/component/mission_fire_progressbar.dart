@@ -27,7 +27,7 @@ class MissionFireProgressBar extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         const Text(
-          '모임원 발등에 불을 던쳐 미션 인증을 독려해요',
+          '모임원 발등에 불을 던져 미션 인증을 독려해요',
           style: contentTextStyle,
         ),
         const SizedBox(height: 24),
@@ -41,7 +41,7 @@ class MissionFireProgressBar extends StatelessWidget {
               ? (singleMissionMyCount) *
               100 /
               singleMissionTotalCount
-              : 100,
+              : 0,
 
           style: RoundedProgressBarStyle(
             colorBorder: Colors.transparent,

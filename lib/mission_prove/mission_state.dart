@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_data.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_page.dart';
@@ -10,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class MissionState {
   /// 미션 더보기 클릭 시
-  Future<bool> showMoreDetails({
+  Future<String> showMoreDetails({
     required BuildContext context,
     required String missionTitle,
     required String missionContent,
@@ -57,8 +58,10 @@ class MissionState {
                 Column(
                   children: [
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         print('반복미션 종료하기 클릭');
+                        var endResult = await showEndRepeatModal(context: context);
+                        (endResult.runtimeType == String && endResult == 'end') ? Navigator.of(context).pop('end') : Navigator.of(context).pop();
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -140,9 +143,40 @@ class MissionState {
       },
     );
 
-    if(modalResult != null && modalResult == true) {
-      return true;
-    } else return false;
+    if (modalResult == 'end') {
+      return 'end';
+    } else if (modalResult == true) {
+      return 'true';
+    } else {
+      return 'false';
+    }
+  }
+
+  /// 반복미션 종료 바텀모달
+  Future<String> showEndRepeatModal({required BuildContext context}) async {
+    var result = await showDialog(
+      context: context,
+      builder: (ctx) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            WarningDialog(
+              title: '반복미션을 종료하시겠어요?',
+              content: '종료하면 해당 반복미션은 더 이상 인증할 수 없어요',
+              onConfirm: () {
+                Navigator.of(ctx).pop(true);
+              },
+              onCanceled: () {
+                Navigator.of(ctx).pop();
+              },
+              leftText: '취소하기',
+              rightText: '종료하기',
+            ),
+          ],
+        );
+      },
+    );
+    return (result != null && result == true) ? 'end' : 'false';
   }
 
   /// 미션 내용, 규칙 클릭 시
@@ -154,11 +188,12 @@ class MissionState {
   }) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
           width: double.infinity,
-          height: 700,
+          height: 652,
           decoration: const BoxDecoration(
             color: grayScaleGrey600,
             borderRadius: BorderRadius.only(
@@ -195,13 +230,14 @@ class MissionState {
                   ],
                 ),
                 SizedBox(height: 24),
-                Text(
-                  '미션 내용',
+                Text('미션 내용',
                   style: contentTextStyle.copyWith(
                       fontWeight: FontWeight.w600, color: grayScaleGrey100),
                 ),
                 SizedBox(height: 4),
                 Container(
+                  width: double.infinity,
+                  height: 240,
                   child: Text(
                     missionContent,
                     style: bodyTextStyle.copyWith(
@@ -216,15 +252,16 @@ class MissionState {
                 ),
                 SizedBox(height: 4),
                 Container(
+                  width: double.infinity,
+                  height: 96,
                   child: Text(
                     missionRule,
                     style: bodyTextStyle.copyWith(
                         fontWeight: FontWeight.w500, color: grayScaleGrey400),
                   ),
                 ),
-                Spacer(),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 32.0),
+                  padding: const EdgeInsets.symmetric(vertical: 32.0),
                   child: WhiteButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -269,6 +306,7 @@ class MissionState {
                  },
                  child: Container(
                    width: double.infinity,
+                   color: Colors.transparent,
                    height: 64,
                    padding: EdgeInsets.symmetric(vertical: 16),
                    child: Row(

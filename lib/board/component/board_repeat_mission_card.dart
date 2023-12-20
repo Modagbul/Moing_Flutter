@@ -1,9 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/board/screen/ongoing_misson_state.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import '../../const/color/colors.dart';
+import '../../mission_prove/mission_prove_state.dart';
 
 class BoardRepeatMissionCard extends StatelessWidget {
   final String title;
@@ -18,7 +22,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
   final Function(String) onShowToast;
 
   const BoardRepeatMissionCard({
-    Key ? key,
+    Key? key,
     required this.title,
     required this.dueTo,
     required this.status,
@@ -33,16 +37,8 @@ class BoardRepeatMissionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String tagText = _getTagText(status);
-
     return GestureDetector(
-      onTap: () {
-        if (tagText == '내일 리셋' || tagText.isEmpty) {
-          onTap();
-        } else {
-          onShowToast('반복 미션은 다음 주 월요일에 시작해요.');
-        }
-      },
+      onTap: onTap,
       child: Stack(
         children: [
           Column(
@@ -119,13 +115,17 @@ class BoardRepeatMissionCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8, top: 4),
-                child: Text(
-                  '주 ${number}회',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.0,
-                    color: grayScaleGrey550,
-                  ),
+                child: Row(
+                  children: [
+                    Text(
+                      '주 ${number}회',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.0,
+                        color: grayScaleGrey550,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -135,7 +135,11 @@ class BoardRepeatMissionCard extends StatelessWidget {
                 ? MediaQuery.of(context).size.height * 0.1
                 : MediaQuery.of(context).size.height * 0.125,
             left: MediaQuery.of(context).size.width * 0.03,
-            child: _Tag(status: status),
+            child: Row(
+              children: [
+                _Tag(status: status),
+              ],
+            ),
           ),
           Positioned.fill(
             child: FadeTransition(
@@ -159,27 +163,6 @@ class BoardRepeatMissionCard extends StatelessWidget {
       ),
     );
   }
-
-  String _getTagText(String status) {
-    DateTime now = DateTime.now();
-    String tagText = '';
-
-    if (status == 'WAIT') {
-      if (now.weekday == DateTime.sunday) {
-        tagText = '내일 시작';
-      } else {
-        int daysToSunday = DateTime.sunday - now.weekday;
-        if (daysToSunday > 0) {
-          tagText = '${daysToSunday}일 후 시작';
-        }
-      }
-    } else if (status == 'ONGOING' && now.weekday == DateTime.sunday) {
-      tagText = '내일 리셋';
-    }
-
-    return tagText;
-  }
-
 }
 
 class _Tag extends StatelessWidget {
@@ -198,7 +181,7 @@ class _Tag extends StatelessWidget {
       } else {
         int daysToSunday = DateTime.sunday - now.weekday;
         if (daysToSunday > 0) {
-          tagText = '${daysToSunday}일 후 시작';
+          tagText = '${daysToSunday+1}일 후 시작';
         }
       }
     } else if (status == 'ONGOING' && now.weekday == DateTime.sunday) {
@@ -221,10 +204,10 @@ class _Tag extends StatelessWidget {
                 padding: const EdgeInsets.all(5),
                 child: Row(
                   children: [
-                    Image.asset(
-                      'asset/image/timer.png',
-                      width: 16.0,
-                      height: 16.0,
+                    SvgPicture.asset(
+                      'asset/icons/mission_repeat_timer.svg',
+                      width: 16,
+                      height: 16,
                     ),
                     const SizedBox(width: 1.0),
                     Flexible(

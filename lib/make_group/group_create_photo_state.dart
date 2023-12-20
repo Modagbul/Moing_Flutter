@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
@@ -23,6 +24,8 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
   /// 클릭 제어
   bool onLoading = false;
+  bool _isGetPresignedUrlInProgress = false;
+  bool _isMakeTeamInProgress = false;
 
   /// 사진 업로드
   XFile? avatarFile;
@@ -51,19 +54,24 @@ class GroupCreatePhotoState extends ChangeNotifier {
     try {
       onLoading = true;
       notifyListeners();
-      var status = await Permission.photos.request();
-      print('status : ${status.toString()}');
-      if(status.isGranted) {
-        final XFile? assetFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-        avatarFile = assetFile;
-      }
-      else {
-        openAppSettings();
-      }
+      await Permission.photos.request();
+      final XFile? assetFile =
+      await ImagePicker().pickImage(source: ImageSource.gallery);
+      avatarFile = assetFile;
     } catch (e) {
-      print(e.toString());
-      viewUtil.showAlertDialog(context: context, message: e.toString());
+      print('소모임 대표 사진 업로드 실패 : ${e.toString()}');
+      if(e.toString().contains('photo access')) {
+        bool? isImagePermissioned = await viewUtil.showWarningDialog(
+            context: context,
+            title: '갤러리 접근 권한이 필요해요',
+            content: '사진을 업로드하기 위해 갤러리 접근 권한이 필요해요.\n설정에서 갤러리 접근 권한을 허용해주세요',
+            leftText: '취소하기',
+            rightText: '허용하러 가기');
+
+        if (isImagePermissioned != null && isImagePermissioned) {
+          openAppSettings();
+        }
+      }
     } finally {
       onLoading = false;
       notifyListeners();
@@ -72,6 +80,9 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
   // 만들기 버튼 클릭
   void makePressed() async {
+    if (_isMakeTeamInProgress) return;
+    if (_isGetPresignedUrlInProgress) return;
+
     if (avatarFile != null) {
       // 파일 확장자 얻기
       extension = avatarFile!.path.split(".").last;
@@ -92,6 +103,8 @@ class GroupCreatePhotoState extends ChangeNotifier {
   }
 
   Future<bool> getPresignedUrl(String fileExtension) async {
+    _isGetPresignedUrlInProgress = true;
+
     try {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/image/presigned';
       Map<String, dynamic> data = {
@@ -114,17 +127,19 @@ class GroupCreatePhotoState extends ChangeNotifier {
         await uploadImageToS3(presignedUrl, avatarFile!);
         return true;
       } else {
-        if(apiResponse.errorCode == 'J0003') {
+        if (apiResponse.errorCode == 'J0003') {
           getPresignedUrl(fileExtension);
-        }
-        else {
-          throw Exception('getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
+        } else {
+          throw Exception(
+              'getPresignedUrl is Null, error code : ${apiResponse.errorCode}');
         }
         return false;
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
       return false;
+    } finally {
+      _isGetPresignedUrlInProgress = false;
     }
   }
 
@@ -152,6 +167,7 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
   // API 연동
   Future<void> makeTeam() async {
+    _isMakeTeamInProgress = true;
     final String apiUrl = '${dotenv.env['MOING_API']}/api/team';
 
     MakeTeamData data = MakeTeamData(
@@ -173,20 +189,27 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
       if (apiResponse.data?['teamId'] != null) {
         print('소모임 생성 완료! : ${apiResponse.data?['teamId']}');
-        Navigator.of(context).pushNamed(
-          GroupCreateSuccessPage.routeName,
+        // Navigator.of(context).pushNamed(
+        //   GroupCreateSuccessPage.routeName,
+        // );
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          MainPage.routeName,
+              (route) => false,
+          arguments: 'new',
         );
-      }
-      else {
-        if(apiResponse.errorCode == 'J0003') {
+      } else {
+        if (apiResponse.errorCode == 'J0003') {
           makeTeam();
-        }
-        else {
-          throw Exception('makeTeam is Null, error code : ${apiResponse.errorCode}');
+        } else {
+          throw Exception(
+              'makeTeam is Null, error code : ${apiResponse.errorCode}');
         }
       }
     } catch (e) {
       print('소모임 생성 실패: $e');
+    } finally {
+      _isMakeTeamInProgress = false;
     }
   }
 }

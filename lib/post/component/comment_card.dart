@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/post/post_detail_state.dart';
@@ -43,8 +44,8 @@ class _Header extends StatelessWidget {
                   width: 20,
                   height: 20,
                 )
-              : Image.asset(
-                  'asset/image/icon_user_profile.png',
+              : SvgPicture.asset(
+                  'asset/icons/icon_user_profile.svg',
                   fit: BoxFit.cover,
                   width: 20,
                   height: 20,
@@ -61,16 +62,16 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(width: 4.0),
         if (commentData.writerIsLeader)
-          Image.asset(
-            'asset/image/icon_crown.png',
-            width: 14.0,
-            height: 14.0,
+          SvgPicture.asset(
+            'asset/icons/icon_crown.svg',
+            width: 14,
+            height: 14,
           ),
         const Spacer(),
         if (commentData.isWriter)
           GestureDetector(
-            onTap: () {
-              context
+            onTap: () async {
+              await context
                   .read<PostDetailState>()
                   .deleteComment(boardCommentId: commentData.boardCommentId);
             },
@@ -97,14 +98,28 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28.0),
-      child: Text(
-        commentData.content,
-        style: const TextStyle(
-          color: grayBlack3,
-          fontSize: 14.0,
-          fontWeight: FontWeight.w500,
-          height: 1.7,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            commentData.content,
+            style: const TextStyle(
+              color: grayBlack3,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+              height: 1.7,
+            ),
+          ),
+          const SizedBox(height: 12.0),
+          Text(
+            commentData.createdDate,
+            style: const TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: grayBlack8,
+            ),
+          ),
+        ],
       ),
     );
   }

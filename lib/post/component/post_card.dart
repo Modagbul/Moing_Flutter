@@ -45,8 +45,8 @@ class PostCard extends StatelessWidget {
                   width: 20,
                   height: 20,
                 )
-              : Image.asset(
-                  'asset/image/icon_user_profile.png',
+              : SvgPicture.asset(
+                  'asset/icons/icon_user_profile.svg',
                   fit: BoxFit.cover,
                   width: 20,
                   height: 20,
@@ -63,10 +63,10 @@ class PostCard extends StatelessWidget {
         ),
         const SizedBox(width: 4.0),
         if (postData.writerIsLeader)
-          Image.asset(
-            'asset/image/icon_crown.png',
-            width: 14.0,
-            height: 14.0,
+          SvgPicture.asset(
+            'asset/icons/icon_crown.svg',
+            width: 14,
+            height: 14,
           ),
         const Spacer(),
         const SizedBox(height: 48.0),
@@ -96,7 +96,7 @@ class PostCard extends StatelessWidget {
             const SizedBox(width: 4.0),
             if (!isRead)
               SvgPicture.asset(
-                'asset/image/icon_new.svg',
+                'asset/icons/icon_new.svg',
                 width: 16,
                 height: 16,
               ),
@@ -118,10 +118,10 @@ class PostCard extends StatelessWidget {
   Widget _renderNoticeCardFooter({required int commentNum}) {
     return Row(
       children: [
-        Image.asset(
-          'asset/image/icon_message.png',
-          width: 14.0,
-          height: 14.0,
+        SvgPicture.asset(
+          'asset/icons/icon_message.svg',
+          width: 14,
+          height: 14,
         ),
         const SizedBox(width: 4.0),
         Text(

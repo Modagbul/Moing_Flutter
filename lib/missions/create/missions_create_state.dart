@@ -48,6 +48,7 @@ class MissionCreateState extends ChangeNotifier {
   bool isSuccess = false;
   // 오늘 날짜 선택 여부
   bool isPickedToday = false;
+  bool onLoading = false;
 
   // 미션 추천 문구 리스트
   List<String> textList = [];
@@ -73,10 +74,10 @@ class MissionCreateState extends ChangeNotifier {
     initState();
   }
 
-  void initState() {
+  void initState() async {
     log('Instance "MissionCreateState" has been created');
     print('teamId : $teamId, repeatMissions : $repeatMissions');
-    getMissionRecommend();
+    await getMissionRecommend();
 
     titleController.addListener(_onTitleTextChanged);
     titleFocusNode.addListener(onTitleFocusChanged);
@@ -175,7 +176,7 @@ class MissionCreateState extends ChangeNotifier {
   }
 
   /// 미션 추천 API
-  void getMissionRecommend() async {
+  Future<void> getMissionRecommend() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/recommend';
 
     try {
@@ -217,12 +218,7 @@ class MissionCreateState extends ChangeNotifier {
       }
 
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          getMissionRecommend();
-        }
-        else {
-          throw Exception('getMissionRecommend is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getMissionRecommend is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -352,6 +348,8 @@ class MissionCreateState extends ChangeNotifier {
 
   /// 마감 날짜 선택 시 IOS 날짜 선택 모달
   void datePicker() {
+    if(onLoading) return;
+    onLoading = true;
     DateTime now = DateTime.now();
     DatePicker.showDatePicker(context,
         showTitleActions: true,
@@ -378,10 +376,14 @@ class MissionCreateState extends ChangeNotifier {
       checkAddition();
       notifyListeners();
     }, currentTime: DateTime.now(), locale: LocaleType.ko);
+    onLoading = false;
   }
 
   /// 마감 시간 선택 시 IOS 시간 선택 모달
   void timePicker() {
+    if(onLoading) return;
+    onLoading = true;
+
     timeScrollController.dispose();
     timeScrollController = FixedExtentScrollController(initialItem: timeCountIndex);
     timeList = timeList.length < 1 ? List.from(timeCountList) : timeList;
@@ -453,6 +455,7 @@ class MissionCreateState extends ChangeNotifier {
         ),
       ),
     );
+    onLoading = false;
   }
 
 
@@ -483,7 +486,7 @@ class MissionCreateState extends ChangeNotifier {
                         Text('#$recommendText', style: ts),
                         Text(' 인증미션 추천',
                             style: ts.copyWith(color: grayScaleGrey400)),
-                        const SizedBox(width: 44),
+                        Spacer(),
                         GestureDetector(
                             onTap: () {
                               Navigator.of(context).pop();
@@ -558,7 +561,10 @@ class MissionCreateState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void submit() async {
+  Future<void> submit() async {
+    if(onLoading) return;
+    onLoading = true;
+
     if (isSuccess) {
       int repeatMission;
       String way = '';
@@ -611,6 +617,8 @@ class MissionCreateState extends ChangeNotifier {
         log('미션 생성 실패: $e');
       }
     }
+    onLoading = false;
+
     String warningText = '미션이 등록되었어요.';
 
     if (warningText.isNotEmpty) {

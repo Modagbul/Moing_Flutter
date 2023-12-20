@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
@@ -67,7 +68,7 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
               _Title(
                 mainText: '한번 미션',
                 countText:
-                    '${state.aggregateTeamSingleMissionStatus?.data?.length ?? 0}',
+                    '${state.aggregateTeamSingleMissionStatus?.data.length ?? 0}',
               ),
               const SizedBox(
                 height: 12.0,
@@ -81,8 +82,8 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                     itemCount:
                         state.aggregateTeamSingleMissionStatus?.data.length,
                     itemBuilder: (context, index) {
-                      final e =
-                          state.aggregateTeamSingleMissionStatus?.data[index];
+                      final e = state.aggregateTeamSingleMissionStatus?.data[index];
+                      print('e : ${e.toString()}');
                       log('Building item: ${e?.missionTitle}');
 
                       return Padding(
@@ -95,11 +96,13 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                           onTap: () {
                             Navigator.of(context).pushNamed(
                                 MissionProvePage.routeName,
-                                arguments: {
-                                  'isRepeated': false,
-                                  'teamId': e.teamId,
-                                  'missionId': e.missionId,
-                                },).then((_) {
+                                arguments: MissionProveArgument(
+                                    isRepeated: false,
+                                    teamId: e.teamId,
+                                    missionId: e.missionId,
+                                    status: e.status,
+                                    isEnded: false,),
+                            ).then((_) {
                               Provider.of<MissionsGroupState>(context,
                                   listen: false)
                                   .reloadMissionStatus();
@@ -118,7 +121,7 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                     height: 126,
                     child: Center(
                       child: Text(
-                        '아직 미션이 없어요.',
+                        '진행 중인 한번 미션이 없어요.',
                         style: TextStyle(
                           color: grayScaleGrey400,
                           fontSize: 14.0,
@@ -161,15 +164,17 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                       totalNum: e.totalNum,
                       doneNum: e.doneNum,
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(MissionProvePage.routeName, arguments: {
-                          'isRepeated': true,
-                          'teamId': e.teamId,
-                          'missionId': e.missionId,
-                        },).then((_) {
-                          Provider.of<MissionsGroupState>(context,
-                              listen: false)
-                              .reloadMissionStatus();
+                        Navigator.of(context).pushNamed(
+                          MissionProvePage.routeName,
+                          arguments: MissionProveArgument(
+                              isRepeated: true,
+                              teamId: e.teamId,
+                              missionId: e.missionId,
+                              status: e.status,
+                              isEnded: false,),
+                        ).then((_) {
+                          Provider.of<MissionsGroupState>(
+                              context, listen: false).reloadMissionStatus();
                         });
                       },
                     );
@@ -183,7 +188,7 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                     height: 182,
                     child: Center(
                       child: Text(
-                        '아직 미션이 없어요.',
+                        '진행 중인 반복 미션이 없어요.',
                         style: TextStyle(
                           color: grayScaleGrey400,
                           fontSize: 14.0,

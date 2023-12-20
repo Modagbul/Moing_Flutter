@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 
-import '../../main/alarm/alarm.dart';
 import '../../model/api_code/api_code.dart';
 import '../../model/response/team_list_response.dart';
 
@@ -15,8 +14,6 @@ class MissionsState extends ChangeNotifier {
   int _selectedTeamId = 0;
 
   int get selectedTeamId => _selectedTeamId;
-
-  String? alarmCount;
 
   void setSelectedTeamId(int teamId) {
     if (_selectedTeamId != teamId) {
@@ -33,10 +30,7 @@ class MissionsState extends ChangeNotifier {
 
   MissionsState({required this.context}) {
     log('Instance "MissionsState" has been created');
-    initState();
-    getNotReadAlarmCount();
-    getTeamListStatus();
-    notifyListeners();
+    // initState();
   }
 
   @override
@@ -45,21 +39,10 @@ class MissionsState extends ChangeNotifier {
     super.dispose();
   }
 
-  void initState() {
-    getTeamListStatus();
+  Future<void> initState() async {
+    await getTeamListStatus();
     log('Instance "OngoingMissionState" has been created');
     notifyListeners();
-  }
-
-  // 알람 클릭
-  void alarmPressed() async {
-    final result = await Navigator.of(context).pushNamed(
-      AlarmPage.routeName,
-    );
-
-    if (result as bool) {
-      getNotReadAlarmCount();
-    }
   }
 
   Future<void> getTeamListStatus() async {
@@ -71,11 +54,5 @@ class MissionsState extends ChangeNotifier {
       }
       notifyListeners();
     }
-  }
-
-  // 안읽음 알림 개수 조회
-  void getNotReadAlarmCount() async {
-    alarmCount = await apiCode.getNotReadAlarmCount();
-    notifyListeners();
   }
 }

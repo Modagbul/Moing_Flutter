@@ -8,6 +8,7 @@ class CommentData {
   final String? writerProfileImage;
   final bool isWriter;
   final bool writerIsDeleted;
+  final String createdDate;
 
   CommentData({
     required this.boardCommentId,
@@ -17,6 +18,7 @@ class CommentData {
     required this.writerProfileImage,
     required this.isWriter,
     required this.writerIsDeleted,
+    required this.createdDate,
   });
 
   factory CommentData.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class CommentData {
       writerProfileImage: json['writerProfileImage'] as String?,
       isWriter: json['isWriter'] as bool,
       writerIsDeleted: json['writerIsDeleted'] as bool,
+      createdDate: json['createdDate'] as String,
     );
   }
 }

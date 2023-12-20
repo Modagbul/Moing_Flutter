@@ -15,6 +15,7 @@ class SkipMissionState extends ChangeNotifier {
 
   String? selectedCategory;
   bool isSelected = false;
+  bool onLoading = false;
 
   final TextEditingController textController = TextEditingController();
 
@@ -62,10 +63,10 @@ class SkipMissionState extends ChangeNotifier {
     return isCategorySelected() ? grayScaleGrey700 : grayScaleGrey500;
   }
 
-  void submit() async {
-    if (!isCategorySelected()) {
-      return;
-    }
+  Future<void> submit() async {
+    if (!isCategorySelected()) return;
+    if(onLoading) return;
+    onLoading = true;
 
     print(textController.text);
     final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
@@ -88,16 +89,12 @@ class SkipMissionState extends ChangeNotifier {
         skipSuccess();
       }
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          submit();
-        }
-        else {
-          throw Exception('submit is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('submit is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('텍스트 인증 실패: $e');
     }
+    onLoading = false;
   }
 
   skipSuccess() async {
@@ -121,13 +118,4 @@ class SkipMissionState extends ChangeNotifier {
     );
     notifyListeners();
   }
-// 사진 업로드 화면으로 이동
-// void nextPressed() {
-//   Navigator.pushNamed(context, GroupCreatePhotoPage.routeName, arguments: {
-//     'category': category,
-//     'name': nameController.text,
-//     'introduce': introduceController.text,
-//     'promise': resolutionController.text,
-//   });
-// }
 }

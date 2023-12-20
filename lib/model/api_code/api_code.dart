@@ -48,8 +48,7 @@ class ApiCode {
           await Future.delayed(Duration(seconds: 1));
           getSingleBoard(teamId: teamId);
         } else {
-          throw Exception(
-              'getSingleBoard data is Null, error code : ${apiResponse.errorCode}');
+          print('getSingleBoard data is Null, error code : ${apiResponse.errorCode}');
         }
       }
     } catch (e) {
@@ -69,15 +68,9 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('마이페이지 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getMyPageData();
-        } else {
-          throw Exception(
-              'getMyPageData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getMyPageData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('마이페이지 데이터 조회 실패: $e');
@@ -85,7 +78,6 @@ class ApiCode {
     return null;
   }
 
-  /// J0003 적용 ver
   Future<ProfileData?> getProfileData() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
 
@@ -101,44 +93,12 @@ class ApiCode {
         log('프로필 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getProfileData();
-        } else {
-          throw Exception(
-              'ApiResponse.data is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('ApiResponse.data is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('프로필 데이터 조회 실패: $e');
     }
     return null;
-  }
-
-  void putProfileData({required ProfileData profileData}) async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
-
-    try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-          await call.makeRequest<Map<String, dynamic>>(
-        url: apiUrl,
-        method: 'PUT',
-        body: profileData.toJson(),
-        fromJson: (data) => data as Map<String, dynamic>,
-      );
-
-      if (apiResponse.data != null) {
-        log('프로필 데이터 수정 성공: ${apiResponse.data}');
-      } else {
-        if (apiResponse.errorCode == 'J0003') {
-          putProfileData(profileData: profileData);
-        } else {
-          throw Exception(
-              'putProfileData is Null, error code : ${apiResponse.errorCode}');
-        }
-      }
-    } catch (e) {
-      log('프로필 데이터 수정 실패: $e');
-    }
   }
 
   Future<AllPostData?> getAllPostData({required int teamId}) async {
@@ -156,12 +116,7 @@ class ApiCode {
         log('모든 공지, 게시글 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getAllPostData(teamId: teamId);
-        } else {
-          throw Exception(
-              'getAllPostData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getAllPostData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('모든 공지, 게시글 데이터 조회 실패: $e');
@@ -180,7 +135,6 @@ class ApiCode {
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
-          log('반복 미션 Server response: $data');
           return (data as List<dynamic>)
               .map((item) =>
                   RepeatMission.fromJson(item as Map<String, dynamic>))
@@ -189,16 +143,10 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('반복 미션 상태 조회 성공: ${apiResponse.data}');
         return RepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getRepeatMissionStatus(teamId: teamId);
-        } else {
-          throw Exception(
-              'getRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('반복 미션 상태 조회 실패: $e');
@@ -224,13 +172,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글/공지 생성 성공: ${apiResponse.data}');
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          postCreatePostOrNotice(
-              teamId: teamId, createPostData: createPostData);
-        } else {
-          throw Exception(
-              'postCreatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('postCreatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글/공지 생성 실패: $e');
@@ -254,12 +196,7 @@ class ApiCode {
         log('게시글 상세 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getDetailPostData(teamId: teamId, boardId: boardId);
-        } else {
-          throw Exception(
-              'getDetailPostData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getDetailPostData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 상세 조회 실패: $e');
@@ -279,7 +216,6 @@ class ApiCode {
         url: apiUrl,
         method: 'GET',
         fromJson: (data) {
-          log('한번 미션 Server response: $data');
           return (data as List<dynamic>)
               .map((item) => Mission.fromJson(item as Map<String, dynamic>))
               .toList();
@@ -287,16 +223,10 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('한번 미션 상태 조회 성공: ${apiResponse.data}');
         return BoardSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getSingleMissionStatus(teamId: teamId);
-        } else {
-          throw Exception(
-              'getSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('한번 미션 상태 조회 실패: $e');
@@ -322,12 +252,7 @@ class ApiCode {
         log('게시글 댓글 전체 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getAllCommentData(teamId: teamId, boardId: boardId);
-        } else {
-          throw Exception(
-              'getAllCommentData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getAllCommentData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 댓글 전체 조회 실패: $e');
@@ -360,12 +285,7 @@ class ApiCode {
         return BoardCompletedMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getCompletedMissionStatus(teamId: teamId);
-        } else {
-          throw Exception(
-              'getCompletedMissionStatus is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getCompletedMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('완료된 미션 상태 조회 실패: $e');
@@ -392,15 +312,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글 댓글 생성 성공: ${apiResponse.data}');
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          postCreateComment(
-              teamId: teamId,
-              boardId: boardId,
-              createCommentData: createCommentData);
-        } else {
-          throw Exception(
-              'postCreateComment is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('postCreateComment is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 댓글 생성 실패: $e');
@@ -408,7 +320,7 @@ class ApiCode {
     return;
   }
 
-  void deleteComment({
+  Future<void> deleteComment({
     required int teamId,
     required int boardId,
     required int boardCommentId,
@@ -427,13 +339,7 @@ class ApiCode {
       if (apiResponse.isSuccess) {
         log('게시글 댓글 삭제 성공');
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          deleteComment(
-              teamId: teamId, boardId: boardId, boardCommentId: boardCommentId);
-        } else {
-          throw Exception(
-              'deleteComment is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('deleteComment is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 댓글 삭제 실패: $e');
@@ -457,12 +363,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글 삭제 성공: ${apiResponse.message}');
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          deletePost(teamId: teamId, boardId: boardId);
-        } else {
-          throw Exception(
-              'deletePost is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('deletePost is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 삭제 실패: $e');
@@ -489,13 +390,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글/공지 수정 성공: ${apiResponse.data}');
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          putUpdatePostOrNotice(
-              teamId: teamId, boardId: boardId, createPostData: createPostData);
-        } else {
-          throw Exception(
-              'putUpdatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('putUpdatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글/공지 수정 실패: $e');
@@ -517,17 +412,12 @@ class ApiCode {
         log('로그아웃 성공!');
         return true;
       } else {
-        if (apiResponse?.errorCode == 'J0003') {
-          return false;
-        } else {
-          throw Exception(
-              'signOut is Null, error code : ${apiResponse?.errorCode}');
-        }
+        print('signOut is Null, error code : ${apiResponse?.errorCode}');
       }
     } catch (e) {
       log('로그아웃 실패: $e');
-      return false;
     }
+    return false;
   }
 
   Future<AggregateSingleMissionResponse?>
@@ -549,16 +439,10 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('한번 미션 상태 조회 성공: ${apiResponse.data}');
         return AggregateSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getAggregateSingleMissionStatus();
-        } else {
-          throw Exception(
-              'getAggregateSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getAggregateSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('한번 미션 상태 조회 실패: $e');
@@ -587,16 +471,10 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('팀별 한번 미션 상태 조회 성공: ${apiResponse.data}');
         return AggregateTeamSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getAggregateTeamSingleMissionStatus(teamId: teamId);
-        } else {
-          throw Exception(
-              'getAggregateTeamSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getAggregateTeamSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀별 한번 미션 상태 조회 실패: $e');
@@ -623,16 +501,10 @@ class ApiCode {
       );
 
       if (apiResponse.data != null) {
-        log('반복 미션 상태 조회 성공: ${apiResponse.data}');
         return AggregateRepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getAggregateRepeatMissionStatus();
-        } else {
-          throw Exception(
-              'getAggregateRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getAggregateRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('반복 미션 상태 조회 실패: $e');
@@ -665,12 +537,7 @@ class ApiCode {
         return AggregateTeamRepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getAggregateTeamRepeatMissionStatus(teamId: teamId);
-        } else {
-          throw Exception(
-              'getAggregateTeamRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getAggregateTeamRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀별 반복 미션 상태 조회 실패: $e');
@@ -699,12 +566,7 @@ class ApiCode {
         return TeamListResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getTeamListStatus();
-        } else {
-          throw Exception(
-              'getTeamListStatus is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getTeamListStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀 리스트 조회 실패: $e');
@@ -726,12 +588,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getTeamFireLevel(teamId: teamId);
-        } else {
-          throw Exception(
-              'getTeamFireLevel is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getTeamFireLevel is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀별 불 레벨 경험치 조회: $e');
@@ -754,12 +611,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data!['teamId'];
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          deleteTeam(teamId: teamId);
-        } else {
-          throw Exception(
-              'deleteTeam is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('deleteTeam is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('소모임장 강제종료 실패: $e');
@@ -782,12 +634,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data!['teamId'];
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          deleteTeam(teamId: teamId);
-        } else {
-          throw Exception(
-              'deleteTeamUser is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('deleteTeamUser is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('소모임원 탈퇴 실패: $e');
@@ -810,12 +657,7 @@ class ApiCode {
         log('알람 설정 조회 성공: ${apiResponse.data}');
         return apiResponse.data;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getAlarmSettings();
-        } else {
-          throw Exception(
-              'getAlarmSettings is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getAlarmSettings is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알람 설정 조회 실패1: $e');
@@ -842,12 +684,7 @@ class ApiCode {
         log('알람 설정 수정 성공!');
         return apiResponse.data;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          return updateAlarmSettings(type, status);
-        } else {
-          throw Exception(
-              'updateAlarmSettings is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('updateAlarmSettings is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알람 설정 수정 실패: $e');
@@ -875,12 +712,7 @@ class ApiCode {
         log('팀별 미션 사진 모아보기 성공: ${apiResponse.data}');
         return apiResponse.data;
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          getTeamMissionPhotoList();
-        } else {
-          throw Exception(
-              'getTeamMissionPhotoList is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('getTeamMissionPhotoList is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀별 미션 사진 모아보기 실패: $e');
@@ -889,7 +721,7 @@ class ApiCode {
   }
 
   Future<bool?> postReportPost({required int boardId}) async {
-    String apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$boardId';
+    String apiUrl = '${dotenv.env['MOING_API']}/api/report/BOARD/$boardId';
     try {
       ApiResponse<int> apiResponse = await call.makeRequest<int>(
         url: apiUrl,
@@ -901,17 +733,12 @@ class ApiCode {
         log('게시글 신고 성공!');
         return true;
       } else {
-        if (apiResponse?.errorCode == 'J0003') {
-          return false;
-        } else {
-          throw Exception(
-              'postReportPost is Null, error code : ${apiResponse?.errorCode}');
-        }
+        print('postReportPost is Null, error code : ${apiResponse?.errorCode}');
       }
     } catch (e) {
       log('게시글 신고 실패: $e');
-      return false;
     }
+    return false;
   }
 
   Future<String?> getNotReadAlarmCount() async {
@@ -929,14 +756,11 @@ class ApiCode {
         log('안읽음 알림 개수 조회 성공!');
         return apiResponse.data!['count'];
       } else {
-        if (apiResponse?.errorCode == 'J0003') {
-        } else {
-          throw Exception(
-              'getNotReadAlarmCount is Null, error code : ${apiResponse?.errorCode}');
-        }
+        print('getNotReadAlarmCount is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('안읽음 알림 개수 조회 실패: $e');
     }
+    return null;
   }
 }

@@ -19,6 +19,8 @@ class OngoingMissionState extends ChangeNotifier {
   BoardSingleMissionResponse? singleMissionStatus;
   APICall call = APICall();
 
+  String apiUrl = '';
+
   OngoingMissionState({
     required this.context,
     required this.teamId,
@@ -27,9 +29,9 @@ class OngoingMissionState extends ChangeNotifier {
   }
 
   void initState() async {
-    getRepeatMissionStatus();
-    getSingleMissionStatus();
-    checkMeIsLeader();
+    await getRepeatMissionStatus();
+    await getSingleMissionStatus();
+    await checkMeIsLeader();
     log('Instance "OngoingMissionState" has been created');
   }
 
@@ -49,7 +51,7 @@ class OngoingMissionState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void checkMeIsLeader() async {
+  Future<void> checkMeIsLeader() async {
     try {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/isLeader';
       ApiResponse<bool> apiResponse =
@@ -61,18 +63,15 @@ class OngoingMissionState extends ChangeNotifier {
 
       if(apiResponse.isSuccess == true) {
         isLeader = apiResponse.data;
+        print('onGoing에서 isLeader : $isLeader');
       }
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          checkMeIsLeader();
-        }
-        else {
-          throw Exception('OnGoingIsLeader is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('OnGoingIsLeader is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       print('OnGoingIsLeader - 내가 리더인지 조회 실패: $e');
     }
+    notifyListeners();
   }
 
   void reloadMissionStatus() async {
@@ -80,4 +79,31 @@ class OngoingMissionState extends ChangeNotifier {
     await getSingleMissionStatus();
     notifyListeners();
   }
+
+  // Future<void> missionDelete(int missionId) async {
+  //   apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId';
+  //
+  //   try {
+  //     ApiResponse<int> apiResponse = await call.makeRequest<int>(
+  //       url: apiUrl,
+  //       method: 'DELETE',
+  //       fromJson: (dataJson) => dataJson as int,
+  //     );
+  //
+  //     if (apiResponse.isSuccess) {
+  //       print('${apiResponse.data} 미션 삭제가 완료되었습니다.');
+  //
+  //       notifyListeners();
+  //     } else {
+  //       throw Exception('미션 삭제 실패, error code : ${apiResponse.errorCode}');
+  //     }
+  //   } catch (e) {
+  //     log('미션 삭제 실패: $e');
+  //   }
+  //
+  //   notifyListeners();
+  //
+  // }
+
 }
+

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_state.dart';
+import 'package:moing_flutter/model/response/mission/fire_person_list_repsonse.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 
@@ -11,11 +12,6 @@ class MissionFireUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorFilter colorFilter = ColorFilter.mode(
-      grayScaleGrey600.withOpacity(0.7),
-      BlendMode.overlay,
-    );
-
     return Column(
       children: [
         Container(
@@ -82,109 +78,25 @@ class MissionFireUser extends StatelessWidget {
                                 : null,
                           ),
                           child: ClipOval(
-                            child: userList[index].fireStatus == "False"
-                                ? ColorFiltered(
-                                    colorFilter: colorFilter,
-                                    child: Stack(
-                                      children: [
-                                        userList[index].profileImg != null
-                                            ? Image.network(
-                                                userList[index].profileImg!,
-                                                fit: BoxFit.cover,
-                                                loadingBuilder:
-                                                    (BuildContext context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-                                                  if (loadingProgress == null) {
-                                                    return child;
-                                                  } else {
-                                                    return const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                      Color>(
-                                                                  grayScaleGrey500),
-                                                          strokeWidth: 2.0,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                              )
-                                            : Image.asset(
-                                                'asset/image/icon_user_profile.png',
-                                                fit: BoxFit.cover,
-                                              ),
-                                        if (userList[index].fireStatus ==
-                                            "False")
-                                          Positioned(
-                                            top: 0,
-                                            left: 0,
-                                            child: SvgPicture.asset(
-                                              'asset/image/icon_fire_graphic.svg',
-                                              width: 90,
-                                              height: 90,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                      ],
+                            child: Stack(
+                              children: [
+                                _buildProfileImage(userList[index]),
+                                if (userList[index].fireStatus == "False")
+                                  Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    child: SvgPicture.asset(
+                                      'asset/icons/icon_fire_graphic.svg',
+                                      width: 90,
+                                      height: 90,
+                                      fit: BoxFit.cover,
                                     ),
-                                  )
-                                : Stack(
-                                    children: [
-                                      userList[index].profileImg != null
-                                          ? Image.network(
-                                              userList[index].profileImg!,
-                                              fit: BoxFit.cover,
-                                              loadingBuilder:
-                                                  (BuildContext context,
-                                                      Widget child,
-                                                      ImageChunkEvent?
-                                                          loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                } else {
-                                                  return const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
-                                                    child: Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        valueColor:
-                                                            AlwaysStoppedAnimation<
-                                                                    Color>(
-                                                                grayScaleGrey500),
-                                                        strokeWidth: 2.0,
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                            )
-                                          : Image.asset(
-                                              'asset/image/icon_user_profile.png',
-                                              fit: BoxFit.cover,
-                                            ),
-                                      if (userList[index].fireStatus == "False")
-                                        Positioned(
-                                          top: 0,
-                                          left: 0,
-                                          child: SvgPicture.asset(
-                                            'asset/image/icon_fire_graphic.svg',
-                                            width: 90,
-                                            height: 90,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                    ],
                                   ),
+                              ],
+                            ),
                           ),
                         ),
+
                         const SizedBox(height: 12), // 원과 텍스트 간의 간격 조정
                         Flexible(
                           child: Padding(
@@ -206,6 +118,50 @@ class MissionFireUser extends StatelessWidget {
                   );
                 }),
       ],
+    );
+  }
+
+  Widget _buildProfileImage(FireReceiverData user) {
+    ColorFilter colorFilter = ColorFilter.mode(
+      grayScaleGrey600.withOpacity(0.7),
+      BlendMode.overlay,
+    );
+
+    return ColorFiltered(
+      colorFilter: user.fireStatus == "False"
+          ? colorFilter
+          : const ColorFilter.mode(
+              Colors.transparent,
+              BlendMode.clear,
+            ),
+      child: user.profileImg != null
+          ? Image.network(
+              user.profileImg!,
+              fit: BoxFit.cover,
+              width: 90,
+              height: 90,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                } else {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(grayScaleGrey500),
+                        strokeWidth: 2.0,
+                      ),
+                    ),
+                  );
+                }
+              },
+            )
+          : SvgPicture.asset(
+              'asset/icons/icon_user_profile.svg',
+              fit: BoxFit.cover,
+            ),
     );
   }
 }

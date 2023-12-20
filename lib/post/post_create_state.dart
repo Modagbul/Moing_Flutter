@@ -22,6 +22,8 @@ class PostCreateState extends ChangeNotifier {
   bool isCheckedNotice = false;
   bool isButtonEnabled = false;
 
+  bool _isCreatePostInProgress = false;
+
   PostCreateState({
     required this.teamId,
     required this.context,
@@ -63,7 +65,11 @@ class PostCreateState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void requestCreatePost() async {
+  Future<void> requestCreatePost() async {
+    if(_isCreatePostInProgress) return;
+
+    _isCreatePostInProgress = true;
+
     await apiCode.postCreatePostOrNotice(
       teamId: teamId,
       createPostData: CreatePostData(
@@ -72,6 +78,7 @@ class PostCreateState extends ChangeNotifier {
         isNotice: isCheckedNotice,
       ),
     );
+    _isCreatePostInProgress = false;
     notifyListeners();
     Navigator.pop(context, true);
 

@@ -15,6 +15,7 @@ class PostDetailState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
   final TextEditingController commentController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   final int boardId;
   final int teamId;
@@ -24,19 +25,23 @@ class PostDetailState extends ChangeNotifier {
 
   final FToast fToast = FToast();
 
+  bool _isCreateCommentInProgress = false;
+  bool _isDeleteCommentInProgress = false;
+  bool _isReportPostInProgress = false;
+
   PostDetailState({
     required this.context,
     required this.teamId,
     required this.boardId,
   }) {
     initState();
-    getDetailPostData();
-    getAllCommentData();
   }
 
-  void initState() {
+  void initState() async {
     fToast.init(context);
     log('Instance "PostDetailState" has been created');
+    await getDetailPostData();
+    await getAllCommentData();
   }
 
   @override
@@ -53,7 +58,14 @@ class PostDetailState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getDetailPostData() async {
+  // 화면 최하단으로 스크롤
+  void scrollToBottom() {
+    scrollController.jumpTo(
+      scrollController.position.maxScrollExtent,
+    );
+  }
+
+  Future<void> getDetailPostData() async {
     postData =
         await apiCode.getDetailPostData(teamId: teamId, boardId: boardId);
     notifyListeners();
@@ -66,6 +78,9 @@ class PostDetailState extends ChangeNotifier {
   }
 
   Future<void> postCreateComment() async {
+    if(_isCreateCommentInProgress) return;
+
+    _isCreateCommentInProgress = true;
     await apiCode.postCreateComment(
       teamId: teamId,
       boardId: boardId,
@@ -75,11 +90,18 @@ class PostDetailState extends ChangeNotifier {
     );
     await getAllCommentData();
     clearNameTextField();
+    FocusScope.of(context).unfocus(); // 키보드 닫힘
+    scrollToBottom(); // 화면 아래로 이동
     notifyListeners();
+    _isCreateCommentInProgress = false;
   }
 
-  void deleteComment({required int boardCommentId}) {
-    apiCode.deleteComment(
+  Future<void> deleteComment({required int boardCommentId}) async {
+    if(_isDeleteCommentInProgress) return;
+
+    _isDeleteCommentInProgress = true;
+
+    await apiCode.deleteComment(
         teamId: teamId, boardId: boardId, boardCommentId: boardCommentId);
     allCommentData?.commentBlocks.removeWhere((commentBlock) {
       return commentBlock.boardCommentId == boardCommentId;
@@ -127,9 +149,11 @@ class PostDetailState extends ChangeNotifier {
             );
           });
     }
+
+    _isDeleteCommentInProgress = false;
   }
 
-  void deletePost() async {
+  Future<void> deletePost() async {
     await apiCode.deletePost(teamId: teamId, boardId: boardId);
     notifyListeners();
     Navigator.pop(context);
@@ -239,6 +263,9 @@ class PostDetailState extends ChangeNotifier {
   }
 
   void reportPost() async {
+    if(_isReportPostInProgress) return;
+
+    _isReportPostInProgress = true;
     final bool? isSuccess = await apiCode.postReportPost(boardId: boardId);
 
     if (isSuccess != null && isSuccess) {
@@ -250,7 +277,7 @@ class PostDetailState extends ChangeNotifier {
                 child: Container(
                   alignment: Alignment.center,
                   width: double.infinity,
-                  height: 51,
+                  height: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white,
@@ -259,7 +286,7 @@ class PostDetailState extends ChangeNotifier {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '신고가 완료되었어요',
+                        '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
                         style: TextStyle(
                           color: grayBlack8,
                           fontSize: 16.0,
@@ -282,5 +309,6 @@ class PostDetailState extends ChangeNotifier {
 
       Navigator.of(context).pop();
     }
+    _isReportPostInProgress = false;
   }
 }

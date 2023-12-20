@@ -15,7 +15,9 @@ import 'package:provider/provider.dart';
 class GroupFinishExitState extends ChangeNotifier {
   final BuildContext context;
   final int teamId;
+  final String text;
   final ApiCode apiCode = ApiCode();
+  String? teamName;
 
   int finishCount = 0;
   int exitCount = 0;
@@ -27,13 +29,18 @@ class GroupFinishExitState extends ChangeNotifier {
   APICall call = APICall();
   ExitTeamInfo? teamInfo;
 
-  GroupFinishExitState({required this.context, required this.teamId}) {
-    log('Instance "GroupFinishExitState" has been created');
-    loadExitData();
+  GroupFinishExitState({
+    required this.context, required this.teamId, required this.text, required this.teamName}) {
+    print('teamName : $teamName');
+    initState();
+  }
+
+  void initState() async {
+    await loadExitData();
   }
 
   /// 삭제 전 조회 API
-  void loadExitData() async {
+  Future<void> loadExitData() async {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/review';
 
     try {
@@ -62,12 +69,7 @@ class GroupFinishExitState extends ChangeNotifier {
         }
 
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          loadExitData();
-        }
-        else {
-          throw Exception('loadExitData is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('loadExitData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -76,11 +78,30 @@ class GroupFinishExitState extends ChangeNotifier {
 
   /// 소모임 강제종료하기 버튼 클릭 시
   void finishPressed() async {
-    finishCount++;
-    if(teamInfo!= null && teamInfo!.isLeader == true) {
-      finishButtonText = '강제종료 완료하기';
-    } else {
-      finishButtonText = '탈퇴 완료하기';
+    /// 모임원이 1명인 소모임
+    if(teamInfo != null) {
+      int deleteTeamId;
+      if(teamInfo!.numOfMember == 1) {
+        deleteTeamId = await apiCode.deleteTeam(teamId: teamId);
+        if(deleteTeamId == teamId) {
+          Navigator.pushReplacementNamed(
+            context,
+            GroupFinishSuccessPage.routeName,
+            arguments: {
+              'teamId': teamId,
+              'text': '소모임 강제 종료가\n완료되었어요.'
+            },
+          );
+          notifyListeners();
+        }
+      } else {
+        finishCount++;
+        if(teamInfo!.isLeader) {
+          finishButtonText = '강제종료 완료하기';
+        } else {
+          finishButtonText = '소모임 탈퇴 완료하기';
+        }
+      }
     }
     notifyListeners();
 
@@ -95,7 +116,11 @@ class GroupFinishExitState extends ChangeNotifier {
             Navigator.pushReplacementNamed(
               context,
               GroupFinishSuccessPage.routeName,
-              arguments: teamId,
+              arguments: {
+                'teamId': teamId,
+                'text': '소모임 강제 종료\n신청이 완료되었어요.',
+                'teamName': teamInfo!.teamName,
+              },
             );
           }
         }
@@ -104,7 +129,8 @@ class GroupFinishExitState extends ChangeNotifier {
           if(deleteTeamId == teamId) {
             Navigator.pushReplacementNamed(
               context,
-              MainPage.routeName,
+              GroupExitApplyPage.routeName,
+              arguments: teamId,
             );
           }
         }
@@ -128,7 +154,15 @@ class GroupFinishExitState extends ChangeNotifier {
 
   // 강제종료 성공 후 목표보드로 되돌아갈 때
   void finishSuccessPressed() {
-    log(teamId.toString());
-    Navigator.pushNamed(context, BoardMainPage.routeName, arguments: {'teamId': teamId});
+    if(text.contains('종료가')) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        MainPage.routeName,
+            (route) => false,
+      );
+    }
+    else {
+      Navigator.pushNamed(context, BoardMainPage.routeName, arguments: {'teamId': teamId});
+    }
   }
 }

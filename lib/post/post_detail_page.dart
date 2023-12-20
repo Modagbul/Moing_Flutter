@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/board/component/icon_text_button.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
@@ -57,10 +59,13 @@ class PostDetailPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
+                      controller:
+                          context.read<PostDetailState>().scrollController,
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -78,22 +83,25 @@ class PostDetailPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 32.0),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12.0),
                                   child: Row(
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(50),
-                                        child: postDetailData?.writerProfileImage !=
+                                        child: postDetailData
+                                                    ?.writerProfileImage !=
                                                 null
                                             ? Image.network(
-                                                postDetailData?.writerProfileImage ??
+                                                postDetailData
+                                                        ?.writerProfileImage ??
                                                     '',
                                                 fit: BoxFit.cover,
                                                 width: 20,
                                                 height: 20,
                                               )
-                                            : Image.asset(
-                                                'asset/image/icon_user_profile.png',
+                                            : SvgPicture.asset(
+                                                'asset/icons/icon_user_profile.svg',
                                                 fit: BoxFit.cover,
                                                 width: 20,
                                                 height: 20,
@@ -109,11 +117,12 @@ class PostDetailPage extends StatelessWidget {
                                         ),
                                       ),
                                       const SizedBox(width: 4.0),
-                                      if (postDetailData?.writerIsLeader ?? false)
-                                        Image.asset(
-                                          'asset/image/icon_crown.png',
-                                          width: 14.0,
-                                          height: 14.0,
+                                      if (postDetailData?.writerIsLeader ??
+                                          false)
+                                        SvgPicture.asset(
+                                          'asset/icons/icon_crown.svg',
+                                          width: 14,
+                                          height: 14,
                                         ),
                                       const Spacer(),
                                       Text(
@@ -143,10 +152,11 @@ class PostDetailPage extends StatelessWidget {
                           ),
                           Container(
                             height: 8.0,
-                            decoration: const BoxDecoration(color: grayScaleGrey600),
+                            decoration:
+                                const BoxDecoration(color: grayScaleGrey600),
                           ),
                           _renderCommentScrollBody(context: context),
-                          const SizedBox(height: 100),
+                          const SizedBox(height: 150),
                         ],
                       ),
                     ),
@@ -176,10 +186,10 @@ class PostDetailPage extends StatelessWidget {
   Widget _renderNoticeTag() {
     return Row(
       children: [
-        Image.asset(
-          'asset/image/icon_solar_pin_bold.png',
-          width: 20.0,
-          height: 20.0,
+        SvgPicture.asset(
+          'asset/icons/icon_solar_pin_bold.svg',
+          width: 20,
+          height: 20,
         ),
         const SizedBox(width: 4.0),
         const Text(
@@ -241,12 +251,26 @@ class PostDetailPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                IconTextButton(
-                  onPressed: () {
-                    context.read<PostDetailState>().reportPost();
-                  },
-                  icon: 'asset/image/icon_edit.png',
-                  text: '게시글 신고하기',
+                GestureDetector(
+                  onTap: context.read<PostDetailState>().reportPost,
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'asset/icons/post_alarm.svg',
+                        width: 32,
+                        height: 32,
+                      ),
+                      const SizedBox(width: 24.0),
+                      const Text(
+                        '게시글 신고하기',
+                        style: TextStyle(
+                          color: grayScaleGrey200,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -289,12 +313,12 @@ class PostDetailPage extends StatelessWidget {
                   onPressed: () {
                     context.read<PostDetailState>().navigatePostUpdatePage();
                   },
-                  icon: 'asset/image/icon_edit.png',
+                  icon: 'asset/icons/icon_edit.svg',
                   text: '게시글 수정하기',
                 ),
                 IconTextButton(
                   onPressed: () => _showDeleteDialog(context),
-                  icon: 'asset/image/icon_delete.png',
+                  icon: 'asset/icons/icon_delete.svg',
                   text: '게시글 삭제하기',
                 ),
                 ElevatedButton(
@@ -324,7 +348,7 @@ class PostDetailPage extends StatelessWidget {
               content: '한번 삭제한 게시글은 복구할 수 없게 됩니다',
               onConfirm: () async {
                 Navigator.of(dialogContext).pop();
-                context.read<PostDetailState>().deletePost();
+                await context.read<PostDetailState>().deletePost();
               },
               onCanceled: () => Navigator.of(dialogContext).pop(),
               leftText: '취소하기',
@@ -335,7 +359,6 @@ class PostDetailPage extends StatelessWidget {
       },
     );
   }
-
 
   Widget _renderCommentScrollBody({required BuildContext context}) {
     AllCommentData? allCommentData =
@@ -376,7 +399,9 @@ class _CommentsInputWidget extends StatelessWidget {
     return TextField(
       controller: context.watch<PostDetailState>().commentController,
       onChanged: (value) => context.read<PostDetailState>().updateTextField(),
+      maxLength: 255,
       maxLines: 1,
+      inputFormatters: [LengthLimitingTextInputFormatter(200)],
       decoration: InputDecoration(
         filled: true,
         fillColor: grayScaleGrey600,
@@ -387,6 +412,13 @@ class _CommentsInputWidget extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(
           vertical: 20.0,
           horizontal: 16.0,
+        ),
+        counterText: '',
+        hintText: '댓글을 작성해주세요',
+        hintStyle: const TextStyle(
+          color: grayScaleGrey550,
+          fontSize: 16.0,
+          fontWeight: FontWeight.w500,
         ),
       ),
       style: const TextStyle(
@@ -406,12 +438,16 @@ class _CommentsInputWidget extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(6.0),
       child: IconButton(
-        icon: Image.asset(
-          'asset/image/icon_message.png',
-          width: 24.0,
-          height: 24.0,
+        icon: SvgPicture.asset(
+          context.read<PostDetailState>().commentController.text.isNotEmpty
+              ? 'asset/icons/icon_send_white.svg'
+              : 'asset/icons/icon_send.svg',
+          width: 24,
+          height: 24,
         ),
-        onPressed: context.watch<PostDetailState>().postCreateComment,
+        onPressed: () async {
+          await context.read<PostDetailState>().postCreateComment();
+        },
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/login/date/component/custom_date_picker_scroll_view_options.dart';
@@ -13,32 +14,57 @@ class SignUpDatePage extends StatelessWidget {
   static const routeName = '/sign/up/date';
 
   static route(BuildContext context) {
-    final Map<String, dynamic> data = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    final String nickname = data['nickname'] as String;
-    final String gender = data['gender'] as String;
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    String nickname = '';
+    String? gender = '';
+
+    if (arguments is Map<String, dynamic>) {
+      nickname = arguments['nickname'] as String;
+      gender = arguments['gender'] as String?;
+    } else {
+      // arguments가 String인 경우 또는 다른 타입인 경우 처리
+    }
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => SignUpDateState(context: context, nickname: nickname, gender: gender)),
+            create: (_) => SignUpDateState(
+                context: context, nickname: nickname, gender: gender)),
       ],
       builder: (context, _) {
         return const SignUpDatePage();
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: grayBackground,
         elevation: 0,
-        leading: GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
-          child: Image.asset(
-            'asset/image/arrow_left.png',
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: SvgPicture.asset(
+            'asset/icons/arrow_left.svg',
+            width: 24.0,
+            height: 24.0,
           ),
         ),
+        actions: [
+          TextButton(
+            onPressed: context.read<SignUpDateState>().skipPressed,
+            child: const Text(
+              '건너뛰기',
+              style: TextStyle(
+                color: grayScaleGrey100,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(width: 20),
+        ],
       ),
       backgroundColor: grayBackground,
       body: SafeArea(
@@ -50,7 +76,7 @@ class SignUpDatePage extends StatelessWidget {
               ),
               Container(
                 padding:
-                const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
                 decoration: BoxDecoration(
                   color: grayScaleGrey600,
                   borderRadius: BorderRadius.circular(12.0),
@@ -65,8 +91,8 @@ class SignUpDatePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Text(
-                '모닥불님의',
+              Text(
+                '${context.watch<SignUpDateState>().nickname}님의',
                 style: headerTextStyle,
               ),
               const SizedBox(
@@ -76,25 +102,33 @@ class SignUpDatePage extends StatelessWidget {
                 '생일은 언제인가요?',
                 style: headerTextStyle,
               ),
-              const SizedBox(height: 52.0),
+              const SizedBox(height: 16.0),
+              const Text(
+                '불편하시다면 다음 단계로 넘어가주세요!',
+                style: TextStyle(
+                  color: grayScaleGrey550,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 36.0),
               SizedBox(
                 height: 250,
                 child: ScrollDatePicker(
                   selectedDate: context.watch<SignUpDateState>().selectedDate,
                   locale: const Locale('ko'),
                   scrollViewOptions: const DatePickerScrollViewOptions(
-                    year: ScrollViewDetailOptions(
-                      label: '년',
-                      margin: EdgeInsets.only(right: 8),
-                    ),
-                    month: ScrollViewDetailOptions(
-                      label: '월',
-                      margin: EdgeInsets.only(right: 8),
-                    ),
-                    day: ScrollViewDetailOptions(
-                      label: '일',
-                    )
-                  ),
+                      year: ScrollViewDetailOptions(
+                        label: '년',
+                        margin: EdgeInsets.only(right: 8),
+                      ),
+                      month: ScrollViewDetailOptions(
+                        label: '월',
+                        margin: EdgeInsets.only(right: 8),
+                      ),
+                      day: ScrollViewDetailOptions(
+                        label: '일',
+                      )),
                   onDateTimeChanged: (DateTime value) {
                     context.read<SignUpDateState>().changeDate(value);
                   },
@@ -102,9 +136,10 @@ class SignUpDatePage extends StatelessWidget {
               ),
               const Spacer(),
               Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 32.0),
+                padding:
+                    const EdgeInsets.only(left: 20, right: 20, bottom: 32.0),
                 child: WhiteButton(
-                    onPressed: (){
+                    onPressed: () {
                       context.read<SignUpDateState>().nextPressed();
                     },
                     text: '다음으로'),

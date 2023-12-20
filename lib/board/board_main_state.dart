@@ -28,11 +28,11 @@ class BoardMainState extends ChangeNotifier {
     initState();
   }
 
-  void initState() {
+  void initState() async {
     log('Instance "BoardMainState" has been created');
     print('teamID : $teamId');
-    getSingleBoard();
-    getTeamFireLevel();
+    await getSingleBoard();
+    await getTeamFireLevel();
   }
 
   void initTabController({required TabController tabController}) {
@@ -46,7 +46,7 @@ class BoardMainState extends ChangeNotifier {
     super.dispose();
   }
 
-  void getSingleBoard() async {
+  Future<void> getSingleBoard() async {
     singleBoardData = await apiCode.getSingleBoard(teamId: teamId);
     teamInfo = singleBoardData?.teamInfo;
     notifyListeners();
@@ -56,7 +56,7 @@ class BoardMainState extends ChangeNotifier {
     Navigator.pushNamed(context, PostMainPage.routeName, arguments: teamId);
   }
 
-  void getTeamFireLevel() async {
+  Future<void> getTeamFireLevel() async {
     teamFireLevelData = await apiCode.getTeamFireLevel(teamId: teamId);
     notifyListeners();
   }

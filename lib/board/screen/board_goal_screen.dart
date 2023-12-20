@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
 import 'package:moing_flutter/board/screen/board_goal_state.dart';
@@ -18,7 +19,6 @@ class BoardGoalScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-
     final int level =
         context.watch<BoardMainState>().teamFireLevelData?.level ?? 0;
     final int score =
@@ -27,19 +27,27 @@ class BoardGoalScreen extends StatelessWidget {
         (context.watch<BoardMainState>().teamInfo?.category ?? '');
     final bool isDeleted =
         context.watch<BoardMainState>().teamInfo?.isDeleted ?? false;
+
+    bool leftLessThanOneHour = false;
     int daysRemaining = 0;
     int hoursRemaining = 0;
+    int minutesRemaining = 0;
 
-    if(isDeleted){
-      DateTime deletionTime =
-      DateTime.parse(context.watch<BoardMainState>().teamInfo!.deletionTime!);
+    if (isDeleted) {
+      DateTime deletionTime = DateTime.parse(
+          context.watch<BoardMainState>().teamInfo!.deletionTime!);
       DateTime threeDaysLater = deletionTime.add(const Duration(days: 3));
       DateTime now = DateTime.now();
       Duration difference = threeDaysLater.difference(now);
+
+      if (difference.inHours <= 1) {
+        leftLessThanOneHour = true;
+      }
+
       daysRemaining = difference.inDays;
       hoursRemaining = difference.inHours % 24;
+      minutesRemaining = difference.inMinutes % 60;
     }
-
 
     return MultiProvider(
       providers: [
@@ -65,19 +73,22 @@ class BoardGoalScreen extends StatelessWidget {
                       children: [
                         isDeleted
                             ? Column(
-                              children: [
-                                Row(
+                                children: [
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      Image.asset(
-                                        'asset/image/icon_warning_circle.png',
-                                        width: 20.0,
-                                        height: 20.0,
+                                      SvgPicture.asset(
+                                        'asset/icons/icon_warning_circle.svg',
+                                        width: 20,
+                                        height: 20,
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
-                                        '소모임 종료까지 $daysRemaining일 $hoursRemaining시간',
+                                        leftLessThanOneHour
+                                            ? '소모임 종료까지 $hoursRemaining시간 $minutesRemaining분'
+                                            : '소모임 종료까지 $daysRemaining일 $hoursRemaining시간',
                                         style: const TextStyle(
                                           color: errorColor,
                                           fontSize: 16.0,
@@ -86,9 +97,9 @@ class BoardGoalScreen extends StatelessWidget {
                                       )
                                     ],
                                   ),
-                                const SizedBox(height: 12.0),
-                              ],
-                            )
+                                  const SizedBox(height: 12.0),
+                                ],
+                              )
                             : SizedBox(height: screenHeight * 0.01),
                         _buildRandomMessageContainer(
                           level: level,
@@ -180,26 +191,29 @@ class BoardGoalScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Image.asset(
-                'asset/image/icon_fire_level.png',
-                width: 52.0,
-                height: 52.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  level.toString(),
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 7.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SvgPicture.asset(
+                  'asset/icons/icon_fire_level.svg',
+                  width: 33.58,
+                  height: 40.56,
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    level.toString(),
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
           const SizedBox(width: 10.0),
           Expanded(
@@ -212,13 +226,22 @@ class BoardGoalScreen extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              color: grayScaleGrey400,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () => context.read<BoardMainState>().getTeamFireLevel(),
+              splashColor: Colors.white,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.refresh,
+                  color: grayScaleGrey400,
+                ),
+              ),
             ),
-            onPressed: context.read<BoardMainState>().getTeamFireLevel,
           ),
+          const SizedBox(width: 5.0),
         ],
       ),
     );

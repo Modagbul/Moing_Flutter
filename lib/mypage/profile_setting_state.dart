@@ -1,22 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/profile/profile_model.dart';
 
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
-import 'package:moing_flutter/model/request/fix_team_request.dart';
-import 'package:moing_flutter/mypage/my_page_screen.dart';
-import 'package:moing_flutter/mypage/setting_page.dart';
 import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
@@ -34,16 +27,18 @@ class ProfileSettingState extends ChangeNotifier {
   final TextEditingController introduceController = TextEditingController();
 
   MyPageData? myPageData;
-
-  String nameGroupText = '';
   String introduceTextCount = '(0/300)';
 
   bool isNameChanged = false;
   bool isIntroduceChanged = false;
   bool isAvatarChanged = false;
+  bool isNickNameOverlapped = false;
+  bool isSubmit = false;
 
   /// 클릭 제어
   bool onLoading = false;
+  bool _isGetPresignedUrlInProgress = false;
+  bool _isFixProfileInProgress = false;
 
   /// 사진 업로드
   XFile? avatarFile;
@@ -61,56 +56,33 @@ class ProfileSettingState extends ChangeNotifier {
   ProfileSettingState({
     required this.context,
   }) {
-    getProfileData();
+    initState();
+  }
+
+  void initState() async {
+    await getProfileData();
     nameController.addListener(_onNameTextChanged);
     introduceController.addListener(_onIntroduceTextChanged);
   }
 
-  void getProfileData() async {
+  Future<void> getProfileData() async {
     profileData = await apiCode.getProfileData();
     nameController.text = profileData?.nickName ?? '';
     introduceController.text = profileData?.introduction ?? '';
     notifyListeners();
   }
 
-  void loadFixData(int teamId) async {
-    print('teamId : $teamId');
-    final String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
-
-    try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-          await call.makeRequest<Map<String, dynamic>>(
-        url: apiUrl,
-        method: 'GET',
-        fromJson: (json) => json as Map<String, dynamic>,
-      );
-
-      if (apiResponse.isSuccess == true) {
-        nameController.text = apiResponse.data?['name'];
-        introduceController.text = apiResponse.data?['introduction'];
-        getProfileImageUrl = apiResponse.data?['profileImage'];
-      } else {
-        if (apiResponse.errorCode == 'J0003') {
-          loadFixData(teamId);
-        } else {
-          throw Exception(
-              'loadFixData is Null, error code : ${apiResponse.errorCode}');
-        }
-      }
-    } catch (e) {
-      print('프로필 수정 전 조회 실패: $e');
-    }
-  }
-
   // nameController 텍스트 변경 감지
   void _onNameTextChanged() {
-    nameGroupText = nameController.text;
     isNameChanged = profileData?.nickName != nameController.text;
+    isNickNameOverlapped = false;
+    checkSubmit();
     notifyListeners();
   }
 
   void _onIntroduceTextChanged() {
     isIntroduceChanged = profileData?.introduction != introduceController.text;
+    checkSubmit();
     notifyListeners();
   }
 
@@ -134,6 +106,7 @@ class ProfileSettingState extends ChangeNotifier {
   // 이름 텍스트 필드 초기화 메소드
   void clearNameTextField() {
     nameController.clear();
+    checkSubmit();
     notifyListeners();
   }
 
@@ -146,6 +119,7 @@ class ProfileSettingState extends ChangeNotifier {
 
   // 텍스트 필드 변경 감지 메소드
   void updateTextField() {
+    checkSubmit();
     notifyListeners();
   }
 
@@ -165,12 +139,25 @@ class ProfileSettingState extends ChangeNotifier {
       if (assetFile != null) {
         avatarFile = assetFile;
         isAvatarChanged = true;
+        checkSubmit();
       } else {
         isAvatarChanged = false;
       }
     } catch (e) {
-      print(e.toString());
-      viewUtil.showAlertDialog(context: context, message: e.toString());
+      print('프로필 사진 업로드 실패 : ${e.toString()}');
+
+      if(e.toString().contains('photo access')) {
+        bool? isImagePermissioned = await viewUtil.showWarningDialog(
+            context: context,
+            title: '갤러리 접근 권한이 필요해요',
+            content: '사진을 업로드하기 위해 갤러리 접근 권한이 필요해요.\n설정에서 갤러리 접근 권한을 허용해주세요',
+            leftText: '취소하기',
+            rightText: '허용하러 가기');
+
+        if(isImagePermissioned != null && isImagePermissioned) {
+          openAppSettings();
+        }
+      }
       isAvatarChanged = false;
     } finally {
       onLoading = false;
@@ -178,10 +165,27 @@ class ProfileSettingState extends ChangeNotifier {
     }
   }
 
+  void checkSubmit() {
+    if (isNameChanged || isIntroduceChanged || isAvatarChanged) {
+      if (nameController.value.text.length > 0 &&
+          introduceController.value.text.length > 0) {
+        isSubmit = true;
+      } else {
+        isSubmit = false;
+      }
+    } else {
+      isSubmit = false;
+    }
+    notifyListeners();
+  }
+
   /// 저장 버튼 클릭
   void savePressed() async {
     try {
       if (onLoading) return;
+      if (_isFixProfileInProgress) return;
+      if (_isGetPresignedUrlInProgress) return;
+      if(nameController.value.text.isEmpty || introduceController.value.text.isEmpty) return;
       if (!isAvatarChanged && !isNameChanged && !isIntroduceChanged) return;
 
       print('savePressed called');
@@ -222,6 +226,7 @@ class ProfileSettingState extends ChangeNotifier {
 
   /// presignedURL 발급받기
   Future<bool> getPresignedUrl(String fileExtension) async {
+    _isGetPresignedUrlInProgress = true;
     try {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/image/presigned';
       Map<String, dynamic> data = {
@@ -251,6 +256,8 @@ class ProfileSettingState extends ChangeNotifier {
     } catch (e) {
       print('presigned url 발급 실패: $e');
       return false;
+    } finally {
+      _isGetPresignedUrlInProgress = false;
     }
   }
 
@@ -278,6 +285,8 @@ class ProfileSettingState extends ChangeNotifier {
 
   // 프로필 수정 API 연동
   Future<void> fixProfileAPI() async {
+    _isFixProfileInProgress = true;
+
     final String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
     try {
       FixProfile data = FixProfile(
@@ -340,15 +349,17 @@ class ProfileSettingState extends ChangeNotifier {
               });
         }
       } else {
-        if (apiResponse.errorCode == 'J0003') {
-          fixProfileAPI();
-        } else {
-          throw Exception(
-              'fixProfileAPI is Null, error code : ${apiResponse.errorCode}');
+        String? errorCode = apiResponse.errorCode;
+        if(errorCode != null && errorCode == 'AU0004') {
+        print('닉네임 중복 발생!');
+        isNickNameOverlapped = true;
+        notifyListeners();
         }
       }
     } catch (e) {
       print('프로필 수정 실패: $e');
+    } finally {
+      _isFixProfileInProgress = false;
     }
   }
 }

@@ -6,6 +6,7 @@ import '../../const/style/elevated_button.dart';
 
 class BoardMainBottomSheet extends StatelessWidget {
   final int teamId;
+
   const BoardMainBottomSheet({required this.teamId, super.key});
 
   @override
@@ -22,7 +23,6 @@ class BoardMainBottomSheet extends StatelessWidget {
           children: [
             IconTextButton(
               onPressed: () {
-                // TODO(): 소모임 탈퇴하기 구현 후 연결
                 print('소모임원 탈퇴 구현하기!');
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(
@@ -30,13 +30,20 @@ class BoardMainBottomSheet extends StatelessWidget {
                   arguments: teamId,
                 );
               },
-              icon: 'asset/image/icon_delete.png',
+              icon: 'asset/icons/icon_delete.svg',
               text: '소모임 탈퇴하기',
             ),
-            ElevatedButton(
-              onPressed: () {},
-              style: defaultButtonStyle,
-              child: const Text('닫기'),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: defaultButtonStyle.copyWith(
+              elevation: MaterialStateProperty.all(0.0),
+            ),
+                child: const Text('닫기'),
+              ),
             )
           ],
         ),

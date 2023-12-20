@@ -13,6 +13,7 @@ class TextAuthState extends ChangeNotifier {
   final int missionId;
   String? selectedCategory;
   bool isSelected = false;
+  bool onLoading = false;
 
   final TextEditingController textController = TextEditingController();
 
@@ -61,7 +62,8 @@ class TextAuthState extends ChangeNotifier {
   }
 
   void submit() async {
-    print(textController.text);
+    if(onLoading) return;
+    onLoading = true;
 
     final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
     final APICall call = APICall();
@@ -91,14 +93,7 @@ class TextAuthState extends ChangeNotifier {
     } catch (e) {
       log('텍스트 인증 실패: $e');
     }
+
+    onLoading = false;
   }
-// 사진 업로드 화면으로 이동
-// void nextPressed() {
-//   Navigator.pushNamed(context, GroupCreatePhotoPage.routeName, arguments: {
-//     'category': category,
-//     'name': nameController.text,
-//     'introduce': introduceController.text,
-//     'promise': resolutionController.text,
-//   });
-// }
 }

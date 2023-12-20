@@ -10,7 +10,7 @@ class EveryMissionProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
@@ -20,22 +20,20 @@ class EveryMissionProfile extends StatelessWidget {
               context.watch<MissionProveState>()
                   .everyMissionList![index].profileImg == null
               ? Container(
-            width: 24,
-            height: 24,
+            width: 20,
+            height: 20,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: grayScaleGrey400,
             ),
           )
-              : ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+              : ClipOval(
             child: Image.network(
-              context
-                  .watch<MissionProveState>()
+              context.watch<MissionProveState>()
                   .everyMissionList![index]
                   .profileImg!,
-              width: 24,
-              height: 24,
+              width: 20,
+              height: 20,
               fit: BoxFit.cover,
             ),
           ),

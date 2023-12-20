@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/missions/aggregate/missions_all_state.dart';
 import 'package:provider/provider.dart';
 
@@ -33,23 +34,6 @@ class MissionsAllPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<MissionsAllState>();
-
-    final data = state.aggregateRepeatMissionStatus?.data;
-    if (data == null) {
-      log('data is null');
-    } else if (data.isEmpty) {
-      log('data is empty');
-    } else {
-      log('data is not empty: $data');
-    }
-
-    final singleMissionData = state.aggregateSingleMissionStatus?.data;
-    if (singleMissionData == null) {
-      log('singleMissionData is null');
-    } else {
-      log('singleMissionData is not empty: $singleMissionData');
-    }
-
     return Scaffold(
       backgroundColor: grayBackground,
       body: SafeArea(
@@ -88,11 +72,12 @@ class MissionsAllPage extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
-                              arguments: {
-                                'isRepeated': false,
-                                'teamId': e.teamId,
-                                'missionId': e.missionId,
-                              },
+                              arguments: MissionProveArgument(
+                                  isRepeated: false,
+                                  teamId: e.teamId,
+                                  missionId: e.missionId,
+                                  status: e.status,
+                                  isEnded: false)
                             ).then((_) {
                               Provider.of<MissionsAllState>(context,
                                       listen: false)
@@ -112,7 +97,7 @@ class MissionsAllPage extends StatelessWidget {
                     height: 126,
                     child: Center(
                       child: Text(
-                        '아직 미션이 없어요.',
+                        '진행 중인 한번 미션이 없어요.',
                         style: TextStyle(
                           color: grayScaleGrey400,
                           fontSize: 14.0,
@@ -155,11 +140,12 @@ class MissionsAllPage extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).pushNamed(
                           MissionProvePage.routeName,
-                          arguments: {
-                            'isRepeated': true,
-                            'teamId': e.teamId,
-                            'missionId': e.missionId,
-                          },
+                            arguments: MissionProveArgument(
+                                isRepeated: true,
+                                teamId: e.teamId,
+                                missionId: e.missionId,
+                                status: e.status,
+                                isEnded: false,)
                         ).then((_) {
                           Provider.of<MissionsAllState>(context, listen: false)
                               .reloadMissionStatus();
@@ -176,7 +162,7 @@ class MissionsAllPage extends StatelessWidget {
                     height: 182,
                     child: Center(
                       child: Text(
-                        '아직 미션이 없어요.',
+                        '진행 중인 반복 미션이 없어요.',
                         style: TextStyle(
                           color: grayScaleGrey400,
                           fontSize: 14.0,

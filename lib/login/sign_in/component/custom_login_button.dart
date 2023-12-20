@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomButton extends StatelessWidget {
   final void Function() onPressed;
@@ -24,21 +25,21 @@ class CustomButton extends StatelessWidget {
         child: Row(
           children: [
             Padding(
-              padding: imagePath.contains('kakao') || imagePath.contains('google')
-                  ? const EdgeInsets.only(left: 12.0)
+              padding: imagePath.contains('kakao')
+                  ? const EdgeInsets.only(left: 2.0)
                   : EdgeInsets.zero,
-              child: Image.asset(
+              child: SvgPicture.asset(
                 imagePath,
                 width: imagePath.contains('kakao')
-                    ? 30
+                    ? 22
                     : imagePath.contains('google')
-                    ? 25
-                    : 55,
+                    ? 22
+                    : 24,
                 height: imagePath.contains('kakao')
-                    ? 30
+                    ? 20.89
                     : imagePath.contains('google')
-                    ? 25
-                    : 55,
+                    ? 22
+                    : 24,
                 fit: BoxFit.cover,
               ),
             ),

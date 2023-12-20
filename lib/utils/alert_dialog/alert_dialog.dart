@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 
 class ViewUtil {
   // AlertDialog 오류 메세지 출력
@@ -80,5 +81,38 @@ class ViewUtil {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Future<bool?> showWarningDialog({
+    required BuildContext context,
+    required String title,
+    required String content,
+    required String leftText,
+    required String rightText,
+}) async {
+    var result = await showDialog(
+      context: context,
+      builder: (ctx) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            WarningDialog(
+              title: title,
+              content: content,
+              onConfirm: () {
+                Navigator.of(ctx).pop(true);
+              },
+              onCanceled: () {
+                Navigator.of(ctx).pop(false);
+              },
+              leftText: leftText,
+              rightText: rightText,
+            ),
+          ],
+        );
+      },
+    );
+
+    return result;
   }
 }

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
@@ -76,8 +77,8 @@ class MyPageRevokeState extends ChangeNotifier {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  'asset/image/danger_icon.png',
+                SvgPicture.asset(
+                  'asset/icons/danger_icon.svg',
                   width: 52,
                   height: 52,
                 ),
@@ -125,7 +126,9 @@ class MyPageRevokeState extends ChangeNotifier {
                       SizedBox(width: 4),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: revoke,
+                          onPressed: () async {
+                            await revoke();
+                          },
                           child: Text('탈퇴하기', style: buttonTextStyle.copyWith(color:errorColor)),
                           style: ButtonStyle(
                             fixedSize: MaterialStateProperty.all(
@@ -155,7 +158,7 @@ class MyPageRevokeState extends ChangeNotifier {
   }
 
   /// 탈퇴 로직
-  void revoke() async {
+  Future<void> revoke() async {
     String? sign = await sharedPreferencesInfo.loadPreferencesData('sign');
     if(sign == null) return ;
 
@@ -193,12 +196,7 @@ class MyPageRevokeState extends ChangeNotifier {
         notifyListeners();
       }
       else {
-        if(apiResponse.errorCode == 'J0003') {
-          revoke();
-        }
-        else {
-          throw Exception('revoke is Null, error code : ${apiResponse.errorCode}');
-        }
+        print('revoke is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('회원탈퇴 실패: $e');

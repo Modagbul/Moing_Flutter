@@ -1,12 +1,11 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_state.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
-import '../../home/component/home_appbar.dart';
 import '../../model/response/team_list_response.dart';
 import 'missions_all_page.dart';
 import 'missions_group_state.dart';
@@ -63,18 +62,14 @@ class _MissionsScreenState extends State<MissionsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeAppBar(
-                notificationCount: context.watch<MissionsState>().alarmCount ?? '0',
-                onTap: context.watch<MissionsState>().alarmPressed,
-              ),
               const SizedBox(
-                height: 32.0,
+                height: 16.0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 220,
+                    width: 210,
                     child: TabBar(
                       controller: _tabController,
                       labelColor: grayScaleGrey700,
@@ -202,7 +197,7 @@ class _MyDropdownState extends State<MyDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    String displayTeamName = _selectedTeamName ?? "Select a team";
+    String displayTeamName = _selectedTeamName ?? "모임 없음";
 
     if (displayTeamName.length > 5) {
       displayTeamName = '${displayTeamName.substring(0, 5)}...';
@@ -230,12 +225,13 @@ class _MyDropdownState extends State<MyDropdown> {
           ),
           child: PopupMenuButton<String>(
               offset: const Offset(0, 60),
-              icon: Image.asset(
+              icon: SvgPicture.asset(
                   _isMenuOpen
-                      ? 'asset/image/arrow_icon.png'
-                      : 'asset/image/arrow_not_icon.png',
+                      ? 'asset/icons/drop_arrow_not_icon.svg'
+                      : 'asset/icons/drop_arrow_icon.svg',
                   width: 20,
-                  height: 20),
+                  height: 20
+              ),
               onSelected: (String value) {
                 var selectedTeam = widget.teams.firstWhere(
                         (team) => team.teamId.toString() == value,

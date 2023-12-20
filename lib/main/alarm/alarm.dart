@@ -29,7 +29,7 @@ class AlarmPage extends StatelessWidget {
     return Scaffold(
       appBar: MoingAppBar(
         title: '알림 모아보기',
-        imagePath: 'asset/image/arrow_left.png',
+        imagePath: 'asset/icons/arrow_left.svg',
         onTap: () => Navigator.pop(context, true),
       ),
       backgroundColor: grayScaleGrey900,
@@ -151,7 +151,7 @@ class AlarmPage extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
-                                  '받은 알림은 90일동안 보관해요',
+                                  '받은 알림은 일주일 동안 보관해요',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,

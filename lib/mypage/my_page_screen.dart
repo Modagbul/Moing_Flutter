@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
-import 'package:moing_flutter/main/alarm/alarm.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
@@ -26,59 +25,21 @@ class MyPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: grayBackground,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                _renderAppBar(context: context),
-                const SizedBox(height: 40.0),
-                _Profile(),
-                const SizedBox(height: 36.0),
-                _HashTag(),
-                const SizedBox(height: 52.0),
-                const _GroupList(),
-              ],
-            ),
+      backgroundColor: grayBackground,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 64.0),
+              _Profile(),
+              const SizedBox(height: 36.0),
+              _HashTag(),
+              const SizedBox(height: 52.0),
+              const _GroupList(),
+            ],
           ),
         ),
-      );
-  }
-
-  Widget _renderAppBar({required BuildContext context}) {
-    return Container(
-      height: 48,
-      color: grayBackground,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SvgPicture.asset(
-            'asset/icons/home_moing_logo.svg',
-            width: 80,
-            height: 32,
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: (){
-              Navigator.of(context).pushNamed(AlarmPage.routeName);
-            },
-            child: SvgPicture.asset(
-              'asset/icons/home_notification.svg',
-              width: 24,
-              height: 24,
-            ),
-          ),
-          SizedBox(width: 24),
-          GestureDetector(
-            onTap: () => context.read<MyPageState>().settingPressed(),
-            child: SvgPicture.asset(
-              'asset/icons/mypage_setting.svg',
-              width: 24,
-              height: 24,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -98,25 +59,26 @@ class _Profile extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
                 child: context.watch<MyPageState>().myPageData != null &&
-                context.watch<MyPageState>().myPageData!.profileImage != null
+                        context.watch<MyPageState>().myPageData!.profileImage !=
+                            null
                     ? Image.network(
-                  context.watch<MyPageState>().myPageData!.profileImage!,
-                  fit: BoxFit.cover,
-                  width: 80,
-                  height: 80,
-                ) : Image.asset(
-                    'asset/image/icon_user_profile.png',
-                  fit: BoxFit.cover,
-                  width: 80,
-                  height: 80,
-                ),
+                        context.watch<MyPageState>().myPageData!.profileImage!,
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      )
+                    : SvgPicture.asset(
+                        'asset/icons/icon_user_profile.svg',
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      ),
               ),
-
               Positioned(
                 right: 0,
                 bottom: 0,
-                child: Image.asset(
-                  'asset/image/icon_edit_circle.png',
+                child: SvgPicture.asset(
+                  'asset/icons/icon_edit_circle.svg',
                   fit: BoxFit.cover,
                   width: 32.0,
                   height: 32.0,
@@ -139,9 +101,10 @@ class _Profile extends StatelessWidget {
             ),
             const SizedBox(height: 4.0),
             Container(
-              width: 250,
+              width: 235,
               child: Text(
-                context.watch<MyPageState>().myPageData?.introduction ?? '아직 한줄다짐이 없어요',
+                context.watch<MyPageState>().myPageData?.introduction ??
+                    '아직 한줄다짐이 없어요',
                 style: const TextStyle(
                   color: grayScaleGrey400,
                   fontSize: 14.0,
@@ -159,16 +122,16 @@ class _Profile extends StatelessWidget {
 class _HashTag extends StatelessWidget {
   _HashTag();
 
-  final Image blackFireImg = Image.asset(
-    'asset/image/icon_fire_mono_black.png',
-    width: 100.0,
-    height: 100.0,
+  final Widget blackFireImg = SvgPicture.asset(
+    'asset/icons/icon_fire_mono_black.svg',
+    width: 100,
+    height: 100,
   );
 
-  final Image whiteFireImg = Image.asset(
-    'asset/image/icon_fire_mono_white.png',
-    width: 100.0,
-    height: 100.0,
+  final Widget whiteFireImg = SvgPicture.asset(
+    'asset/icons/icon_fire_mono_white.svg',
+    width: 100,
+    height: 100,
   );
 
   final String titleGroupNone = '내 열정의 불이 아직 없어요';
