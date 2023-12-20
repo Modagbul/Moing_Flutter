@@ -22,8 +22,8 @@ const TextStyle contentTextStyle = TextStyle(
 
 const TextStyle buttonTextStyle = TextStyle(
   color: grayScaleGrey900,
-  fontSize: 18.0,
-  fontWeight: FontWeight.w600,
+  fontSize: 16.0,
+  fontWeight: FontWeight.w500,
 );
 
 const TextStyle middleTextStyle = TextStyle(

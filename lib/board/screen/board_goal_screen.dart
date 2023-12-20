@@ -226,15 +226,22 @@ class BoardGoalScreen extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              color: grayScaleGrey400,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () => context.read<BoardMainState>().getTeamFireLevel(),
+              splashColor: Colors.white,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.refresh,
+                  color: grayScaleGrey400,
+                ),
+              ),
             ),
-            onPressed: context.read<BoardMainState>().getTeamFireLevel,
-            splashRadius: 1,
-            splashColor: Colors.transparent,
           ),
+          const SizedBox(width: 5.0),
         ],
       ),
     );
