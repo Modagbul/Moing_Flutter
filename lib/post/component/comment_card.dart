@@ -98,14 +98,28 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28.0),
-      child: Text(
-        commentData.content,
-        style: const TextStyle(
-          color: grayBlack3,
-          fontSize: 14.0,
-          fontWeight: FontWeight.w500,
-          height: 1.7,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            commentData.content,
+            style: const TextStyle(
+              color: grayBlack3,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+              height: 1.7,
+            ),
+          ),
+          const SizedBox(height: 12.0),
+          Text(
+            commentData.createdDate,
+            style: const TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: grayBlack8,
+            ),
+          ),
+        ],
       ),
     );
   }
