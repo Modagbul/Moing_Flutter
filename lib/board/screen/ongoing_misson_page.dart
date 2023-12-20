@@ -163,7 +163,8 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                     isRepeated: true,
                                     teamId: context.read<OngoingMissionState>().teamId,
                                     missionId: e.missionId,
-                                    status: e.status)
+                                    status: e.status,
+                                    isEnded: false)
                               ).then((_) {
                                 Provider.of<OngoingMissionState>(context,
                                         listen: false)
@@ -245,7 +246,8 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                         isRepeated: false,
                                         teamId: context.read<OngoingMissionState>().teamId,
                                         missionId: e.missionId,
-                                        status: e.status)
+                                        status: e.status,
+                                        isEnded: false)
                                   ).then((_) {
                                     Provider.of<OngoingMissionState>(context,
                                             listen: false)

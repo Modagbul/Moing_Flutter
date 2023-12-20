@@ -20,9 +20,6 @@ class MissionSliverAppBar extends StatelessWidget {
         height: 56,
         child: Row(
           children: [
-            // Image.asset(
-            //   'asset/image/arrow_left.png',
-            // ),
             Spacer(),
             GestureDetector(
                 onTap: () => context.read<MissionProveState>().showModal('content'),

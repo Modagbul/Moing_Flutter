@@ -55,19 +55,14 @@ class CompletedMissionState extends ChangeNotifier {
     } catch (e) {
       print('CompletedIsLeader - 내가 리더인지 조회 실패: $e');
     }
+    notifyListeners();
   }
 
   Future<void> getCompletedMissionStatus() async {
     var response = await apiCode.getCompletedMissionStatus(teamId: teamId);
 
     if (response != null && response.isSuccess) {
-      var filteredMissions = response.data?.where((mission) {
-        var dueToDate = DateTime.parse(mission.dueTo);
-
-        return dueToDate.isBefore(DateTime.now()) || mission.status == 'COMPLETE'
-            || mission.status == 'FAIL' || mission.status == 'SKIP';
-      }).toList() ?? [];
-
+      var filteredMissions = response.data.toList();
       completedMissionStatus = BoardCompletedMissionResponse(
         isSuccess: true,
         message: 'Filtered missions successfully',

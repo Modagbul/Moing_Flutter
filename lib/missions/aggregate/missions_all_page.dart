@@ -76,7 +76,8 @@ class MissionsAllPage extends StatelessWidget {
                                   isRepeated: false,
                                   teamId: e.teamId,
                                   missionId: e.missionId,
-                                  status: e.status)
+                                  status: e.status,
+                                  isEnded: false)
                             ).then((_) {
                               Provider.of<MissionsAllState>(context,
                                       listen: false)
@@ -143,7 +144,8 @@ class MissionsAllPage extends StatelessWidget {
                                 isRepeated: true,
                                 teamId: e.teamId,
                                 missionId: e.missionId,
-                                status: e.status)
+                                status: e.status,
+                                isEnded: false,)
                         ).then((_) {
                           Provider.of<MissionsAllState>(context, listen: false)
                               .reloadMissionStatus();

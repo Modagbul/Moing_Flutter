@@ -12,6 +12,7 @@ import 'completed_mission_state.dart';
 
 class CompletedMissionPage extends StatelessWidget {
   static const routeName = '/board/mission/completed';
+
   const CompletedMissionPage({Key? key}) : super(key: key);
 
   static route(BuildContext context) {
@@ -33,7 +34,8 @@ class CompletedMissionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CompletedMissionState>();
-    print('state.completedMissionStatus?.data.isNotEmpty : ${state.completedMissionStatus?.data.isNotEmpty}');
+    print(
+        'state.completedMissionStatus?.data.isNotEmpty : ${state.completedMissionStatus?.data.isNotEmpty}');
     return Scaffold(
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
@@ -44,13 +46,13 @@ class CompletedMissionPage extends StatelessWidget {
               const SizedBox(
                 height: 40.0,
               ),
-              if ((state.completedMissionStatus != null && state.completedMissionStatus!.data.isNotEmpty))
+              if ((state.completedMissionStatus != null &&
+                  state.completedMissionStatus!.data.isNotEmpty))
                 ...state.completedMissionStatus!.data
                     .map(
-                      (e) => // ...
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: BoardCompletedMissionCard(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: BoardCompletedMissionCard(
                         title: e.title,
                         status: e.status,
                         dueTo: e.dueTo,
@@ -61,30 +63,33 @@ class CompletedMissionPage extends StatelessWidget {
                               MissionProvePage.routeName,
                               arguments: MissionProveArgument(
                                   isRepeated: e.missionType == 'ONCE' ? false : true,
-                                  teamId: context.read<CompletedMissionState>().teamId,
+                                  teamId: context
+                                      .read<CompletedMissionState>()
+                                      .teamId,
                                   missionId: e.missionId,
-                                  status: e.status)
-                          );
+                                  status: e.status,
+                                  isEnded: true));
                         },
                       ),
-                          ),
-                    )
-                    .toList()
-              else
-                const Center(
-                  child: Text(
-                    '아직 미션이 없어요.',
-                    style: TextStyle(
-                      color: grayScaleGrey400,
-                      fontSize: 14.0,
                     ),
+                  ).toList()
+            else
+              const Center(
+                child: Text(
+                  '아직 미션이 없어요.',
+                  style: TextStyle(
+                    color: grayScaleGrey400,
+                    fontSize: 14.0,
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
-      floatingActionButton: (state.isLeader != null && state.isLeader!) ? const _BottomButton() : null,
+    ),
+      floatingActionButton: (state.isLeader != null && state.isLeader!)
+          ? const _BottomButton()
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

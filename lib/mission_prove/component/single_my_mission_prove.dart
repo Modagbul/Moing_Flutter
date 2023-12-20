@@ -182,6 +182,7 @@ class SingleMyMissionProved extends StatelessWidget {
                       ),
                     ),
                     Spacer(),
+                    if(!state.isEnded)
                     DropdownButton<String>(
                       underline: SizedBox.shrink(),
                       style: contentTextStyle.copyWith(color: grayScaleGrey100),

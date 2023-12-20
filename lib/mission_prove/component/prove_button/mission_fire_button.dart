@@ -40,20 +40,22 @@ class MissionFireButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            (state.myMissionList == null ||
-                state.myMissionList!.isNotEmpty)
+            state.isEnded
+                ? '미션이 종료되었어요'
+                :(state.myMissionList == null || state.myMissionList!.isNotEmpty)
                 ? '친구들에게 불 던지러 가기'
                 : '인증을 완료하고 불을 던져요',
             style: contentTextStyle.copyWith(
               fontWeight: FontWeight.w600,
               color:
-                  (state.myMissionList == null ||
-                      state.myMissionList!.isNotEmpty)
+                  state.isEnded
+                  ? grayScaleGrey550
+                  : (state.myMissionList == null || state.myMissionList!.isNotEmpty)
                       ? grayScaleGrey200
                       : grayScaleGrey550,
             ),
           ),
-          if (state.myMissionList == null || state.myMissionList!.isNotEmpty)
+          if ((!state.isEnded) && state.myMissionList != null && state.myMissionList!.isNotEmpty)
             SvgPicture.asset(
               'asset/icons/icon_fire_mono_white.svg',
               width: 24,

@@ -11,6 +11,7 @@ import 'package:moing_flutter/model/response/alarm_model.dart';
 class AlarmState extends ChangeNotifier {
   final BuildContext context;
   final APICall apiCall = APICall();
+  String apiUrl = '';
   List<AlarmData>? alarmList;
 
   AlarmState({required this.context}) {
@@ -24,7 +25,7 @@ class AlarmState extends ChangeNotifier {
 
   /// 알림 전체 조회
   Future<List<AlarmData>?> getAllAlarmData() async {
-    final String apiUrl = '${dotenv.env['MOING_API']}/api/history/alarm';
+    apiUrl = '${dotenv.env['MOING_API']}/api/history/alarm';
 
     try {
       ApiResponse<List<AlarmData>> apiResponse =
@@ -39,7 +40,6 @@ class AlarmState extends ChangeNotifier {
       );
 
       if (apiResponse.data != null) {
-        log('알림 모아보기 성공: ${apiResponse.data}');
         alarmList = apiResponse.data;
         notifyListeners();
       } else {
@@ -53,7 +53,7 @@ class AlarmState extends ChangeNotifier {
 
   /// 알림 단건 조회
   Future<bool> postSingleAlarmData({required int alarmHistoryId}) async {
-    final String apiUrl =
+    apiUrl =
         '${dotenv.env['MOING_API']}/api/history/alarm/read?alarmHistoryId=$alarmHistoryId';
 
     try {
@@ -74,6 +74,33 @@ class AlarmState extends ChangeNotifier {
       log('알림 단건 조회 실패: $e');
     }
     return false;
+  }
+
+  /// teamId, missionId 통해 해당 미션의 종료 여부, status 값 받기
+  Future<Map<String, dynamic>?> getMissionEndStatus({required int teamId, required int missionId}) async {
+    apiUrl =
+    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/mission-status';
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await apiCall.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (json) => {
+          'end': json['end'] as bool,
+          'status': json['status'] as String,
+        },
+      );
+
+      if (apiResponse.isSuccess == true) {
+        log('미션 상태 조회 성공');
+        return apiResponse.data;
+      } else {
+        print('getMissionEndStatus is Null, error code : ${apiResponse.errorCode}');
+      }
+    } catch (e) {
+      log('미션 상태 조회 실패: $e');
+    }
+    return null;
   }
 
   String convertAlarmTypeToImage({required String type}) {
@@ -128,14 +155,28 @@ class AlarmState extends ChangeNotifier {
     Navigator.pushNamed(context, alarmData.path, arguments: idInfoMap);
   }
 
-  void navigateMissionsProvePage({required AlarmData alarmData}) {
+  void navigateMissionsProvePage({required AlarmData alarmData}) async {
     Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
+    bool? isEnded;
+    String? status;
+
+    if(idInfoMap['teamId'] != null && idInfoMap['missionId'] != null) {
+      final missionEndStatus = await getMissionEndStatus(
+          teamId: idInfoMap['teamId'], missionId: idInfoMap['missionId']);
+      if(missionEndStatus != null) {
+        isEnded = missionEndStatus['end'];
+        status = missionEndStatus['status'];
+        print('end : ${missionEndStatus['end']}');
+        print('status : ${missionEndStatus['status']}');
+      }
+    }
 
     MissionProveArgument missionProveArgument = MissionProveArgument(
       isRepeated: idInfoMap['isRepeated'] ?? false,
       teamId: idInfoMap['teamId'] ?? 0,
       missionId: idInfoMap['missionId'] ?? 0,
-      status: idInfoMap['status'] ?? '',
+      status: status ?? idInfoMap['status'] ?? '',
+      isEnded: isEnded ?? false,
     );
 
     Navigator.pushNamed(context, alarmData.path,

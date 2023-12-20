@@ -129,12 +129,20 @@ class FixGroupState extends ChangeNotifier {
       isImageChanged = true;
       checkSave();
     } catch (e) {
-      isImageChanged = false;
-      print(e.toString());
-      // viewUtil.showAlertDialog(context: context, message: e.toString());
+      print('그룹 프로필 사진 설정 실퍠 : ${e.toString()}');
       if(e.toString().contains('photo access')) {
-        openAppSettings();
+        bool? isImagePermissioned = await viewUtil.showWarningDialog(
+            context: context,
+            title: '갤러리 접근 권한이 필요해요',
+            content: '사진을 업로드하기 위해 갤러리 접근 권한이 필요해요.\n설정에서 갤러리 접근 권한을 허용해주세요',
+            leftText: '취소하기',
+            rightText: '허용하러 가기');
+
+        if(isImagePermissioned != null && isImagePermissioned) {
+          openAppSettings();
+        }
       }
+      isImageChanged = false;
     } finally {
       onLoading = false;
       notifyListeners();

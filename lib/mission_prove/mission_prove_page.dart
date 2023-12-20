@@ -25,6 +25,7 @@ class MissionProvePage extends StatefulWidget {
     final int teamId = argument.teamId;
     final int missionId = argument.missionId;
     final String status = argument.status;
+    final bool isEnded = argument.isEnded;
 
     return MultiProvider(
       providers: [
@@ -35,6 +36,7 @@ class MissionProvePage extends StatefulWidget {
                   teamId: teamId,
                   missionId: missionId,
                   repeatMissionStatus: status,
+                  isEnded : isEnded,
                 )),
       ],
       builder: (context, _) {
@@ -121,11 +123,12 @@ class _MissionProvePageState extends State<MissionProvePage>
             ),
 
             /// 인증 안한 경우
-            if((state.repeatMissionStatus != 'WAIT' && state.isRepeated) ||
-                (!state.isRepeated && state.myMissionList != null && state.myMissionList!.isEmpty))
+            if(!state.isEnded && ((state.repeatMissionStatus != 'WAIT' && state.isRepeated) ||
+                (!state.isRepeated && state.myMissionList != null && state.myMissionList!.isEmpty)))
              MissionNotProveButton(),
             /// 인증 한 경우
-            if(!state.isRepeated && state.myMissionList != null && state.myMissionList!.isNotEmpty)
+            if(!state.isEnded && !state.isRepeated &&
+                state.myMissionList != null && state.myMissionList!.isNotEmpty)
             MissionProveButton(),
 
           ],

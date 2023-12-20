@@ -27,6 +27,7 @@ import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/response/mission/my_mission_get_prove_response.dart';
 import 'package:moing_flutter/model/response/mission/other_mission_get_prove_response.dart';
+import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:moing_flutter/utils/image_upload/image_upload.dart';
 import 'package:moing_flutter/utils/toast/toast_message.dart';
 import 'package:path_provider/path_provider.dart';
@@ -44,9 +45,11 @@ class MissionProveState with ChangeNotifier {
   final BuildContext context;
   final int teamId;
   final int missionId;
+  final bool isEnded;
   final bool isRepeated;
   final String repeatMissionStatus;
   final MissionState missionState = MissionState();
+  final ViewUtil viewUtil = ViewUtil();
 
   late TabController tabController;
 
@@ -114,20 +117,21 @@ class MissionProveState with ChangeNotifier {
   String nobodyText = '데이터를 불러오는 중입니다...';
   bool onLoading = false;
 
-  MissionProveState(
-      {required this.context,
-      required this.isRepeated,
-      required this.teamId,
-      required this.missionId,
-      required this.repeatMissionStatus}) {
-    print('반복미션 상태 : $repeatMissionStatus');
+  MissionProveState({
+    required this.context,
+    required this.isRepeated,
+    required this.isEnded,
+    required this.teamId,
+    required this.missionId,
+    required this.repeatMissionStatus}) {
     initState();
   }
 
   Future<void> initState() async {
     log('Instance "MissionProveState" has been created');
-    print(
-        'isRepeated : $isRepeated, teamId : $teamId, missionId: $missionId, MissionRepeatStatus : $repeatMissionStatus');
+    print('isRepeated : $isRepeated, teamId : $teamId, '
+        'missionId: $missionId, MissionRepeatStatus : $repeatMissionStatus');
+    print('반복미션 상태 : $repeatMissionStatus, 종료여부 : $isEnded');
     fToast.init(context);
 
     // 나의 인증 현황 조회하기
@@ -164,7 +168,12 @@ class MissionProveState with ChangeNotifier {
     Duration difference = serverEndTime.difference(now);
 
     if (difference.isNegative) {
-      missionRemainTime = '시간 종료';
+      DateTime newEndTime = DateTime(
+          serverEndTime.year, serverEndTime.month, serverEndTime.day, 0, 0, 0);
+      String formattedDate =
+          '${newEndTime.year.toString().padLeft(4, '0')}.${newEndTime.month.toString().padLeft(2, '0')}.${newEndTime.day.toString().padLeft(2, '0')} 종료';
+
+      missionRemainTime = formattedDate;
     } else {
       String formattedTime = '';
       int days = difference.inDays;
@@ -191,7 +200,7 @@ class MissionProveState with ChangeNotifier {
         child: Material(
           type: MaterialType.transparency,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0),
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: SpeechBalloon(
               color: coralGrey500,
               width: double.infinity,
@@ -308,11 +317,11 @@ class MissionProveState with ChangeNotifier {
       if (!isMeOrEveryProved &&
           everyMissionList != null &&
           everyMissionList!.isEmpty) {
-        nobodyText = '아직 아무도\n인증하지 않았어요';
+        nobodyText = isEnded ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 아무도\n인증하지 않았어요';
       } else if (isMeOrEveryProved &&
           myMissionList != null &&
           myMissionList!.isEmpty) {
-        nobodyText = '아직 인증하지 않았어요';
+        nobodyText = isEnded ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 아무도\n인증하지 않았어요';
       }
       notifyListeners();
     }
@@ -350,7 +359,7 @@ class MissionProveState with ChangeNotifier {
           }
         }
         if (myMissionList != null && myMissionList!.isEmpty) {
-          nobodyText = repeatMissionStatus == 'FAIL'
+          nobodyText = isEnded == true
               ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!'
               : '아직 인증하지 않았어요';
         }
@@ -385,6 +394,10 @@ class MissionProveState with ChangeNotifier {
 
       if (apiResponse.isSuccess == true) {
         everyMissionList = apiResponse.data;
+        if (everyMissionList != null && everyMissionList!.isEmpty) {
+          nobodyText =
+              isEnded == true ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 인증하지 않았어요';
+        }
       } else {
         print(
             'loadEveryMissionData is Null, error code : ${apiResponse.errorCode}');
@@ -509,7 +522,7 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
-  /// 미션 인증 API
+  /// 미션 인증 APIf
   Future<bool?> submitMission({required String url}) async {
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
@@ -614,7 +627,16 @@ class MissionProveState with ChangeNotifier {
     } catch (e) {
       print('미션 인증 도중 에러 발생 : ${e}');
       if(e.toString().contains('photo access')) {
-        openAppSettings();
+        bool? isImagePermissioned = await viewUtil.showWarningDialog(
+            context: context,
+            title: '갤러리 접근 권한이 필요해요',
+            content: '사진을 업로드하기 위해 갤러리 접근 권한이 필요해요.\n설정에서 갤러리 접근 권한을 허용해주세요',
+            leftText: '취소하기',
+            rightText: '허용하러 가기');
+
+        if (isImagePermissioned != null && isImagePermissioned) {
+          openAppSettings();
+        }
       }
     } finally {
       onLoading = false;
@@ -627,7 +649,7 @@ class MissionProveState with ChangeNotifier {
       if (onLoading) return;
       onLoading = true;
       /// 내가 인증했을 때
-      if(myMissionList != null && myMissionList!.isNotEmpty) {
+      if(myMissionList != null && myMissionList!.isNotEmpty && !isEnded) {
         Navigator.of(context).pushNamed(MissionFirePage.routeName, arguments: {
           'teamId': teamId,
           'missionId': missionId,
@@ -1100,7 +1122,7 @@ class MissionProveState with ChangeNotifier {
                               fontWeight: FontWeight.w500),
                         ),
                         Spacer(),
-                        if (isMeOrEveryProved && isTodayCreated)
+                        if (isMeOrEveryProved && isTodayCreated && !isEnded)
                           DropdownButton<String>(
                             underline: SizedBox.shrink(),
                             style: contentTextStyle.copyWith(

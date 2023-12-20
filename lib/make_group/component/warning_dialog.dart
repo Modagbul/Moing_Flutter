@@ -58,6 +58,7 @@ class WarningDialog extends StatelessWidget {
                     color: grayScaleGrey400,
                     fontSize: 14,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

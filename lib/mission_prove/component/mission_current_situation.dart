@@ -36,119 +36,74 @@ class MissionCurrentSituation extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // 반복 미션이면서 내가 인증했을 때
-                      if (state.isRepeated &&
-                          state.isMeProved)
-                        Container(
-                          width: 72,
-                          height: 72,
-                          child: CircularPercentIndicator(
-                            animationDuration: 1000,
-                            backgroundColor: grayScaleGrey600,
-                            radius: 36.0,
-                            lineWidth: 3.0,
-                            animation: true,
-                            percent: state.repeatMissionMyCount / state.repeatMissionTotalCount,
-                            center: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${state.repeatMissionMyCount}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20.0,
-                                      color: grayScaleGrey100),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "/",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14.0,
-                                            color: grayScaleGrey400),
-                                      ),
-                                      Text(
-                                        '${state.repeatMissionTotalCount}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14.0,
-                                            color: grayScaleGrey400),
-                                      ),
-                                    ],
+                      if (state.isRepeated)
+                        ClipOval(
+                          child: Container(
+                            width: 72,
+                            height: 72,
+                            color: state.isEnded ? grayScaleGrey500 : Colors.transparent,
+                            child: CircularPercentIndicator(
+                              animationDuration: 1000,
+                              backgroundColor: grayScaleGrey600,
+                              radius: 36.0,
+                              lineWidth: 3.0,
+                              animation: true,
+                              percent: state.repeatMissionMyCount / state.repeatMissionTotalCount,
+                              center: state.isEnded == false ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${state.repeatMissionMyCount}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20.0,
+                                        color: grayScaleGrey100),
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "/",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14.0,
+                                              color: grayScaleGrey400),
+                                        ),
+                                        Text(
+                                          '${state.repeatMissionTotalCount}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14.0,
+                                              color: grayScaleGrey400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ) : Center(child: Text('종료',
+                                style: middleTextStyle.copyWith(color: grayScaleGrey100),)),
+                              circularStrokeCap: CircularStrokeCap.round,
+                              progressColor: coralGrey500,
                             ),
-                            circularStrokeCap: CircularStrokeCap.round,
-                            progressColor: coralGrey500,
                           ),
                         ),
-
-                      /// 반복 미션이면서 내가 인증 안했을 때
-                      if (state.isRepeated &&
-                          !state.isMeProved)
-                        Container(
-                          width: 72,
-                          height: 72,
-                          child: CircularPercentIndicator(
-                            backgroundColor: grayScaleGrey600,
-                            radius: 36.0,
-                            lineWidth: 3.0,
-                            animation: true,
-                            percent: state.repeatMissionMyCount / state.repeatMissionTotalCount,
-                            center: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${state.repeatMissionMyCount}',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20.0,
-                                      color: grayScaleGrey100),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        "/",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14.0,
-                                            color: grayScaleGrey400),
-                                      ),
-                                      Text(
-                                        '${state.repeatMissionTotalCount}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14.0,
-                                            color: grayScaleGrey400),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            circularStrokeCap: CircularStrokeCap.round,
-                            progressColor: coralGrey500,
-                          ),
-                        ),
-                      // 한번 미션이면서 내가 인증했을 때
+                      /// 한번 미션이면서 내가 인증했을 때
                       if (!state.isRepeated && state.myMissionList != null &&
                           state.myMissionList!.isNotEmpty)
                         SvgPicture.asset(
-                          'asset/icons/mission_icon_prove.svg',
+                          state.isEnded ? 'asset/icons/mission_success.svg'
+                              :'asset/icons/mission_icon_prove.svg',
                           width: 76,
                           height: 65,
                         ),
-                      // 한번 미션이면서 내가 인증 안 했을 때
+                      /// 한번 미션이면서 내가 인증 안 했을 때
                       if (!state.isRepeated &&
                           (state.myMissionList == null ||
                               (state.myMissionList != null && state.myMissionList!.isEmpty)))
                         SvgPicture.asset(
-                          'asset/icons/mission_icon_not_yet.svg',
+                          state.isEnded ? 'asset/icons/mission_fail.svg'
+                              : 'asset/icons/mission_icon_not_yet.svg',
                           width: 76,
                           height: 65,
                         ),
