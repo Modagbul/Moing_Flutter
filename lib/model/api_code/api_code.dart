@@ -721,7 +721,7 @@ class ApiCode {
   }
 
   Future<bool?> postReportPost({required int boardId}) async {
-    String apiUrl = '${dotenv.env['MOING_API']}/api/report/MISSION/$boardId';
+    String apiUrl = '${dotenv.env['MOING_API']}/api/report/BOARD/$boardId';
     try {
       ApiResponse<int> apiResponse = await call.makeRequest<int>(
         url: apiUrl,
