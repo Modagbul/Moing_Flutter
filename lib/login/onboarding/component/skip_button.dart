@@ -12,10 +12,10 @@ class SkipButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Align(
+      child: const Align(
         alignment: Alignment.topRight,
-        child: const Padding(
-          padding: EdgeInsets.only(top: 16.0, right: 45.0, bottom: 27.0,),
+        child: Padding(
+          padding: EdgeInsets.only(top: 20.0, right: 32.0),
           child: Text(
             'Skip',
             style: TextStyle(

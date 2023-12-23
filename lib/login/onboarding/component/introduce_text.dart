@@ -22,33 +22,29 @@ class IntroduceText extends StatelessWidget {
       width = 75;
     }
 
-    return Container(
-      width: 250,
-      height: 125,
-      child: Column(
-        children: [
-          Container(
-            width: width,
-            height: 25,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: grayScaleGrey600,
-            ),
-            child: Text(
-              title,
-              style: bodyTextStyle,
-              textAlign: TextAlign.center,
-            ),
+    return Column(
+      children: [
+        Container(
+          width: width,
+          height: 25,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: grayScaleGrey600,
           ),
-          const SizedBox(height: 16),
-          Text(
-            comment,
-            style: headerTextStyle,
+          child: Text(
+            title,
+            style: bodyTextStyle,
             textAlign: TextAlign.center,
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          comment,
+          style: headerTextStyle,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }
