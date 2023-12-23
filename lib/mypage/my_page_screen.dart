@@ -31,12 +31,13 @@ class MyPageScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              const SizedBox(height: 64.0),
+              const Spacer(),
               _Profile(),
               const SizedBox(height: 36.0),
               _HashTag(),
               const SizedBox(height: 52.0),
               const _GroupList(),
+              const Spacer(),
             ],
           ),
         ),
