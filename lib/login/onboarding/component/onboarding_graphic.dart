@@ -9,7 +9,7 @@ class OnBoardingGraphic extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Lottie.asset(graphicPath,
         width: double.infinity,
         height: 353

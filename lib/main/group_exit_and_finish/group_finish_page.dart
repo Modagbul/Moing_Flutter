@@ -18,8 +18,8 @@ class GroupFinishPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) =>
-                GroupFinishExitState(context: context, teamId: teamId, text: '', teamName: null)),
+            create: (_) => GroupFinishExitState(
+                context: context, teamId: teamId, text: '', teamName: null)),
       ],
       builder: (context, _) {
         return const GroupFinishPage();
@@ -31,39 +31,21 @@ class GroupFinishPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var state = context.watch<GroupFinishExitState>();
     return Scaffold(
+      appBar: MoingAppBar(
+        title: state.teamInfo?.isLeader == true ? '소모임 강제종료' : '소모임 탈퇴',
+        imagePath: 'asset/icons/icon_close.svg',
+        onTap: () => Navigator.pop(context, true),
+      ),
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 56,
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Icon(
-                            Icons.close,
-                            color: grayScaleGrey100,
-                          )),
-                      SizedBox(width: 40),
-                      Text(
-                        state.teamInfo?.isLeader == true
-                        ? '소모임 강제종료' : '소모임 탈퇴',
-                        style: buttonTextStyle.copyWith(color: grayScaleGrey300),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 44,
-                ),
+                const Spacer(),
                 Text(
                   '정말 ${state.teamInfo?.teamName ?? '해당'} 모임과\n이별하시겠어요?',
                   style: headerTextStyle.copyWith(
@@ -72,9 +54,7 @@ class GroupFinishPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(
-                  height: 62,
-                ),
+                const SizedBox(height: 62),
                 Stack(
                   children: [
                     Container(
@@ -101,7 +81,8 @@ class GroupFinishPage extends StatelessWidget {
                           child: ExitCard(
                             number: state.teamInfo!.numOfMember.toString(),
                             time: state.teamInfo!.duration.toString(),
-                            missionClear: state.teamInfo!.numOfMission.toString(),
+                            missionClear:
+                                state.teamInfo!.numOfMission.toString(),
                             level: 'Lv.${state.teamInfo!.levelOfFire}',
                           ),
                         ),
@@ -114,12 +95,12 @@ class GroupFinishPage extends StatelessWidget {
                         child: SizedBox(
                           width: double.infinity,
                           height: 137,
-                          child: ExitCard(isLeader : state.teamInfo!.isLeader),
+                          child: ExitCard(isLeader: state.teamInfo!.isLeader),
                         ),
                       ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 24.0),
                   child: Text(
@@ -136,7 +117,8 @@ class GroupFinishPage extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: BlackButton(
                       color: grayScaleGrey900,
-                      onPressed: context.read<GroupFinishExitState>().finishPressed,
+                      onPressed:
+                          context.read<GroupFinishExitState>().finishPressed,
                       text: state.finishButtonText,
                     ),
                   ),

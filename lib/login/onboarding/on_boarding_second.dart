@@ -27,21 +27,28 @@ class OnBoardingSecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        actions: [
+          SkipButton(
+            onTap: context.read<OnBoardingState>().skip,
+          ),
+        ],
+      ),
       body: Container(
         color: Colors.black,
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SkipButton(
-                onTap: context.read<OnBoardingState>().skip,
-              ),
-              IntroduceText(
+              const IntroduceText(
                 title: '불꽃 키우기',
                 comment: '미션을 인증하면\n우리 모임만의 불꽃이 성장해요',
               ),
-              OnBoardingGraphic(graphicPath: 'asset/graphic/onboarding_2.json'),
-              const SizedBox(height: 52),
+              const OnBoardingGraphic(
+                  graphicPath: 'asset/graphic/onboarding_2.json'),
+              const Spacer(),
               const ImagePhase(
                   phase1: 'asset/image/onboard_phase2.png',
                   phase2: 'asset/image/onboard_phase1.png',
