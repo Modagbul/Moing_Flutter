@@ -231,8 +231,8 @@ class PostDetailPage extends StatelessWidget {
 
   void showPostControlBottomSheetNotWriter({
     required BuildContext context,
-  }) {
-    showModalBottomSheet(
+  }) async {
+    await showModalBottomSheet(
       backgroundColor: grayScaleGrey600,
       context: context,
       shape: const RoundedRectangleBorder(
@@ -243,7 +243,7 @@ class PostDetailPage extends StatelessWidget {
       builder: (_) {
         final screenHeight = MediaQuery.of(context).size.height;
         return SizedBox(
-          height: screenHeight * 0.25,
+          height: screenHeight * 0.30,
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
@@ -252,7 +252,12 @@ class PostDetailPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 GestureDetector(
-                  onTap: context.read<PostDetailState>().reportPost,
+                  onTap: () {
+                    context.read<PostDetailState>().reportPost(
+                          reportType: "BOARD",
+                          targetId: context.read<PostDetailState>().boardId,
+                        );
+                  },
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -263,6 +268,31 @@ class PostDetailPage extends StatelessWidget {
                       const SizedBox(width: 24.0),
                       const Text(
                         '게시글 신고하기',
+                        style: TextStyle(
+                          color: grayScaleGrey200,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    context
+                        .read<PostDetailState>()
+                        .showBlockUserModal(context: context);
+                  },
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'asset/icons/post_minus.svg',
+                        width: 32,
+                        height: 32,
+                      ),
+                      const SizedBox(width: 24.0),
+                      const Text(
+                        '이용자 차단하기',
                         style: TextStyle(
                           color: grayScaleGrey200,
                           fontSize: 18.0,

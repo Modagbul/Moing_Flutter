@@ -132,7 +132,7 @@ class MissionFireUser extends StatelessWidget {
           ? colorFilter
           : const ColorFilter.mode(
               Colors.transparent,
-              BlendMode.clear,
+              BlendMode.overlay,
             ),
       child: user.profileImg != null
           ? Image.network(
@@ -160,6 +160,8 @@ class MissionFireUser extends StatelessWidget {
             )
           : SvgPicture.asset(
               'asset/icons/icon_user_profile.svg',
+              width: 90,
+              height: 90,
               fit: BoxFit.cover,
             ),
     );
