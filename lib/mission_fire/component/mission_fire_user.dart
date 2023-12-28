@@ -25,10 +25,10 @@ class MissionFireUser extends StatelessWidget {
         const SizedBox(
           height: 34,
         ),
-        if (context.watch<MissionFireState>().userList != null)
-          if (context.watch<MissionFireState>().userList!.isNotEmpty)
+        if (context.watch<MissionFireState>().filteredUserList != null)
+          if (context.watch<MissionFireState>().filteredUserList!.isNotEmpty)
             GridView.builder(
-                itemCount: context.watch<MissionFireState>().userList!.length,
+                itemCount: context.watch<MissionFireState>().filteredUserList!.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   childAspectRatio: 94 / 181,
@@ -40,7 +40,7 @@ class MissionFireUser extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final bool isSelected =
                       context.watch<MissionFireState>().selectedIndex == index;
-                  final userList = context.watch<MissionFireState>().userList;
+                  final filteredUserList = context.watch<MissionFireState>().filteredUserList;
 
                   return GestureDetector(
                     onTap: () {
@@ -49,7 +49,7 @@ class MissionFireUser extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        userList![index].fireStatus == "False"
+                        filteredUserList![index].fireStatus == "False"
                             ? Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
                                 child: SpeechBalloon(
@@ -80,8 +80,8 @@ class MissionFireUser extends StatelessWidget {
                           child: ClipOval(
                             child: Stack(
                               children: [
-                                _buildProfileImage(userList[index]),
-                                if (userList[index].fireStatus == "False")
+                                _buildProfileImage(filteredUserList[index]),
+                                if (filteredUserList[index].fireStatus == "False")
                                   Positioned(
                                     top: 0,
                                     left: 0,
@@ -102,11 +102,11 @@ class MissionFireUser extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Text(
-                              userList[index].nickname,
+                              filteredUserList[index].nickname,
                               style: contentTextStyle.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: (isSelected ||
-                                        userList[index].fireStatus == "False")
+                                    filteredUserList[index].fireStatus == "False")
                                     ? coralGrey500
                                     : grayScaleGrey300,
                               ),
