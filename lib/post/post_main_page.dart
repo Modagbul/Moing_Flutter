@@ -122,7 +122,7 @@ class _Notice extends StatelessWidget {
         ),
         const SizedBox(height: 8.0),
         SizedBox(
-          height: 150,
+          height: 158,
           child: _renderNoticeScrollBody(context: context),
         ),
       ],
