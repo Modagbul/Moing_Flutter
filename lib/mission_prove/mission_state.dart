@@ -10,6 +10,38 @@ import 'package:moing_flutter/utils/button/white_button.dart';
 import 'package:provider/provider.dart';
 
 class MissionState {
+  /// 사용자 차단 클릭 시
+  Future<String> showUserBlockModal({
+    required BuildContext context,
+    required int makerId,
+    required String nickname,
+  }) async {
+    var result = await showDialog(
+      context: context,
+      builder: (ctx) {
+        String title = "'$nickname'님을 차단하시겠어요?";
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            WarningDialog(
+              title: title,
+              content: '차단한 이용자의 콘텐츠가 더 이상 표시되지 않아요\n[설정>차단 멤버 관리]에서 언제든 해제할 수 있어요',
+              onConfirm: () {
+                Navigator.of(ctx).pop(true);
+              },
+              onCanceled: () {
+                Navigator.of(ctx).pop();
+              },
+              leftText: '취소하기',
+              rightText: '차단하기',
+            ),
+          ],
+        );
+      },
+    );
+    return (result != null && result == true) ? 'userBlock' : 'false';
+  }
+
   /// 미션 더보기 클릭 시
   Future<String> showMoreDetails({
     required BuildContext context,

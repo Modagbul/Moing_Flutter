@@ -9,10 +9,11 @@ class EveryMissionProveData {
   int hearts;
   final String status;
   final int count;
+  final int makerId;
 
   EveryMissionProveData({required this.archiveId, required this.nickname, required this.profileImg,
     required this.archive, required this.createdDate, required this.way, required this.heartStatus,
-    required this.hearts, required this.status, required this.count});
+    required this.hearts, required this.status, required this.count, required this.makerId});
 
   set setheartStatus(String newHeartStatus) {
     heartStatus = newHeartStatus;
@@ -34,11 +35,15 @@ class EveryMissionProveData {
       hearts: json['hearts'] as int,
       status: json['status'] as String,
       count: json['count'] as int,
+      makerId: json['makerId'] as int,
     );
   }
 
   @override
   String toString() {
-    return 'EveryMissionProveData(archiveId: $archiveId, nickname: $nickname, profileImg: $profileImg, archive: $archive, createdDate: $createdDate, way: $way, heartStatus: $heartStatus, hearts: $hearts, status: $status, count: $count)';
+    return 'EveryMissionProveData(archiveId: $archiveId, nickname: $nickname, '
+        'profileImg: $profileImg, archive: $archive, createdDate: $createdDate, '
+        'way: $way, heartStatus: $heartStatus, hearts: $hearts,'
+        ' status: $status, count: $count, makerId: $makerId)';
   }
 }
