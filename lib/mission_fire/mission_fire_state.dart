@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/response/mission/fire_person_list_repsonse.dart';
 
 class MissionFireState extends ChangeNotifier {
   final BuildContext context;
+  final ApiCode apiCode = ApiCode();
   final int teamId;
   final int missionId;
   int singleMissionMyCount = 0;
@@ -18,6 +20,8 @@ class MissionFireState extends ChangeNotifier {
   String selectedUserName = '모임원 프로필을 클릭해보세요';
   int? selectedIndex;
   List<FireReceiverData>? userList;
+  List<FireReceiverData>? filteredUserList;
+  List<int>? blockUserList;
   String apiUrl = '';
   final APICall call = APICall();
   bool _isThrowFireInProgress = false;
@@ -45,6 +49,7 @@ class MissionFireState extends ChangeNotifier {
   void initState() async {
     log('Instance "MissionFireState" has been created');
     log('teamId : $teamId, missionId : $missionId');
+    await getBlockUserList();
     await loadFirePersonList();
     await loadTeamMissionProveCount();
   }
@@ -67,7 +72,7 @@ class MissionFireState extends ChangeNotifier {
         singleMissionTotalCount = int.parse(apiResponse.data?['total']);
         notifyListeners();
       } else {
-        print('loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
+        log('loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -93,13 +98,24 @@ class MissionFireState extends ChangeNotifier {
 
       if (apiResponse.data != null) {
         userList = apiResponse.data;
+        if (blockUserList != null) {
+          filteredUserList = userList!
+              .where((user) => !blockUserList!.contains(user.receiveMemberId))
+              .toList();
+        }
         notifyListeners();
       } else {
-        print('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
+        log('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('불 던질 사람 조회 실패: $e');
     }
+  }
+
+  /// 차단 유저 목록 조회 API
+  Future<void> getBlockUserList() async {
+    blockUserList = await apiCode.getBlockUserList();
+    notifyListeners();
   }
 
   /// 불 던지기 API
@@ -126,7 +142,7 @@ class MissionFireState extends ChangeNotifier {
         compeleteThrowFireModal();
         initSelectedUser();
       } else {
-        print('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
+        log('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('불던지기 실패: $e');
@@ -136,7 +152,7 @@ class MissionFireState extends ChangeNotifier {
   }
 
   // 선택 유저 초기화 메소드
-  void initSelectedUser(){
+  void initSelectedUser() {
     selectedIndex = null;
     selectedUserName = '모임원 프로필을 클릭해보세요';
     notifyListeners();
