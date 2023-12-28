@@ -10,6 +10,7 @@ class PostDetailData {
   final String createdDate;
   final bool isWriter;
   final bool isNotice;
+  final int makerId;
 
   PostDetailData({
     required this.boardId,
@@ -21,6 +22,7 @@ class PostDetailData {
     required this.createdDate,
     required this.isWriter,
     required this.isNotice,
+    required this.makerId,
   });
 
   factory PostDetailData.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,7 @@ class PostDetailData {
       createdDate: json['createdDate'] as String,
       isWriter: json['isWriter'] as bool,
       isNotice: json['isNotice'] as bool,
+      makerId: json['makerId'] as int,
     );
   }
 }

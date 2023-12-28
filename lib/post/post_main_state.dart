@@ -12,17 +12,19 @@ class PostMainState extends ChangeNotifier {
   final int teamId;
 
   AllPostData? allPostData;
+  List<int>? blockUserList;
 
   PostMainState({
     required this.context,
     required this.teamId,
   }) {
     initState();
-    getAllPost();
   }
 
   void initState() {
     log('Instance "PostMainState" has been created');
+    getAllPost();
+    getBlockUserList();
   }
 
   @override
@@ -33,6 +35,11 @@ class PostMainState extends ChangeNotifier {
 
   Future<void> getAllPost() async {
     allPostData = await apiCode.getAllPostData(teamId: teamId);
+    notifyListeners();
+  }
+
+  Future<void> getBlockUserList() async {
+    blockUserList = await apiCode.getBlockUserList();
     notifyListeners();
   }
 

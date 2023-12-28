@@ -68,22 +68,37 @@ class _Header extends StatelessWidget {
             height: 14,
           ),
         const Spacer(),
-        if (commentData.isWriter)
-          GestureDetector(
-            onTap: () async {
-              await context
-                  .read<PostDetailState>()
-                  .deleteComment(boardCommentId: commentData.boardCommentId);
-            },
-            child: const Text(
-              '삭제',
-              style: TextStyle(
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
-                color: grayBlack8,
+        commentData.isWriter
+            ? GestureDetector(
+                onTap: () async {
+                  await context.read<PostDetailState>().deleteComment(
+                      boardCommentId: commentData.boardCommentId);
+                },
+                child: const Text(
+                  '삭제',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                    color: grayBlack8,
+                  ),
+                ),
+              )
+            : GestureDetector(
+                onTap: () {
+                  context.read<PostDetailState>().reportPost(
+                        reportType: "COMMENT",
+                        targetId: commentData.boardCommentId,
+                      );
+                },
+                child: const Text(
+                  '신고',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                    color: grayBlack8,
+                  ),
+                ),
               ),
-            ),
-          ),
       ],
     );
   }
