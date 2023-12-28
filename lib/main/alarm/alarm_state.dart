@@ -3,7 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
+import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/response/alarm_model.dart';
@@ -11,6 +15,8 @@ import 'package:moing_flutter/model/response/alarm_model.dart';
 class AlarmState extends ChangeNotifier {
   final BuildContext context;
   final APICall apiCall = APICall();
+  final ApiCode apiCode = ApiCode();
+  final FToast fToast = FToast();
   String apiUrl = '';
   List<AlarmData>? alarmList;
 
@@ -43,7 +49,7 @@ class AlarmState extends ChangeNotifier {
         alarmList = apiResponse.data;
         notifyListeners();
       } else {
-        print('getAllAlarmData is Null, error code : ${apiResponse.errorCode}');
+        log('getAllAlarmData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알림 모아보기 실패: $e');
@@ -67,8 +73,7 @@ class AlarmState extends ChangeNotifier {
         log('알림 단건 조회 성공');
         return true;
       } else {
-        print(
-            'postSingleAlarmData is Null, error code : ${apiResponse.errorCode}');
+        log('postSingleAlarmData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알림 단건 조회 실패: $e');
@@ -77,12 +82,13 @@ class AlarmState extends ChangeNotifier {
   }
 
   /// teamId, missionId 통해 해당 미션의 종료 여부, status 값 받기
-  Future<Map<String, dynamic>?> getMissionEndStatus({required int teamId, required int missionId}) async {
+  Future<Map<String, dynamic>?> getMissionEndStatus(
+      {required int teamId, required int missionId}) async {
     apiUrl =
-    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/mission-status';
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/mission-status';
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await apiCall.makeRequest<Map<String, dynamic>>(
+          await apiCall.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'GET',
         fromJson: (json) => {
@@ -95,7 +101,12 @@ class AlarmState extends ChangeNotifier {
         log('미션 상태 조회 성공');
         return apiResponse.data;
       } else {
-        print('getMissionEndStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getMissionEndStatus is Null, error code : ${apiResponse.errorCode}');
+        if (apiResponse.errorCode == 'T0001') {
+          showWarningToast(warningText: '존재하지 않는 소모임이에요');
+        } else {
+          showWarningToast(warningText: '존재하지 않는 미션이에요');
+        }
       }
     } catch (e) {
       log('미션 상태 조회 실패: $e');
@@ -128,12 +139,12 @@ class AlarmState extends ChangeNotifier {
     // 알림 읽음 처리 성공 -> 화면 이동
     AlarmData alarmData = alarmList![index];
     if (await postSingleAlarmData(alarmHistoryId: alarmData.alarmHistoryId)) {
-      // await getAllAlarmData();
-      // notifyListeners();
+      await getAllAlarmData();
+      notifyListeners();
 
       switch (alarmData.path) {
         case '/post/detail': // 신규 공지 업로드 알림
-          navigatePostDetailPage(alarmData: alarmData);
+          validateNewUploadPost(alarmData: alarmData);
           break;
         case '/missions/prove': // (한번/반복) 신규 미션 업로드, 불 던지기 알림
           navigateMissionsProvePage(alarmData: alarmData);
@@ -150,6 +161,20 @@ class AlarmState extends ChangeNotifier {
     }
   }
 
+  void validateNewUploadPost({required AlarmData alarmData}) async {
+    Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
+
+    final result = await apiCode.getDetailPostData(
+        teamId: idInfoMap['teamId'], boardId: idInfoMap['boardId']);
+
+    if (result == null) {
+      showWarningToast(warningText: '존재하지 않는 게시글이에요');
+      return;
+    }
+
+    navigatePostDetailPage(alarmData: alarmData);
+  }
+
   void navigatePostDetailPage({required AlarmData alarmData}) {
     Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
     Navigator.pushNamed(context, alarmData.path, arguments: idInfoMap);
@@ -160,14 +185,12 @@ class AlarmState extends ChangeNotifier {
     bool? isEnded;
     String? status;
 
-    if(idInfoMap['teamId'] != null && idInfoMap['missionId'] != null) {
+    if (idInfoMap['teamId'] != null && idInfoMap['missionId'] != null) {
       final missionEndStatus = await getMissionEndStatus(
           teamId: idInfoMap['teamId'], missionId: idInfoMap['missionId']);
-      if(missionEndStatus != null) {
+      if (missionEndStatus != null) {
         isEnded = missionEndStatus['end'];
         status = missionEndStatus['status'];
-        print('end : ${missionEndStatus['end']}');
-        print('status : ${missionEndStatus['status']}');
       }
     }
 
@@ -179,8 +202,11 @@ class AlarmState extends ChangeNotifier {
       isEnded: isEnded ?? false,
     );
 
-    Navigator.pushNamed(context, alarmData.path,
-        arguments: missionProveArgument);
+    Navigator.pushNamed(
+      context,
+      alarmData.path,
+      arguments: missionProveArgument,
+    );
   }
 
   void navigateMissionsScreen({required AlarmData alarmData}) {
@@ -189,5 +215,55 @@ class AlarmState extends ChangeNotifier {
 
   void navigateHomeScreen({required AlarmData alarmData}) {
     Navigator.pop(context, {'result': true, 'screenIndex': 0});
+  }
+
+  void showWarningToast({required String warningText}) {
+    fToast.showToast(
+        child: Material(
+          type: MaterialType.transparency,
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'asset/icons/toast_danger.svg',
+                          width: 24,
+                          height: 24,
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                    ),
+                    Text(
+                      warningText,
+                      style: const TextStyle(
+                        color: grayScaleGrey700,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+        ),
+        toastDuration: const Duration(milliseconds: 3000),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            top: 100.0,
+            left: 0.0,
+            right: 0,
+            child: child,
+          );
+        });
   }
 }
