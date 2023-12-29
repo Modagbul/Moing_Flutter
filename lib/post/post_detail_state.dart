@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
+import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/request/create_comment_request.dart';
 import 'package:moing_flutter/model/response/get_all_comments_response.dart';
@@ -23,6 +24,8 @@ class PostDetailState extends ChangeNotifier {
 
   PostDetailData? postData;
   AllCommentData? allCommentData;
+  List<CommentData>? filteredCommentList;
+  List<int>? blockUserList;
 
   final FToast fToast = FToast();
 
@@ -41,6 +44,7 @@ class PostDetailState extends ChangeNotifier {
 
   void initState() async {
     fToast.init(context);
+    await getBlockUserList();
     await getDetailPostData();
     await getAllCommentData();
     log('Instance "PostDetailState" has been created');
@@ -50,6 +54,12 @@ class PostDetailState extends ChangeNotifier {
   void dispose() {
     log('Instance "PostDetailState" has been removed');
     super.dispose();
+  }
+
+  /// 차단 유저 목록 조회 API
+  Future<void> getBlockUserList() async {
+    blockUserList = await apiCode.getBlockUserList();
+    notifyListeners();
   }
 
   /// 게시물 정보 호출 API
@@ -63,6 +73,15 @@ class PostDetailState extends ChangeNotifier {
   Future<void> getAllCommentData() async {
     allCommentData =
         await apiCode.getAllCommentData(teamId: teamId, boardId: boardId);
+
+    if (allCommentData == null) return;
+
+    if (blockUserList != null) {
+      filteredCommentList = allCommentData!.commentBlocks
+          .where((comment) => !blockUserList!.contains(comment.makerId))
+          .toList();
+    }
+
     notifyListeners();
   }
 
@@ -80,6 +99,7 @@ class PostDetailState extends ChangeNotifier {
     );
 
     if (isSuccess != null && isSuccess) {
+      await getBlockUserList();
       await getAllCommentData();
       clearCommentTextField();
       FocusScope.of(context).unfocus();
@@ -189,6 +209,7 @@ class PostDetailState extends ChangeNotifier {
       }
 
       if (reportType == 'COMMENT') {
+        await getBlockUserList();
         await getAllCommentData();
         notifyListeners();
       }

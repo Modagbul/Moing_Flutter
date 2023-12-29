@@ -5,7 +5,6 @@ import 'package:moing_flutter/board/component/icon_text_button.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
-import 'package:moing_flutter/model/response/get_all_comments_response.dart';
 import 'package:moing_flutter/post/component/comment_card.dart';
 import 'package:moing_flutter/post/post_detail_state.dart';
 
@@ -391,9 +390,8 @@ class PostDetailPage extends StatelessWidget {
   }
 
   Widget _renderCommentScrollBody({required BuildContext context}) {
-    AllCommentData? allCommentData =
-        context.watch<PostDetailState>().allCommentData;
-    List<CommentData> commentList = allCommentData?.commentBlocks ?? [];
+    List<CommentData> filteredCommentList =
+        context.watch<PostDetailState>().filteredCommentList ?? [];
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -401,7 +399,7 @@ class PostDetailPage extends StatelessWidget {
         vertical: 8.0,
       ),
       child: Column(
-        children: commentList.map((CommentData comment) {
+        children: filteredCommentList.map((CommentData comment) {
           return CommentCard(commentData: comment);
         }).toList(),
       ),

@@ -82,7 +82,8 @@ class PostMainState extends ChangeNotifier {
     );
 
     if (result as bool) {
-      getAllPost();
+      await getBlockUserList();
+      await getAllPost();
     }
   }
 }
