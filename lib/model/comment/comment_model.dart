@@ -9,6 +9,7 @@ class CommentData {
   final bool isWriter;
   final bool writerIsDeleted;
   final String createdDate;
+  final int makerId;
 
   CommentData({
     required this.boardCommentId,
@@ -19,6 +20,7 @@ class CommentData {
     required this.isWriter,
     required this.writerIsDeleted,
     required this.createdDate,
+    required this.makerId,
   });
 
   factory CommentData.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class CommentData {
       isWriter: json['isWriter'] as bool,
       writerIsDeleted: json['writerIsDeleted'] as bool,
       createdDate: json['createdDate'] as String,
+      makerId: json['makerId'] as int,
     );
   }
 }
