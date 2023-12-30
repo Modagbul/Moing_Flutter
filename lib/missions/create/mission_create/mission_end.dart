@@ -11,14 +11,27 @@ class MissionEndDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isRepeatMission = context.watch<MissionCreateState>().isRepeatSelected;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 52),
-        Text(
-          '미션 마감일',
-          style: contentTextStyle.copyWith(
-              fontWeight: FontWeight.w600, color: grayScaleGrey200),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '미션 마감일',
+              style: contentTextStyle.copyWith(
+                  fontWeight: FontWeight.w600, color: grayScaleGrey200),
+            ),
+            if (isRepeatMission)
+              Text(
+                '반복 미션은 다음 주 월요일에 시작해요',
+                style: contentTextStyle.copyWith(
+                    fontWeight: FontWeight.w500, color: grayScaleGrey550, fontSize: 14),
+              ),
+          ],
         ),
         SizedBox(height: 24),
         MissionExpectEnd(),
