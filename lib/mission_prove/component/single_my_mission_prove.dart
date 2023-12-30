@@ -34,10 +34,11 @@ class SingleMyMissionProved extends StatelessWidget {
                   ? Padding(
                       padding:
                           const EdgeInsets.only(top: 68.0, left: 16, right: 16),
-                      child: Text(
-                          state.myMissionList![0].archive,
-                          style: contentTextStyle.copyWith(color: Colors.white)),
+                      child: Text(state.myMissionList![0].archive,
+                          style:
+                              contentTextStyle.copyWith(color: Colors.white)),
                     )
+
                   /// 사진 인증
                   : state.missionWay.length > 1 &&
                           state.missionWay.contains('사진') &&
@@ -72,91 +73,114 @@ class SingleMyMissionProved extends StatelessWidget {
                             ),
                           ],
                         )
-                    /// 텍스트 인증
-                    : state.missionWay.length > 1 && state.missionWay.contains('텍스트') &&
-                            state.myMissionList![0].status == 'COMPLETE'
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16.0, top: 60, bottom: 24, right: 32),
-                        child: Text(
-                          state.myMissionList![0].archive,
-                          style: contentTextStyle.copyWith(color: grayScaleGrey200),))
-                      /// 링크 인증
-                    : state.missionWay.length > 1 && state.missionWay.contains('링크') &&
-                  state.myMissionList![0].status == 'COMPLETE' ?
-              GestureDetector(
-                        onTap: context
-                            .read<MissionProveState>()
-                            .singleMissionLink,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 80.0, left: 16, right: 16, bottom: 24),
-                          child: Container(
-                            width: double.infinity,
-                            height: 88,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: grayScaleGrey600,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16.0,
-                                      right: 12,
-                                      top: 34,
-                                      bottom: 34),
-                                  child: SvgPicture.asset(
-                                    'asset/icons/icon_hyperlink.svg',
-                                    color: grayScaleGrey400,
-                                  ),
+
+                      /// 텍스트 인증
+                      : state.missionWay.length > 1 &&
+                              state.missionWay.contains('텍스트') &&
+                              state.myMissionList![0].status == 'COMPLETE'
+                          ? Container(
+                              height: 300, // 고정된 높이 지정
+                              padding: const EdgeInsets.only(
+                                  left: 16.0, top: 60, bottom: 24, right: 32),
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  state.myMissionList![0].archive,
+                                  style: contentTextStyle.copyWith(
+                                      color: grayScaleGrey200),
                                 ),
-                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 16.0,
-                                          top: 25.5,
-                                          bottom: 4),
-                                      child: Text(
-                                        '링크 바로가기',
-                                        style: contentTextStyle.copyWith(
-                                            color: grayScaleGrey100),
+                              ),
+                            )
+
+                          /// 링크 인증
+                          : state.missionWay.length > 1 &&
+                                  state.missionWay.contains('링크') &&
+                                  state.myMissionList![0].status == 'COMPLETE'
+                              ? GestureDetector(
+                                  onTap: context
+                                      .read<MissionProveState>()
+                                      .singleMissionLink,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 80.0,
+                                        left: 16,
+                                        right: 16,
+                                        bottom: 24),
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 88,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: grayScaleGrey600,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 16.0,
+                                                right: 12,
+                                                top: 34,
+                                                bottom: 34),
+                                            child: SvgPicture.asset(
+                                              'asset/icons/icon_hyperlink.svg',
+                                              color: grayScaleGrey400,
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 16.0,
+                                                    top: 25.5,
+                                                    bottom: 4),
+                                                child: Text(
+                                                  '링크 바로가기',
+                                                  style:
+                                                      contentTextStyle.copyWith(
+                                                          color:
+                                                              grayScaleGrey100),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 265,
+                                                child: Text(
+                                                  state.myMissionList![0]
+                                                      .archive,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: grayScaleGrey400,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Container(
-                                      width: 265,
-                                      child: Text(
-                                        state.myMissionList![0].archive,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: grayScaleGrey400,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    '',
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                : Center(
-              child: Text('',),
             ),
-            ),
-            if(state.myMissionList![0].status == 'SKIP')
+            if (state.myMissionList![0].status == 'SKIP')
               Positioned(
                   bottom: 24,
                   left: 0,
                   right: 0,
-                  child: Text('미션을 건너뛰었어요', style: contentTextStyle, textAlign: TextAlign.center,)
-              ),
+                  child: Text(
+                    '미션을 건너뛰었어요',
+                    style: contentTextStyle,
+                    textAlign: TextAlign.center,
+                  )),
             Positioned(
               top: 0,
               left: 0,
@@ -182,40 +206,43 @@ class SingleMyMissionProved extends StatelessWidget {
                       ),
                     ),
                     Spacer(),
-                    if(!state.isEnded)
-                    DropdownButton<String>(
-                      underline: SizedBox.shrink(),
-                      style: contentTextStyle.copyWith(color: grayScaleGrey100),
-                      dropdownColor: grayScaleGrey500,
-                      icon: Icon(
-                        Icons.more_vert_outlined,
-                        color: grayScaleGrey300,
+                    if (!state.isEnded)
+                      DropdownButton<String>(
+                        underline: SizedBox.shrink(),
+                        style:
+                            contentTextStyle.copyWith(color: grayScaleGrey100),
+                        dropdownColor: grayScaleGrey500,
+                        icon: Icon(
+                          Icons.more_vert_outlined,
+                          color: grayScaleGrey300,
+                        ),
+                        iconEnabledColor: Colors.white,
+                        items: <DropdownMenuItem<String>>[
+                          DropdownMenuItem(
+                              value: 'retry',
+                              child: Container(
+                                padding: EdgeInsets.only(top: 8, right: 8),
+                                alignment: Alignment.centerRight,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text('다시 인증하기'),
+                                    Text(
+                                      '기존 인증내역이 취소돼요',
+                                      style: bodyTextStyle.copyWith(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ],
+                        isDense: true,
+                        onChanged: (String? val) {
+                          context
+                              .read<MissionProveState>()
+                              .setMission(val: val);
+                        },
                       ),
-                      iconEnabledColor: Colors.white,
-                      items: <DropdownMenuItem<String>>[
-                        DropdownMenuItem(
-                            value: 'retry',
-                            child: Container(
-                              padding: EdgeInsets.only(top: 8, right: 8),
-                              alignment: Alignment.centerRight,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text('다시 인증하기'),
-                                  Text(
-                                    '기존 인증내역이 취소돼요',
-                                    style: bodyTextStyle.copyWith(
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                            )),
-                      ],
-                      isDense: true,
-                      onChanged: (String? val) {
-                        context.read<MissionProveState>().setMission(val: val);
-                      },
-                    ),
                   ],
                 ),
               ),
