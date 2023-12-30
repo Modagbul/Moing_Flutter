@@ -47,6 +47,7 @@ import 'package:moing_flutter/post/post_main_page.dart';
 import '../missions/create/link_auth_page.dart';
 import '../missions/create/skip_mission_page.dart';
 import '../missions/create/text_auth_page.dart';
+import '../mypage/blocked_users_page.dart';
 import '../mypage/my_page_screen.dart';
 import '../mypage/setting_page.dart';
 import '../post/post_create_page.dart';
@@ -134,6 +135,7 @@ class MoingApp extends StatelessWidget {
 
             SettingPage.routeName:(context) => SettingPage.route(context),
             AlarmSettingPage.routeName:(context) => AlarmSettingPage.route(context),
+            BlockedUsersPage.routeName:(context) => BlockedUsersPage.route(context),
 
             MyPageScreen.routeName:(context) => MyPageScreen.route(context: context),
             MyPageRevokeReasonPage.routeName:(context) => MyPageRevokeReasonPage.route(context),

@@ -8,6 +8,7 @@ class PostData {
   final int commentNum;
   final bool isRead;
   final bool writerIsDeleted;
+  final int makerId;
 
   PostData({
     required this.boardId,
@@ -19,6 +20,7 @@ class PostData {
     required this.commentNum,
     required this.isRead,
     required this.writerIsDeleted,
+    required this.makerId,
   });
 
   factory PostData.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class PostData {
       commentNum: json['commentNum'],
       isRead: json['isRead'],
       writerIsDeleted: json['writerIsDeleted'],
+      makerId: json['makerId'],
     );
   }
 }

@@ -14,6 +14,8 @@ class ToastMessage {
     double? toastLeft,
     double? toastRight,
     double? toastTop,
+    double? height,
+    String? textSize,
     bool? isWarning,
   }) {
     fToast.showToast(
@@ -24,7 +26,7 @@ class ToastMessage {
               child: Container(
                 alignment: Alignment.center,
                 width: double.infinity,
-                height: 48,
+                height: height ?? 48,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   color: Colors.white,
@@ -49,7 +51,9 @@ class ToastMessage {
                     ),
                     Text(
                       warningText,
-                      style: bodyTextStyle.copyWith(color: grayScaleGrey700),
+                      style: (textSize != null)
+                          ? contentTextStyle.copyWith(color: grayScaleGrey900)
+                          : bodyTextStyle.copyWith(color: grayScaleGrey700),
                     ),
                   ],
                 ),

@@ -127,7 +127,7 @@ class LoginState extends ChangeNotifier {
 
         // sharedPreferences를 이용하여 accessToken, refreshToken 저장
         await tokenManagement.saveToken(accessToken, refreshToken);
-        // print('카카오JWT : $accessToken');
+        print('카카오JWT : $accessToken');
         _isRegistered = responseBody['data']['registrationStatus'];
         sharedPreferencesInfo.savePreferencesData('sign', 'kakao');
         checkRegister(_isRegistered!);
@@ -227,7 +227,7 @@ class LoginState extends ChangeNotifier {
       if(responseBody['isSuccess'] == true) {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
-        // print('애플JWT : $accessToken');
+        print('애플JWT : $accessToken');
         // sharedPreferences를 이용하여 accessToken, refreshToken 저장
         await tokenManagement.saveToken(accessToken, refreshToken);
 

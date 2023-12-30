@@ -5,7 +5,7 @@ import 'package:moing_flutter/mission_prove/component/prove_button/mission_like_
 import 'package:moing_flutter/mission_prove/component/mission_current_situation.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_not_prove_button.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_prove_button.dart';
-import 'package:moing_flutter/mission_prove/component/repeat_every_mission/every_mission_prove_test.dart';
+import 'package:moing_flutter/mission_prove/component/repeat_every_mission/every_mission_prove.dart';
 import 'package:moing_flutter/mission_prove/component/repeat_my_mission_prove.dart';
 import 'package:moing_flutter/mission_prove/component/single_my_mission_not_prove.dart';
 import 'package:moing_flutter/mission_prove/component/single_my_mission_prove.dart';
@@ -86,8 +86,7 @@ class _MissionProvePageState extends State<MissionProvePage>
 
                 /// 나의 인증이면서 아직 인증 안한 경우
                 if (state.myMissionList == null ||
-                    (state.isMeOrEveryProved &&
-                        state.myMissionList != null &&
+                    (state.isMeOrEveryProved && state.myMissionList != null &&
                         state.myMissionList!.isEmpty))
                   SingleMyMissionNotProved(),
 

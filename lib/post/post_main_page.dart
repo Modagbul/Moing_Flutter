@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
+import 'package:moing_flutter/model/post/post_model.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
 import 'package:moing_flutter/post/component/notice_card.dart';
 import 'package:moing_flutter/post/component/post_card.dart';
@@ -108,7 +109,7 @@ class _Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
+    List<PostData>? filteredNoticeBlocks = context.watch<PostMainState>().filteredNoticeBlocks;
 
     return Column(
       children: [
@@ -117,11 +118,11 @@ class _Notice extends StatelessWidget {
             horizontal: 20.0,
             vertical: 5.0,
           ),
-          child: _renderNoticeHeader(noticeNum: allPostData?.noticeNum ?? 0),
+          child: _renderNoticeHeader(noticeNum: filteredNoticeBlocks?.length ?? 0),
         ),
         const SizedBox(height: 8.0),
         SizedBox(
-          height: 150,
+          height: 158,
           child: _renderNoticeScrollBody(context: context),
         ),
       ],
@@ -150,12 +151,12 @@ class _Notice extends StatelessWidget {
   }
 
   Widget _renderNoticeScrollBody({required BuildContext context}) {
-    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
+    List<PostData>? filteredNoticeBlocks = context.watch<PostMainState>().filteredNoticeBlocks;
     PageController pageController = PageController(
       viewportFraction: 0.9,
     );
 
-    return allPostData != null && allPostData.noticeNum == 0
+    return filteredNoticeBlocks != null && filteredNoticeBlocks.isEmpty
         ? const SizedBox(
             height: 150,
             child: Center(
@@ -173,9 +174,9 @@ class _Notice extends StatelessWidget {
             controller: pageController,
             scrollDirection: Axis.horizontal,
             pageSnapping: true,
-            itemCount: allPostData?.noticeBlocks.length ?? 0,
+            itemCount: filteredNoticeBlocks?.length ?? 0,
             itemBuilder: (context, index) {
-              final notice = allPostData!.noticeBlocks[index];
+              final notice = filteredNoticeBlocks![index];
 
               return GestureDetector(
                 onTap: () {
@@ -238,8 +239,8 @@ class _Post extends StatelessWidget {
   }
 
   Widget _renderPostScrollBody({required BuildContext context}) {
-    AllPostData? allPostData = context.watch<PostMainState>().allPostData;
-    return allPostData != null && allPostData.postNum == 0
+    List<PostData>? filteredPostBlocks = context.watch<PostMainState>().filteredPostBlocks;
+    return filteredPostBlocks != null && filteredPostBlocks.isEmpty
         ? const Center(
             child: Text(
               '아직 게시글이 없어요',
@@ -252,9 +253,9 @@ class _Post extends StatelessWidget {
           )
         : Column(
             children: List.generate(
-              allPostData?.postBlocks.length ?? 0,
+              filteredPostBlocks?.length ?? 0,
               (index) {
-                final post = allPostData!.postBlocks[index];
+                final post = filteredPostBlocks![index];
 
                 return GestureDetector(
                   onTap: () {

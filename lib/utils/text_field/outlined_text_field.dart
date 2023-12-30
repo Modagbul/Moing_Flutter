@@ -88,6 +88,7 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
           // 텍스트 입력 감지
           onChanged: (value) {
             widget.onChanged(value);
+            setState(() {}); // 여기서 setState를 호출하여 counterText를 업데이트
           },
 
           onTap: widget.onTap,
@@ -105,7 +106,7 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
           // 데코레이션
           decoration: InputDecoration(
             // 카운터 텍스트 - 기본값 == '' (off)
-            counterText: widget.counterText,
+            counterText: '',
             // // // // 카운터 텍스트 스타일
             counterStyle: widget.counterTextStyle,
 
@@ -154,6 +155,22 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
 
           // 커서 색상
           cursorColor: coralGrey200,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                '${widget.controller.text.length}',
+                style: widget.counterTextStyle,
+              ),
+              Text(
+                ' / ${widget.maxLength}',
+                style: widget.counterTextStyle,
+              ),
+            ],
+          ),
         ),
       ],
     );

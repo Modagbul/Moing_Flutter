@@ -20,6 +20,7 @@ import '../response/aggregate_team_repeat_mission_response.dart';
 import '../response/aggregate_team_single_mission_response.dart';
 import '../response/alarm_settings_editor_response.dart';
 import '../response/alarm_settings_response.dart';
+import '../response/blocked_member_response.dart';
 import '../response/board_completed_mission_response.dart';
 import '../response/board_repeat_mission_response.dart';
 import '../response/board_single_mission_response.dart';
@@ -45,10 +46,10 @@ class ApiCode {
         return apiResponse.data!;
       } else {
         if (apiResponse.errorCode == 'J0003') {
-          await Future.delayed(Duration(seconds: 1));
+          await Future.delayed(const Duration(seconds: 1));
           getSingleBoard(teamId: teamId);
         } else {
-          print('getSingleBoard data is Null, error code : ${apiResponse.errorCode}');
+          log('getSingleBoard data is Null, error code : ${apiResponse.errorCode}');
         }
       }
     } catch (e) {
@@ -70,7 +71,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data!;
       } else {
-        print('getMyPageData is Null, error code : ${apiResponse.errorCode}');
+        log('getMyPageData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('마이페이지 데이터 조회 실패: $e');
@@ -93,7 +94,7 @@ class ApiCode {
         log('프로필 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        print('ApiResponse.data is Null, error code : ${apiResponse.errorCode}');
+        log('ApiResponse.data is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('프로필 데이터 조회 실패: $e');
@@ -116,7 +117,7 @@ class ApiCode {
         log('모든 공지, 게시글 데이터 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        print('getAllPostData is Null, error code : ${apiResponse.errorCode}');
+        log('getAllPostData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('모든 공지, 게시글 데이터 조회 실패: $e');
@@ -146,7 +147,7 @@ class ApiCode {
         return RepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        print('getRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('반복 미션 상태 조회 실패: $e');
@@ -172,7 +173,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글/공지 생성 성공: ${apiResponse.data}');
       } else {
-        print('postCreatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
+        log('postCreatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글/공지 생성 실패: $e');
@@ -196,7 +197,7 @@ class ApiCode {
         log('게시글 상세 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        print('getDetailPostData is Null, error code : ${apiResponse.errorCode}');
+        log('getDetailPostData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 상세 조회 실패: $e');
@@ -226,7 +227,7 @@ class ApiCode {
         return BoardSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        print('getSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('한번 미션 상태 조회 실패: $e');
@@ -252,7 +253,7 @@ class ApiCode {
         log('게시글 댓글 전체 조회 성공: ${apiResponse.data}');
         return apiResponse.data!;
       } else {
-        print('getAllCommentData is Null, error code : ${apiResponse.errorCode}');
+        log('getAllCommentData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 댓글 전체 조회 실패: $e');
@@ -285,7 +286,7 @@ class ApiCode {
         return BoardCompletedMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        print('getCompletedMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getCompletedMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('완료된 미션 상태 조회 실패: $e');
@@ -293,7 +294,7 @@ class ApiCode {
     return null;
   }
 
-  Future<void> postCreateComment({
+  Future<bool?> postCreateComment({
     required int teamId,
     required int boardId,
     required CreateCommentData createCommentData,
@@ -311,16 +312,17 @@ class ApiCode {
 
       if (apiResponse.data != null) {
         log('게시글 댓글 생성 성공: ${apiResponse.data}');
+        return true;
       } else {
-        print('postCreateComment is Null, error code : ${apiResponse.errorCode}');
+        log('postCreateComment is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 댓글 생성 실패: $e');
     }
-    return;
+    return false;
   }
 
-  Future<void> deleteComment({
+  Future<bool?> deleteComment({
     required int teamId,
     required int boardId,
     required int boardCommentId,
@@ -338,13 +340,14 @@ class ApiCode {
 
       if (apiResponse.isSuccess) {
         log('게시글 댓글 삭제 성공');
+        return apiResponse.isSuccess;
       } else {
-        print('deleteComment is Null, error code : ${apiResponse.errorCode}');
+        log('deleteComment is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 댓글 삭제 실패: $e');
     }
-    return null;
+    return false;
   }
 
   Future<void> deletePost({
@@ -363,7 +366,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글 삭제 성공: ${apiResponse.message}');
       } else {
-        print('deletePost is Null, error code : ${apiResponse.errorCode}');
+        log('deletePost is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글 삭제 실패: $e');
@@ -390,7 +393,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         log('게시글/공지 수정 성공: ${apiResponse.data}');
       } else {
-        print('putUpdatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
+        log('putUpdatePostOrNotice is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('게시글/공지 수정 실패: $e');
@@ -412,7 +415,7 @@ class ApiCode {
         log('로그아웃 성공!');
         return true;
       } else {
-        print('signOut is Null, error code : ${apiResponse?.errorCode}');
+        log('signOut is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('로그아웃 실패: $e');
@@ -442,7 +445,7 @@ class ApiCode {
         return AggregateSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        print('getAggregateSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getAggregateSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('한번 미션 상태 조회 실패: $e');
@@ -474,7 +477,7 @@ class ApiCode {
         return AggregateTeamSingleMissionResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        print('getAggregateTeamSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getAggregateTeamSingleMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀별 한번 미션 상태 조회 실패: $e');
@@ -504,7 +507,7 @@ class ApiCode {
         return AggregateRepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        print('getAggregateRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getAggregateRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('반복 미션 상태 조회 실패: $e');
@@ -537,7 +540,7 @@ class ApiCode {
         return AggregateTeamRepeatMissionStatusResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        print('getAggregateTeamRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getAggregateTeamRepeatMissionStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀별 반복 미션 상태 조회 실패: $e');
@@ -566,7 +569,7 @@ class ApiCode {
         return TeamListResponse(
             isSuccess: true, message: '성공', data: apiResponse.data!);
       } else {
-        print('getTeamListStatus is Null, error code : ${apiResponse.errorCode}');
+        log('getTeamListStatus is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀 리스트 조회 실패: $e');
@@ -588,7 +591,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data;
       } else {
-        print('getTeamFireLevel is Null, error code : ${apiResponse.errorCode}');
+        log('getTeamFireLevel is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀별 불 레벨 경험치 조회: $e');
@@ -611,7 +614,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data!['teamId'];
       } else {
-        print('deleteTeam is Null, error code : ${apiResponse.errorCode}');
+        log('deleteTeam is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('소모임장 강제종료 실패: $e');
@@ -634,7 +637,7 @@ class ApiCode {
       if (apiResponse.data != null) {
         return apiResponse.data!['teamId'];
       } else {
-        print('deleteTeamUser is Null, error code : ${apiResponse.errorCode}');
+        log('deleteTeamUser is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('소모임원 탈퇴 실패: $e');
@@ -657,7 +660,7 @@ class ApiCode {
         log('알람 설정 조회 성공: ${apiResponse.data}');
         return apiResponse.data;
       } else {
-        print('getAlarmSettings is Null, error code : ${apiResponse.errorCode}');
+        log('getAlarmSettings is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알람 설정 조회 실패1: $e');
@@ -667,7 +670,7 @@ class ApiCode {
 
   Future<AlarmSettingsEditor?> updateAlarmSettings(
       String type, bool status) async {
-    print('type : $type, status : $status');
+    log('type : $type, status : $status');
 
     String apiUrl =
         '${dotenv.env['MOING_API']}/api/mypage/alarm?type=$type&status=${status ? 'on' : 'off'}';
@@ -684,7 +687,7 @@ class ApiCode {
         log('알람 설정 수정 성공!');
         return apiResponse.data;
       } else {
-        print('updateAlarmSettings is Null, error code : ${apiResponse.errorCode}');
+        log('updateAlarmSettings is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('알람 설정 수정 실패: $e');
@@ -712,33 +715,12 @@ class ApiCode {
         log('팀별 미션 사진 모아보기 성공: ${apiResponse.data}');
         return apiResponse.data;
       } else {
-        print('getTeamMissionPhotoList is Null, error code : ${apiResponse.errorCode}');
+        log('getTeamMissionPhotoList is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('팀별 미션 사진 모아보기 실패: $e');
     }
     return null;
-  }
-
-  Future<bool?> postReportPost({required int boardId}) async {
-    String apiUrl = '${dotenv.env['MOING_API']}/api/report/BOARD/$boardId';
-    try {
-      ApiResponse<int> apiResponse = await call.makeRequest<int>(
-        url: apiUrl,
-        method: 'POST',
-        fromJson: (data) => data as int,
-      );
-
-      if (apiResponse.isSuccess) {
-        log('게시글 신고 성공!');
-        return true;
-      } else {
-        print('postReportPost is Null, error code : ${apiResponse?.errorCode}');
-      }
-    } catch (e) {
-      log('게시글 신고 실패: $e');
-    }
-    return false;
   }
 
   Future<String?> getNotReadAlarmCount() async {
@@ -756,11 +738,122 @@ class ApiCode {
         log('안읽음 알림 개수 조회 성공!');
         return apiResponse.data!['count'];
       } else {
-        print('getNotReadAlarmCount is Null, error code : ${apiResponse.errorCode}');
+        log('getNotReadAlarmCount is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('안읽음 알림 개수 조회 실패: $e');
     }
+    return null;
+  }
+
+  /// 게시물/댓글/미션 신고 API
+  Future<bool?> postReportPost(
+      {required String reportType, required int targetId}) async {
+    String apiUrl =
+        '${dotenv.env['MOING_API']}/api/report/$reportType/$targetId';
+    try {
+      ApiResponse<int> apiResponse = await call.makeRequest<int>(
+        url: apiUrl,
+        method: 'POST',
+        fromJson: (data) => data as int,
+      );
+
+      if (apiResponse.isSuccess) {
+        log('게시물/댓글/미션 신고 성공!');
+        return true;
+      } else {
+        log('postReportPost is Null, error code : ${apiResponse.errorCode}');
+      }
+    } catch (e) {
+      log('게시물/댓글/미션 신고 실패: $e');
+    }
+    return false;
+  }
+
+  /// 유저 차단 API
+  Future<bool?> postBlockUser({required int targetId}) async {
+    String apiUrl = '${dotenv.env['MOING_API']}/api/block/$targetId';
+
+    try {
+      ApiResponse<int> apiResponse = await call.makeRequest<int>(
+        url: apiUrl,
+        method: 'POST',
+        fromJson: (data) => data as int,
+      );
+
+      if (apiResponse.isSuccess) {
+        log('유저 차단 성공!');
+        return true;
+      } else {
+        log('postBlockUser is Null, error code : ${apiResponse.errorCode}');
+      }
+    } catch (e) {
+      log('유저 차단 실패: $e');
+    }
+    return false;
+  }
+
+  /// 차단 유저 목록 조회 API
+  Future<List<int>?> getBlockUserList() async {
+    String apiUrl = '${dotenv.env['MOING_API']}/api/block/';
+
+    try {
+      ApiResponse<List<int>> apiResponse = await call.makeRequest<List<int>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) {
+          if (data is List<dynamic>) {
+            return data.cast<int>();
+          } else {
+            return <int>[];
+          }
+        },
+      );
+
+      if (apiResponse.isSuccess) {
+        log('차단 유저 목록 조회 성공!');
+        return apiResponse.data;
+      } else {
+        log('getBlockUserList is Null, error code : ${apiResponse.errorCode}');
+      }
+    } catch (e) {
+      log('차단 유저 목록 조회 실패: $e');
+    }
+    return null;
+  }
+
+  /// 차단 유저 정보 조회 API
+  Future<List<BlockedMemberInfo>?> getBlockedMemberStatus() async {
+    String apiUrl = '${dotenv.env['MOING_API']}/api/block/info';
+
+    try {
+      ApiResponse<List<BlockedMemberInfo>>? apiResponse =
+          await call.makeRequest<List<BlockedMemberInfo>>(
+        url: apiUrl,
+        method: 'GET',
+        fromJson: (data) {
+          print('Raw API Data: $data');
+
+          return (data as List<dynamic>)
+              .map((item) =>
+                  BlockedMemberInfo.fromJson(item as Map<String, dynamic>))
+              .toList();
+        },
+      );
+
+      print('API Response Data: ${apiResponse.data}');
+
+      if (apiResponse.data != null) {
+        log('차단 유저 정보 조회 성공: ${apiResponse.data}');
+        return apiResponse.data;
+      } else {
+        log('getBlockedMemberStatus is Null, error code : ${apiResponse.errorCode}');
+      }
+    } catch (e, stackTrace) {
+      print('오류 발생: $e');
+      print('StackTrace: $stackTrace');
+    }
+
     return null;
   }
 }
