@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../const/color/colors.dart';
 import '../make_group/component/warning_dialog.dart';
 import '../model/api_code/api_code.dart';
+import 'blocked_users_page.dart';
 import 'component/list_custom_tile.dart';
 import 'component/question_dialog.dart';
 
@@ -79,6 +80,17 @@ class SettingPage extends StatelessWidget {
                       print('개인정보 처리 방침 클릭!');
                     },
                   ),
+                  ListCustomTile(
+                      listName: '차단멤버 관리',
+                      imagePath: 'asset/icons/right_arrow.svg',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  BlockedUsersPage.route(context)),
+                        );
+                      }),
                   ListCustomTile(
                     listName: '문의하기',
                     imagePath: 'asset/icons/right_arrow.svg',
