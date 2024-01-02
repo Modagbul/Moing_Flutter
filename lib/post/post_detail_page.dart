@@ -212,7 +212,7 @@ class PostDetailPage extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
         },
       ),
       actions: [
@@ -252,7 +252,8 @@ class PostDetailPage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    context.read<PostDetailState>().reportPost(
+                    context.read<PostDetailState>().showReportPostModal(
+                          context: context,
                           reportType: "BOARD",
                           targetId: context.read<PostDetailState>().boardId,
                         );
