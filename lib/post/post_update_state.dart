@@ -16,7 +16,7 @@ class PostUpdateState extends ChangeNotifier {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
 
-  bool isCheckedNotice = false;
+  bool isCheckedNotice;
   bool isButtonEnabled = false;
 
   bool isRequestUpdatePostInProgress = false;
@@ -26,6 +26,7 @@ class PostUpdateState extends ChangeNotifier {
     required this.boardId,
     required this.context,
     required this.postData,
+    required this.isCheckedNotice,
   }) {
     initState();
   }
@@ -52,6 +53,7 @@ class PostUpdateState extends ChangeNotifier {
 
   void toggleCheckedNotice() {
     isCheckedNotice = !isCheckedNotice;
+    isButtonEnabled = true;
     notifyListeners();
   }
 

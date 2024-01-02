@@ -22,6 +22,7 @@ class NoticeCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, bottom: 16.0, right: 14.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _renderNoticeCardHeader(nickName: noticeData.writerNickName),
@@ -115,6 +116,7 @@ class NoticeCard extends StatelessWidget {
             fontSize: 14.0,
             fontWeight: FontWeight.w500,
           ),
+          maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
       ],

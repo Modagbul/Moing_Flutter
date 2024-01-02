@@ -123,8 +123,7 @@ class PostDetailState extends ChangeNotifier {
     );
 
     if (isSuccess != null && isSuccess) {
-      allCommentData?.commentBlocks.removeWhere(
-          (commentBlock) => commentBlock.boardCommentId == boardCommentId);
+      await getAllCommentData();
       notifyListeners();
       _showToastMessage(
         message: '댓글이 삭제되었어요.',
@@ -175,7 +174,7 @@ class PostDetailState extends ChangeNotifier {
     );
 
     if (result as bool) {
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
       await getDetailPostData();
       _showToastMessage(
         message: '게시글이 수정되었어요.',
@@ -205,7 +204,7 @@ class PostDetailState extends ChangeNotifier {
     if (isSuccess != null && isSuccess) {
       if (reportType == 'BOARD') {
         await getDetailPostData();
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       }
 
       if (reportType == 'COMMENT') {
@@ -273,13 +272,78 @@ class PostDetailState extends ChangeNotifier {
                   '차단한 이용자의 콘텐츠가 더 이상 표시되지 않아요\n[설정>차단 멤버 관리]에서 언제든 해제할 수 있어요',
               leftText: '취소하기',
               onCanceled: () {
-                Navigator.of(ctx).pop();
+                Navigator.of(ctx).pop(true);
               },
               rightText: '차단하기',
               onConfirm: () {
-                Navigator.of(ctx).pop();
-                Navigator.of(ctx).pop();
+                Navigator.of(ctx).pop(true);
+                Navigator.of(ctx).pop(true);
                 postBlockUser();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 댓글 신고 바텀 모달
+  Future<void> showReportCommentModal({
+    required BuildContext context,
+    required int targetId,
+    required String reportType,
+  }) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            WarningDialog(
+              title: '이 댓글을 신고하시겠어요?',
+              content:
+              '신고한 댓글은 모든 모임원들에게 숨겨져요',
+              leftText: '취소하기',
+              onCanceled: () {
+                Navigator.of(ctx).pop(true);
+              },
+              rightText: '신고하기',
+              onConfirm: () {
+                Navigator.of(ctx).pop(true);
+                reportPost(targetId: targetId, reportType: reportType);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 게시글 신고 바텀 모달
+  Future<void> showReportPostModal({
+    required BuildContext context,
+    required int targetId,
+    required String reportType,
+  }) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            WarningDialog(
+              title: '이 게시글을 신고하시겠어요?',
+              content:
+              '신고한 게시글은 모든 모임원들에게 숨겨져요',
+              leftText: '취소하기',
+              onCanceled: () {
+                Navigator.of(ctx).pop(true);
+              },
+              rightText: '신고하기',
+              onConfirm: () {
+                Navigator.of(ctx).pop(true);
+                Navigator.of(ctx).pop(true);
+                reportPost(targetId: targetId, reportType: reportType);
               },
             ),
           ],
