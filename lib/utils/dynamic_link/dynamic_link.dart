@@ -34,6 +34,7 @@ class DynamicLinkService extends ChangeNotifier {
 
   Future<String> getShortLink({
     required String route,
+    required String moingTitle,
   }) async {
     String dynamicLinkPrefix = 'https://moing.page.link';
     final dynamicLinkParams = DynamicLinkParameters(
@@ -44,12 +45,17 @@ class DynamicLinkService extends ChangeNotifier {
         minimumVersion: 0,
       ),
       iosParameters: IOSParameters(
-        appStoreId: "6444061302",
+        appStoreId: "6472060530",
         bundleId: "com.moing.moing-team",
         minimumVersion: '0',
       ),
       navigationInfoParameters: NavigationInfoParameters(
         forcedRedirectEnabled: true,
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+        title: "<$moingTitle> 소모임에서 초대장이 도착했어요.",
+        description: "지금 MOING에서 소모임에 가입해보세요.",
+        imageUrl: Uri.parse('https://modagbul.s3.ap-northeast-2.amazonaws.com/modak_fire.png'),
       ),
     );
     final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);

@@ -1443,6 +1443,7 @@ class MissionProveState with ChangeNotifier {
                                       index: selectedIndex,
                                       heartStatus: currentMission.heartStatus);
                                   setState(() {
+
                                     currentMission.hearts = everyMissionList![index].hearts;
                                     currentMission.heartStatus = everyMissionList![index].heartStatus;
                                   });

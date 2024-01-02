@@ -142,6 +142,7 @@ class _BoardMainPageState extends State<BoardMainPage>
         .firstWhere((element) => element.memberId == currentUserId);
     final bool isLeader = currentUserInfo?.isLeader ?? false;
     final isDeleted = context.read<BoardMainState>().teamInfo?.isDeleted;
+    final teamName = context.read<BoardMainState>().teamInfo?.teamName;
 
     showModalBottomSheet(
       backgroundColor: grayScaleGrey600,
@@ -154,7 +155,7 @@ class _BoardMainPageState extends State<BoardMainPage>
       builder: (BuildContext context) {
         return isLeader
             ? BoardMainBottomSheetLeader(
-                teamId: teamId, isDeleted: isDeleted!,
+                teamId: teamId, isDeleted: isDeleted!, teamName: teamName!,
               )
             : BoardMainBottomSheet(
                 teamId: teamId,
