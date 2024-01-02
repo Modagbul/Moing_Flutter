@@ -59,6 +59,8 @@ class DynamicLinkService extends ChangeNotifier {
       ),
     );
     final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+    final link = await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
+    print('link : ${link.toString()}');
     return dynamicLink.shortUrl.toString();
   }
 

@@ -1135,14 +1135,14 @@ class MissionProveState with ChangeNotifier {
                                 if(!isRepeated)
                                 ClipOval(
                                   child: Image.network(
-                                    currentMission.profileImg,
+                                    currentMission.profileImg ?? '',
                                     width: 24,
                                     height: 24,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return ClipOval(
-                                        child: Container(
-                                          color: grayScaleGrey550,
+                                        child: SvgPicture.asset(
+                                          'asset/icons/icon_user_profile.svg',
                                           width: 24,
                                           height: 24,
                                         ),
@@ -1151,7 +1151,7 @@ class MissionProveState with ChangeNotifier {
                                   ),
                                 ),
                                 SizedBox(width: 8),
-                                Text(currentMission.nickname,
+                                Text(currentMission.nickname != null ? currentMission.nickname : '나의 인증 상세',
                                   style: bodyTextStyle.copyWith(color: grayScaleGrey400),),
                               ],
                             ),
@@ -1248,45 +1248,54 @@ class MissionProveState with ChangeNotifier {
                               onChanged: (String? val) async {
                                 if (val == 'report') {
                                   print('신고하기 버튼 클릭');
-                                  await doReport(currentMission.archiveId);
-                                  Navigator.of(context).pop();
-                                  fToast.showToast(
-                                      child: Material(
-                                        type: MaterialType.transparency,
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20.0),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              width: double.infinity,
-                                              height: 60,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(12),
-                                                color: Colors.white,
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
-                                                    style: bodyTextStyle.copyWith(
-                                                        color: grayScaleGrey700),
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                                      ),
-                                      toastDuration: Duration(milliseconds: 2000),
-                                      positionedToastBuilder: (context, child) {
-                                        return Positioned(
-                                          child: child,
-                                          top: 114.0,
-                                          left: 0.0,
-                                          right: 0,
-                                        );
-                                      });
+                                  bool? agreeReport = await viewUtil.showWarningDialog(
+                                      context: context,
+                                      title: '이 인증을 신고하시겠어요?',
+                                      content: '신고한 인증은 모든 모임원들에게 숨겨져요.',
+                                      leftText: '취소하기',
+                                      rightText: '신고하기');
+
+                                  if(agreeReport == true) {
+                                    await doReport(currentMission.archiveId);
+                                    Navigator.of(context).pop();
+                                    fToast.showToast(
+                                        child: Material(
+                                          type: MaterialType.transparency,
+                                          child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 20.0),
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                width: double.infinity,
+                                                height: 60,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
+                                                      style: bodyTextStyle.copyWith(
+                                                          color: grayScaleGrey700),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
+                                        ),
+                                        toastDuration: Duration(milliseconds: 2000),
+                                        positionedToastBuilder: (context, child) {
+                                          return Positioned(
+                                            child: child,
+                                            top: 114.0,
+                                            left: 0.0,
+                                            right: 0,
+                                          );
+                                        });
+                                  }
                                 }
                                 else if (val == 'block') {
                                   showModal('block', nickname: currentMission.nickname, makerId: currentMission.makerId);

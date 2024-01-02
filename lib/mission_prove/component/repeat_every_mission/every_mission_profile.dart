@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
@@ -19,14 +20,14 @@ class EveryMissionProfile extends StatelessWidget {
               .everyMissionList![index].profileImg == 'undef' ||
               context.watch<MissionProveState>()
                   .everyMissionList![index].profileImg == null
-              ? Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: grayScaleGrey400,
-            ),
-          )
+              ? ClipOval(
+                  child: SvgPicture.asset(
+                    'asset/icons/icon_user_profile.svg',
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                )
               : ClipOval(
             child: Image.network(
               context.watch<MissionProveState>()
@@ -35,6 +36,15 @@ class EveryMissionProfile extends StatelessWidget {
               width: 20,
               height: 20,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return ClipOval(
+                  child: SvgPicture.asset(
+                    'asset/icons/home_card_user.svg',
+                    width: 20,
+                    height: 20,
+                  ),
+                );
+              },
             ),
           ),
         ),
