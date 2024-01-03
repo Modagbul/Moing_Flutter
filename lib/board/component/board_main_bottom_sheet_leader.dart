@@ -38,7 +38,7 @@ class BoardMainBottomSheetLeader extends StatelessWidget {
                   route: "teamId=$teamId",
                 );
                 print('dynamic link : $link');
-                Share.share(link, subject: '모잉 테스트!', );
+                Share.share(link, subject: teamName);
               },
               icon: 'asset/icons/icon_link_copy.svg',
               text: '소모임 초대 링크 복사하기',

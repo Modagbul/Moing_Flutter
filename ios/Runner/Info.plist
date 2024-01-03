@@ -45,7 +45,7 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
-		<string>https://soultalk.page.link</string>
+		<string>https://moing.page.link</string>
 	</array>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
