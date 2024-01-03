@@ -66,6 +66,8 @@ class HomeScreenState extends ChangeNotifier {
       warningText = '최대 3개의 소모임에서만 활동할 수 있어요';
     } else if (newCreated == 'T0003') {
       warningText = '한번 탈퇴한 소모임에 다시 가입할 수 없어요';
+    } else if (newCreated == 'T0005') {
+      warningText = '이미 종료된 소모임입니다.';
     } else if (newCreated != null && newCreated!.isNotEmpty) {
       warningText = '소모임 가입에 실패했어요';
       print('소모임 가입 실패 에러 확인 : $newCreated');
