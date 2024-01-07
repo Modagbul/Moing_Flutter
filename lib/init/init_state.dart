@@ -69,40 +69,47 @@ class InitState extends ChangeNotifier {
           bool? isUser = await checkUser();
           if(isUser != null && isUser) {
             await getTeamNameAndNumber();
-            if(numOfTeam != null && numOfTeam! < 3) {
-              bool? isRegistered = await registerTeam();
-              // 가입 완료되었을 때
-              if(isRegistered != null && isRegistered) {
-                Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    InvitationWelcomePage.routeName,
-                        (route) => false,
-                arguments: {
-                      'teamName': teamName,
-                  'teamLeaderName': teamLeaderName,
-                'memberName': memberName});
-              }
-              else {
-                /// TODO : 메인 페이지로 이동하면서 추가 조건 넣어줘야 함.
-                print('다이나믹 링크로 접속했지만 이미 가입된 유저라 가입하지 못했을 때~ 추가 전달 메세지 필요!');
-                print('errorCode : $errorCode');
-                if(errorCode == 'T0004') {
-                  /// 이미 가입된 유저라 가입하지 못했을 때
+            if(numOfTeam != null) {
+              if(numOfTeam! < 3) {
+                bool? isRegistered = await registerTeam();
+                // 가입 완료되었을 때
+                if(isRegistered != null && isRegistered) {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, MainPage.routeName, (route) => false, arguments: 'isRegistered');
+                      context,
+                      InvitationWelcomePage.routeName,
+                          (route) => false,
+                      arguments: {
+                        'teamName': teamName,
+                        'teamLeaderName': teamLeaderName,
+                        'memberName': memberName});
                 }
                 else {
-                  print('다이나믹 링크로 진입했지만 에러났을 때 : $errorCode');
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, MainPage.routeName, (route) => false, arguments: errorCode);
+                  /// TODO : 메인 페이지로 이동하면서 추가 조건 넣어줘야 함.
+                  print('다이나믹 링크로 접속했지만 이미 가입된 유저라 가입하지 못했을 때~ 추가 전달 메세지 필요!');
+                  print('errorCode : $errorCode');
+                  if(errorCode == 'T0004') {
+                    /// 이미 가입된 유저라 가입하지 못했을 때
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, MainPage.routeName, (route) => false, arguments: 'isRegistered');
+                  }
+                  else {
+                    print('다이나믹 링크로 진입했지만 에러났을 때 : $errorCode');
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, MainPage.routeName, (route) => false, arguments: errorCode);
+                  }
                 }
+              } else {
+                /// 팀 소모임 3개 초과했을 때
+                Navigator.pushNamedAndRemoveUntil(
+                    context, MainPage.routeName, (route) => false , arguments: 'full'
+                );
               }
-            }
-            else {
-              /// Team 개수가 3개 초과했을 때
+            } else {
+              String code = errorCode.length > 0 ? errorCode : 'fail';
               Navigator.pushNamedAndRemoveUntil(
-                /// TODO : 추가 초건 넣어줘야 함
-                  context, MainPage.routeName, (route) => false , arguments: 'full');
+                  context, MainPage.routeName, (route) => false ,
+                  arguments: code,
+              );
             }
           }
         }
