@@ -149,84 +149,85 @@ class GroupCreatePhotoPage extends StatelessWidget {
                       ),
                     ),
               const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      width: 172,
-                      height: 62,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: grayScaleGrey700,
-                          foregroundColor: grayScaleWhite,
-                          padding: const EdgeInsets.all(16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text(
-                          '이전으로',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      width: 172,
-                      height: 62,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          overlayColor:
-                              MaterialStateProperty.all(Colors.transparent),
-                          minimumSize: MaterialStateProperty.all<Size>(
-                              Size(double.infinity, 60)),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          backgroundColor: context
-                                      .watch<GroupCreatePhotoState>()
-                                      .avatarFile !=
-                                  null
-                              ? MaterialStateProperty.all(Colors.white)
-                              : MaterialStateProperty.all(grayScaleGrey700),
-                        ),
-                        onPressed: () {
-                          context.read<GroupCreatePhotoState>().makePressed();
-                        },
-                        child: Text(
-                          '만들기',
-                          style: context
-                                      .watch<GroupCreatePhotoState>()
-                                      .avatarFile !=
-                                  null
-                              ? buttonTextStyle
-                              : buttonTextStyle.copyWith(
-                                  color: grayScaleGrey500,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget buildBottomNavigationBar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24, top: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: 172,
+              height: 62,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: grayScaleGrey700,
+                  foregroundColor: grayScaleWhite,
+                  padding: const EdgeInsets.all(16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  '이전으로',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Expanded(
+            child: SizedBox(
+              width: 172,
+              height: 62,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  minimumSize: MaterialStateProperty.all<Size>(
+                      Size(double.infinity, 60)),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                  ),
+                  backgroundColor:
+                      context.watch<GroupCreatePhotoState>().avatarFile != null
+                          ? MaterialStateProperty.all(Colors.white)
+                          : MaterialStateProperty.all(grayScaleGrey700),
+                ),
+                onPressed: () {
+                  context.read<GroupCreatePhotoState>().makePressed();
+                },
+                child: Text(
+                  '만들기',
+                  style:
+                      context.watch<GroupCreatePhotoState>().avatarFile != null
+                          ? buttonTextStyle
+                          : buttonTextStyle.copyWith(
+                              color: grayScaleGrey500,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -104,7 +104,13 @@ class HomeScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(32.0)),
                 ),
-                child: const Text('모임 +'),
+                child: const Text(
+                  '모임 +',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             )
           ],

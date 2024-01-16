@@ -67,18 +67,21 @@ class _PostMainPageState extends State<PostMainPage> {
                   ]),
             Align(
               alignment: Alignment.bottomCenter,
-              child: ElevatedButton(
-                onPressed: context.read<PostMainState>().navigatePostCreatePage,
-                style: brightButtonStyle.copyWith(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: ElevatedButton(
+                  onPressed: context.read<PostMainState>().navigatePostCreatePage,
+                  style: brightButtonStyle.copyWith(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
                     ),
                   ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text('글쓰기 +'),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text('글쓰기 +'),
+                  ),
                 ),
               ),
             ),

@@ -167,7 +167,7 @@ class ProfileSettingState extends ChangeNotifier {
 
   void checkSubmit() {
     if (isNameChanged || isIntroduceChanged || isAvatarChanged) {
-      if (nameController.value.text.length > 0 &&
+      if (nameController.value.text.length > 0 ||
           introduceController.value.text.length > 0) {
         isSubmit = true;
       } else {
