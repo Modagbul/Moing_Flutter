@@ -7,6 +7,7 @@ import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/make_group/group_create_info_state.dart';
 import 'package:provider/provider.dart';
 
+import '../const/color/colors.dart';
 import '../utils/text_field/outlined_text_field.dart';
 
 class GroupCreateInfoPage extends StatelessWidget {
@@ -85,12 +86,61 @@ class GroupCreateInfoPage extends StatelessWidget {
                   const _Title(),
                   SizedBox(height: screenHeight * 0.04),
                   const _InfoTextFields(),
-                  const _NavButtons(),
                 ],
               ),
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget buildBottomNavigationBar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24, top: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: 172,
+              height: 62,
+              child: ElevatedButton(
+                style: darkButtonStyle,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('이전으로'),
+              ),
+            ),
+          ),
+          const SizedBox(width: 5.0),
+          Expanded(
+            child: SizedBox(
+              width: 172,
+              height: 62,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: grayScaleWhite,
+                  padding: const EdgeInsets.all(16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+                onPressed: context.read<GroupCreateInfoState>().nextPressed,
+                child: const Text(
+                  '다음으로',
+                  style: TextStyle(
+                    color: grayScaleBlack,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -165,44 +215,6 @@ class _InfoTextFields extends StatelessWidget {
           controller: context.read<GroupCreateInfoState>().resolutionController,
         ),
         SizedBox(height: screenHeight * 0.04),
-      ],
-    );
-  }
-}
-
-class _NavButtons extends StatelessWidget {
-  const _NavButtons();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Container(
-            width: 172,
-            height: 62,
-            child: ElevatedButton(
-              style: darkButtonStyle,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('이전으로'),
-            ),
-          ),
-        ),
-        const SizedBox(width: 5.0),
-        Expanded(
-          child: Container(
-            width: 172,
-            height: 62,
-            child: ElevatedButton(
-              style: brightButtonStyle,
-              onPressed: context.read<GroupCreateInfoState>().nextPressed,
-              child: const Text('다음으로'),
-            ),
-          ),
-        ),
       ],
     );
   }

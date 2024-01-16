@@ -31,7 +31,7 @@ class BoardSingleMissionCard extends StatelessWidget {
           children: [
             Container(
               width: MediaQuery.of(context).size.width - 40,
-              height: 95,
+              height: 92,
               decoration: BoxDecoration(
                 color: grayScaleGrey700,
                 borderRadius: BorderRadius.circular(16),
@@ -67,7 +67,7 @@ class BoardSingleMissionCard extends StatelessWidget {
                                 formatDueTo(dueTo),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14.0,
+                                  fontSize: 12.0,
                                   color: grayScaleGrey550,
                                 ),
                               ),

@@ -53,7 +53,7 @@ class GroupCreateCategoryPage extends StatelessWidget {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           MainPage.routeName,
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                       leftText: '나가기',
@@ -67,12 +67,12 @@ class GroupCreateCategoryPage extends StatelessWidget {
           icon: const Icon(Icons.close),
         ),
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Stack(
             children: [
-              const SingleChildScrollView(
+              SingleChildScrollView(
                 padding: EdgeInsets.only(bottom: 160),
                 child: Column(
                   children: [
@@ -111,85 +111,89 @@ class GroupCreateCategoryPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: 172,
-                        height: 62,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: grayScaleGrey700,
-                            foregroundColor: grayScaleWhite,
-                            textStyle: const TextStyle(
-                              color: grayScaleGrey550,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            padding: const EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              PageRouteBuilder(
-                                pageBuilder: (context, animation1, animation2) =>
-                                    ChangeNotifierProvider(
-                                      create: (_) => GroupCreateStartState(context: context),
-                                      child: const GroupCreateStartPage(),
-                                    ),
-                                transitionsBuilder: (context, animation1, animation2, child) {
-                                  return child;
-                                },
-                                transitionDuration: const Duration(milliseconds: 0),
-                              ),
-                            );
-                          },
-                          child: const Text('이전으로'),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Container(
-                        width: 172,
-                        height: 62,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: categoryState.getNextButtonColor(),
-                            padding: const EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          onPressed: categoryState.isCategorySelected()
-                              ? () {
-                            categoryState.moveInfoPage();
-                          }
-                              : null,
-                          child: Text(
-                            '다음으로',
-                            style: TextStyle(
-                              color: categoryState.getNextButtonTextColor(),
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context, categoryState),
+    );
+  }
+
+  Widget buildBottomNavigationBar(
+      BuildContext context, GroupCreateCategoryState categoryState) {
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24, top: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Container(
+              width: 172,
+              height: 62,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: grayScaleGrey700,
+                  foregroundColor: grayScaleWhite,
+                  textStyle: const TextStyle(
+                    color: grayScaleGrey550,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  padding: const EdgeInsets.all(16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          ChangeNotifierProvider(
+                        create: (_) => GroupCreateStartState(context: context),
+                        child: const GroupCreateStartPage(),
+                      ),
+                      transitionsBuilder:
+                          (context, animation1, animation2, child) {
+                        return child;
+                      },
+                      transitionDuration: const Duration(milliseconds: 0),
+                    ),
+                  );
+                },
+                child: const Text('이전으로'),
+              ),
+            ),
+          ),
+          const SizedBox(width: 5),
+          Expanded(
+            child: Container(
+              width: 172,
+              height: 62,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: categoryState.getNextButtonColor(),
+                  padding: const EdgeInsets.all(16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+                onPressed: categoryState.isCategorySelected()
+                    ? () {
+                        categoryState.moveInfoPage();
+                      }
+                    : null,
+                child: Text(
+                  '다음으로',
+                  style: TextStyle(
+                    color: categoryState.getNextButtonTextColor(),
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
