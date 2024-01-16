@@ -67,12 +67,12 @@ class GroupCreateCategoryPage extends StatelessWidget {
           icon: const Icon(Icons.close),
         ),
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Stack(
             children: [
-              const SingleChildScrollView(
+              SingleChildScrollView(
                 padding: EdgeInsets.only(bottom: 160),
                 child: Column(
                   children: [
