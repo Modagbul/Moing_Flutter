@@ -20,7 +20,7 @@ class HomeCardScroll extends StatelessWidget {
       viewportFraction: 0.9,
     );
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 356,
       child: PageView.builder(
@@ -44,22 +44,26 @@ class HomeCardScroll extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 12.0),
                 child: Container(
-                  width: 334,
+                  width: double.infinity,
                   height: 356,
                   decoration: BoxDecoration(
                     color: grayScaleGrey900,
                     borderRadius: BorderRadius.circular(32),
                   ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 36.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 26.0),
-                            child: ClipOval(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 36.0,
+                      right: 16.0,
+                      left: 16.0,
+                      bottom: 20.0,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipOval(
                               child: Image.network(
                                 teamList[index].profileImgUrl,
                                 width: 52.0,
@@ -67,57 +71,48 @@ class HomeCardScroll extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 9.0,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${team.duration.toString()}일',
-                                style: const TextStyle(
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.w600,
-                                  color: grayScaleGrey100,
+                            const SizedBox(width: 9.0),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${team.duration.toString()}일',
+                                  style: const TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.w600,
+                                    color: grayScaleGrey100,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 6.0,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    '#${team.category}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16.0,
-                                      color: grayScaleGrey300,
+                                const SizedBox(height: 6.0),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '#${team.category}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14.0,
+                                        color: grayScaleGrey300,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 4.0,
-                                  ),
-                                  const Text(
-                                    '하며 함께 불태운 시간',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14.0,
-                                      color: grayScaleGrey400,
+                                    const SizedBox(width: 4.0),
+                                    const Text(
+                                      '하며 함께 불태운 시간',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12.0,
+                                        color: grayScaleGrey400,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
 
-                      /// 사진 받아오는 클래스 따로 구현하여 생성할 것
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 13, top: 30, right: 13),
-                        child: photoData != null
+                        const SizedBox(height: 30),
+
+                        photoData != null
                             ? photoData.photo.isNotEmpty
                                 ? SizedBox(
                                     height: 54,
@@ -173,154 +168,146 @@ class HomeCardScroll extends StatelessWidget {
                                   )
                                 : const SizedBox(height: 54)
                             : const SizedBox(height: 54),
-                      ),
-                      //위치 좌측으로, 1초 이후 사라지게
-                      (context.watch<HomeScreenState>().newCreated == "new" &&
-                              index == 0)
-                          ? const Column(
-                              children: [
-                                SizedBox(
-                                  height: 15.0,
-                                ),
-                                SpeechBalloon(
-                                  color: coralGrey500,
-                                  width: 180,
-                                  height: 34,
-                                  borderRadius: 24,
-                                  nipLocation: NipLocation.bottom,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical: 8.0,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '새 모임이 추가되었어요',
-                                        style: TextStyle(
-                                          color: grayScaleWhite,
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w600,
+                        //위치 좌측으로, 1초 이후 사라지게
+                        (context.watch<HomeScreenState>().newCreated == "new" &&
+                                index == 0)
+                            ? const Column(
+                                children: [
+                                  SizedBox(
+                                    height: 15.0,
+                                  ),
+                                  SpeechBalloon(
+                                    color: coralGrey500,
+                                    width: 180,
+                                    height: 34,
+                                    borderRadius: 24,
+                                    nipLocation: NipLocation.bottom,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.0,
+                                        vertical: 8.0,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '새 모임이 추가되었어요',
+                                          style: TextStyle(
+                                            color: grayScaleWhite,
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
+                                  SizedBox(
+                                    height: 15.0,
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(
+                                height: 64.0,
+                              ),
+                        Container(
+                          height: 96,
+                          decoration: BoxDecoration(
+                            color: grayScaleGrey600,
+                            borderRadius: BorderRadius.circular(32),
+                            border: Border.all(
+                              color: (context
+                                              .watch<HomeScreenState>()
+                                              .newCreated ==
+                                          "new" &&
+                                      index == 0)
+                                  ? coralGrey500
+                                  : Colors.transparent,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 21.0, top: 19),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'asset/icons/home_card_fire.svg',
+                                      width: 45,
+                                      height: 56,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        team.levelOfFire.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: 15.0,
+                                const SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4.0),
+                                      child: Text(
+                                        team.teamName,
+                                        style: const TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w600,
+                                          color: grayScaleGrey100,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'asset/icons/home_card_user.svg',
+                                            width: 14,
+                                            height: 14,
+                                          ),
+                                          const SizedBox(width: 4.0),
+                                          Text(
+                                            '${team.numOfMember.toString()}명',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14.0,
+                                              color: grayScaleGrey550,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12.0),
+                                          SvgPicture.asset(
+                                            'asset/icons/mission_single_clock.svg',
+                                            width: 14,
+                                            height: 14,
+                                          ),
+                                          const SizedBox(width: 4.0),
+                                          Text(
+                                            '시작 ${team.startDate}',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14.0,
+                                              color: grayScaleGrey550,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ],
-                            )
-                          : const SizedBox(
-                              height: 64.0,
                             ),
-                      Container(
-                        width: 302,
-                        height: 96,
-                        decoration: BoxDecoration(
-                          color: grayScaleGrey600,
-                          borderRadius: BorderRadius.circular(32),
-                          border: Border.all(
-                            color:
-                                (context.watch<HomeScreenState>().newCreated ==
-                                            "new" &&
-                                        index == 0)
-                                    ? coralGrey500
-                                    : Colors.transparent,
-                            width: 1.0,
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 21.0, top: 19),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'asset/icons/home_card_fire.svg',
-                                    width: 45,
-                                    height: 56,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      team.levelOfFire.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 21,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Text(
-                                      team.teamName,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w600,
-                                        color: grayScaleGrey100,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 12.0),
-                                    child: Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          'asset/icons/home_card_user.svg',
-                                          width: 14,
-                                          height: 14,
-                                        ),
-                                        const SizedBox(
-                                          width: 4.0,
-                                        ),
-                                        Text(
-                                          '${team.numOfMember.toString()}명',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14.0,
-                                            color: grayScaleGrey550,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 12.0,
-                                        ),
-                                        SvgPicture.asset(
-                                          'asset/icons/mission_single_clock.svg',
-                                          width: 14,
-                                          height: 14,
-                                        ),
-                                        const SizedBox(
-                                          width: 4.0,
-                                        ),
-                                        Text(
-                                          '시작 ${team.startDate}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14.0,
-                                            color: grayScaleGrey550,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

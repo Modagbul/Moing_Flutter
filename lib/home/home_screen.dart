@@ -33,6 +33,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     const maxTeamBlockLength = 3;
     final teamBlockLength =
         context.watch<HomeScreenState>().futureData?.teamBlocks.length ?? 0;
@@ -42,36 +43,44 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: HomeText(
-                      nickName:
-                          '${context.watch<HomeScreenState>().futureData?.memberNickName ?? '모닥불'}님,',
-                      encourage: '오늘도 모잉이 응원해요!'),
+            SingleChildScrollView(
+              physics: screenHeight <= 640
+                  ? const ClampingScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
+              child: SizedBox(
+                height: screenHeight,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: HomeText(
+                          nickName:
+                              '${context.watch<HomeScreenState>().futureData?.memberNickName ?? '모닥불'}님,',
+                          encourage: '오늘도 모잉이 응원해요!'),
+                    ),
+                    const SizedBox(height: 40.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: HomeMyMeeting(
+                        meetingCount: context
+                                .watch<HomeScreenState>()
+                                .futureData
+                                ?.numOfTeam
+                                .toString() ??
+                            '0',
+                      ),
+                    ),
+                    const SizedBox(height: 12.0),
+                    (context.watch<HomeScreenState>().futureData?.numOfTeam ??
+                                0) >
+                            0
+                        ? const HomeCardScroll()
+                        : const HomeNoCard(),
+                    const Spacer(),
+                  ],
                 ),
-                const SizedBox(height: 40.0),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: HomeMyMeeting(
-                    meetingCount: context
-                            .watch<HomeScreenState>()
-                            .futureData
-                            ?.numOfTeam
-                            .toString() ??
-                        '0',
-                  ),
-                ),
-                const SizedBox(height: 12.0),
-                (context.watch<HomeScreenState>().futureData?.numOfTeam ?? 0) >
-                        0
-                    //   ? const HomeCard()
-                    ? const HomeCardScroll()
-                    : const HomeNoCard(),
-                const Spacer(),
-              ],
+              ),
             ),
             Positioned(
               bottom: 0,
