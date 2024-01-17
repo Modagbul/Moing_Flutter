@@ -23,15 +23,18 @@ class MoingAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: SvgPicture.asset(imagePath, width: 24.0, height: 24.0),
         onPressed: () => onTap(),
       ),
-      title: Text(
-        title ?? '',
-        style: title != null
-            ? const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: grayScaleGrey300,
-              )
-            : null,
+      title: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          title ?? '',
+          style: title != null
+              ? const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: grayScaleGrey300,
+                )
+              : null,
+        ),
       ),
     );
   }
