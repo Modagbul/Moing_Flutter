@@ -77,7 +77,8 @@ class MissionFireUser extends StatelessWidget {
                                 ? Border.all(color: coralGrey500, width: 1)
                                 : null,
                           ),
-                          child: ClipOval(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50.0),
                             child: Stack(
                               children: [
                                 _buildProfileImage(filteredUserList[index]),
@@ -85,6 +86,8 @@ class MissionFireUser extends StatelessWidget {
                                   Positioned(
                                     top: 0,
                                     left: 0,
+                                    right: 0,
+                                    bottom: 0,
                                     child: SvgPicture.asset(
                                       'asset/icons/icon_fire_graphic.svg',
                                       width: 90,

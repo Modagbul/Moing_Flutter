@@ -53,97 +53,102 @@ class AlarmPage extends StatelessWidget {
                         itemBuilder: (context, position) {
                           if (position < alarmList.length) {
                             final AlarmData alarm = alarmList[position];
-                            return GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () => context.read<AlarmState>().onTapAlarm(index: position), // 해당 페이지로 이동
-                              child: Card(
-                                color: alarm.isRead
-                                    ? grayScaleGrey900
-                                    : grayScaleGrey600,
-                                margin: EdgeInsets.zero,
-                                elevation: 0,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 16.0),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        context
-                                            .read<AlarmState>()
-                                            .convertAlarmTypeToImage(
-                                                type: alarm.type),
-                                        width: 42,
-                                        height: 42,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () => context.read<AlarmState>().onTapAlarm(index: position), // 해당 페이지로 이동
+                                  child: Card(
+                                    color: alarm.isRead
+                                        ? grayScaleGrey900
+                                        : grayScaleGrey600,
+                                    margin: EdgeInsets.zero,
+                                    elevation: 0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 16.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            context
+                                                .read<AlarmState>()
+                                                .convertAlarmTypeToImage(
+                                                    type: alarm.type),
+                                            width: 42,
+                                            height: 42,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  alarm.name,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w600,
-                                                    color: grayScaleGrey400,
-                                                  ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      alarm.name,
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: grayScaleGrey400,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      alarm.createdDate,
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14,
+                                                        color: grayScaleGrey550,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                  height: 8,
                                                 ),
                                                 Text(
-                                                  alarm.createdDate,
+                                                  alarm.title,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
                                                   style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w500,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: grayScaleGrey100,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 3,
+                                                ),
+                                                Text(
+                                                  alarm.body,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
-                                                    color: grayScaleGrey550,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: grayScaleGrey400,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                            Text(
-                                              alarm.title,
-                                              overflow:
-                                                  TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                color: grayScaleGrey100,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 3,
-                                            ),
-                                            Text(
-                                              alarm.body,
-                                              overflow:
-                                                  TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                                color: grayScaleGrey400,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                                const SizedBox(height: 6.0),
+                              ],
                             );
                           } else {
                             return const Padding(
