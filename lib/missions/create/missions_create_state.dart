@@ -521,8 +521,7 @@ class MissionCreateState extends ChangeNotifier {
                                   color: grayScaleGrey500),
                               child: Text(
                                 textList[index],
-                                style: contentTextStyle.copyWith(
-                                  fontWeight: FontWeight.w600,
+                                style: bodyTextStyle.copyWith(
                                   color: grayScaleGrey300,
                                 ),
                               ),

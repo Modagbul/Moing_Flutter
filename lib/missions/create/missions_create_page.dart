@@ -71,6 +71,7 @@ class MissionsCreatePage extends StatelessWidget {
                         const MissionEndDate(),
                         const MissionChoose(),
                         const MissionRule(),
+                        const SizedBox(height: 32),
                       ],
                     ),
                   ),
