@@ -11,35 +11,43 @@ class MissionsFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: context.read<MissionCreateState>().openBottomModal,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0, left: 85, top: 8),
-        child: Container(
-          width: 222,
-          height: 54,
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewPadding.bottom),
-          decoration: BoxDecoration(
-            color: coralGrey500,
-            borderRadius: BorderRadius.circular(32),
+    return Container(
+      color: coralGrey500,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: GestureDetector(
+              onTap: context.read<MissionCreateState>().openBottomModal,
+              child: Container(
+                width: 222,
+                height: 54,
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewPadding.bottom),
+                // decoration: BoxDecoration(
+                //   // color: coralGrey500,
+                //   borderRadius: BorderRadius.circular(32),
+                // ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '이런 미션은 어때요?',
+                      style: buttonTextStyle.copyWith(color: Colors.white),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    SvgPicture.asset(
+                      'asset/icons/icon_arrow_circle_up.svg',
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '이런 미션은 어때요?',
-                style: buttonTextStyle.copyWith(color: Colors.white),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              SvgPicture.asset(
-                'asset/icons/icon_arrow_circle_up.svg',
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

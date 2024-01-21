@@ -1089,6 +1089,7 @@ class MissionProveState with ChangeNotifier {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
@@ -1097,7 +1098,7 @@ class MissionProveState with ChangeNotifier {
             bool isTodayCreated = isSameDate(currentMission.createdDate);
             return Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.55,
               decoration: const BoxDecoration(
                 color: grayScaleGrey600,
                 borderRadius: BorderRadius.only(
@@ -1556,6 +1557,7 @@ class MissionProveState with ChangeNotifier {
                               ),
                             ],
                           )),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
