@@ -15,6 +15,7 @@ class BoardMainState extends ChangeNotifier {
   final int teamId;
   final bool isSuccess;
 
+  bool isLoading = true;
   SingleBoardData? singleBoardData;
   TeamFireLevelData? teamFireLevelData;
   TeamInfo? teamInfo;
@@ -29,8 +30,10 @@ class BoardMainState extends ChangeNotifier {
 
   void initState() async {
     log('Instance "BoardMainState" has been created');
+    isLoading = true;
     await getSingleBoard();
     await getTeamFireLevel();
+    isLoading = false;
   }
 
   void initTabController({required TabController tabController}) {

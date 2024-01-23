@@ -9,6 +9,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
 import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
+import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
 
 class BoardMainPage extends StatefulWidget {
@@ -68,34 +69,37 @@ class _BoardMainPageState extends State<BoardMainPage>
     final String teamName = teamInfo?.teamName ?? '';
     final int teamId = context.read<BoardMainState>().teamId;
 
-    return Scaffold(
-      backgroundColor: grayScaleGrey900,
-      appBar: renderAppBar(context: context, title: teamName, teamId: teamId),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: _CustomTabBar(
-              tabs: const [
-                '목표보드',
-                '미션인증',
-              ],
-              tabController: context.read<BoardMainState>().tabController,
-            ),
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: context.read<BoardMainState>().tabController,
+    return context.watch<BoardMainState>().isLoading
+        ? const LoadingPage()
+        : Scaffold(
+            backgroundColor: grayScaleGrey900,
+            appBar:
+                renderAppBar(context: context, title: teamName, teamId: teamId),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const BoardGoalScreen(),
-                BoardMissionScreen(),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: _CustomTabBar(
+                    tabs: const [
+                      '목표보드',
+                      '미션인증',
+                    ],
+                    tabController: context.read<BoardMainState>().tabController,
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: context.read<BoardMainState>().tabController,
+                    children: [
+                      const BoardGoalScreen(),
+                      BoardMissionScreen(),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   PreferredSizeWidget renderAppBar({
@@ -155,7 +159,9 @@ class _BoardMainPageState extends State<BoardMainPage>
       builder: (BuildContext context) {
         return isLeader
             ? BoardMainBottomSheetLeader(
-                teamId: teamId, isDeleted: isDeleted!, teamName: teamName!,
+                teamId: teamId,
+                isDeleted: isDeleted!,
+                teamName: teamName!,
               )
             : BoardMainBottomSheet(
                 teamId: teamId,
