@@ -14,8 +14,8 @@ class MissionFireState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final int teamId;
   final int missionId;
-  int singleMissionMyCount = 1;
-  int singleMissionTotalCount = 1;
+  int singleMissionMyCount = 0;
+  int singleMissionTotalCount = 0;
 
   String selectedUserName = '모임원 프로필을 클릭해보세요';
   int? selectedIndex;
