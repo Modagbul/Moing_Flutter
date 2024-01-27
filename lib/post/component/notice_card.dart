@@ -91,14 +91,16 @@ class NoticeCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: grayScaleWhite,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
+            Flexible(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: grayScaleWhite,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
-              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(width: 4.0),
             if (!isRead)
