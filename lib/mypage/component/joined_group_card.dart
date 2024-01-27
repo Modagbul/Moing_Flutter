@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 
@@ -16,21 +17,28 @@ class JoinedGroupCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipOval(
-            child: Image.network(
-              teamBlock.profileImgUrl,
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return ClipOval(
-                  child: Container(
-                    color: grayScaleGrey550,
+            child: teamBlock.profileImgUrl != null &&
+                    teamBlock.profileImgUrl.isNotEmpty
+                ? Image.network(
+                    teamBlock.profileImgUrl,
                     width: 80,
                     height: 80,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return SvgPicture.asset(
+                        'asset/icons/group_basic_image.svg',
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  )
+                : SvgPicture.asset(
+                    'asset/icons/group_basic_image.svg',
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
                   ),
-                );
-              },
-            ),
           ),
           const SizedBox(height: 12.0),
           Container(

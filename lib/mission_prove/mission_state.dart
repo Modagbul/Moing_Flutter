@@ -267,13 +267,13 @@ class MissionState {
                       fontWeight: FontWeight.w600, color: grayScaleGrey100),
                 ),
                 SizedBox(height: 4),
-                Container(
-                  width: double.infinity,
-                  height: 240,
-                  child: Text(
-                    missionContent,
-                    style: bodyTextStyle.copyWith(
-                        fontWeight: FontWeight.w500, color: grayScaleGrey400),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Text(
+                      missionContent,
+                      style: bodyTextStyle.copyWith(
+                          fontWeight: FontWeight.w500, color: grayScaleGrey400),
+                    ),
                   ),
                 ),
                 SizedBox(height: 24),

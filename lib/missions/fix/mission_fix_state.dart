@@ -17,6 +17,7 @@ import '../../const/style/text.dart';
 class MissionFixState extends ChangeNotifier {
   final BuildContext context;
   final MissionFixData fixData;
+  final TextEditingController missionTitleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   final TextEditingController ruleController = TextEditingController();
   late FixedExtentScrollController timeScrollController;
@@ -52,6 +53,7 @@ class MissionFixState extends ChangeNotifier {
     formattedDate = DateFormat('yyyy-MM-dd').format(dueTo);
     formattedTime = DateFormat('HH:mm').format(dueTo);
 
+    missionTitleController.text = fixData.missionTitle;
     contentController.text = fixData.missionContent;
     ruleController.text = fixData.missionRule;
     timeScrollController = FixedExtentScrollController(initialItem: timeCountIndex);
@@ -60,16 +62,21 @@ class MissionFixState extends ChangeNotifier {
     fToast.init(context);
   }
 
+  @override
   void dispose() {
+    missionTitleController.dispose();
     contentController.dispose();
     ruleController.dispose();
     timeScrollController.dispose();
+    super.dispose();
   }
 
   void updateTextField() {
     isContentChanged = (contentController.value.text != fixData.missionContent) ? true : false;
     isRuleChanged = (ruleController.value.text != fixData.missionRule) ? true : false;
-    checkSubmit = (ruleController.value.text.isEmpty || contentController.value.text.isEmpty) ? false : true;
+    bool isTitleChanged = missionTitleController.value.text != fixData.missionTitle;
+    checkSubmit = isTitleChanged || isContentChanged || isRuleChanged;
+    // checkSubmit = (missionTitleController.value.text.isEmpty || ruleController.value.text.isEmpty || contentController.value.text.isEmpty) ? false : true;
     notifyListeners();
   }
 
@@ -213,7 +220,7 @@ class MissionFixState extends ChangeNotifier {
       final String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId';
       final APICall call = APICall();
       Map<String, dynamic> data = {
-        "title": fixData.missionTitle,
+        "title": missionTitleController.value.text,
         "dueTo": dueTo,
         "rule": ruleController.value.text,
         "content": contentController.value.text,

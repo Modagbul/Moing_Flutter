@@ -58,7 +58,7 @@ class GroupCreatePhotoPage extends StatelessWidget {
                 height: 34.0,
               ),
               const Text(
-                '우리 소모임을 나타내는\n사진이 필요해요!',
+                '우리 소모임을 나타내는 사진을 \n추가해주세요.',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 24,
@@ -205,24 +205,17 @@ class GroupCreatePhotoPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                   ),
-                  backgroundColor:
-                      context.watch<GroupCreatePhotoState>().avatarFile != null
-                          ? MaterialStateProperty.all(Colors.white)
-                          : MaterialStateProperty.all(grayScaleGrey700),
+                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                      // context.watch<GroupCreatePhotoState>().avatarFile != null
+                      //     ? MaterialStateProperty.all(Colors.white)
+                      //     : MaterialStateProperty.all(grayScaleGrey700),
                 ),
                 onPressed: () {
                   context.read<GroupCreatePhotoState>().makePressed();
                 },
-                child: Text(
+                child: const Text(
                   '만들기',
-                  style:
-                      context.watch<GroupCreatePhotoState>().avatarFile != null
-                          ? buttonTextStyle
-                          : buttonTextStyle.copyWith(
-                              color: grayScaleGrey500,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w600,
-                            ),
+                  style: buttonTextStyle,
                 ),
               ),
             ),
@@ -239,18 +232,7 @@ Widget _ContainerText() {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       SvgPicture.asset(
-        'asset/icons/image_upload.svg',
-      ),
-      const SizedBox(
-        width: 12.0,
-      ),
-      const Text(
-        '사진 업로드하기',
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          color: grayScaleGrey100,
-          fontSize: 16,
-        ),
+        'asset/icons/photo_default_img.svg',
       ),
     ],
   );
