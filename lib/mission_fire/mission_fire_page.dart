@@ -40,31 +40,44 @@ class MissionFirePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: grayBackground,
+      appBar: const MissionFireAppBar(),
       body: SafeArea(
         child: Stack(
           children: [
-            const SingleChildScrollView(
-              padding: EdgeInsets.only(top: 56),
+            SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MissionFireProgressBar(),
-                    MissionFireUser(),
-                    SizedBox(height: 80),
+                    const MissionFireProgressBar(),
+                    if (context.watch<MissionFireState>().filteredUserList !=
+                        null)
+                      if (context
+                          .watch<MissionFireState>()
+                          .filteredUserList!
+                          .isNotEmpty)
+                        const MissionFireUser(),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
             ),
-            const Positioned(
-                top: 0, left: 20, right: 20, child: MissionFireAppBar()),
+            if (context.watch<MissionFireState>().filteredUserList != null)
+              if (context.watch<MissionFireState>().filteredUserList!.isEmpty)
+                const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '모든 모임원들이 인증을 완료했어요!',
+                    style: contentTextStyle,
+                  ),
+                ),
             if (context.watch<MissionFireState>().selectedIndex != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(
+                  child: SizedBox(
                     width: 190,
                     height: 62,
                     child: ElevatedButton(

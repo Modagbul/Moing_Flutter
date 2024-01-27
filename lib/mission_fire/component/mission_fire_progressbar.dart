@@ -11,8 +11,10 @@ class MissionFireProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int singleMissionMyCount = context.watch<MissionFireState>().singleMissionMyCount;
-    final int singleMissionTotalCount = context.watch<MissionFireState>().singleMissionTotalCount;
+    final int singleMissionMyCount =
+        context.watch<MissionFireState>().singleMissionMyCount;
+    final int singleMissionTotalCount =
+        context.watch<MissionFireState>().singleMissionTotalCount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,15 +36,12 @@ class MissionFireProgressBar extends StatelessWidget {
         RoundedProgressBar(
           borderRadius: BorderRadius.circular(24),
           childLeft: Text(
-            '${singleMissionMyCount}/$singleMissionTotalCount명 인증성공',
+            '$singleMissionMyCount/$singleMissionTotalCount명 인증성공',
             style: bodyTextStyle.copyWith(color: grayScaleGrey100),
           ),
-          percent: singleMissionMyCount < singleMissionTotalCount
-              ? (singleMissionMyCount) *
-              100 /
-              singleMissionTotalCount
+          percent: singleMissionTotalCount != 0
+              ? singleMissionMyCount * 100 / singleMissionTotalCount
               : 0,
-
           style: RoundedProgressBarStyle(
             colorBorder: Colors.transparent,
             colorProgress: coralGrey500,

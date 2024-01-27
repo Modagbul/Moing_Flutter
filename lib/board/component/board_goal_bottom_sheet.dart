@@ -141,19 +141,19 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> with Single
             ),
             Container(
               padding: const EdgeInsets.symmetric(
-                vertical: 2.0,
-                horizontal: 4.0,
+                vertical: 4.0,
+                horizontal: 8.0,
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: grayScaleGrey500,
+                color: coralGrey500,
               ),
               child: Text(
-                '${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 0}',
+                '새 글 ${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 0}',
                 style: const TextStyle(
                   color: grayScaleGrey100,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

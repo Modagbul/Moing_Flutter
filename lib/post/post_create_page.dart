@@ -152,9 +152,9 @@ class _PostInfoTextFields extends StatelessWidget {
     return Column(
       children: [
         OutlinedTextField(
-          maxLength: 15,
+          maxLength: 30,
           labelText: '제목',
-          hintText: '15자 이내의 제목을 적어주세요',
+          hintText: '30자 이내의 제목을 적어주세요',
           counterText:
               '(${context.watch<PostCreateState>().titleController.text.length}/15)',
           onChanged: (value) =>

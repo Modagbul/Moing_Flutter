@@ -5,7 +5,6 @@ import 'package:moing_flutter/board/screen/team_member_list_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
-import 'package:moing_flutter/model/response/single_board_team_member_info.dart';
 import 'package:moing_flutter/model/team/team_fire_level_models.dart';
 import 'package:moing_flutter/post/post_main_page.dart';
 
@@ -16,6 +15,7 @@ class BoardMainState extends ChangeNotifier {
   final int teamId;
   final bool isSuccess;
 
+  bool isLoading = true;
   SingleBoardData? singleBoardData;
   TeamFireLevelData? teamFireLevelData;
   TeamInfo? teamInfo;
@@ -30,9 +30,10 @@ class BoardMainState extends ChangeNotifier {
 
   void initState() async {
     log('Instance "BoardMainState" has been created');
-    print('teamID : $teamId');
+    isLoading = true;
     await getSingleBoard();
     await getTeamFireLevel();
+    isLoading = false;
   }
 
   void initTabController({required TabController tabController}) {
@@ -52,8 +53,12 @@ class BoardMainState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void navigatePostMainPage() {
-    Navigator.pushNamed(context, PostMainPage.routeName, arguments: teamId);
+  void navigatePostMainPage() async {
+    final result = await Navigator.pushNamed(context, PostMainPage.routeName, arguments: teamId);
+
+    if (result as bool) {
+      initState();
+    }
   }
 
   Future<void> getTeamFireLevel() async {
