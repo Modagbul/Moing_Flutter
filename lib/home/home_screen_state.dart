@@ -7,6 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/make_group/group_create_category_page.dart';
+import 'package:moing_flutter/make_group/group_create_category_state.dart';
 import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
@@ -15,6 +17,7 @@ import 'package:moing_flutter/model/response/get_team_mission_photo_list_respons
 import 'package:moing_flutter/model/response/group_team_response.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreenState extends ChangeNotifier {
   final BuildContext context;
@@ -166,8 +169,20 @@ class HomeScreenState extends ChangeNotifier {
 
   // 모임 만들기 클릭
   void makeGroupPressed() {
-    Navigator.of(context).pushNamed(
-      GroupCreateStartPage.routeName,
+    // 버벅임 애니메이션 처리
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) =>
+            ChangeNotifierProvider(
+              create: (_) => GroupCreateCategoryState(context: context),
+              child: const GroupCreateCategoryPage(),
+            ),
+        transitionsBuilder:
+            (context, animation1, animation2, child) {
+          return child;
+        },
+        transitionDuration: const Duration(milliseconds: 0),
+      ),
     );
   }
 

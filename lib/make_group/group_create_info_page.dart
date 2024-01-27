@@ -97,6 +97,8 @@ class GroupCreateInfoPage extends StatelessWidget {
   }
 
   Widget buildBottomNavigationBar(BuildContext context) {
+    bool isAllFieldsValid = context.watch<GroupCreateInfoState>().isAllFieldsValid;
+
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24, top: 16),
       child: Row(
@@ -122,17 +124,17 @@ class GroupCreateInfoPage extends StatelessWidget {
               height: 62,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: grayScaleWhite,
+                  backgroundColor: isAllFieldsValid ? grayScaleWhite : grayScaleGrey700,
                   padding: const EdgeInsets.all(16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                 ),
-                onPressed: context.read<GroupCreateInfoState>().nextPressed,
-                child: const Text(
+                onPressed: isAllFieldsValid ? context.read<GroupCreateInfoState>().nextPressed : null,
+                child: Text(
                   '다음으로',
                   style: TextStyle(
-                    color: grayScaleBlack,
+                    color: isAllFieldsValid ? grayScaleBlack : grayScaleGrey500,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
                   ),
@@ -203,18 +205,20 @@ class _InfoTextFields extends StatelessWidget {
           controller: context.read<GroupCreateInfoState>().introduceController,
         ),
         SizedBox(height: screenHeight * 0.04),
-        OutlinedTextField(
-          maxLength: 100,
-          maxLines: 10,
-          labelText: '모임장의 각오 한마디',
-          counterText:
-              '(${context.watch<GroupCreateInfoState>().resolutionController.text.length}/100)',
-          hintText: '자유롭게 작성해주세요',
-          onChanged: (value) =>
-              context.read<GroupCreateInfoState>().updateTextField(),
-          controller: context.read<GroupCreateInfoState>().resolutionController,
-        ),
-        SizedBox(height: screenHeight * 0.04),
+
+        /// 모임장의 각오 한마디 삭제
+        // OutlinedTextField(
+        //   maxLength: 100,
+        //   maxLines: 10,
+        //   labelText: '모임장의 각오 한마디',
+        //   counterText:
+        //       '(${context.watch<GroupCreateInfoState>().resolutionController.text.length}/100)',
+        //   hintText: '자유롭게 작성해주세요',
+        //   onChanged: (value) =>
+        //       context.read<GroupCreateInfoState>().updateTextField(),
+        //   controller: context.read<GroupCreateInfoState>().resolutionController,
+        // ),
+        // SizedBox(height: screenHeight * 0.04),
       ],
     );
   }

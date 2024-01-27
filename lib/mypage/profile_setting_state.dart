@@ -165,19 +165,27 @@ class ProfileSettingState extends ChangeNotifier {
     }
   }
 
+  // void checkSubmit() {
+  //   if (isNameChanged || isIntroduceChanged || isAvatarChanged) {
+  //     if (nameController.value.text.length > 0 ||
+  //         introduceController.value.text.length > 0) {
+  //       isSubmit = true;
+  //     } else {
+  //       isSubmit = false;
+  //     }
+  //   } else {
+  //     isSubmit = false;
+  //   }
+  //   notifyListeners();
+  // }
+
   void checkSubmit() {
-    if (isNameChanged || isIntroduceChanged || isAvatarChanged) {
-      if (nameController.value.text.length > 0 ||
-          introduceController.value.text.length > 0) {
-        isSubmit = true;
-      } else {
-        isSubmit = false;
-      }
-    } else {
-      isSubmit = false;
-    }
+    isSubmit = nameController.text.isNotEmpty;
+
     notifyListeners();
   }
+
+
 
   /// 저장 버튼 클릭
   void savePressed() async {
@@ -185,7 +193,6 @@ class ProfileSettingState extends ChangeNotifier {
       if (onLoading) return;
       if (_isFixProfileInProgress) return;
       if (_isGetPresignedUrlInProgress) return;
-      if(nameController.value.text.isEmpty || introduceController.value.text.isEmpty) return;
       if (!isAvatarChanged && !isNameChanged && !isIntroduceChanged) return;
 
       print('savePressed called');
@@ -289,9 +296,13 @@ class ProfileSettingState extends ChangeNotifier {
 
     final String apiUrl = '${dotenv.env['MOING_API']}/api/mypage/profile';
     try {
+      String introduction = introduceController.value.text.isEmpty
+          ? '아직 한 줄 다짐이 없어요'
+          : introduceController.value.text;
+
       FixProfile data = FixProfile(
           nickName: isNameChanged ? nameController.text : null,
-          introduction: isIntroduceChanged ? introduceController.text : null,
+          introduction: isIntroduceChanged ? introduction : null,
           profileImage: isAvatarChanged ? putProfileImageUrl : null);
 
       print('프로필 수정 data : ${data.toString()}');

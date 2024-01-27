@@ -64,12 +64,37 @@ class HomeCardScroll extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipOval(
-                              child: Image.network(
-                                teamList[index].profileImgUrl,
-                                width: 52.0,
-                                height: 52.0,
-                                fit: BoxFit.cover,
-                              ),
+                              child: teamList[index].profileImgUrl != null &&
+                                      teamList[index].profileImgUrl.isNotEmpty
+                                  ? Image.network(
+                                      teamList[index].profileImgUrl,
+                                      width: 52.0,
+                                      height: 52.0,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return CircularProgressIndicator();
+                                      },
+                                      errorBuilder: (BuildContext context,
+                                          Object error,
+                                          StackTrace? stackTrace) {
+                                        return SvgPicture.asset(
+                                          'asset/icons/group_basic_image.svg',
+                                          width: 52.0,
+                                          height: 52.0,
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
+                                    )
+                                  : SvgPicture.asset(
+                                      'asset/icons/group_basic_image.svg',
+                                      width: 52.0,
+                                      height: 52.0,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                             const SizedBox(width: 9.0),
                             Column(

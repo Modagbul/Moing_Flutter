@@ -87,25 +87,18 @@ class MissionFixPage extends StatelessWidget {
                         fontWeight: FontWeight.w600, color: grayScaleGrey200),
                   ),
                   const SizedBox(height: 24),
-                  Text(
-                    '미션 제목',
-                    style: bodyTextStyle.copyWith(
-                        fontWeight: FontWeight.w500, color: grayScaleGrey500),
-                  ),
-                  const SizedBox(height: 4),
-                  Container(
-                    width: double.infinity,
-                    height: 60,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      color: grayScaleGrey700,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      context.watch<MissionFixState>().fixData.missionTitle,
-                      style: contentTextStyle.copyWith(color: grayScaleGrey500),
-                    ),
+                  OutlinedTextField(
+                    maxLength: 50,
+                    maxLines: 1,
+                    hintText: '미션의 제목을 입력해주세요',
+                    labelText: '미션 제목',
+                    onChanged: (value) =>
+                        context.read<MissionFixState>().updateTextField(),
+                    controller:
+                    context.watch<MissionFixState>().missionTitleController,
+                    counterText:
+                    '(${context.watch<MissionFixState>().missionTitleController.text.length}/50)',
+                    inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
                   ),
                   const SizedBox(height: 32),
                   OutlinedTextField(
