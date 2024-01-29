@@ -29,6 +29,8 @@ class GroupFinishExitState extends ChangeNotifier {
   APICall call = APICall();
   ExitTeamInfo? teamInfo;
 
+  bool onLoading = false;
+
   GroupFinishExitState({
     required this.context, required this.teamId, required this.text, required this.teamName}) {
     print('teamName : $teamName');
@@ -107,11 +109,15 @@ class GroupFinishExitState extends ChangeNotifier {
 
     /// 한 번 더 누르면 소모임 강제 종료 신청
     if (finishCount >= 2) {
+      if(onLoading) return;
+      onLoading = true;
+
       int deleteTeamId;
       // 소모임 장인 경우
       if(teamInfo != null) {
         if(teamInfo!.isLeader) {
           deleteTeamId = await apiCode.deleteTeam(teamId: teamId);
+          onLoading = false;
           if(deleteTeamId == teamId) {
             Navigator.pushReplacementNamed(
               context,
@@ -126,6 +132,7 @@ class GroupFinishExitState extends ChangeNotifier {
         }
         else {
           deleteTeamId = await apiCode.deleteTeamUser(teamId: teamId);
+          onLoading = false;
           if(deleteTeamId == teamId) {
             Navigator.pushReplacementNamed(
               context,

@@ -1098,7 +1098,7 @@ class MissionProveState with ChangeNotifier {
             bool isTodayCreated = isSameDate(currentMission.createdDate);
             return Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.55,
+              height: MediaQuery.of(context).size.height * 0.58,
               decoration: const BoxDecoration(
                 color: grayScaleGrey600,
                 borderRadius: BorderRadius.only(
@@ -1192,7 +1192,7 @@ class MissionProveState with ChangeNotifier {
                               DropdownMenuItem(
                                   value: 'retry',
                                   child: Container(
-                                    padding: EdgeInsets.only(top: 8, right: 8),
+                                    padding: EdgeInsets.only(top: 4, right: 8),
                                     alignment: Alignment.centerRight,
                                     child: Column(
                                       crossAxisAlignment:

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
@@ -28,6 +29,8 @@ class InitState extends ChangeNotifier {
   String errorCode = '';
   int? numOfTeam;
 
+  String authStatus = "Unknown";
+
   InitState({
     required this.context,
     required this.dynamicLinkService,
@@ -44,6 +47,53 @@ class InitState extends ChangeNotifier {
     super.dispose();
   }
 
+  Future<bool?> showCustomTrackingDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Dear User'),
+        content: const Text(
+          'We care about your privacy and data security. We keep this app free by showing ads. '
+              'Can we continue to use your data to tailor ads for you?\n\nYou can change your choice anytime in the app settings. '
+              'Our partners will collect data and use a unique identifier on your device to show you ads.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlugin() async {
+    final TrackingStatus status =
+    await AppTrackingTransparency.trackingAuthorizationStatus;
+    authStatus = '$status';
+    print('authStatus1 = $status');
+    // If the system can show an authorization request dialog
+    if (status == TrackingStatus.notDetermined) {
+      // // Show a custom explainer dialog before the system dialog
+      // var result = await showCustomTrackingDialog(context);
+      // print('result: $result');
+      // // Wait for dialog popping animation
+      // await Future.delayed(const Duration(milliseconds: 200));
+      // Request system's tracking authorization dialog
+      final TrackingStatus status =
+      await AppTrackingTransparency.requestTrackingAuthorization();
+      authStatus = '$status';
+      print('authStatus2 = $status');
+      notifyListeners();
+    }
+
+    final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
+    print("UUID: $uuid");
+  }
+
   void initStart() async {
     await Future.delayed(
       const Duration(
@@ -52,6 +102,7 @@ class InitState extends ChangeNotifier {
       ),
     );
 
+    await initPlugin();
     String? oldUser = await sharedPreferencesInfo.loadPreferencesData('old');
     /// 한 번이라도 앱에 접속한 사람
     if (oldUser == 'true') {

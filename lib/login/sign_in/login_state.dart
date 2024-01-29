@@ -76,7 +76,11 @@ class LoginState extends ChangeNotifier {
       await sendKakaoTokenToBackend(token.accessToken);
 
     } catch (error) {
-      // showErrorDialog(error.toString());
+      if(!(error.toString().contains("CANCEL"))) {
+        print(1);
+        showErrorDialog("카카오 에러1 : ${error.toString()}");
+      }
+      showErrorDialog("카카오 에러2 : ${error.toString()}");
       print('카카오톡으로 로그인 실패 $error');
     } finally {
       onLoading = false;
@@ -144,8 +148,10 @@ class LoginState extends ChangeNotifier {
           }
           await sendKakaoTokenToBackend(accessToken);
         }
+
       }
     } catch (e) {
+      showErrorDialog("카카오 -백엔드 연동 간 에러 발생 : ${e.toString()}");
       print('카카오 - 백엔드 연동 간 에러 발생 : ${e.toString()}');
     }
   }
@@ -271,15 +277,13 @@ class LoginState extends ChangeNotifier {
         ),
       );
 
-      // print("Google ID Token: ${googleAuth?.idToken}");
-
       // 구글 토큰을 백엔드 서버로 전송
       if (googleAuth?.idToken != null) {
         await sendGoogleTokenToBackend(googleAuth!.idToken!);
       }
     } catch (e) {
+      showErrorDialog("Google Sign-In Error : ${e.toString()}");
       print("Google Sign-In Error: $e");
-      // 오류 처리
     }
   }
 
@@ -308,11 +312,7 @@ class LoginState extends ChangeNotifier {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
 
-        // print('Access Token: $accessToken');
-        // print('Refresh Token: $refreshToken');
-
         await tokenManagement.saveToken(accessToken, refreshToken);
-        // print('구글 JWT : $accessToken');
         _isRegistered = responseBody['data']['registrationStatus'];
         sharedPreferencesInfo.savePreferencesData('sign', 'google');
         checkRegister(_isRegistered!);
@@ -331,6 +331,7 @@ class LoginState extends ChangeNotifier {
         }
       }
     } catch (e) {
+      showErrorDialog("Google Sign-In backend-front Error : ${e.toString()}");
       print('Error sending Google token to backend : ${e.toString()}');
     }
   }
