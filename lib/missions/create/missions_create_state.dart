@@ -539,7 +539,8 @@ class MissionCreateState extends ChangeNotifier {
     /// 반복 미션인 경우
     if(isRepeatSelected) {
       if(titleController.text.isNotEmpty && contentController.text.isNotEmpty &&
-      isMethodSelected && ruleController.text.isNotEmpty) {
+      isMethodSelected) {
+        // && ruleController.text.isNotEmpty
         isSuccess = true;
       }
       else {
@@ -550,7 +551,8 @@ class MissionCreateState extends ChangeNotifier {
     else {
       /// TODO : formattedTime 설정 해줘야 함.
       if(titleController.text.isNotEmpty && contentController.text.isNotEmpty &&
-          formattedDate.length > 1 && isMethodSelected && ruleController.text.isNotEmpty) {
+          formattedDate.length > 1 && isMethodSelected) {
+        //  && ruleController.text.isNotEmpty
         isSuccess = true;
       }
       else {

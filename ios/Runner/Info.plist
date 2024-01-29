@@ -40,7 +40,19 @@
 				<string>moing.page.link</string>
 			</array>
 		</dict>
+		<dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+              <string>fb[APP_ID]</string>
+            </array>
+          </dict>
 	</array>
+	<key>FacebookAppID</key>
+    <string>2417953345069946</string>
+    <key>FacebookClientToken</key>
+    <string>c2e4d1cdb57a816c95b5142ce2adcf29</string>
+    <key>FacebookDisplayName</key>
+    <string>모잉 MOING - 함께하는 자기계발</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
@@ -103,6 +115,8 @@
 	<string>소모임 및 프로필 이미지 등록, 미션 인증을 위해 사진 라이브러리 접근 권한이 필요합니다.</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>리마인더 알림을 위한 권한이 필요합니다.</string>
+	<key>NSUserTrackingUsageDescription</key>
+    <string>데이터는 개인화된 광고 제공 목적으로만 사용됩니다.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

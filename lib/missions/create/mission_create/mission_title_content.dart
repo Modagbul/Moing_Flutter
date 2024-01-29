@@ -62,8 +62,8 @@ class MissionTitleContent extends StatelessWidget {
         OutlinedTextField(
           maxLength: 300,
           maxLines: 10,
-          hintText: '공지할 내용을 적어주세요',
-          labelText: '미션 내용',
+          hintText: '미션에 대한 설명과 인증 규칙을 적어주세요',
+          labelText: '미션 설명',
           onChanged: (value) =>
               context.read<MissionCreateState>().updateTextField(),
           controller: context.watch<MissionCreateState>().contentController,

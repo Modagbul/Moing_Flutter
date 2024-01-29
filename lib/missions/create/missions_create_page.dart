@@ -70,7 +70,7 @@ class MissionsCreatePage extends StatelessWidget {
                         const MissionTitleContent(),
                         const MissionEndDate(),
                         const MissionChoose(),
-                        const MissionRule(),
+                        // const MissionRule(),
                         const SizedBox(height: 32),
                       ],
                     ),
@@ -101,7 +101,7 @@ class MissionsCreatePage extends StatelessWidget {
         ),
         const SizedBox(height: 52),
         Text(
-          '미션 제목과 내용',
+          '미션 제목과 설명',
           style: contentTextStyle.copyWith(
               color: grayScaleGrey200, fontWeight: FontWeight.w500),
         ),
