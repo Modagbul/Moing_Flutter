@@ -75,7 +75,7 @@ class MissionFixState extends ChangeNotifier {
     isContentChanged = (contentController.value.text != fixData.missionContent) ? true : false;
     isRuleChanged = (ruleController.value.text != fixData.missionRule) ? true : false;
     bool isTitleChanged = missionTitleController.value.text != fixData.missionTitle;
-    checkSubmit = isTitleChanged || isContentChanged || isRuleChanged;
+    checkSubmit = isTitleChanged || isContentChanged;
     // checkSubmit = (missionTitleController.value.text.isEmpty || ruleController.value.text.isEmpty || contentController.value.text.isEmpty) ? false : true;
     notifyListeners();
   }

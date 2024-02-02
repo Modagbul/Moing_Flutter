@@ -529,13 +529,13 @@ class MissionProveState with ChangeNotifier {
       );
 
       if(apiResponse.isSuccess) {
-        print('반복 미션 종료에 성공했습니다!');
-        Navigator.of(context).pop();
+        print('미션 종료에 성공했습니다!');
+        Navigator.of(context).pop("END");
       } else {
         print('endRepeatMission error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
-      log('반복미션 종료 실패: $e');
+      log('미션 종료 실패: $e');
     } finally {
       notifyListeners();
     }
@@ -1603,10 +1603,18 @@ class MissionProveState with ChangeNotifier {
       // 미션내용 클릭
       case 'content':
         missionState.showContentAndRule(
-            context: context,
-            missionWay: missionWay,
-            missionContent: missionContent,
-            missionRule: missionRule);
+          context: context,
+          missionTitle: missionTitle,
+          missionWay: missionWay,
+          missionContent: missionContent,
+          dueTo: missionDueTo,
+          missionRule: missionRule,
+          isLeader: isLeader,
+          isRepeated: isRepeated,
+          teamId: teamId,
+          missionId: missionId,
+          repeatCount: repeatMissionTotalCount,
+        );
         break;
       // 미션 인증하기 클릭
       case 'mission':

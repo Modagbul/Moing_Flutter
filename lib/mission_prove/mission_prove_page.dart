@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/mission_prove/component/mission_content_rule.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_like_share.dart';
 import 'package:moing_flutter/mission_prove/component/mission_current_situation.dart';

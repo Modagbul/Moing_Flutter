@@ -165,10 +165,14 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                     missionId: e.missionId,
                                     status: e.status,
                                     isEnded: false)
-                              ).then((_) {
+                              ).then((value) async {
                                 Provider.of<OngoingMissionState>(context,
                                         listen: false)
                                     .reloadMissionStatus();
+                                if(value == "END") {
+                                  await Future.delayed(Duration(milliseconds: 500));
+                                  context.read<OngoingMissionState>().showToast(false);
+                                }
                               });
                             },
                           ),
@@ -248,10 +252,13 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                         missionId: e.missionId,
                                         status: e.status,
                                         isEnded: false)
-                                  ).then((_) {
-                                    Provider.of<OngoingMissionState>(context,
-                                            listen: false)
-                                        .reloadMissionStatus();
+                                  ).then((value) async {
+                                    print('미션 종료 VALUE : $value');
+                                    context.read<OngoingMissionState>().reloadMissionStatus();
+                                    if(value == "END") {
+                                      await Future.delayed(Duration(milliseconds: 500));
+                                      context.read<OngoingMissionState>().showToast(false);
+                                    }
                                   });
                                 },
                               ),

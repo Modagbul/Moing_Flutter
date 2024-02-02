@@ -22,11 +22,27 @@
           }
         },
         {
-          "client_id": "78739178434-2lbr3kipej989p2a6m6v1c8bvb3dnned.apps.googleusercontent.com",
+          "client_id": "78739178434-edfr2nu0mupup5kn68v5p3ml3mbrnj8t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.moing.moing_team",
             "certificate_hash": "d1c1736256cc05eecc921874231be32ada24a995"
+          }
+        },
+        {
+          "client_id": "78739178434-erk3t52r7qkjjr1fa0fdel0lkpl353ef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moing.moing_team",
+            "certificate_hash": "b3e2599369b8001faea8bf408a04e897c19c67ec"
+          }
+        },
+        {
+          "client_id": "78739178434-fsikes3g7dnj5d7okk2llutf8c0vf30b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moing.moing_team",
+            "certificate_hash": "dacf204389290eaac5714879240f972bd3f5e3e6"
           }
         },
         {

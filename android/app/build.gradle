@@ -58,7 +58,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 34
         multiDexEnabled true
-        /// 1.0.0+3 이면, versionCode는 3(Integer)을 의미함. versionName은 1.0.0(String)을 의미함.
+        /// 1.0.0+3 이면, version Code 3(Integer)을 의미함. version Name 1.0.0(String)을 의미함.
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         // manifestPlaceHolders

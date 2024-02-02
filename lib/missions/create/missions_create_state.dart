@@ -19,6 +19,7 @@ class MissionCreateState extends ChangeNotifier {
   final BuildContext context;
   final int teamId;
   final int repeatMissions;
+  final bool isLeader;
 
   final APICall call = APICall();
   final TextEditingController titleController = TextEditingController();
@@ -70,13 +71,14 @@ class MissionCreateState extends ChangeNotifier {
     required this.context,
     required this.teamId,
     required this.repeatMissions,
+    required this.isLeader,
   }) {
     initState();
   }
 
   void initState() async {
     log('Instance "MissionCreateState" has been created');
-    print('teamId : $teamId, repeatMissions : $repeatMissions');
+    print('teamId : $teamId, repeatMissions : $repeatMissions, isLeader: $isLeader');
     await getMissionRecommend();
 
     titleController.addListener(_onTitleTextChanged);

@@ -69,18 +69,12 @@ class LoginState extends ChangeNotifier {
         },
       );
 
-      final profileInfo = json.decode(response.body);
-      // print(profileInfo.toString());
-
+      print('key hash : ${await KakaoSdk.origin}');
       // 카카오 로그인 후 백엔드에 토큰 전송
       await sendKakaoTokenToBackend(token.accessToken);
 
     } catch (error) {
-      if(!(error.toString().contains("CANCEL"))) {
-        print(1);
-        showErrorDialog("카카오 에러1 : ${error.toString()}");
-      }
-      showErrorDialog("카카오 에러2 : ${error.toString()}");
+      // showErrorDialog("카카오 로그인 에러 : ${error.toString()}");
       print('카카오톡으로 로그인 실패 $error');
     } finally {
       onLoading = false;
@@ -151,7 +145,6 @@ class LoginState extends ChangeNotifier {
 
       }
     } catch (e) {
-      showErrorDialog("카카오 -백엔드 연동 간 에러 발생 : ${e.toString()}");
       print('카카오 - 백엔드 연동 간 에러 발생 : ${e.toString()}');
     }
   }
@@ -191,7 +184,6 @@ class LoginState extends ChangeNotifier {
         );
         await appleLoginSendToken(appleCredential.identityToken!);
       } catch (e) {
-        // showErrorDialog(e.toString());
         print('애플 로그인 실패 : ${e.toString()}');
       } finally {
         onLoading = false;
@@ -200,7 +192,6 @@ class LoginState extends ChangeNotifier {
 
     /// IOS 13 버전이 아닌 경우
     else {
-      // showErrorDialog('Sign in With Apple is not available on this device.');
       throw PlatformException(
         code: 'APPLE_SIGN_IN_NOT_AVAILABLE',
         message: 'Sign in With Apple is not available on this device.',
@@ -282,7 +273,7 @@ class LoginState extends ChangeNotifier {
         await sendGoogleTokenToBackend(googleAuth!.idToken!);
       }
     } catch (e) {
-      showErrorDialog("Google Sign-In Error : ${e.toString()}");
+      // showErrorDialog("Google Sign-In Error : ${e.toString()}");
       print("Google Sign-In Error: $e");
     }
   }
@@ -331,7 +322,6 @@ class LoginState extends ChangeNotifier {
         }
       }
     } catch (e) {
-      showErrorDialog("Google Sign-In backend-front Error : ${e.toString()}");
       print('Error sending Google token to backend : ${e.toString()}');
     }
   }

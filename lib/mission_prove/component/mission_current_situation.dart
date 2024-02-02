@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
+import 'package:moing_flutter/mission_prove/component/mission_content_rule.dart';
 import 'package:moing_flutter/mission_prove/component/prove_button/mission_fire_button.dart';
 import 'package:moing_flutter/mission_prove/component/repeat_mission_tag/repeat_mission_start_tag.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
@@ -24,7 +25,6 @@ class MissionCurrentSituation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 16),
             Container(
               padding: EdgeInsets.symmetric(vertical: 12),
               width: double.infinity,
@@ -64,14 +64,7 @@ class MissionCurrentSituation extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         Text(
-                                          "/",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14.0,
-                                              color: grayScaleGrey400),
-                                        ),
-                                        Text(
-                                          '${state.repeatMissionTotalCount}',
+                                          "/${state.repeatMissionTotalCount}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 14.0,
@@ -178,7 +171,8 @@ class MissionCurrentSituation extends StatelessWidget {
               MissionFireButton(
                 onPressed: state.firePressed,
               ),
-            const SizedBox(height: 24),
+            MissionContentAndRule(),
+            // const SizedBox(height: 24),
           ],
         ),
       ),
