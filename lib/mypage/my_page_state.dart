@@ -66,6 +66,9 @@ class MyPageState extends ChangeNotifier {
       case 'ETC':
         convertedCategory = '그외 자기계발';
         break;
+      default:
+        convertedCategory = category;
+        break;
     }
 
     return convertedCategory;
