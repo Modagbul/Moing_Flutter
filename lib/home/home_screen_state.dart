@@ -9,7 +9,6 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/group_create_category_page.dart';
 import 'package:moing_flutter/make_group/group_create_category_state.dart';
-import 'package:moing_flutter/make_group/group_create_start_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
@@ -191,5 +190,35 @@ class HomeScreenState extends ChangeNotifier {
     /// 목표보드 페이지로 이동
     Navigator.pushNamed(context, BoardMainPage.routeName,
         arguments: {'teamId': teamId});
+  }
+
+  String convertCategoryName({required String category}) {
+    String convertedCategory = '';
+
+    switch (category) {
+      case 'SPORTS':
+        convertedCategory = '스포츠/운동';
+        break;
+      case 'HABIT':
+        convertedCategory = '생활습관 개선';
+        break;
+      case 'TEST':
+        convertedCategory = '시험/취업준비';
+        break;
+      case 'STUDY':
+        convertedCategory = '스터디/공부';
+        break;
+      case 'READING':
+        convertedCategory = '독서';
+        break;
+      case 'ETC':
+        convertedCategory = '그외 자기계발';
+        break;
+      default:
+        convertedCategory = '자기계발';
+        break;
+    }
+
+    return convertedCategory;
   }
 }

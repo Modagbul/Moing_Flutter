@@ -112,7 +112,7 @@ class HomeCardScroll extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      '#${team.category}',
+                                      '#${context.read<HomeScreenState>().convertCategoryName(category: team.category)}',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14.0,
