@@ -30,7 +30,7 @@ class AlarmPage extends StatelessWidget {
       appBar: MoingAppBar(
         title: '알림 모아보기',
         imagePath: 'asset/icons/arrow_left.svg',
-        onTap: () => Navigator.pop(context, true),
+        onTap: () => Navigator.pop(context, {'result': true, 'screenIndex': 0}),
       ),
       backgroundColor: grayScaleGrey900,
       body: SafeArea(
