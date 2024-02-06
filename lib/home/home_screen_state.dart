@@ -211,9 +211,6 @@ class HomeScreenState extends ChangeNotifier {
       case 'READING':
         convertedCategory = '독서';
         break;
-      case 'ETC':
-        convertedCategory = '그외 자기계발';
-        break;
       default:
         convertedCategory = '자기계발';
         break;
