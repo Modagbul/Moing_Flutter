@@ -21,7 +21,7 @@ class MissionSliverAppBar extends StatelessWidget {
         child: Row(
           children: [
             Spacer(),
-            if(!context.watch<MissionProveState>().isEnded) ...[
+            if(!context.watch<MissionProveState>().isEnded && context.watch<MissionProveState>().isLeader) ...[
               Padding(
                 padding: const EdgeInsets.only(right: 20.0),
                 child: GestureDetector(

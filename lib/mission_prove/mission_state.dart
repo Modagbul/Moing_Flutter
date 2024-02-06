@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
@@ -6,6 +7,8 @@ import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_data.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_page.dart';
+import 'package:moing_flutter/model/api_generic.dart';
+import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 import 'package:provider/provider.dart';
 
@@ -293,7 +296,9 @@ class MissionState {
     required int missionId,
     required int repeatCount,
     required String missionTitle,
+    bool? isRead,
   }) {
+    print('미션 설명 클릭');
     MissionFixData data = MissionFixData(
       missionTitle: missionTitle,
       missionContent: missionContent,
@@ -392,7 +397,11 @@ class MissionState {
                   ),
                       )
                       : WhiteButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        if(isRead == false) {
+                          /// 미션 설명 읽음 처리
+                          readMissionRule(teamId, missionId);
+                        }
                         Navigator.of(context).pop();
                       },
                       text: '확인했어요'),
@@ -403,6 +412,26 @@ class MissionState {
         );
       },
     );
+  }
+
+  /// 미션 읽음 처리
+  Future<bool> readMissionRule(int teamId, int missionId) async {
+    String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/confirm';
+    APICall call = APICall();
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'POST',
+        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
+      );
+      print('미션 설명 읽기에 성공했습니다!');
+      return apiResponse.isSuccess ? true : false;
+    } catch (e) {
+      print('미션 설명 읽기 실패: $e');
+      return false;
+    }
   }
 
   /// 미션 인증하기 클릭 시 바텀 모달

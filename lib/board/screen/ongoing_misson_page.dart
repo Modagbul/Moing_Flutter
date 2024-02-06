@@ -164,7 +164,9 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                     teamId: context.read<OngoingMissionState>().teamId,
                                     missionId: e.missionId,
                                     status: e.status,
-                                    isEnded: false)
+                                    isEnded: false,
+                                  isRead: e.isRead,
+                                )
                               ).then((value) async {
                                 Provider.of<OngoingMissionState>(context,
                                         listen: false)
@@ -176,7 +178,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                               });
                             },
                           ),
-                          if (e.status == "WAIT")
+                          if (!e.isRead)
                             Positioned(
                               top: -25,
                               child: FadeTransition(
@@ -251,7 +253,9 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                         teamId: context.read<OngoingMissionState>().teamId,
                                         missionId: e.missionId,
                                         status: e.status,
-                                        isEnded: false)
+                                        isEnded: false,
+                                      isRead: e.isRead,
+                                    )
                                   ).then((value) async {
                                     print('미션 종료 VALUE : $value');
                                     context.read<OngoingMissionState>().reloadMissionStatus();
@@ -262,7 +266,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                   });
                                 },
                               ),
-                              if (e.status == "WAIT")
+                              if (!e.isRead)
                                 Positioned(
                                   top: -25,
                                   right: 15,
@@ -312,7 +316,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
           ),
         ),
       ),
-      floatingActionButton: (state.isLeader != null && state.isLeader!) ? const _BottomButton() : null,
+      floatingActionButton: const _BottomButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

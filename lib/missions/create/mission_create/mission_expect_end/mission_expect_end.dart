@@ -15,24 +15,24 @@ class MissionExpectEnd extends StatelessWidget {
         ? countRepeatMissions + 1 : countRepeatMissions;
 
     /// 소모임원인 경우
-    // if (!context.watch<MissionCreateState>().isLeader) {
-    //   return Container(
-    //     width: double.infinity,
-    //     height: 48,
-    //     child: Row(
-    //       children: [
-    //         Text(
-    //           '반복미션은 소모임장만 만들 수 있어요.',
-    //             style: contentTextStyle.copyWith(
-    //             fontWeight: FontWeight.w600,
-    //             color: context.watch<MissionCreateState>().isRepeatSelected == true ? Colors.white : grayScaleGrey550,
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
-    // else {
+    if (!context.watch<MissionCreateState>().isLeader) {
+      return Container(
+        width: double.infinity,
+        height: 48,
+        child: Row(
+          children: [
+            Text(
+              '반복미션은 소모임장만 만들 수 있어요.',
+                style: contentTextStyle.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.watch<MissionCreateState>().isRepeatSelected == true ? Colors.white : grayScaleGrey550,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    else {
       /// 미션 반복 개수가 2개 이상인 경우
       if (context.watch<MissionCreateState>().repeatMissions > 1) {
         return Container(
@@ -84,6 +84,6 @@ class MissionExpectEnd extends StatelessWidget {
           ),
         );
       }
-    // }
+    }
   }
 }

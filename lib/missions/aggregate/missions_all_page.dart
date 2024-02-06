@@ -73,11 +73,13 @@ class MissionsAllPage extends StatelessWidget {
                             Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
                               arguments: MissionProveArgument(
-                                  isRepeated: false,
-                                  teamId: e.teamId,
-                                  missionId: e.missionId,
-                                  status: e.status,
-                                  isEnded: false)
+                                isRepeated: false,
+                                teamId: e.teamId,
+                                missionId: e.missionId,
+                                status: e.status,
+                                isEnded: false,
+                                isRead: true,
+                              )
                             ).then((_) {
                               Provider.of<MissionsAllState>(context,
                                       listen: false)
@@ -141,11 +143,13 @@ class MissionsAllPage extends StatelessWidget {
                         Navigator.of(context).pushNamed(
                           MissionProvePage.routeName,
                             arguments: MissionProveArgument(
-                                isRepeated: true,
-                                teamId: e.teamId,
-                                missionId: e.missionId,
-                                status: e.status,
-                                isEnded: false,)
+                              isRepeated: true,
+                              teamId: e.teamId,
+                              missionId: e.missionId,
+                              status: e.status,
+                              isEnded: false,
+                              isRead: true,
+                            )
                         ).then((_) {
                           Provider.of<MissionsAllState>(context, listen: false)
                               .reloadMissionStatus();
