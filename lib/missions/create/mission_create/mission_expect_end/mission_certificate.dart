@@ -95,8 +95,8 @@ class MissionCertificate extends StatelessWidget {
                         : '마감 날짜 선택하기',
                     style: contentTextStyle.copyWith(color: grayScaleGrey100),
                   ),
-                  Spacer(),
-                  Padding(
+                  const Spacer(),
+                  const Padding(
                       padding: EdgeInsets.only(right: 16),
                       child: Icon(
                         Icons.calendar_month_outlined,
@@ -106,7 +106,7 @@ class MissionCertificate extends StatelessWidget {
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           GestureDetector(
             onTap: context.read<MissionCreateState>().timePicker,
             child: Container(

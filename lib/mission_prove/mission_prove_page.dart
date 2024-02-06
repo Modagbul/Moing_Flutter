@@ -13,6 +13,7 @@ import 'package:moing_flutter/mission_prove/component/single_my_mission_prove.da
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:moing_flutter/mission_prove/sliver/mission_sliver_appbar.dart';
 import 'package:moing_flutter/mission_prove/sliver/mission_sliver_tabbar_header.dart';
+import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
 
 class MissionProvePage extends StatefulWidget {
@@ -27,17 +28,19 @@ class MissionProvePage extends StatefulWidget {
     final int missionId = argument.missionId;
     final String status = argument.status;
     final bool isEnded = argument.isEnded;
+    final bool isRead = argument.isRead;
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (_) => MissionProveState(
-                  context: context,
-                  isRepeated: isRepeated,
-                  teamId: teamId,
-                  missionId: missionId,
-                  repeatMissionStatus: status,
-                  isEnded : isEnded,
+              context: context,
+              isRepeated: isRepeated,
+              teamId: teamId,
+              missionId: missionId,
+              repeatMissionStatus: status,
+              isEnded : isEnded,
+              isRead: isRead,
                 )),
       ],
       builder: (context, _) {
@@ -131,6 +134,13 @@ class _MissionProvePageState extends State<MissionProvePage>
                 state.myMissionList != null && state.myMissionList!.isNotEmpty)
             MissionProveButton(),
 
+            if(state.showLoading)
+            const Align(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ),

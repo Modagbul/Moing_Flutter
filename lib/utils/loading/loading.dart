@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 
 class LoadingPage extends StatelessWidget {
-  const LoadingPage({Key? key}) : super(key: key);
+  final Color? color;
+  const LoadingPage({Key? key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: grayBackground,
-      body: Center(
+    return Scaffold(
+      backgroundColor: color ?? grayBackground,
+      body: const Center(
         child: CircularProgressIndicator(
           color: Colors.white,
         ),

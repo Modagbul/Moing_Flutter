@@ -56,11 +56,11 @@ class MissionFixPage extends StatelessWidget {
                           },
                           child: const Icon(
                             Icons.close,
-                            size: 28,
+                            size: 24,
                             color: grayScaleGrey100,
                           ),
                         ),
-                        const SizedBox(width: 32),
+                        const SizedBox(width: 16),
                         Text(
                           '미션 수정하기',
                           style:
@@ -129,7 +129,7 @@ class MissionFixPage extends StatelessWidget {
                            onTap: context.read<MissionFixState>().datePicker,
                            child: Container(
                              padding: const EdgeInsets.only(left: 16),
-                             width: 271,
+                             width: 230,
                              height: 60,
                              decoration: BoxDecoration(
                                borderRadius: BorderRadius.circular(8),

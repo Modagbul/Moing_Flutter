@@ -62,13 +62,15 @@ class CompletedMissionPage extends StatelessWidget {
                           Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
                               arguments: MissionProveArgument(
-                                  isRepeated: e.missionType == 'ONCE' ? false : true,
-                                  teamId: context
-                                      .read<CompletedMissionState>()
-                                      .teamId,
-                                  missionId: e.missionId,
-                                  status: e.status,
-                                  isEnded: true));
+                                isRepeated: e.missionType == 'ONCE' ? false : true,
+                                teamId: context
+                                    .read<CompletedMissionState>()
+                                    .teamId,
+                                missionId: e.missionId,
+                                status: e.status,
+                                isEnded: true,
+                                isRead: true,
+                              ));
                         },
                       ),
                     ),
@@ -87,9 +89,7 @@ class CompletedMissionPage extends StatelessWidget {
         ),
       ),
     ),
-      floatingActionButton: (state.isLeader != null && state.isLeader!)
-          ? const _BottomButton()
-          : null,
+      floatingActionButton: const _BottomButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
