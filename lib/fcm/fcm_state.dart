@@ -295,6 +295,7 @@ class FCMState extends ChangeNotifier {
       missionId: idInfo['missionId'] ?? 0,
       status: status ?? idInfo['status'] ?? '',
       isEnded: isEnded ?? false,
+      isRead: true,
     );
 
     navigatorKey.currentState
