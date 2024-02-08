@@ -92,24 +92,26 @@ class GroupCreatePhotoPage extends StatelessWidget {
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32.0),
-                        color: grayScaleGrey700,
-                      ),
+                      width: MediaQuery.of(context).size.width,
+                      height:
+                      context.watch<GroupCreatePhotoState>().avatarFile ==
+                          null
+                          ? 205
+                          : 255,
                       child:
-                          context.watch<GroupCreatePhotoState>().avatarFile ==
-                                  null
-                              ? _ContainerText()
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(32.0),
-                                  child: Image.file(
-                                    File(context
-                                        .watch<GroupCreatePhotoState>()
-                                        .avatarFile!
-                                        .path),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                      context.watch<GroupCreatePhotoState>().avatarFile ==
+                          null
+                          ? _ContainerText()
+                          : ClipRRect(
+                        borderRadius: BorderRadius.circular(32.0),
+                        child: Image.file(
+                          File(context
+                              .watch<GroupCreatePhotoState>()
+                              .avatarFile!
+                              .path),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ],
                 ),
