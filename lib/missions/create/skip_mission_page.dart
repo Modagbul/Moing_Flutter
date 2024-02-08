@@ -82,30 +82,30 @@ class SkipMissionPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20, bottom: 32, top: 16),
       child: Container(
-    width: 353,
-    height: 62,
-    child: ElevatedButton(
-    style: ElevatedButton.styleFrom(
-    backgroundColor: categoryState.getNextButtonColor(),
-    disabledBackgroundColor: grayScaleGrey700,
-    disabledForegroundColor: grayScaleGrey500,
-    padding: const EdgeInsets.all(16.0),
-    shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(15.0),
-    ),
-    ),
-    onPressed: () async {
-    await categoryState.submit();
-    },
-    child: Text(
-    '사유작성 완료하기',
-    style: TextStyle(
-    color: categoryState.getNextButtonTextColor(),
-    fontSize: 16.0,
-    fontWeight: FontWeight.w600,
-    ),
-    ),
-    ),
+        width: 353,
+        height: 62,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: categoryState.getNextButtonColor(),
+            disabledBackgroundColor: grayScaleGrey700,
+            disabledForegroundColor: grayScaleGrey500,
+            padding: const EdgeInsets.all(16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          ),
+          onPressed: () async {
+            await categoryState.submit();
+          },
+          child: Text(
+            '사유작성 완료하기',
+            style: TextStyle(
+              color: categoryState.getNextButtonTextColor(),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ),
     );
   }
