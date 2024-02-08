@@ -33,7 +33,7 @@ class GroupCreatePhotoState extends ChangeNotifier {
   String presignedUrl = '';
   String imgUrl = '';
 
-  final String defaultImageUrl = 'asset/icons/photo_default.png';
+  final String defaultImageUrl = 'asset/icons/group_basic_image.svg';
 
   GroupCreatePhotoState({
     required this.context,

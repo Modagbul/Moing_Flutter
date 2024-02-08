@@ -109,6 +109,9 @@ class _NicknameTextField extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
           decoration: InputDecoration(
+            counterStyle: const TextStyle(
+              height: 0.2,
+            ),
             suffixIcon:
                 context.watch<SignUpState>().nicknameController.text.isNotEmpty
                     ? IconButton(

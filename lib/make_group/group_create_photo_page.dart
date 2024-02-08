@@ -96,12 +96,6 @@ class GroupCreatePhotoPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(32.0),
                         color: grayScaleGrey700,
                       ),
-                      width: MediaQuery.of(context).size.width,
-                      height:
-                          context.watch<GroupCreatePhotoState>().avatarFile ==
-                                  null
-                              ? 205
-                              : 255,
                       child:
                           context.watch<GroupCreatePhotoState>().avatarFile ==
                                   null
@@ -228,12 +222,17 @@ class GroupCreatePhotoPage extends StatelessWidget {
 
 Widget _ContainerText() {
   return Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      SvgPicture.asset(
-        'asset/icons/photo_default_img.svg',
+      Flexible(
+        child: Center(
+          child: SvgPicture.asset(
+            'asset/icons/photo_default_img.svg',
+          ),
+        ),
       ),
     ],
   );
 }
+
