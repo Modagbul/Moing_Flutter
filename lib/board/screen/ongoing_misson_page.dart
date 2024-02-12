@@ -372,6 +372,7 @@ class _BottomButton extends StatelessWidget {
           'teamId': ongoingMissionState.teamId,
           'repeatMissions':
               ongoingMissionState.repeatMissionStatus?.data.length ?? 0,
+          'isLeader': ongoingMissionState.isLeader,
         });
 
         if (result != null && result == true) {

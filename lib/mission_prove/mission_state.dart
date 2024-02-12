@@ -297,7 +297,7 @@ class MissionState {
     required int repeatCount,
     required String missionTitle,
     bool? isRead,
-  }) {
+  }) async {
     print('미션 설명 클릭');
     MissionFixData data = MissionFixData(
       missionTitle: missionTitle,
@@ -311,7 +311,7 @@ class MissionState {
       missionWay: missionWay,
     );
 
-    showModalBottomSheet(
+    var result = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -412,6 +412,11 @@ class MissionState {
         );
       },
     );
+
+    if(isRead == false) {
+      /// 미션 설명 읽음 처리
+      readMissionRule(teamId, missionId);
+    }
   }
 
   /// 미션 읽음 처리

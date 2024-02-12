@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/board_completed_mission_card.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
+import 'package:moing_flutter/model/api_code/api_code.dart';
+import 'package:moing_flutter/model/response/board_repeat_mission_response.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
@@ -100,11 +102,20 @@ class _BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final completeMissionState = Provider.of<CompletedMissionState>(context, listen: false);
     return FloatingActionButton.extended(
-      onPressed: () {
+      onPressed: () async {
+        var teamId = context.read<CompletedMissionState>().teamId;
+        ApiCode apiCode = ApiCode();
+        RepeatMissionStatusResponse? repeatMissionStatus = await apiCode.getRepeatMissionStatus(teamId: teamId);
+
         Navigator.of(context).pushNamed(
           MissionsCreatePage.routeName,
-          arguments: context.read<CompletedMissionState>().teamId,
+          arguments: {
+           'teamId': teamId,
+            'repeatMissions': repeatMissionStatus?.data.length ?? 0,
+            'isLeader': completeMissionState.isLeader,
+          }
         );
       },
       backgroundColor: grayScaleGrey100,

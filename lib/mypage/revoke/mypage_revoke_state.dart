@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
@@ -179,6 +180,8 @@ class MyPageRevokeState extends ChangeNotifier {
       'socialToken': socialToken,
     };
 
+    print('sign: $sign, data : ${data.toString()}');
+
     try {
       ApiResponse<void> apiResponse = await call.makeRequest<void>(
         url: apiUrl,
@@ -255,6 +258,17 @@ class MyPageRevokeState extends ChangeNotifier {
           code: 'APPLE_SIGN_IN_NOT_AVAILABLE',
           message: 'Sign in With Apple is not available on this device.',
         );
+      }
+    }
+    else if (sign == 'google') {
+      try {
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+        if (googleUser == null) return null;
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        if (googleAuth.idToken != null) return googleAuth.accessToken!;
+      } catch (e) {
+        print("Google Sign-In Error: $e");
       }
     }
   }
