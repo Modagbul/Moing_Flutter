@@ -112,7 +112,7 @@ class _Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<PostData>? filteredNoticeBlocks = context.watch<PostMainState>().filteredNoticeBlocks;
+    List<PostData>? filteredNoticeBlocks = context.watch<PostMainState>().noticeBlocks;
 
     return Column(
       children: [
@@ -154,7 +154,7 @@ class _Notice extends StatelessWidget {
   }
 
   Widget _renderNoticeScrollBody({required BuildContext context}) {
-    List<PostData>? filteredNoticeBlocks = context.watch<PostMainState>().filteredNoticeBlocks;
+    List<PostData>? filteredNoticeBlocks = context.watch<PostMainState>().noticeBlocks;
     PageController pageController = PageController(
       viewportFraction: 0.9,
     );
@@ -242,7 +242,7 @@ class _Post extends StatelessWidget {
   }
 
   Widget _renderPostScrollBody({required BuildContext context}) {
-    List<PostData>? filteredPostBlocks = context.watch<PostMainState>().filteredPostBlocks;
+    List<PostData>? filteredPostBlocks = context.watch<PostMainState>().postBlocks;
     return filteredPostBlocks != null && filteredPostBlocks.isEmpty
         ? const Center(
             child: Text(

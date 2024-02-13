@@ -392,7 +392,7 @@ class PostDetailPage extends StatelessWidget {
 
   Widget _renderCommentScrollBody({required BuildContext context}) {
     List<CommentData> filteredCommentList =
-        context.watch<PostDetailState>().filteredCommentList ?? [];
+        context.watch<PostDetailState>().commentBlocks ?? [];
 
     return Padding(
       padding: const EdgeInsets.symmetric(

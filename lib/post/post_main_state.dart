@@ -13,9 +13,8 @@ class PostMainState extends ChangeNotifier {
   final int teamId;
 
   AllPostData? allPostData;
-  List<PostData>? filteredPostBlocks;
-  List<PostData>? filteredNoticeBlocks;
-  List<int>? blockUserList;
+  List<PostData>? postBlocks;
+  List<PostData>? noticeBlocks;
 
   PostMainState({
     required this.context,
@@ -26,7 +25,6 @@ class PostMainState extends ChangeNotifier {
 
   void initState() async {
     log('Instance "PostMainState" has been created');
-    await getBlockUserList();
     await getAllPost();
   }
 
@@ -42,20 +40,9 @@ class PostMainState extends ChangeNotifier {
 
     if (allPostData == null) return;
 
-    if (blockUserList != null) {
-      filteredPostBlocks = allPostData!.postBlocks
-          .where((post) => !blockUserList!.contains(post.makerId))
-          .toList();
-      filteredNoticeBlocks = allPostData!.noticeBlocks
-          .where((post) => !blockUserList!.contains(post.makerId))
-          .toList();
-    }
-    notifyListeners();
-  }
+    postBlocks = allPostData!.postBlocks;
+    noticeBlocks = allPostData!.noticeBlocks;
 
-  /// 차단 유저 목록 조회 API
-  Future<void> getBlockUserList() async {
-    blockUserList = await apiCode.getBlockUserList();
     notifyListeners();
   }
 
@@ -82,7 +69,6 @@ class PostMainState extends ChangeNotifier {
     );
 
     if (result as bool) {
-      await getBlockUserList();
       await getAllPost();
     }
   }
