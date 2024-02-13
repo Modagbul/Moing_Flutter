@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/fix_group/fix_group_state.dart';
@@ -109,7 +110,8 @@ class FixGroupPage extends StatelessWidget {
                     onChanged: (value) =>
                         context.read<FixGroupState>().updateTextField(),
                     controller: context.read<FixGroupState>().nameController,
-                    inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
+                    inputTextStyle:
+                        contentTextStyle.copyWith(color: grayBlack2),
                     onClearButtonPressed:
                         context.read<FixGroupState>().clearNameTextField,
                   ),
@@ -124,7 +126,8 @@ class FixGroupPage extends StatelessWidget {
                         '(${context.watch<FixGroupState>().introduceController.text.length}/300)',
                     onChanged: (value) =>
                         context.read<FixGroupState>().updateTextField(),
-                    controller: context.read<FixGroupState>().introduceController,
+                    controller:
+                        context.read<FixGroupState>().introduceController,
                     inputTextStyle: bodyTextStyle.copyWith(color: grayBlack2),
                   ),
                   const SizedBox(
@@ -137,13 +140,9 @@ class FixGroupPage extends StatelessWidget {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(32.0),
-                            color: grayScaleGrey700,
-                          ),
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          height: 255,
+                          height: 205,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(32.0),
                             child: _buildImage(context),
@@ -179,9 +178,11 @@ class FixGroupPage extends StatelessWidget {
                   const SizedBox(
                     height: 24,
                   ),
-                  Text(
-                    '소모임의 대표 사진은 홈 화면에서의 썸네일로 적용되어요.',
-                    style: bodyTextStyle.copyWith(color: grayBlack8),
+                  Center(
+                    child: Text(
+                      '소모임의 대표 사진은 홈 화면에서의 썸네일로 적용되어요.',
+                      style: bodyTextStyle.copyWith(color: grayBlack8),
+                    ),
                   ),
                   const SizedBox(
                     height: 124,
@@ -196,25 +197,36 @@ class FixGroupPage extends StatelessWidget {
   }
 
   Widget _buildImage(BuildContext context) {
-    if (context.watch<FixGroupState>().avatarFile == null &&
-        context.watch<FixGroupState>().getProfileImageUrl != null) {
-      return Image.network(context.watch<FixGroupState>().getProfileImageUrl!,
-          fit: BoxFit.cover);
-    } else if (context.watch<FixGroupState>().avatarFile != null) {
+    if (context.watch<FixGroupState>().avatarFile != null) {
       return Image.file(
         File(context.watch<FixGroupState>().avatarFile!.path),
         fit: BoxFit.cover,
       );
+    } else if (context.watch<FixGroupState>().getProfileImageUrl != null &&
+        !context
+            .watch<FixGroupState>()
+            .getProfileImageUrl!
+            .startsWith('asset/')) {
+      return Image.network(context.watch<FixGroupState>().getProfileImageUrl!,
+          fit: BoxFit.cover);
     } else {
-      return Center(
-        child: Text(
-          '이미지를 업로드해주세요.',
-          style: contentTextStyle.copyWith(
-            fontWeight: FontWeight.w600,
-            color: grayScaleGrey100,
+      return _defaultImg(context);
+    }
+  }
+
+  Widget _defaultImg(context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Flexible(
+          child: Center(
+            child: SvgPicture.asset(
+              'asset/icons/photo_default_img.svg',
+            ),
           ),
         ),
-      );
-    }
+      ],
+    );
   }
 }

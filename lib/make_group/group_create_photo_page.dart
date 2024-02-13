@@ -94,24 +94,24 @@ class GroupCreatePhotoPage extends StatelessWidget {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height:
-                      context.watch<GroupCreatePhotoState>().avatarFile ==
-                          null
-                          ? 205
-                          : 255,
+                          context.watch<GroupCreatePhotoState>().avatarFile ==
+                                  null
+                              ? 205
+                              : 255,
                       child:
-                      context.watch<GroupCreatePhotoState>().avatarFile ==
-                          null
-                          ? _ContainerText()
-                          : ClipRRect(
-                        borderRadius: BorderRadius.circular(32.0),
-                        child: Image.file(
-                          File(context
-                              .watch<GroupCreatePhotoState>()
-                              .avatarFile!
-                              .path),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          context.watch<GroupCreatePhotoState>().avatarFile ==
+                                  null
+                              ? _ContainerText()
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(32.0),
+                                  child: Image.file(
+                                    File(context
+                                        .watch<GroupCreatePhotoState>()
+                                        .avatarFile!
+                                        .path),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                     ),
                   ],
                 ),
@@ -202,9 +202,9 @@ class GroupCreatePhotoPage extends StatelessWidget {
                     ),
                   ),
                   backgroundColor: MaterialStateProperty.all(Colors.white),
-                      // context.watch<GroupCreatePhotoState>().avatarFile != null
-                      //     ? MaterialStateProperty.all(Colors.white)
-                      //     : MaterialStateProperty.all(grayScaleGrey700),
+                  // context.watch<GroupCreatePhotoState>().avatarFile != null
+                  //     ? MaterialStateProperty.all(Colors.white)
+                  //     : MaterialStateProperty.all(grayScaleGrey700),
                 ),
                 onPressed: () {
                   context.read<GroupCreatePhotoState>().makePressed();
@@ -237,4 +237,3 @@ Widget _ContainerText() {
     ],
   );
 }
-
