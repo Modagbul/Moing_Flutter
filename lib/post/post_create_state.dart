@@ -66,7 +66,7 @@ class PostCreateState extends ChangeNotifier {
   }
 
   Future<void> requestCreatePost() async {
-    if(_isCreatePostInProgress) return;
+    if (_isCreatePostInProgress) return;
 
     _isCreatePostInProgress = true;
 
@@ -82,7 +82,7 @@ class PostCreateState extends ChangeNotifier {
     notifyListeners();
     Navigator.pop(context, true);
 
-    String warningText = '게시글이 등록되었어요.';
+    String warningText = '${isCheckedNotice ? '공지가' : '게시글이'} 등록되었어요.';
 
     if (warningText.isNotEmpty) {
       fToast.showToast(
