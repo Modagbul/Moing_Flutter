@@ -14,7 +14,6 @@ import 'completed_mission_state.dart';
 
 class CompletedMissionPage extends StatelessWidget {
   static const routeName = '/board/mission/completed';
-
   const CompletedMissionPage({Key? key}) : super(key: key);
 
   static route(BuildContext context) {
@@ -54,31 +53,32 @@ class CompletedMissionPage extends StatelessWidget {
                     .map(
                       (e) => Padding(
                         padding: const EdgeInsets.only(bottom: 12.0),
-                        child: BoardCompletedMissionCard(
-                        title: e.title,
-                        status: e.status,
-                        dueTo: e.dueTo,
-                        missionType: e.missionType,
-                        missionId: e.missionId,
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                              MissionProvePage.routeName,
-                              arguments: MissionProveArgument(
-                                isRepeated: e.missionType == 'ONCE' ? false : true,
-                                teamId: context
-                                    .read<CompletedMissionState>()
-                                    .teamId,
-                                missionId: e.missionId,
-                                status: e.status,
-                                isEnded: true,
-                                isRead: true,
-                              ));
-                        },
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                MissionProvePage.routeName,
+                                arguments: MissionProveArgument(
+                                  isRepeated: e.missionType == 'ONCE' ? false : true,
+                                  teamId: context
+                                      .read<CompletedMissionState>()
+                                      .teamId,
+                                  missionId: e.missionId,
+                                  status: e.status,
+                                  isEnded: true,
+                                  isRead: true,
+                                ));
+                          },
+                          child: BoardCompletedMissionCard(
+                          title: e.title,
+                          status: e.status,
+                          dueTo: e.dueTo,
+                          missionType: e.missionType,
+                          missionId: e.missionId,
                       ),
+                        ),
                     ),
                   ).toList()
-            else
-              const Center(
+            else const Center(
                 child: Text(
                   '아직 미션이 없어요.',
                   style: TextStyle(

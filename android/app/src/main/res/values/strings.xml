@@ -3,7 +3,4 @@
     <string name="client_id">5UA2mzoDVvp6SpDo81Ml</string>
     <string name="client_secret">2WbJ_p8NRI</string>
     <string name="client_name">naverlogintest</string>
-    <!-- Facebook 관련 추가 문자열 -->
-    <string name="facebook_app_id">2417953345069946</string>
-    <string name="facebook_client_token">c2e4d1cdb57a816c95b5142ce2adcf29</string>
 </resources>

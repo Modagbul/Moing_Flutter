@@ -9,6 +9,7 @@ class BoardSingleMissionCard extends StatelessWidget {
   final String dueTo;
   final String missionType;
   final int missionId;
+  final bool isRead;
   final VoidCallback onTap;
   final Animation<double> fadeAnimation;
 
@@ -19,6 +20,7 @@ class BoardSingleMissionCard extends StatelessWidget {
     required this.dueTo,
     required this.missionType,
     required this.missionId,
+    required this.isRead,
     required this.onTap,
     required this.fadeAnimation,
   });
@@ -112,7 +114,7 @@ class BoardSingleMissionCard extends StatelessWidget {
                     width: MediaQuery.of(context).size.width - 40,
                     height: 95,
                     decoration: BoxDecoration(
-                      border: status == 'WAIT'
+                      border: isRead == false
                           ? Border.all(color: coralGrey500, width: 1)
                           : null,
                       borderRadius: BorderRadius.circular(16),

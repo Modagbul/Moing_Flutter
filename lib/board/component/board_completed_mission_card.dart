@@ -11,7 +11,6 @@ class BoardCompletedMissionCard extends StatelessWidget {
   final String dueTo;
   final String missionType;
   final int missionId;
-  final VoidCallback onTap;
 
   const BoardCompletedMissionCard({
     super.key,
@@ -20,7 +19,6 @@ class BoardCompletedMissionCard extends StatelessWidget {
     required this.dueTo,
     required this.missionType,
     required this.missionId,
-    required this.onTap,
   });
 
   @override
@@ -94,13 +92,10 @@ class BoardCompletedMissionCard extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(
-                      onTap: onTap,
-                      child: SvgPicture.asset(
-                        'asset/icons/mission_repeat_plus_btn.svg',
-                        width: 48,
-                        height: 48,
-                      ),
+                    child: SvgPicture.asset(
+                      'asset/icons/mission_repeat_plus_btn.svg',
+                      width: 48,
+                      height: 48,
                     ),
                   ),
                 ],
