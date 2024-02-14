@@ -4,6 +4,7 @@ import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
+import 'package:moing_flutter/make_group/group_create_category_page.dart';
 import 'package:moing_flutter/make_group/group_create_info_state.dart';
 import 'package:provider/provider.dart';
 
@@ -111,7 +112,19 @@ class GroupCreateInfoPage extends StatelessWidget {
               child: ElevatedButton(
                 style: darkButtonStyle,
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => GroupCreateCategoryPage.route(context),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                      transitionDuration: Duration(milliseconds: 0),
+                    ),
+                  );
                 },
                 child: const Text('이전으로'),
               ),

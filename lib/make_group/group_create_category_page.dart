@@ -44,14 +44,16 @@ class _GroupCreateCategoryPageState extends State<GroupCreateCategoryPage> {
       if (_focusNode.hasFocus) {
         setState(() {
           _isFocused = true;
-          Provider.of<GroupCreateCategoryState>(context, listen: false).deselectAllCategories();
-          Provider.of<GroupCreateCategoryState>(context, listen: false).selectedCategory = null;
-          Provider.of<GroupCreateCategoryState>(context, listen: false).notifyListeners();
+          Provider.of<GroupCreateCategoryState>(context, listen: false)
+              .deselectAllCategories();
+          Provider.of<GroupCreateCategoryState>(context, listen: false)
+              .selectedCategory = null;
+          Provider.of<GroupCreateCategoryState>(context, listen: false)
+              .notifyListeners();
         });
       }
     });
   }
-
 
   @override
   void dispose() {
@@ -104,69 +106,72 @@ class _GroupCreateCategoryPageState extends State<GroupCreateCategoryPage> {
           icon: const Icon(Icons.close),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                padding: const EdgeInsets.only(bottom: 160),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 34.0),
-                    const _Title(),
-                    const SizedBox(height: 76.0),
-                    const CategoryButton(
-                      imagePath: 'asset/icons/icon_sport.svg',
-                      buttonText: '스포츠/운동',
-                    ),
-                    const SizedBox(height: 8.0),
-                    const CategoryButton(
-                      imagePath: 'asset/icons/icon_life.svg',
-                      buttonText: '생활습관 개선',
-                    ),
-                    const SizedBox(height: 8.0),
-                    const CategoryButton(
-                      imagePath: 'asset/icons/icon_test.svg',
-                      buttonText: '시험/취업준비',
-                    ),
-                    const SizedBox(height: 8.0),
-                    const CategoryButton(
-                      imagePath: 'asset/icons/icon_study.svg',
-                      buttonText: '스터디/공부',
-                    ),
-                    const SizedBox(height: 8.0),
-                    const CategoryButton(
-                      imagePath: 'asset/icons/icon_read.svg',
-                      buttonText: '독서',
-                    ),
-                    const SizedBox(height: 8.0),
-                    GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(_focusNode);
-                        categoryState.deselectAllCategories();
-                        _controller.clear();
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 64,
-                        margin: const EdgeInsets.only(bottom: 8.0),
-                        decoration: BoxDecoration(
-                          color: grayScaleGrey700,
-                          borderRadius: BorderRadius.circular(16.0),
-                          border: _isFocused
-                              ? Border.all(color: coralGrey200, width: 1.0)
-                              : Border.all(color: Colors.transparent),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Stack(
-                                alignment: Alignment.centerRight,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 6.0),
-                                    child: TextField(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: const EdgeInsets.only(bottom: 160),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 34.0),
+                      const _Title(),
+                      const SizedBox(height: 76.0),
+                      const CategoryButton(
+                        imagePath: 'asset/icons/icon_sport.svg',
+                        buttonText: '스포츠/운동',
+                      ),
+                      const SizedBox(height: 8.0),
+                      const CategoryButton(
+                        imagePath: 'asset/icons/icon_life.svg',
+                        buttonText: '생활습관 개선',
+                      ),
+                      const SizedBox(height: 8.0),
+                      const CategoryButton(
+                        imagePath: 'asset/icons/icon_test.svg',
+                        buttonText: '시험/취업준비',
+                      ),
+                      const SizedBox(height: 8.0),
+                      const CategoryButton(
+                        imagePath: 'asset/icons/icon_study.svg',
+                        buttonText: '스터디/공부',
+                      ),
+                      const SizedBox(height: 8.0),
+                      const CategoryButton(
+                        imagePath: 'asset/icons/icon_read.svg',
+                        buttonText: '독서',
+                      ),
+                      const SizedBox(height: 8.0),
+                      GestureDetector(
+                        onTap: () {
+                          FocusScope.of(context).requestFocus(_focusNode);
+                          categoryState.deselectAllCategories();
+                          _isFocused = false;
+                          _controller.clear();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 64,
+                          margin: const EdgeInsets.only(bottom: 8.0),
+                          decoration: BoxDecoration(
+                            color: grayScaleGrey700,
+                            borderRadius: BorderRadius.circular(16.0),
+                            border: _isFocused
+                                ? Border.all(color: coralGrey200, width: 1.0)
+                                : Border.all(color: Colors.transparent),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Stack(
+                                  alignment: Alignment.centerRight,
+                                  children: [
+                                    TextField(
                                       focusNode: _focusNode,
                                       controller: _controller,
                                       style: const TextStyle(
@@ -176,46 +181,44 @@ class _GroupCreateCategoryPageState extends State<GroupCreateCategoryPage> {
                                       decoration: const InputDecoration(
                                         hintText: '어떤 자기계발 모임인가요? (최대 10자)',
                                         hintStyle: TextStyle(
-                                          color:
-                                              grayScaleGrey550,
+                                          color: grayScaleGrey550,
                                         ),
                                         border: InputBorder.none,
-                                        contentPadding:
-                                            EdgeInsets.symmetric(
-                                                horizontal:
-                                                    20.0),
+                                        counterText: "",
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 20.0),
                                       ),
                                       maxLength: 10,
                                       onChanged: (value) {
                                         categoryState.setCustomCategory(value);
                                       },
                                     ),
-                                  ),
-                                  if (_controller.text
-                                      .isNotEmpty)
-                                    GestureDetector(
-                                      onTap: () {
-                                        FocusScope.of(context).requestFocus(_focusNode);
-                                        categoryState.setCustomCategory('');
-                                        _controller.clear();
-                                      },
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Icon(Icons.clear,
-                                            color: grayScaleGrey550),
+                                    if (_controller.text.isNotEmpty)
+                                      GestureDetector(
+                                        onTap: () {
+                                          FocusScope.of(context)
+                                              .requestFocus(_focusNode);
+                                          categoryState.setCustomCategory('');
+                                          _controller.clear();
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Icon(Icons.clear,
+                                              color: grayScaleGrey550),
+                                        ),
                                       ),
-                                    ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -249,7 +252,11 @@ class _GroupCreateCategoryPageState extends State<GroupCreateCategoryPage> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    MainPage.routeName,
+                    (route) => false,
+                  );
                 },
                 child: const Text('이전으로'),
               ),
