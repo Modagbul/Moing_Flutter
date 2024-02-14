@@ -161,9 +161,9 @@ class _GroupCreateCategoryPageState extends State<GroupCreateCategoryPage> {
                           decoration: BoxDecoration(
                             color: grayScaleGrey700,
                             borderRadius: BorderRadius.circular(16.0),
-                            border: _isFocused
-                                ? Border.all(color: coralGrey200, width: 1.0)
-                                : Border.all(color: Colors.transparent),
+                            // border: _isFocused
+                            //     ? Border.all(color: coralGrey200, width: 1.0)
+                            //     : Border.all(color: Colors.transparent),
                           ),
                           child: Row(
                             children: [
@@ -185,8 +185,12 @@ class _GroupCreateCategoryPageState extends State<GroupCreateCategoryPage> {
                                         ),
                                         border: InputBorder.none,
                                         counterText: "",
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 20.0),
+                                        contentPadding: EdgeInsets.only(
+                                            left: 16, right: 16, top: 20, bottom: 20),
+                                        focusedBorder:  OutlineInputBorder(
+                                          borderSide: BorderSide(color: coralGrey200),
+                                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                                        ),
                                       ),
                                       maxLength: 10,
                                       onChanged: (value) {
