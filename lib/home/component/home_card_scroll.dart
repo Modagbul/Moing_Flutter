@@ -74,9 +74,15 @@ class HomeCardScroll extends StatelessWidget {
                                       loadingBuilder: (BuildContext context,
                                           Widget child,
                                           ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null)
+                                        if (loadingProgress == null) {
                                           return child;
-                                        return CircularProgressIndicator();
+                                        }
+                                        return const CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  grayScaleGrey500),
+                                          strokeWidth: 2.0,
+                                        );
                                       },
                                       errorBuilder: (BuildContext context,
                                           Object error,
