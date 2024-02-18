@@ -25,10 +25,10 @@ class MissionFireUser extends StatelessWidget {
         const SizedBox(
           height: 34,
         ),
-        if (context.watch<MissionFireState>().filteredUserList != null)
-          if (context.watch<MissionFireState>().filteredUserList!.isNotEmpty)
+        if (context.watch<MissionFireState>().userList != null)
+          if (context.watch<MissionFireState>().userList!.isNotEmpty)
             GridView.builder(
-                itemCount: context.watch<MissionFireState>().filteredUserList!.length,
+                itemCount: context.watch<MissionFireState>().userList!.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   childAspectRatio: 94 / 181,
@@ -40,7 +40,7 @@ class MissionFireUser extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final bool isSelected =
                       context.watch<MissionFireState>().selectedIndex == index;
-                  final filteredUserList = context.watch<MissionFireState>().filteredUserList;
+                  final filteredUserList = context.watch<MissionFireState>().userList;
 
                   return GestureDetector(
                     onTap: () {

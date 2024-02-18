@@ -51,11 +51,11 @@ class MissionFirePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const MissionFireProgressBar(),
-                    if (context.watch<MissionFireState>().filteredUserList !=
+                    if (context.watch<MissionFireState>().userList !=
                         null)
                       if (context
                           .watch<MissionFireState>()
-                          .filteredUserList!
+                          .userList!
                           .isNotEmpty)
                         const MissionFireUser(),
                     const SizedBox(height: 80),
@@ -63,8 +63,8 @@ class MissionFirePage extends StatelessWidget {
                 ),
               ),
             ),
-            if (context.watch<MissionFireState>().filteredUserList != null)
-              if (context.watch<MissionFireState>().filteredUserList!.isEmpty)
+            if (context.watch<MissionFireState>().userList != null)
+              if (context.watch<MissionFireState>().userList!.isEmpty)
                 const Align(
                   alignment: Alignment.center,
                   child: Text(
