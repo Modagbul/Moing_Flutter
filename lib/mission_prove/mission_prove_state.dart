@@ -105,8 +105,6 @@ class MissionProveState with ChangeNotifier {
   List<MyMissionProveData>? myMissionList;
   // 시간대 정렬 리스트
   List<List<String>> myRepeatMissionTime = [];
-  // 유저 차단 목록 리스트
-  Set<int>? blockUserList;
   // 모두의 인증 조회 시 받아오는 리스트
   List<EveryMissionProveData>? everyMissionList;
 
@@ -146,8 +144,6 @@ class MissionProveState with ChangeNotifier {
     await loadMissionData();
     // 모두의 인증 현황 조회하기
     await loadEveryMissionData();
-    // 차단 목록 가져오기
-    await getBlockUserList();
     // 미션 내용, 규칙 조회 --> 미션 제목, 기한, 규칙, 내용, 반복 or 한번 미션, 인증 방식(텍스트, 링크, 사진) 리턴
     await getMissionContent();
     // 반복 미션인 경우, 나의 성공횟수 조회
@@ -266,20 +262,6 @@ class MissionProveState with ChangeNotifier {
     } finally {
       onLoading = false;
     }
-  }
-
-  // 유저 차단 목록 가져오기
-  Future<void> getBlockUserList() async {
-    List<int>? userBlockList = await apiCode.getBlockUserList();
-    blockUserList = userBlockList?.toSet();
-    print('blockUserList : ${blockUserList.toString()}');
-    if(blockUserList != null && everyMissionList != null) {
-      blockUserList!.forEach((value) {
-        everyMissionList!.removeWhere((data) => data.makerId == value);
-      });
-      print('everyMissionList blockList : ${everyMissionList.toString()}');
-    }
-    notifyListeners();
   }
 
   /// 모임원 미션 인증 성공 인원 조회 API
