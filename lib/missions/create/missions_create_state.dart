@@ -211,7 +211,7 @@ class MissionCreateState extends ChangeNotifier {
             textList = readingList;
             recommendText = '좋은 독서를 도와주는';
             break;
-          case 'ETC':
+          default:
             textList = etcList;
             recommendText = '자기계발을 도와주는';
             break;
