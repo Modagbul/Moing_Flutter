@@ -88,7 +88,7 @@ class MissionFixPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   OutlinedTextField(
-                    maxLength: 50,
+                    maxLength: 15,
                     maxLines: 1,
                     hintText: '미션의 제목을 입력해주세요',
                     labelText: '미션 제목',

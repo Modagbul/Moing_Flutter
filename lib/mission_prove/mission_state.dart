@@ -284,7 +284,7 @@ class MissionState {
   }
 
   /// 미션 내용, 규칙 클릭 시
-  void showContentAndRule({
+  Future<String?> showContentAndRule({
     required BuildContext context,
     required String missionWay,
     required String missionContent,
@@ -380,7 +380,8 @@ class MissionState {
                         print('미션 수정하기 클릭');
                         var result = await Navigator.of(context).pushNamed(MissionFixPage.routeName, arguments: data);
                         if(result != null && result == true) {
-                          Navigator.of(context).pop(true);
+                          print('미션을 수정하였습니다.');
+                          Navigator.of(context).pop("fix");
                         }
                         else {
                           Navigator.of(context).pop();
@@ -416,7 +417,11 @@ class MissionState {
     if(isRead == false) {
       /// 미션 설명 읽음 처리
       readMissionRule(teamId, missionId);
+    } else if (result == "fix") {
+      print('미션 수정했지롱~');
+      return "missionFix";
     }
+    return null;
   }
 
   /// 미션 읽음 처리

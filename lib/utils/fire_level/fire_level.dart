@@ -2,6 +2,7 @@ class FireLevel {
   static String convertLevelToGraphicPath({
     required int level,
     required String category,
+    required String teamName,
   }) {
     String graphicPath = '';
 
@@ -53,6 +54,7 @@ class FireLevel {
 
   static String convertLevelToName({
     required int level,
+    required String teamName,
   }) {
     String name = '';
 
@@ -74,6 +76,7 @@ class FireLevel {
   static String convertLevelToMessage({
     required int level,
     required String category,
+    required String teamName,
   }) {
     String message = '';
 
@@ -88,6 +91,7 @@ class FireLevel {
     } else if (46 <= level) {
       message = convertLevelToMaxLevelMessage(
         category: category,
+        teamName: teamName,
       );
     }
 
@@ -96,27 +100,28 @@ class FireLevel {
 
   static String convertLevelToMaxLevelMessage({
     required String category,
+    required String teamName,
   }) {
     String message = '';
 
     switch (category) {
       case 'SPORTS':
-        message = '운동왕 모닥모닥불 모임이네요!';
+        message = '운동왕 $teamName 모임이네요!';
         break;
       case 'HABIT':
-        message = '생활왕 모닥모닥불 모임이네요!';
+        message = '생활왕 $teamName 모임이네요!';
         break;
       case 'TEST':
-        message = '시험왕 모닥모닥불 모임이네요!';
+        message = '시험왕 $teamName 모임이네요!';
         break;
       case 'STUDY':
-        message = '공부왕 모닥모닥불 모임이네요!';
+        message = '공부왕 $teamName 모임이네요!';
         break;
       case 'READING':
-        message = '다독왕 모닥모닥불 모임이네요!';
+        message = '다독왕 $teamName 모임이네요!';
         break;
       default:
-        message = '목표왕 모닥모닥불 모임이네요!';
+        message = '목표왕 $teamName 모임이네요!';
         break;
     }
 

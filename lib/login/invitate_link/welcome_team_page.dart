@@ -53,7 +53,7 @@ class InvitationWelcomePage extends StatelessWidget {
                   const SizedBox(height: 16),
                   Container(
                     width: 250,
-                    height: 74,
+                    height: 90,
                     alignment: Alignment.center,
                     child: Text(
                       '${state.teamLeaderName}님이 ${state.memberName}님을\n${state.teamName} 모임에 초대했어요',

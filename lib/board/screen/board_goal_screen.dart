@@ -25,6 +25,7 @@ class BoardGoalScreen extends StatelessWidget {
         context.watch<BoardMainState>().teamFireLevelData?.score ?? 0;
     final String category =
         (context.watch<BoardMainState>().teamInfo?.category ?? '');
+    final teamName = (context.watch<BoardMainState>().teamInfo?.category ?? '');
     final bool isDeleted =
         context.watch<BoardMainState>().teamInfo?.isDeleted ?? false;
 
@@ -104,16 +105,19 @@ class BoardGoalScreen extends StatelessWidget {
                         _buildRandomMessageContainer(
                           level: level,
                           category: category,
+                          teamName: teamName,
                         ),
                         _buildFireImageContainer(
                           level: level,
                           category: category,
+                          teamName: teamName,
                         ),
                         SizedBox(height: screenHeight * 0.01),
                         _buildFireLevelContainer(
                           screenWidth: screenWidth,
                           level: level,
                           context: context,
+                          teamName: teamName,
                         ),
                         SizedBox(height: screenHeight * 0.01),
                         _buildFireLevelProgressBar(
@@ -141,6 +145,7 @@ class BoardGoalScreen extends StatelessWidget {
   Widget _buildRandomMessageContainer({
     required int level,
     required String category,
+    required String teamName,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -153,6 +158,7 @@ class BoardGoalScreen extends StatelessWidget {
           FireLevel.convertLevelToMessage(
             level: level,
             category: category,
+            teamName: teamName,
           ),
           style: const TextStyle(
             fontSize: 16.0,
@@ -167,11 +173,13 @@ class BoardGoalScreen extends StatelessWidget {
   Widget _buildFireImageContainer({
     required int level,
     required String category,
+    required String teamName,
   }) {
     return Lottie.asset(
       FireLevel.convertLevelToGraphicPath(
         level: level,
         category: category,
+        teamName: teamName,
       ),
       width: 180.0,
       height: 180.0,
@@ -182,6 +190,7 @@ class BoardGoalScreen extends StatelessWidget {
     required double screenWidth,
     required int level,
     required BuildContext context,
+    required String teamName,
   }) {
     return Container(
       width: screenWidth * 0.6,
@@ -218,7 +227,7 @@ class BoardGoalScreen extends StatelessWidget {
           const SizedBox(width: 10.0),
           Expanded(
             child: Text(
-              FireLevel.convertLevelToName(level: level),
+              FireLevel.convertLevelToName(level: level, teamName: teamName),
               style: const TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w600,

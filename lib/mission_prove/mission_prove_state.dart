@@ -1656,7 +1656,7 @@ class MissionProveState with ChangeNotifier {
         break;
       // 미션내용 클릭
       case 'content':
-        missionState.showContentAndRule(
+        var result = await missionState.showContentAndRule(
           context: context,
           missionTitle: missionTitle,
           missionWay: missionWay,
@@ -1670,6 +1670,10 @@ class MissionProveState with ChangeNotifier {
           repeatCount: repeatMissionTotalCount,
           isRead: isRead,
         );
+
+        if(result == 'missionFix') {
+          await getMissionContent();
+        }
         break;
       // 미션 인증하기 클릭
       case 'mission':
