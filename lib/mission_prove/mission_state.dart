@@ -7,8 +7,8 @@ import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_data.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_page.dart';
-import 'package:moing_flutter/model/api_generic.dart';
-import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/utils/global/api_generic.dart';
+import 'package:moing_flutter/utils/global/api_response.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 import 'package:provider/provider.dart';
 

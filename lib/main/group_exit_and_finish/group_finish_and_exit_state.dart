@@ -6,11 +6,10 @@ import 'package:moing_flutter/board/board_main_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_exit_success_page.dart';
 import 'package:moing_flutter/main/group_exit_and_finish/group_finish_success_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
-import 'package:moing_flutter/model/api_generic.dart';
-import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
+import 'package:moing_flutter/utils/global/api_generic.dart';
+import 'package:moing_flutter/utils/global/api_response.dart';
 import 'package:moing_flutter/model/response/exit_teem_info.dart';
-import 'package:provider/provider.dart';
 
 class GroupFinishExitState extends ChangeNotifier {
   final BuildContext context;

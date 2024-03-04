@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/request/create_post_request.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 
 import '../const/color/colors.dart';
 import '../const/style/text.dart';

@@ -7,9 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
-import 'package:moing_flutter/model/api_generic.dart';
-import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
+import 'package:moing_flutter/utils/global/api_generic.dart';
+import 'package:moing_flutter/utils/global/api_response.dart';
 import 'package:moing_flutter/model/response/alarm_model.dart';
 
 class AlarmState extends ChangeNotifier {

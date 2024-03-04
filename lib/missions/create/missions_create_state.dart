@@ -10,8 +10,8 @@ import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/missions/create/const/mission_create_text_list.dart';
 import 'package:moing_flutter/missions/create/const/mission_modal_text_list.dart';
-import 'package:moing_flutter/model/api_generic.dart';
-import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/utils/global/api_generic.dart';
+import 'package:moing_flutter/utils/global/api_response.dart';
 import 'package:moing_flutter/model/request/make_mission_request.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
 

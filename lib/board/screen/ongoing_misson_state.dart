@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
-import 'package:moing_flutter/model/api_generic.dart';
-import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
+import 'package:moing_flutter/utils/global/api_generic.dart';
+import 'package:moing_flutter/utils/global/api_response.dart';
 import 'package:moing_flutter/utils/toast/toast_message.dart';
 
 import '../../model/response/board_repeat_mission_response.dart';

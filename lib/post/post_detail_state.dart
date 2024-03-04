@@ -4,16 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/request/create_comment_request.dart';
-import 'package:moing_flutter/model/response/get_all_comments_response.dart';
+import 'package:moing_flutter/model/comment/get_all_comments_response.dart';
 import 'package:moing_flutter/post/post_update_page.dart';
+import 'package:moing_flutter/repository/comment_repository.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 
 import '../const/style/text.dart';
 
 class PostDetailState extends ChangeNotifier {
+  late final CommentRepository _commentRepository;
+
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
   final TextEditingController commentController = TextEditingController();
@@ -43,8 +46,9 @@ class PostDetailState extends ChangeNotifier {
 
   void initState() async {
     fToast.init(context);
+    _commentRepository = CommentRepository();
     await getDetailPostData();
-    await getAllCommentData();
+    getAllCommentData();
     log('Instance "PostDetailState" has been created');
   }
 
@@ -63,13 +67,11 @@ class PostDetailState extends ChangeNotifier {
 
   /// 댓글 정보 호출 API
   Future<void> getAllCommentData() async {
-    allCommentData =
-        await apiCode.getAllCommentData(teamId: teamId, boardId: boardId);
+    allCommentData = await _commentRepository.getAllCommentData(teamId: teamId, boardId: boardId);
 
     if (allCommentData == null) return;
 
     commentBlocks = allCommentData!.commentBlocks;
-
     notifyListeners();
   }
 

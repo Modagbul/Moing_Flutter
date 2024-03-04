@@ -8,8 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:moing_flutter/missions/create/const/mission_create_text_list.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_data.dart';
-import 'package:moing_flutter/model/api_generic.dart';
-import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/utils/global/api_generic.dart';
+import 'package:moing_flutter/utils/global/api_response.dart';
 
 import '../../const/color/colors.dart';
 import '../../const/style/text.dart';

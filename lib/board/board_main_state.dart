@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/screen/team_member_list_page.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
 import 'package:moing_flutter/model/team/team_fire_level_models.dart';
 import 'package:moing_flutter/post/post_main_page.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 
 class BoardMainState extends ChangeNotifier {
   final BuildContext context;

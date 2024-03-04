@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 
 class MyPageState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();

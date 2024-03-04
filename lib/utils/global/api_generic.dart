@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
-import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/utils/global/api_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 

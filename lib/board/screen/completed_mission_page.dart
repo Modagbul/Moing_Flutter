@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/board_completed_mission_card.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/board_repeat_mission_response.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';

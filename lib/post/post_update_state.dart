@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/request/create_post_request.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 
 class PostUpdateState extends ChangeNotifier {
   ApiCode apiCode = ApiCode();

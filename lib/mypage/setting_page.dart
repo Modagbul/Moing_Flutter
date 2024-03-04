@@ -5,13 +5,13 @@ import 'package:moing_flutter/mypage/revoke/mypage_revoke_page.dart';
 import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/mypage/setting_state.dart';
 import 'package:moing_flutter/utils/app_bar/moing_app_bar.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../const/color/colors.dart';
 import '../make_group/component/warning_dialog.dart';
-import '../model/api_code/api_code.dart';
 import 'blocked_users_page.dart';
 import 'component/list_custom_tile.dart';
 import 'component/question_dialog.dart';

@@ -2,12 +2,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 
 import '../const/color/colors.dart';
 import '../const/style/text.dart';
-import '../model/api_code/api_code.dart';
-import '../model/api_generic.dart';
-import '../model/api_response.dart';
+import '../utils/global/api_generic.dart';
+import '../utils/global/api_response.dart';
 import '../model/response/blocked_member_response.dart';
 import '../utils/toast/toast_message.dart';
 

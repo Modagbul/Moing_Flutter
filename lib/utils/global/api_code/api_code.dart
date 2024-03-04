@@ -1,30 +1,29 @@
 import 'dart:developer';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:moing_flutter/model/api_generic.dart';
-import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/response/aggregate_repeat_mission_response.dart';
+import 'package:moing_flutter/model/response/aggregate_single_mission_response.dart';
+import 'package:moing_flutter/model/response/aggregate_team_repeat_mission_response.dart';
+import 'package:moing_flutter/model/response/aggregate_team_single_mission_response.dart';
+import 'package:moing_flutter/model/response/alarm_settings_editor_response.dart';
+import 'package:moing_flutter/model/response/alarm_settings_response.dart';
+import 'package:moing_flutter/model/response/blocked_member_response.dart';
+import 'package:moing_flutter/model/response/board_completed_mission_response.dart';
+import 'package:moing_flutter/model/response/board_repeat_mission_response.dart';
+import 'package:moing_flutter/model/response/board_single_mission_response.dart';
+import 'package:moing_flutter/model/response/team_list_response.dart';
+import 'package:moing_flutter/utils/global/api_generic.dart';
+import 'package:moing_flutter/utils/global/api_response.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/model/request/create_comment_request.dart';
 import 'package:moing_flutter/model/request/create_post_request.dart';
 import 'package:moing_flutter/model/profile/profile_model.dart';
-import 'package:moing_flutter/model/response/get_all_comments_response.dart';
+import 'package:moing_flutter/model/comment/get_all_comments_response.dart';
 import 'package:moing_flutter/model/response/get_all_posts_response.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 import 'package:moing_flutter/model/response/get_team_mission_photo_list_response.dart';
 import 'package:moing_flutter/model/team/team_fire_level_models.dart';
-
-import '../response/aggregate_repeat_mission_response.dart';
-import '../response/aggregate_single_mission_response.dart';
-import '../response/aggregate_team_repeat_mission_response.dart';
-import '../response/aggregate_team_single_mission_response.dart';
-import '../response/alarm_settings_editor_response.dart';
-import '../response/alarm_settings_response.dart';
-import '../response/blocked_member_response.dart';
-import '../response/board_completed_mission_response.dart';
-import '../response/board_repeat_mission_response.dart';
-import '../response/board_single_mission_response.dart';
-import '../response/team_list_response.dart';
 
 class ApiCode {
   final APICall call = APICall();
@@ -231,32 +230,6 @@ class ApiCode {
       }
     } catch (e) {
       log('한번 미션 상태 조회 실패: $e');
-    }
-    return null;
-  }
-
-  Future<AllCommentData?> getAllCommentData({
-    required int teamId,
-    required int boardId,
-  }) async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/$boardId/comment';
-
-    try {
-      ApiResponse<AllCommentData> apiResponse =
-          await call.makeRequest<AllCommentData>(
-        url: apiUrl,
-        method: 'GET',
-        fromJson: (data) => AllCommentData.fromJson(data),
-      );
-
-      if (apiResponse.data != null) {
-        log('게시글 댓글 전체 조회 성공: ${apiResponse.data}');
-        return apiResponse.data!;
-      } else {
-        log('getAllCommentData is Null, error code : ${apiResponse.errorCode}');
-      }
-    } catch (e) {
-      log('게시글 댓글 전체 조회 실패: $e');
     }
     return null;
   }

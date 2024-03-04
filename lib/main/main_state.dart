@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/main/alarm/alarm.dart';
-import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/mypage/setting_page.dart';
 import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 
 class MainState extends ChangeNotifier {

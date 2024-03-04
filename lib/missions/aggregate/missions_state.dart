@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-
-import '../../model/api_code/api_code.dart';
+import 'package:moing_flutter/utils/global/api_code/api_code.dart';
 import '../../model/response/team_list_response.dart';
 
 class MissionsState extends ChangeNotifier {
