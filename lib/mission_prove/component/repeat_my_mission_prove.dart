@@ -33,9 +33,6 @@ class RepeatMyMissionProved extends StatelessWidget {
     required int index,
     required BuildContext context,
   }) {
-    TextStyle ts = bodyTextStyle.copyWith(
-        fontWeight: FontWeight.w500, color: grayScaleGrey200);
-
     if (context.watch<MissionProveState>().myMissionList![index].status == 'SKIP') {
       return GestureDetector(
         onTap: () {
@@ -103,10 +100,7 @@ class RepeatMyMissionProved extends StatelessWidget {
                   width: 172,
                   height: 155,
                   child: Image.network(
-                    context
-                        .watch<MissionProveState>()
-                        .myMissionList![index]
-                        .archive,
+                    context.watch<MissionProveState>().myMissionList![index].archive,
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -30,6 +30,7 @@ import 'package:moing_flutter/model/response/mission/my_mission_get_prove_respon
 import 'package:moing_flutter/model/response/mission/other_mission_get_prove_response.dart';
 import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:moing_flutter/utils/image_upload/image_upload.dart';
+import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:moing_flutter/utils/toast/toast_message.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -49,6 +50,7 @@ class MissionProveState with ChangeNotifier {
   final bool isEnded;
   final bool isRepeated;
   final String repeatMissionStatus;
+  final bool isRead;
   final MissionState missionState = MissionState();
   final ViewUtil viewUtil = ViewUtil();
 
@@ -103,8 +105,6 @@ class MissionProveState with ChangeNotifier {
   List<MyMissionProveData>? myMissionList;
   // 시간대 정렬 리스트
   List<List<String>> myRepeatMissionTime = [];
-  // 유저 차단 목록 리스트
-  Set<int>? blockUserList;
   // 모두의 인증 조회 시 받아오는 리스트
   List<EveryMissionProveData>? everyMissionList;
 
@@ -119,6 +119,7 @@ class MissionProveState with ChangeNotifier {
 
   String nobodyText = '데이터를 불러오는 중입니다...';
   bool onLoading = false;
+  bool showLoading = false;
 
   MissionProveState({
     required this.context,
@@ -126,7 +127,9 @@ class MissionProveState with ChangeNotifier {
     required this.isEnded,
     required this.teamId,
     required this.missionId,
-    required this.repeatMissionStatus}) {
+    required this.repeatMissionStatus,
+    required this.isRead,
+  }) {
     initState();
   }
 
@@ -141,8 +144,6 @@ class MissionProveState with ChangeNotifier {
     await loadMissionData();
     // 모두의 인증 현황 조회하기
     await loadEveryMissionData();
-    // 차단 목록 가져오기
-    await getBlockUserList();
     // 미션 내용, 규칙 조회 --> 미션 제목, 기한, 규칙, 내용, 반복 or 한번 미션, 인증 방식(텍스트, 링크, 사진) 리턴
     await getMissionContent();
     // 반복 미션인 경우, 나의 성공횟수 조회
@@ -163,6 +164,11 @@ class MissionProveState with ChangeNotifier {
     if (!isRepeated) {
       // 모임원 성공횟수 조회
       await loadTeamMissionProveCount();
+    }
+
+    /// TODO : 맨 처음 미션 설명이 보이도록 설정하기
+    if(!isRead) {
+      showModal('content', isRead: isRead);
     }
   }
 
@@ -256,20 +262,6 @@ class MissionProveState with ChangeNotifier {
     } finally {
       onLoading = false;
     }
-  }
-
-  // 유저 차단 목록 가져오기
-  Future<void> getBlockUserList() async {
-    List<int>? userBlockList = await apiCode.getBlockUserList();
-    blockUserList = userBlockList?.toSet();
-    print('blockUserList : ${blockUserList.toString()}');
-    if(blockUserList != null && everyMissionList != null) {
-      blockUserList!.forEach((value) {
-        everyMissionList!.removeWhere((data) => data.makerId == value);
-      });
-      print('everyMissionList blockList : ${everyMissionList.toString()}');
-    }
-    notifyListeners();
   }
 
   /// 모임원 미션 인증 성공 인원 조회 API
@@ -529,13 +521,13 @@ class MissionProveState with ChangeNotifier {
       );
 
       if(apiResponse.isSuccess) {
-        print('반복 미션 종료에 성공했습니다!');
-        Navigator.of(context).pop();
+        print('미션 종료에 성공했습니다!');
+        Navigator.of(context).pop("END");
       } else {
         print('endRepeatMission error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
-      log('반복미션 종료 실패: $e');
+      log('미션 종료 실패: $e');
     } finally {
       notifyListeners();
     }
@@ -615,17 +607,18 @@ class MissionProveState with ChangeNotifier {
         if (result != null && result is bool && result) {
           // 미션 인증 성공 모달
           await showMissionSuccessDialog();
-          initState();
+          await initState();
         }
       }
       // 사진 인증 시
       else {
         print('사진 인증 시작!');
         await Permission.photos.request();
-        final XFile? assetFile =
-            await ImagePicker().pickImage(source: ImageSource.gallery);
+        final XFile? assetFile = await ImagePicker().pickImage(source: ImageSource.gallery);
         avatarFile = assetFile;
         if (avatarFile != null) {
+          showLoading = true;
+          notifyListeners();
           String extension = imageUpload.getFileExtension(avatarFile!);
           String? tmpUrl =
               await imageUpload.getPresignedUrl(extension, avatarFile!);
@@ -637,10 +630,11 @@ class MissionProveState with ChangeNotifier {
             bool? isSuccess = await submitMission(url: imageUrl);
             if (isSuccess != null && isSuccess) {
               await showMissionSuccessDialog();
-              initState();
+              await initState();
             }
           }
         }
+        showLoading = false;
         notifyListeners();
       }
     } catch (e) {
@@ -771,7 +765,7 @@ class MissionProveState with ChangeNotifier {
                                     size: 28,
                                     color: grayScaleGrey300,
                                   )),
-                              SizedBox(width: 32),
+                              const SizedBox(width: 32),
                               Text('내 인증 공유하기',
                                   style: buttonTextStyle.copyWith(
                                       color: grayScaleGrey300)),
@@ -826,7 +820,7 @@ class MissionProveState with ChangeNotifier {
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text(
                                         index != null
                                             ? myRepeatMissionTime[index][1]
@@ -980,26 +974,26 @@ class MissionProveState with ChangeNotifier {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   Image.asset(
                     'asset/image/moing_flower.png',
                     width: 254,
                     height: 254,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     isRepeated
                         ? '${myMissionList!.length + 1}회차 인증완료!'
                         : '모잉불이 기뻐해요!',
                     style: middleTextStyle.copyWith(color: grayScaleGrey100),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     '덕분에 모잉불이 쑥쑥 커지고 있어요',
                     style: bodyTextStyle.copyWith(
                         fontWeight: FontWeight.w500, color: grayScaleGrey400),
                   ),
-                  SizedBox(height: 28),
+                  const SizedBox(height: 28),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: RoundedProgressBar(
@@ -1089,6 +1083,7 @@ class MissionProveState with ChangeNotifier {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
@@ -1097,7 +1092,7 @@ class MissionProveState with ChangeNotifier {
             bool isTodayCreated = isSameDate(currentMission.createdDate);
             return Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.58,
               decoration: const BoxDecoration(
                 color: grayScaleGrey600,
                 borderRadius: BorderRadius.only(
@@ -1135,14 +1130,14 @@ class MissionProveState with ChangeNotifier {
                                 if(!isRepeated)
                                 ClipOval(
                                   child: Image.network(
-                                    currentMission.profileImg,
+                                    currentMission.profileImg ?? '',
                                     width: 24,
                                     height: 24,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return ClipOval(
-                                        child: Container(
-                                          color: grayScaleGrey550,
+                                        child: SvgPicture.asset(
+                                          'asset/icons/icon_user_profile.svg',
                                           width: 24,
                                           height: 24,
                                         ),
@@ -1150,12 +1145,12 @@ class MissionProveState with ChangeNotifier {
                                     },
                                   ),
                                 ),
-                                SizedBox(width: 8),
-                                Text(currentMission.nickname,
+                                const SizedBox(width: 8),
+                                Text(currentMission.nickname != null ? currentMission.nickname : '나의 인증 상세',
                                   style: bodyTextStyle.copyWith(color: grayScaleGrey400),),
                               ],
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Row(
                               children: [
                                 Text(
@@ -1164,7 +1159,7 @@ class MissionProveState with ChangeNotifier {
                                       color: grayScaleGrey400,
                                       fontWeight: FontWeight.w500),
                                 ),
-                                SizedBox(width: 12),
+                                const SizedBox(width: 12),
                                 Text(
                                   DateFormat('HH:mm').format(DateTime.parse(currentMission.createdDate)),
                                   style: bodyTextStyle.copyWith(
@@ -1178,7 +1173,7 @@ class MissionProveState with ChangeNotifier {
                         Spacer(),
                         if (isMeOrEveryProved && isTodayCreated && !isEnded)
                           DropdownButton<String>(
-                            underline: SizedBox.shrink(),
+                            underline: const SizedBox.shrink(),
                             style: contentTextStyle.copyWith(
                                 color: grayScaleGrey100),
                             dropdownColor: grayScaleGrey500,
@@ -1191,7 +1186,7 @@ class MissionProveState with ChangeNotifier {
                               DropdownMenuItem(
                                   value: 'retry',
                                   child: Container(
-                                    padding: EdgeInsets.only(top: 8, right: 8),
+                                    padding: EdgeInsets.only(top: 4, right: 8),
                                     alignment: Alignment.centerRight,
                                     child: Column(
                                       crossAxisAlignment:
@@ -1248,45 +1243,54 @@ class MissionProveState with ChangeNotifier {
                               onChanged: (String? val) async {
                                 if (val == 'report') {
                                   print('신고하기 버튼 클릭');
-                                  await doReport(currentMission.archiveId);
-                                  Navigator.of(context).pop();
-                                  fToast.showToast(
-                                      child: Material(
-                                        type: MaterialType.transparency,
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20.0),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              width: double.infinity,
-                                              height: 60,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(12),
-                                                color: Colors.white,
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
-                                                    style: bodyTextStyle.copyWith(
-                                                        color: grayScaleGrey700),
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                                      ),
-                                      toastDuration: Duration(milliseconds: 2000),
-                                      positionedToastBuilder: (context, child) {
-                                        return Positioned(
-                                          child: child,
-                                          top: 114.0,
-                                          left: 0.0,
-                                          right: 0,
-                                        );
-                                      });
+                                  bool? agreeReport = await viewUtil.showWarningDialog(
+                                      context: context,
+                                      title: '이 인증을 신고하시겠어요?',
+                                      content: '신고한 인증은 모든 모임원들에게 숨겨져요.',
+                                      leftText: '취소하기',
+                                      rightText: '신고하기');
+
+                                  if(agreeReport == true) {
+                                    await doReport(currentMission.archiveId);
+                                    Navigator.of(context).pop();
+                                    fToast.showToast(
+                                        child: Material(
+                                          type: MaterialType.transparency,
+                                          child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 20.0),
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                width: double.infinity,
+                                                height: 60,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
+                                                      style: bodyTextStyle.copyWith(
+                                                          color: grayScaleGrey700),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
+                                        ),
+                                        toastDuration: Duration(milliseconds: 2000),
+                                        positionedToastBuilder: (context, child) {
+                                          return Positioned(
+                                            child: child,
+                                            top: 114.0,
+                                            left: 0.0,
+                                            right: 0,
+                                          );
+                                        });
+                                  }
                                 }
                                 else if (val == 'block') {
                                   showModal('block', nickname: currentMission.nickname, makerId: currentMission.makerId);
@@ -1296,7 +1300,7 @@ class MissionProveState with ChangeNotifier {
                                 height: 20,
                                 width: 180,
                               ),
-                              iconStyleData: IconStyleData(
+                              iconStyleData: const IconStyleData(
                                 icon: Icon(
                                   Icons.more_vert_outlined,
                                 ),
@@ -1315,8 +1319,7 @@ class MissionProveState with ChangeNotifier {
                           ),
                       ],
                     ),
-                    SizedBox(height: 16),
-
+                    const SizedBox(height: 16),
                     /// 사진 텍스트 링크 중 선택
                     if (missionWay.contains('사진') &&
                         currentMission.status == 'COMPLETE')
@@ -1326,11 +1329,17 @@ class MissionProveState with ChangeNotifier {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.network(
-                              currentMission.archive,
-                              fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: (){
+                              print('미션 상세내용에서 사진 클릭');
+                              openFullImage(image: currentMission.archive);
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.network(
+                                currentMission.archive,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           )),
                     if (missionWay.contains('링크') &&
@@ -1340,7 +1349,7 @@ class MissionProveState with ChangeNotifier {
                           await _launchUrl(currentMission.archive);
                         },
                         child: ConstrainedBox(
-                          constraints: BoxConstraints(
+                          constraints: const BoxConstraints(
                             minHeight: 77,
                           ),
                           child: Container(
@@ -1363,14 +1372,14 @@ class MissionProveState with ChangeNotifier {
                                         width: 20,
                                         height: 20,
                                       ),
-                                      SizedBox(width: 12),
+                                      const SizedBox(width: 12),
                                       Text('링크 바로보기',
                                           style: contentTextStyle.copyWith(
                                               color: grayScaleGrey100)),
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 48.0, bottom: 20),
@@ -1406,7 +1415,7 @@ class MissionProveState with ChangeNotifier {
                             ),
                           ),
                           if (currentMission.status == 'SKIP')
-                            Positioned(
+                            const Positioned(
                               bottom: 16,
                               left: 0,
                               right: 0,
@@ -1418,7 +1427,7 @@ class MissionProveState with ChangeNotifier {
                             ),
                         ],
                       ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     /// 버튼 구현
                     if (missionWay.contains('사진') &&
                         currentMission.status == 'COMPLETE')
@@ -1443,6 +1452,7 @@ class MissionProveState with ChangeNotifier {
                                       index: selectedIndex,
                                       heartStatus: currentMission.heartStatus);
                                   setState(() {
+
                                     currentMission.hearts = everyMissionList![index].hearts;
                                     currentMission.heartStatus = everyMissionList![index].heartStatus;
                                   });
@@ -1457,7 +1467,7 @@ class MissionProveState with ChangeNotifier {
                                     height: 20,
                                     fit: BoxFit.cover,
                                   ),
-                                  SizedBox(width: 4),
+                                  const SizedBox(width: 4),
                                   Text(
                                     currentMission.hearts.toString(),
                                     style: contentTextStyle.copyWith(
@@ -1471,7 +1481,7 @@ class MissionProveState with ChangeNotifier {
                             Spacer(),
                             if(isMeOrEveryProved)
                             GestureDetector(
-                              onTap: missionShareDialog,
+                              onTap: () => missionShareDialog(index: index),
                               child: Row(
                                 children: [
                                   SvgPicture.asset(
@@ -1480,7 +1490,7 @@ class MissionProveState with ChangeNotifier {
                                     height: 20,
                                     fit: BoxFit.cover,
                                   ),
-                                  SizedBox(width: 4),
+                                  const SizedBox(width: 4),
                                   Text(
                                     '이미지 저장',
                                     style: bodyTextStyle.copyWith(
@@ -1533,7 +1543,7 @@ class MissionProveState with ChangeNotifier {
                                       height: 20,
                                       fit: BoxFit.cover,
                                     ),
-                                    SizedBox(width: 4),
+                                    const SizedBox(width: 4),
                                     Text(
                                       currentMission.hearts.toString(),
                                       style: contentTextStyle.copyWith(
@@ -1546,6 +1556,7 @@ class MissionProveState with ChangeNotifier {
                               ),
                             ],
                           )),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -1557,6 +1568,61 @@ class MissionProveState with ChangeNotifier {
     notifyListeners();
   }
 
+  // 사진 전체 크기로 확대하기
+  void openFullImage({required String image}) async {
+    if (onLoading) return;
+    try {
+      onLoading = true;
+
+      showDialog(
+        context: context,
+        useSafeArea: false,
+        builder: (context) => Dialog.fullscreen(
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body: SafeArea(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        image,
+                        fit: BoxFit.cover,
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: EdgeInsets.all(16),
+                        child: Icon(
+                          Icons.close,
+                          size: 24,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } finally {
+      onLoading = false;
+    }
+  }
+
   /// 더보기 버튼 클릭 시
   clickMoreModal() {
     if (isLeader) {
@@ -1565,7 +1631,7 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 바텀 모달 클릭
-  void showModal(String value, {String? nickname, int? makerId}) async {
+  void showModal(String value, {String? nickname, int? makerId, bool? isRead}) async {
     switch (value) {
       // 더보기 클릭
       case 'more':
@@ -1590,11 +1656,24 @@ class MissionProveState with ChangeNotifier {
         break;
       // 미션내용 클릭
       case 'content':
-        missionState.showContentAndRule(
-            context: context,
-            missionWay: missionWay,
-            missionContent: missionContent,
-            missionRule: missionRule);
+        var result = await missionState.showContentAndRule(
+          context: context,
+          missionTitle: missionTitle,
+          missionWay: missionWay,
+          missionContent: missionContent,
+          dueTo: missionDueTo,
+          missionRule: missionRule,
+          isLeader: isLeader,
+          isRepeated: isRepeated,
+          teamId: teamId,
+          missionId: missionId,
+          repeatCount: repeatMissionTotalCount,
+          isRead: isRead,
+        );
+
+        if(result == 'missionFix') {
+          await getMissionContent();
+        }
         break;
       // 미션 인증하기 클릭
       case 'mission':
@@ -1639,7 +1718,7 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
-  // 같은 날짜인지 확인
+  // 같은 날짜인 지 확인
   bool isSameDate(String createdDate) {
     DateTime created = DateTime.parse(createdDate);
     DateTime now = DateTime.now();
@@ -1647,11 +1726,7 @@ class MissionProveState with ChangeNotifier {
     int month = created.month;
     int day = created.day;
     // 같은 날짜인 경우
-    if (year == now.year && month == now.month && day == now.day) {
-      return true;
-    } else {
-      return false;
-    }
+    return (year == now.year && month == now.month && day == now.day) ? true : false;
   }
 
   // 인증 날짜 변환

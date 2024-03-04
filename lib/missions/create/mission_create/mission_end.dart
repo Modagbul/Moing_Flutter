@@ -27,7 +27,7 @@ class MissionEndDate extends StatelessWidget {
             ),
             if (isRepeatMission)
               Text(
-                '반복 미션은 다음 주 월요일에 시작해요',
+                '반복 미션은 매주 월요일에 다시 시작해요',
                 style: contentTextStyle.copyWith(
                     fontWeight: FontWeight.w500, color: grayScaleGrey550, fontSize: 14),
               ),

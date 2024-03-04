@@ -69,14 +69,12 @@ class LoginState extends ChangeNotifier {
         },
       );
 
-      final profileInfo = json.decode(response.body);
-      // print(profileInfo.toString());
-
+      print('key hash : ${await KakaoSdk.origin}');
       // 카카오 로그인 후 백엔드에 토큰 전송
       await sendKakaoTokenToBackend(token.accessToken);
 
     } catch (error) {
-      // showErrorDialog(error.toString());
+      // showErrorDialog("카카오 로그인 에러 : ${error.toString()}");
       print('카카오톡으로 로그인 실패 $error');
     } finally {
       onLoading = false;
@@ -144,6 +142,7 @@ class LoginState extends ChangeNotifier {
           }
           await sendKakaoTokenToBackend(accessToken);
         }
+
       }
     } catch (e) {
       print('카카오 - 백엔드 연동 간 에러 발생 : ${e.toString()}');
@@ -185,7 +184,6 @@ class LoginState extends ChangeNotifier {
         );
         await appleLoginSendToken(appleCredential.identityToken!);
       } catch (e) {
-        // showErrorDialog(e.toString());
         print('애플 로그인 실패 : ${e.toString()}');
       } finally {
         onLoading = false;
@@ -194,7 +192,6 @@ class LoginState extends ChangeNotifier {
 
     /// IOS 13 버전이 아닌 경우
     else {
-      // showErrorDialog('Sign in With Apple is not available on this device.');
       throw PlatformException(
         code: 'APPLE_SIGN_IN_NOT_AVAILABLE',
         message: 'Sign in With Apple is not available on this device.',
@@ -271,15 +268,13 @@ class LoginState extends ChangeNotifier {
         ),
       );
 
-      // print("Google ID Token: ${googleAuth?.idToken}");
-
       // 구글 토큰을 백엔드 서버로 전송
       if (googleAuth?.idToken != null) {
         await sendGoogleTokenToBackend(googleAuth!.idToken!);
       }
     } catch (e) {
+      // showErrorDialog("Google Sign-In Error : ${e.toString()}");
       print("Google Sign-In Error: $e");
-      // 오류 처리
     }
   }
 
@@ -308,11 +303,7 @@ class LoginState extends ChangeNotifier {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
 
-        // print('Access Token: $accessToken');
-        // print('Refresh Token: $refreshToken');
-
         await tokenManagement.saveToken(accessToken, refreshToken);
-        // print('구글 JWT : $accessToken');
         _isRegistered = responseBody['data']['registrationStatus'];
         sharedPreferencesInfo.savePreferencesData('sign', 'google');
         checkRegister(_isRegistered!);

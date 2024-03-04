@@ -64,13 +64,46 @@ class SkipMissionPage extends StatelessWidget {
                       ),
                       SizedBox(height: 52.0),
                       _InfoTextFields(),
-                      SizedBox(height: 240.0),
-                      _NextBtn(),
                     ],
                   ),
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget buildBottomNavigationBar(BuildContext context) {
+    final categoryState = Provider.of<SkipMissionState>(context);
+
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 32, top: 16),
+      child: Container(
+        width: 353,
+        height: 62,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: categoryState.getNextButtonColor(),
+            disabledBackgroundColor: grayScaleGrey700,
+            disabledForegroundColor: grayScaleGrey500,
+            padding: const EdgeInsets.all(16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          ),
+          onPressed: () async {
+            await categoryState.submit();
+          },
+          child: Text(
+            '사유작성 완료하기',
+            style: TextStyle(
+              color: categoryState.getNextButtonTextColor(),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -119,46 +152,6 @@ class _InfoTextFields extends StatelessWidget {
               context.read<SkipMissionState>().clearTextField(),
         ),
       ],
-    );
-  }
-}
-
-class _NextBtn extends StatelessWidget {
-  const _NextBtn({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final categoryState = Provider.of<SkipMissionState>(context);
-
-    return Padding(
-      padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 32),
-      child: Container(
-        width: 353,
-        height: 62,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: categoryState.getNextButtonColor(),
-            disabledBackgroundColor: grayScaleGrey700,
-            disabledForegroundColor: grayScaleGrey500,
-            padding: const EdgeInsets.all(16.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-          ),
-          onPressed: () async {
-            await categoryState.submit();
-          },
-          child: Text(
-            '사유작성 완료하기',
-            style: TextStyle(
-              color: categoryState.getNextButtonTextColor(),
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

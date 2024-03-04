@@ -12,19 +12,42 @@ class GroupCreateCategoryState extends ChangeNotifier {
   Map<String, bool> categoryStatus = {};
   bool isSelected = false;
 
+  String? customCategory;
+
+  void setCustomCategory(String value) {
+    if (value.isNotEmpty) {
+      deselectAllCategories();
+      customCategory = value;
+      // ** 사용자 정의 카테고리 값을 selectedCategoryEnglish에도 설정
+      selectedCategoryEnglish = value;
+      isSelected = true;
+    } else {
+      customCategory = null;
+      isSelected = false;
+    }
+    notifyListeners();
+  }
+
+
+  void deselectAllCategories() {
+    categoryStatus.forEach((key, value) => categoryStatus[key] = false);
+    selectedCategory = null;
+    notifyListeners();
+  }
+
   GroupCreateCategoryState({
     required this.context,
   });
 
   void selectCategory(String category) {
-    if (selectedCategory != null && selectedCategory != category) {
-      // 이전에 선택된 카테고리의 상태를 false로 업데이트
-      categoryStatus[selectedCategory!] = false;
-    }
+    categoryStatus.forEach((key, value) {
+      categoryStatus[key] = false;
+    });
 
-    // 새로운 카테고리를 선택하고 상태를 true로 업데이트
+    categoryStatus[category] = true;
     selectedCategory = category;
-    switch(selectedCategory) {
+
+    switch (selectedCategory) {
       case '스포츠/운동':
         selectedCategoryEnglish = 'SPORTS';
         break;
@@ -40,13 +63,12 @@ class GroupCreateCategoryState extends ChangeNotifier {
       case '독서':
         selectedCategoryEnglish = 'READING';
         break;
-      case '그외 자기계발':
-        selectedCategoryEnglish = 'ETC';
+      default:
+        selectedCategoryEnglish = category.toString(); // 사용자 정의 카테고리일 경우, 입력값 그대로 저장
         break;
     }
-    categoryStatus[category] = true;
 
-    isSelected = true;  // 카테고리가 선택되었으므로 isSelected를 true로 설정
+    isSelected = true;
     notifyListeners();
   }
 
@@ -63,9 +85,8 @@ class GroupCreateCategoryState extends ChangeNotifier {
     notifyListeners();
   }
 
-
   bool isCategorySelected() {
-    return isSelected && selectedCategory != null;
+    return selectedCategory != null || customCategory != null;
   }
 
   Color getNextButtonColor() {
@@ -89,7 +110,8 @@ class GroupCreateCategoryState extends ChangeNotifier {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation1, animation2) => GroupCreateInfoPage.route(context),
+        pageBuilder: (context, animation1, animation2) =>
+            GroupCreateInfoPage.route(context),
         settings: RouteSettings(
           arguments: selectedCategoryEnglish,
         ),
@@ -101,7 +123,7 @@ class GroupCreateCategoryState extends ChangeNotifier {
     ).then((_) {
       Navigator.of(context).removeRouteBelow(_);
     });
+    print("Selected category: $selectedCategoryEnglish");
+
   }
-
-
 }

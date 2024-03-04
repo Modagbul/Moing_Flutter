@@ -8,11 +8,13 @@ import '../../../const/color/colors.dart';
 class CategoryButton extends StatefulWidget {
   final String imagePath;
   final String buttonText;
+  final VoidCallback? onTap;
 
   const CategoryButton({
     super.key,
     required this.imagePath,
     required this.buttonText,
+    this.onTap,
   });
 
   @override

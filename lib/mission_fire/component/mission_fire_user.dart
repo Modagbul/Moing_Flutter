@@ -25,10 +25,10 @@ class MissionFireUser extends StatelessWidget {
         const SizedBox(
           height: 34,
         ),
-        if (context.watch<MissionFireState>().filteredUserList != null)
-          if (context.watch<MissionFireState>().filteredUserList!.isNotEmpty)
+        if (context.watch<MissionFireState>().userList != null)
+          if (context.watch<MissionFireState>().userList!.isNotEmpty)
             GridView.builder(
-                itemCount: context.watch<MissionFireState>().filteredUserList!.length,
+                itemCount: context.watch<MissionFireState>().userList!.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   childAspectRatio: 94 / 181,
@@ -40,7 +40,7 @@ class MissionFireUser extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final bool isSelected =
                       context.watch<MissionFireState>().selectedIndex == index;
-                  final filteredUserList = context.watch<MissionFireState>().filteredUserList;
+                  final filteredUserList = context.watch<MissionFireState>().userList;
 
                   return GestureDetector(
                     onTap: () {
@@ -77,7 +77,8 @@ class MissionFireUser extends StatelessWidget {
                                 ? Border.all(color: coralGrey500, width: 1)
                                 : null,
                           ),
-                          child: ClipOval(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50.0),
                             child: Stack(
                               children: [
                                 _buildProfileImage(filteredUserList[index]),
@@ -85,6 +86,8 @@ class MissionFireUser extends StatelessWidget {
                                   Positioned(
                                     top: 0,
                                     left: 0,
+                                    right: 0,
+                                    bottom: 0,
                                     child: SvgPicture.asset(
                                       'asset/icons/icon_fire_graphic.svg',
                                       width: 90,

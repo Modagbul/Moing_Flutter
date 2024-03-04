@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/utils/toast/toast_message.dart';
 
 import '../../model/response/board_repeat_mission_response.dart';
 import '../../model/response/board_single_mission_response.dart';
@@ -13,6 +15,8 @@ import 'completed_mission_page.dart';
 class OngoingMissionState extends ChangeNotifier {
   final ApiCode apiCode = ApiCode();
   final BuildContext context;
+  final ToastMessage toastMessage = ToastMessage();
+  final FToast fToast = FToast();
   int teamId;
   bool? isLeader;
   RepeatMissionStatusResponse? repeatMissionStatus;
@@ -29,6 +33,7 @@ class OngoingMissionState extends ChangeNotifier {
   }
 
   void initState() async {
+    fToast.init(context);
     await getRepeatMissionStatus();
     await getSingleMissionStatus();
     await checkMeIsLeader();
@@ -78,6 +83,19 @@ class OngoingMissionState extends ChangeNotifier {
     await getRepeatMissionStatus();
     await getSingleMissionStatus();
     notifyListeners();
+  }
+
+  void showToast(bool isRepeated) {
+    print('미션 종료토스트 문구가 출력됩니다.');
+      toastMessage.showToastMessage(
+        fToast: fToast,
+
+        warningText: isRepeated ? "해당 반복미션이 종료되었어요" : "해당 한번미션이 종료되었어요",
+        isWarning: false,
+        toastLeft: 0,
+        toastRight: 0,
+        toastTop: 114,
+      );
   }
 
   // Future<void> missionDelete(int missionId) async {

@@ -26,9 +26,10 @@ class MyMissionProveData {
   final int count;
   final String heartStatus;
   final int hearts;
+  final String? nickname;
 
   MyMissionProveData({required this.archiveId, required this.archive, required this.way, required this.createdDate,
-  required this.status, required this.count, required this.heartStatus, required this.hearts});
+  required this.status, required this.count, required this.heartStatus, required this.hearts, required this.nickname});
 
   factory MyMissionProveData.fromJson(Map<String, dynamic> json) {
     return MyMissionProveData(
@@ -40,6 +41,7 @@ class MyMissionProveData {
       count: json['count'] as int,
       heartStatus: json['heartStatus'] as String,
       hearts: json['hearts'] as int,
+      nickname: json['nickname'] as String?,
     );
   }
 

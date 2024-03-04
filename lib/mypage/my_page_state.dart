@@ -64,7 +64,10 @@ class MyPageState extends ChangeNotifier {
         convertedCategory = '독서';
         break;
       case 'ETC':
-        convertedCategory = '그외 자기계발';
+        convertedCategory = '자기계발';
+        break;
+      default:
+        convertedCategory = category;
         break;
     }
 

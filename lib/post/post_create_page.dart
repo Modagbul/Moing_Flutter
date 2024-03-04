@@ -53,12 +53,43 @@ class PostCreatePage extends StatelessWidget {
                   const SizedBox(height: 85.0),
                   const _NoticeCheckContainer(),
                   const SizedBox(height: 32.0),
-                  const _PostCreateButton(),
                 ],
               ),
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget buildBottomNavigationBar(BuildContext context) {
+    var state = context.watch<PostCreateState>();
+
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 32, top: 16),
+      child: ElevatedButton(
+        onPressed: () async {
+          if(state.isButtonEnabled) {
+            await context.read<PostCreateState>().requestCreatePost();
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: grayScaleWhite,
+          foregroundColor: grayScaleGrey900,
+          disabledBackgroundColor: grayScaleGrey700,
+          disabledForegroundColor: grayScaleGrey500,
+          textStyle: const TextStyle(
+            color: grayScaleGrey900,
+            fontSize: 18.0,
+            fontWeight: FontWeight.w600,
+          ),
+          padding: const EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        child: const Text('업로드 하기'),
       ),
     );
   }
@@ -121,9 +152,9 @@ class _PostInfoTextFields extends StatelessWidget {
     return Column(
       children: [
         OutlinedTextField(
-          maxLength: 15,
+          maxLength: 30,
           labelText: '제목',
-          hintText: '15자 이내의 제목을 적어주세요',
+          hintText: '30자 이내의 제목을 적어주세요',
           counterText:
               '(${context.watch<PostCreateState>().titleController.text.length}/15)',
           onChanged: (value) =>
@@ -189,41 +220,6 @@ class _NoticeCheckContainer extends StatelessWidget {
             ),
           )
         ],
-      ),
-    );
-  }
-}
-
-class _PostCreateButton extends StatelessWidget {
-  const _PostCreateButton();
-
-  @override
-  Widget build(BuildContext context) {
-    var state = context.watch<PostCreateState>();
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: ElevatedButton(
-        onPressed: () async {
-          if(state.isButtonEnabled) {
-            await context.read<PostCreateState>().requestCreatePost();
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: grayScaleWhite,
-          foregroundColor: grayScaleGrey900,
-          disabledBackgroundColor: grayScaleGrey700,
-          disabledForegroundColor: grayScaleGrey500,
-          textStyle: const TextStyle(
-            color: grayScaleGrey900,
-            fontSize: 18.0,
-            fontWeight: FontWeight.w600,
-          ),
-          padding: const EdgeInsets.all(16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-        ),
-        child: const Text('업로드 하기'),
       ),
     );
   }

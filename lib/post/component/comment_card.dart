@@ -85,7 +85,8 @@ class _Header extends StatelessWidget {
               )
             : GestureDetector(
                 onTap: () {
-                  context.read<PostDetailState>().reportPost(
+                  context.read<PostDetailState>().showReportCommentModal(
+                        context: context,
                         reportType: "COMMENT",
                         targetId: commentData.boardCommentId,
                       );

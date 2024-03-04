@@ -27,6 +27,7 @@ class Mission {
   String title;
   String status;
   String missionType;
+  bool isRead;
 
   Mission({
     required this.missionId,
@@ -34,6 +35,7 @@ class Mission {
     required this.title,
     required this.status,
     required this.missionType,
+    required this.isRead,
   });
 
   factory Mission.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,7 @@ class Mission {
       title: json['title'],
       status: json['status'],
       missionType: json['missionType'],
+      isRead: json['isRead'],
     );
   }
 }

@@ -33,6 +33,8 @@ class GroupCreatePhotoState extends ChangeNotifier {
   String presignedUrl = '';
   String imgUrl = '';
 
+  final String defaultImageUrl = 'asset/icons/group_basic_image.svg';
+
   GroupCreatePhotoState({
     required this.context,
     required this.category,
@@ -83,6 +85,12 @@ class GroupCreatePhotoState extends ChangeNotifier {
     if (_isMakeTeamInProgress) return;
     if (_isGetPresignedUrlInProgress) return;
 
+    String defaultPromise = "모임장 각오 제거";
+
+    if (avatarFile == null) {
+      imgUrl = defaultImageUrl;
+      await makeTeam(defaultPromise); // 기본 이미지와 함께 그룹 생성
+    }
     if (avatarFile != null) {
       // 파일 확장자 얻기
       extension = avatarFile!.path.split(".").last;
@@ -97,7 +105,7 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
       // presigned url 발급 성공 시
       if (await getPresignedUrl(fileExtension)) {
-        await makeTeam();
+        await makeTeam(defaultPromise);
       }
     }
   }
@@ -166,16 +174,19 @@ class GroupCreatePhotoState extends ChangeNotifier {
   }
 
   // API 연동
-  Future<void> makeTeam() async {
+  Future<void> makeTeam(String defaultPromise) async {
     _isMakeTeamInProgress = true;
     final String apiUrl = '${dotenv.env['MOING_API']}/api/team';
+
+    String defaultPromise = "모임장 각오 제거";
+    String finalPromise = promise.isEmpty ? defaultPromise : promise;
 
     MakeTeamData data = MakeTeamData(
       category: category,
       name: name,
       introduction: introduction,
-      promise: promise,
-      profileImgUrl: imgUrl,
+      promise: finalPromise,
+      profileImgUrl: imgUrl.isEmpty ? defaultImageUrl : imgUrl, // 에셋 이미지나 기본 이미지 사용
     );
 
     try {
@@ -200,7 +211,7 @@ class GroupCreatePhotoState extends ChangeNotifier {
         );
       } else {
         if (apiResponse.errorCode == 'J0003') {
-          makeTeam();
+          makeTeam(defaultPromise);
         } else {
           throw Exception(
               'makeTeam is Null, error code : ${apiResponse.errorCode}');

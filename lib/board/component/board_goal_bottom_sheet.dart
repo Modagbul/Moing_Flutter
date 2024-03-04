@@ -14,7 +14,7 @@ class BoardGoalBottomSheet extends StatefulWidget {
   State<BoardGoalBottomSheet> createState() => _BoardGoalBottomSheetState();
 }
 
-class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
+class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> with SingleTickerProviderStateMixin  {
   bool _isExpanded = false;
 
   @override
@@ -22,64 +22,67 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return AnimatedContainer(
-      height: _isExpanded ? screenHeight * 0.50 : screenHeight * 0.30,
-      decoration: const BoxDecoration(
-        color: grayScaleGrey600,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(24.0),
+    return AnimatedSize(
+      alignment: Alignment.bottomCenter,
+      duration: const Duration(milliseconds: 200),
+      child: Container(
+        height: _isExpanded ? null : screenHeight * 0.30,
+        decoration: const BoxDecoration(
+          color: grayScaleGrey600,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(24.0),
+          ),
         ),
-      ),
-      duration: const Duration(milliseconds: 300),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (!_isExpanded) _buildMissionButton(),
-            if (!_isExpanded) _buildAnnouncementRow(),
-            _buildGroupInfoRow(context: context),
-            SizedBox(height: screenHeight * 0.02),
-            if (_isExpanded)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 13.0),
-                    child: Text(
-                      '모임원 소개',
-                      style: TextStyle(
-                        color: grayScaleGrey100,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 14.0),
-                    child: GestureDetector(
-                      onTap: context
-                          .read<BoardMainState>()
-                          .navigateTeamMemberListPage,
-                      child: const Text(
-                        '전체보기',
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (!_isExpanded) _buildMissionButton(),
+              if (!_isExpanded) _buildAnnouncementRow(),
+              _buildGroupInfoRow(context: context),
+              SizedBox(height: screenHeight * 0.02),
+              if (_isExpanded)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 13.0),
+                      child: Text(
+                        '모임원 소개',
                         style: TextStyle(
                           color: grayScaleGrey100,
-                          fontSize: 14.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            if (_isExpanded) _buildExpandedGridView(screenWidth: screenWidth),
-            if (_isExpanded) SizedBox(height: screenHeight * 0.03),
-            if (_isExpanded) _buildIntroductionColumn(),
-            if (_isExpanded) SizedBox(height: screenHeight * 0.04),
-          ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 14.0),
+                      child: GestureDetector(
+                        onTap: context
+                            .read<BoardMainState>()
+                            .navigateTeamMemberListPage,
+                        child: const Text(
+                          '전체보기',
+                          style: TextStyle(
+                            color: grayScaleGrey100,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              if (_isExpanded) _buildExpandedGridView(screenWidth: screenWidth),
+              if (_isExpanded) SizedBox(height: screenHeight * 0.03),
+              if (_isExpanded) _buildIntroductionColumn(),
+              if (_isExpanded) SizedBox(height: screenHeight * 0.04),
+            ],
+          ),
         ),
       ),
     );
@@ -138,19 +141,19 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(
-                vertical: 2.0,
-                horizontal: 4.0,
+                vertical: 4.0,
+                horizontal: 8.0,
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: grayScaleGrey500,
+                color: coralGrey500,
               ),
               child: Text(
-                '${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 0}',
+                '새 글 ${context.watch<BoardMainState>().singleBoardData?.boardNum ?? 0}',
                 style: const TextStyle(
                   color: grayScaleGrey100,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -289,7 +292,8 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> {
     const maxItems = 6;
     final remainingItems = (memberList?.length ?? 0) - maxItems;
 
-    return Expanded(
+    return SizedBox(
+      height: 80,
       child: GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

@@ -56,11 +56,11 @@ class MissionFixPage extends StatelessWidget {
                           },
                           child: const Icon(
                             Icons.close,
-                            size: 28,
+                            size: 24,
                             color: grayScaleGrey100,
                           ),
                         ),
-                        const SizedBox(width: 32),
+                        const SizedBox(width: 16),
                         Text(
                           '미션 수정하기',
                           style:
@@ -87,25 +87,18 @@ class MissionFixPage extends StatelessWidget {
                         fontWeight: FontWeight.w600, color: grayScaleGrey200),
                   ),
                   const SizedBox(height: 24),
-                  Text(
-                    '미션 제목',
-                    style: bodyTextStyle.copyWith(
-                        fontWeight: FontWeight.w500, color: grayScaleGrey500),
-                  ),
-                  const SizedBox(height: 4),
-                  Container(
-                    width: double.infinity,
-                    height: 60,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      color: grayScaleGrey700,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      context.watch<MissionFixState>().fixData.missionTitle,
-                      style: contentTextStyle.copyWith(color: grayScaleGrey500),
-                    ),
+                  OutlinedTextField(
+                    maxLength: 15,
+                    maxLines: 1,
+                    hintText: '미션의 제목을 입력해주세요',
+                    labelText: '미션 제목',
+                    onChanged: (value) =>
+                        context.read<MissionFixState>().updateTextField(),
+                    controller:
+                    context.watch<MissionFixState>().missionTitleController,
+                    counterText:
+                    '(${context.watch<MissionFixState>().missionTitleController.text.length}/50)',
+                    inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
                   ),
                   const SizedBox(height: 32),
                   OutlinedTextField(
@@ -136,7 +129,7 @@ class MissionFixPage extends StatelessWidget {
                            onTap: context.read<MissionFixState>().datePicker,
                            child: Container(
                              padding: const EdgeInsets.only(left: 16),
-                             width: 271,
+                             width: 230,
                              height: 60,
                              decoration: BoxDecoration(
                                borderRadius: BorderRadius.circular(8),
@@ -187,19 +180,19 @@ class MissionFixPage extends StatelessWidget {
                    ],
                   ),
                   const SizedBox(height: 32),
-                  OutlinedTextField(
-                    maxLength: 100,
-                    maxLines: 10,
-                    hintText: '모임원들에게 미션을 인증할 수 있는 방법을 알려주세요',
-                    labelText: '인증 규칙',
-                    onChanged: (value) =>
-                        context.read<MissionFixState>().updateTextField(),
-                    controller:
-                    context.watch<MissionFixState>().ruleController,
-                    counterText:
-                    '(${context.watch<MissionFixState>().ruleController.text.length}/100)',
-                    inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
-                  ),
+                  // OutlinedTextField(
+                  //   maxLength: 100,
+                  //   maxLines: 10,
+                  //   hintText: '모임원들에게 미션을 인증할 수 있는 방법을 알려주세요',
+                  //   labelText: '인증 규칙',
+                  //   onChanged: (value) =>
+                  //       context.read<MissionFixState>().updateTextField(),
+                  //   controller:
+                  //   context.watch<MissionFixState>().ruleController,
+                  //   counterText:
+                  //   '(${context.watch<MissionFixState>().ruleController.text.length}/100)',
+                  //   inputTextStyle: contentTextStyle.copyWith(color: grayBlack2),
+                  // ),
                 ],
               ),
             ),

@@ -32,7 +32,6 @@ class TextAuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: grayScaleGrey900,
       appBar: renderAppBar(context: context, title: '텍스트로 인증하기'),
       body: GestureDetector(
@@ -46,7 +45,6 @@ class TextAuthPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: SingleChildScrollView(
                   child: Column(
                     children: [
                       SizedBox(height: 34.0),
@@ -63,13 +61,47 @@ class TextAuthPage extends StatelessWidget {
                       ),
                       SizedBox(height: 52.0),
                       _InfoTextFields(),
-                      SizedBox(height: 240.0),
-                      _NextBtn(),
                     ],
                   ),
                 ),
-              ),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget buildBottomNavigationBar(BuildContext context) {
+    final categoryState = Provider.of<TextAuthState>(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 32, top: 16),
+      child: SizedBox(
+        width: 353,
+        height: 62,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: categoryState.getNextButtonColor(),
+            disabledBackgroundColor: grayScaleGrey700,
+            disabledForegroundColor: grayScaleGrey500,
+            padding: const EdgeInsets.all(16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          ),
+          onPressed: categoryState.isCategorySelected()
+              ? () {
+            categoryState.submit();
+          }
+              : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
+          child: Text(
+            '인증하기',
+            style: TextStyle(
+              color: categoryState.getNextButtonTextColor(),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),

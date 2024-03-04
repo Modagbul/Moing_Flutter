@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:moing_flutter/const/color/colors.dart';
-import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/login/sign_in/component/custom_login_button.dart';
 import 'package:moing_flutter/login/sign_in/login_state.dart';
-import 'package:moing_flutter/main/main_page.dart';
-import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:provider/provider.dart';
-import 'package:speech_balloon/speech_balloon.dart';
 import 'dart:io';
 
 class LoginPage extends StatelessWidget {
@@ -42,22 +37,12 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 80.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 64.0),
-                    child: SpeechBalloon(
-                      color: grayScaleGrey600,
-                      width: double.infinity,
-                      height: 118,
-                      borderRadius: 16,
-                      nipLocation: NipLocation.bottom,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          '열정 없는 자기계발 모임,\n오늘부터는 끝!',
-                          textAlign: TextAlign.center,
-                          style: headerTextStyle.copyWith(
-                              color: coralGrey100,
-                              fontWeight: FontWeight.w700,
-                              height: 1.4),
-                        ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: SvgPicture.asset(
+                        'asset/icons/login_balloon.svg',
+                        width: 215.79,
+                        height: 114,
                       ),
                     ),
                   ),
@@ -127,7 +112,7 @@ class LoginPage extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0, top: 40),
+                      padding: const EdgeInsets.only(bottom: 54.0, top: 40),
                       child: SvgPicture.asset(
                         'asset/icons/modakbul_icon.svg',
                         width: 100,

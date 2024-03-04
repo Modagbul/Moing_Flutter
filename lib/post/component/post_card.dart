@@ -84,14 +84,16 @@ class PostCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: grayScaleWhite,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
+            Flexible(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: grayScaleWhite,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
-              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(width: 4.0),
             if (!isRead)
@@ -109,6 +111,7 @@ class PostCard extends StatelessWidget {
             fontSize: 14.0,
             fontWeight: FontWeight.w500,
           ),
+          maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
       ],

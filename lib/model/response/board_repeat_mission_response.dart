@@ -29,6 +29,7 @@ class RepeatMission {
   int done;
   int number;
   String status;
+  bool isRead;
 
   RepeatMission({
     required this.missionId,
@@ -37,6 +38,7 @@ class RepeatMission {
     required this.done,
     required this.number,
     required this.status,
+    required this.isRead,
   });
 
   factory RepeatMission.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class RepeatMission {
       done: json['done'],
       number: json['number'],
       status: json['status'],
+      isRead: json['isRead'],
     );
   }
 }

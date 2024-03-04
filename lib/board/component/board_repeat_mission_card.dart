@@ -16,6 +16,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
   final int done;
   final int number;
   final int missionId;
+  final bool isRead;
   final VoidCallback onTap;
   final Animation<double> fadeAnimation;
   final FToast ftoast;
@@ -33,6 +34,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
     required this.fadeAnimation,
     required this.ftoast,
     required this.onShowToast,
+    required this.isRead,
   }) : super(key: key);
 
   @override
@@ -150,7 +152,7 @@ class BoardRepeatMissionCard extends StatelessWidget {
                   width: 170,
                   height: 170,
                   decoration: BoxDecoration(
-                    border: status == 'WAIT'
+                    border: isRead == false
                         ? Border.all(color: coralGrey500, width: 1)
                         : null,
                     borderRadius: BorderRadius.circular(16),

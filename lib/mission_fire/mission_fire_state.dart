@@ -20,8 +20,6 @@ class MissionFireState extends ChangeNotifier {
   String selectedUserName = '모임원 프로필을 클릭해보세요';
   int? selectedIndex;
   List<FireReceiverData>? userList;
-  List<FireReceiverData>? filteredUserList;
-  List<int>? blockUserList;
   String apiUrl = '';
   final APICall call = APICall();
   bool _isThrowFireInProgress = false;
@@ -49,7 +47,6 @@ class MissionFireState extends ChangeNotifier {
   void initState() async {
     log('Instance "MissionFireState" has been created');
     log('teamId : $teamId, missionId : $missionId');
-    await getBlockUserList();
     await loadFirePersonList();
     await loadTeamMissionProveCount();
   }
@@ -98,11 +95,6 @@ class MissionFireState extends ChangeNotifier {
 
       if (apiResponse.data != null) {
         userList = apiResponse.data;
-        if (blockUserList != null) {
-          filteredUserList = userList!
-              .where((user) => !blockUserList!.contains(user.receiveMemberId))
-              .toList();
-        }
         notifyListeners();
       } else {
         log('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
@@ -110,12 +102,6 @@ class MissionFireState extends ChangeNotifier {
     } catch (e) {
       log('불 던질 사람 조회 실패: $e');
     }
-  }
-
-  /// 차단 유저 목록 조회 API
-  Future<void> getBlockUserList() async {
-    blockUserList = await apiCode.getBlockUserList();
-    notifyListeners();
   }
 
   /// 불 던지기 API

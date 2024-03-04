@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/board/component/board_completed_mission_card.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
+import 'package:moing_flutter/model/api_code/api_code.dart';
+import 'package:moing_flutter/model/response/board_repeat_mission_response.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/color/colors.dart';
@@ -12,7 +14,6 @@ import 'completed_mission_state.dart';
 
 class CompletedMissionPage extends StatelessWidget {
   static const routeName = '/board/mission/completed';
-
   const CompletedMissionPage({Key? key}) : super(key: key);
 
   static route(BuildContext context) {
@@ -52,29 +53,32 @@ class CompletedMissionPage extends StatelessWidget {
                     .map(
                       (e) => Padding(
                         padding: const EdgeInsets.only(bottom: 12.0),
-                        child: BoardCompletedMissionCard(
-                        title: e.title,
-                        status: e.status,
-                        dueTo: e.dueTo,
-                        missionType: e.missionType,
-                        missionId: e.missionId,
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                              MissionProvePage.routeName,
-                              arguments: MissionProveArgument(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                MissionProvePage.routeName,
+                                arguments: MissionProveArgument(
                                   isRepeated: e.missionType == 'ONCE' ? false : true,
                                   teamId: context
                                       .read<CompletedMissionState>()
                                       .teamId,
                                   missionId: e.missionId,
                                   status: e.status,
-                                  isEnded: true));
-                        },
+                                  isEnded: true,
+                                  isRead: true,
+                                ));
+                          },
+                          child: BoardCompletedMissionCard(
+                          title: e.title,
+                          status: e.status,
+                          dueTo: e.dueTo,
+                          missionType: e.missionType,
+                          missionId: e.missionId,
                       ),
+                        ),
                     ),
                   ).toList()
-            else
-              const Center(
+            else const Center(
                 child: Text(
                   '아직 미션이 없어요.',
                   style: TextStyle(
@@ -87,9 +91,7 @@ class CompletedMissionPage extends StatelessWidget {
         ),
       ),
     ),
-      floatingActionButton: (state.isLeader != null && state.isLeader!)
-          ? const _BottomButton()
-          : null,
+      floatingActionButton: const _BottomButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -100,11 +102,20 @@ class _BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final completeMissionState = Provider.of<CompletedMissionState>(context, listen: false);
     return FloatingActionButton.extended(
-      onPressed: () {
+      onPressed: () async {
+        var teamId = context.read<CompletedMissionState>().teamId;
+        ApiCode apiCode = ApiCode();
+        RepeatMissionStatusResponse? repeatMissionStatus = await apiCode.getRepeatMissionStatus(teamId: teamId);
+
         Navigator.of(context).pushNamed(
           MissionsCreatePage.routeName,
-          arguments: context.read<CompletedMissionState>().teamId,
+          arguments: {
+           'teamId': teamId,
+            'repeatMissions': repeatMissionStatus?.data.length ?? 0,
+            'isLeader': completeMissionState.isLeader,
+          }
         );
       },
       backgroundColor: grayScaleGrey100,

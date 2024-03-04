@@ -4,9 +4,11 @@ import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/const/style/text_field.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
+import 'package:moing_flutter/make_group/group_create_category_page.dart';
 import 'package:moing_flutter/make_group/group_create_info_state.dart';
 import 'package:provider/provider.dart';
 
+import '../const/color/colors.dart';
 import '../utils/text_field/outlined_text_field.dart';
 
 class GroupCreateInfoPage extends StatelessWidget {
@@ -85,12 +87,75 @@ class GroupCreateInfoPage extends StatelessWidget {
                   const _Title(),
                   SizedBox(height: screenHeight * 0.04),
                   const _InfoTextFields(),
-                  const _NavButtons(),
                 ],
               ),
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget buildBottomNavigationBar(BuildContext context) {
+    bool isAllFieldsValid = context.watch<GroupCreateInfoState>().isAllFieldsValid;
+
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24, top: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: 172,
+              height: 62,
+              child: ElevatedButton(
+                style: darkButtonStyle,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => GroupCreateCategoryPage.route(context),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                      transitionDuration: Duration(milliseconds: 0),
+                    ),
+                  );
+                },
+                child: const Text('이전으로'),
+              ),
+            ),
+          ),
+          const SizedBox(width: 5.0),
+          Expanded(
+            child: SizedBox(
+              width: 172,
+              height: 62,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isAllFieldsValid ? grayScaleWhite : grayScaleGrey700,
+                  padding: const EdgeInsets.all(16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+                onPressed: isAllFieldsValid ? context.read<GroupCreateInfoState>().nextPressed : null,
+                child: Text(
+                  '다음으로',
+                  style: TextStyle(
+                    color: isAllFieldsValid ? grayScaleBlack : grayScaleGrey500,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -153,56 +218,20 @@ class _InfoTextFields extends StatelessWidget {
           controller: context.read<GroupCreateInfoState>().introduceController,
         ),
         SizedBox(height: screenHeight * 0.04),
-        OutlinedTextField(
-          maxLength: 100,
-          maxLines: 10,
-          labelText: '모임장의 각오 한마디',
-          counterText:
-              '(${context.watch<GroupCreateInfoState>().resolutionController.text.length}/100)',
-          hintText: '자유롭게 작성해주세요',
-          onChanged: (value) =>
-              context.read<GroupCreateInfoState>().updateTextField(),
-          controller: context.read<GroupCreateInfoState>().resolutionController,
-        ),
-        SizedBox(height: screenHeight * 0.04),
-      ],
-    );
-  }
-}
 
-class _NavButtons extends StatelessWidget {
-  const _NavButtons();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Container(
-            width: 172,
-            height: 62,
-            child: ElevatedButton(
-              style: darkButtonStyle,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('이전으로'),
-            ),
-          ),
-        ),
-        const SizedBox(width: 5.0),
-        Expanded(
-          child: Container(
-            width: 172,
-            height: 62,
-            child: ElevatedButton(
-              style: brightButtonStyle,
-              onPressed: context.read<GroupCreateInfoState>().nextPressed,
-              child: const Text('다음으로'),
-            ),
-          ),
-        ),
+        /// 모임장의 각오 한마디 삭제
+        // OutlinedTextField(
+        //   maxLength: 100,
+        //   maxLines: 10,
+        //   labelText: '모임장의 각오 한마디',
+        //   counterText:
+        //       '(${context.watch<GroupCreateInfoState>().resolutionController.text.length}/100)',
+        //   hintText: '자유롭게 작성해주세요',
+        //   onChanged: (value) =>
+        //       context.read<GroupCreateInfoState>().updateTextField(),
+        //   controller: context.read<GroupCreateInfoState>().resolutionController,
+        // ),
+        // SizedBox(height: screenHeight * 0.04),
       ],
     );
   }

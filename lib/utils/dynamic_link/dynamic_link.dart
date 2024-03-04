@@ -34,6 +34,7 @@ class DynamicLinkService extends ChangeNotifier {
 
   Future<String> getShortLink({
     required String route,
+    required String moingTitle,
   }) async {
     String dynamicLinkPrefix = 'https://moing.page.link';
     final dynamicLinkParams = DynamicLinkParameters(
@@ -44,12 +45,17 @@ class DynamicLinkService extends ChangeNotifier {
         minimumVersion: 0,
       ),
       iosParameters: IOSParameters(
-        appStoreId: "6444061302",
+        appStoreId: "6472060530",
         bundleId: "com.moing.moing-team",
         minimumVersion: '0',
       ),
       navigationInfoParameters: NavigationInfoParameters(
-        forcedRedirectEnabled: true,
+        forcedRedirectEnabled: false,
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+        title: "<$moingTitle> 소모임에서 초대장이 도착했어요.",
+        description: "지금 MOING에서 소모임에 가입해보세요.",
+        imageUrl: Uri.parse('https://modagbul.s3.ap-northeast-2.amazonaws.com/modak_fire.png'),
       ),
     );
     final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
@@ -63,30 +69,8 @@ class DynamicLinkService extends ChangeNotifier {
       String teamId = link.replaceAll('/teamId=', '');
       print('teamId : $teamId');
 
-      Navigator.pushNamedAndRemoveUntil(context, InitPage.routeName, (route) => false, arguments: teamId);
-      // switch (link) {
-      //   case "/counselor":
-      //     final UserRepository userRepository = UserRepository();
-      //     String? uniqueIdString = dynamicLinkData.link.queryParameters["uniqueId"];
-      //     if (uniqueIdString == null) throw "잘못된 요청입니다";
-      //     User? user = await userRepository.getUserWithUniqueId(uniqueId: int.parse(uniqueIdString));
-      //     if (user == null) throw "사용자를 찾을 수 없습니다";
-      //     if (!(user.isCounselor ?? false)) throw "상담사를 찾을 수 없습니다";
-      //     if (!(user.isCounselorCertificated ?? false)) throw "승인이 필요한 상담사입니다";
-      //
-      //     Navigator.pushNamed(
-      //       context,
-      //       CounselorDetailPage.routeName,
-      //       arguments: CounselorDetailArgument(
-      //         counselorId: user.id!,
-      //       ),
-      //     );
-      //     break;
-      //   default:
-      //     final Uri deepLink = dynamicLinkData.link;
-      //     Navigator.pushNamed(context, deepLink.path);
-      //     break;
-      // }
+      Navigator.pushNamedAndRemoveUntil(
+          context, InitPage.routeName, (route) => false, arguments: teamId);
     } catch (e) {
       log(e.toString());
     }

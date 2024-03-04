@@ -53,13 +53,52 @@ class ProfileSettingPage extends StatelessWidget {
                         _Profile(),
                         const SizedBox(height: 32),
                         const _TextFields(),
-                        SizedBox(height: 100),
-                        _SubmitButton(),
                       ],
                     ),
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context),
+    );
+  }
+
+  Widget buildBottomNavigationBar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 32, top: 16),
+      child: SizedBox(
+        width: double.infinity,
+        height: 62,
+        child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: (context.watch<ProfileSettingState>().isSubmit)
+                ? MaterialStateProperty.all(grayScaleWhite)
+                : MaterialStateProperty.all(grayScaleGrey700),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+            ),
+            overlayColor: (context
+                        .watch<ProfileSettingState>()
+                        .isAvatarChanged ||
+                    context.watch<ProfileSettingState>().isIntroduceChanged ||
+                    context.watch<ProfileSettingState>().isNameChanged)
+                ? null
+                : MaterialStateProperty.all(Colors.transparent),
+          ),
+          onPressed: context.read<ProfileSettingState>().savePressed,
+          child: Text(
+            '수정 완료',
+            style: TextStyle(
+              color: (context.watch<ProfileSettingState>().isSubmit)
+                  ? grayScaleGrey900
+                  : grayScaleGrey500,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -199,51 +238,6 @@ class _TextFields extends StatelessWidget {
           inputTextStyle: bodyTextStyle.copyWith(color: grayBlack2),
         ),
       ],
-    );
-  }
-}
-
-class _SubmitButton extends StatelessWidget {
-  const _SubmitButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 16),
-      child: SizedBox(
-        width: double.infinity,
-        height: 62,
-        child: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: (context.watch<ProfileSettingState>().isSubmit)
-                ? MaterialStateProperty.all(grayScaleWhite)
-                : MaterialStateProperty.all(grayScaleGrey700),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-            ),
-            overlayColor: (context
-                        .watch<ProfileSettingState>()
-                        .isAvatarChanged ||
-                    context.watch<ProfileSettingState>().isIntroduceChanged ||
-                    context.watch<ProfileSettingState>().isNameChanged)
-                ? null
-                : MaterialStateProperty.all(Colors.transparent),
-          ),
-          onPressed: context.read<ProfileSettingState>().savePressed,
-          child: Text(
-            '수정 완료',
-            style: TextStyle(
-              color: (context.watch<ProfileSettingState>().isSubmit)
-                  ? grayScaleGrey900
-                  : grayScaleGrey500,
-              fontSize: 18.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

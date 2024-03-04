@@ -200,6 +200,7 @@ class AlarmState extends ChangeNotifier {
       missionId: idInfoMap['missionId'] ?? 0,
       status: status ?? idInfoMap['status'] ?? '',
       isEnded: isEnded ?? false,
+      isRead: alarmData.isRead,
     );
 
     Navigator.pushNamed(

@@ -22,11 +22,14 @@ class PostUpdatePage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => PostUpdateState(
-                context: context,
-                teamId: teamId,
-                boardId: boardId,
-                postData: postData)),
+          create: (_) => PostUpdateState(
+            context: context,
+            teamId: teamId,
+            boardId: boardId,
+            postData: postData,
+            isCheckedNotice: postData.isNotice,
+          ),
+        ),
       ],
       builder: (context, _) {
         return const PostUpdatePage();
@@ -206,11 +209,11 @@ class _PostCreateButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var state = context.watch<PostUpdateState>();
     return ElevatedButton(
-      onPressed: () async {
-        if(state.isButtonEnabled) {
-          await context.read<PostUpdateState>().requestUpdatePost();
-        }
-      },
+      onPressed: state.isButtonEnabled
+          ? () async {
+              await context.read<PostUpdateState>().requestUpdatePost();
+            }
+          : null,
       style: ElevatedButton.styleFrom(
         backgroundColor: grayScaleWhite,
         foregroundColor: grayScaleGrey900,

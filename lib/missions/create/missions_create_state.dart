@@ -19,6 +19,7 @@ class MissionCreateState extends ChangeNotifier {
   final BuildContext context;
   final int teamId;
   final int repeatMissions;
+  final bool isLeader;
 
   final APICall call = APICall();
   final TextEditingController titleController = TextEditingController();
@@ -70,13 +71,14 @@ class MissionCreateState extends ChangeNotifier {
     required this.context,
     required this.teamId,
     required this.repeatMissions,
+    required this.isLeader,
   }) {
     initState();
   }
 
   void initState() async {
     log('Instance "MissionCreateState" has been created');
-    print('teamId : $teamId, repeatMissions : $repeatMissions');
+    print('teamId : $teamId, repeatMissions : $repeatMissions, isLeader: $isLeader');
     await getMissionRecommend();
 
     titleController.addListener(_onTitleTextChanged);
@@ -209,7 +211,7 @@ class MissionCreateState extends ChangeNotifier {
             textList = readingList;
             recommendText = '좋은 독서를 도와주는';
             break;
-          case 'ETC':
+          default:
             textList = etcList;
             recommendText = '자기계발을 도와주는';
             break;
@@ -521,8 +523,7 @@ class MissionCreateState extends ChangeNotifier {
                                   color: grayScaleGrey500),
                               child: Text(
                                 textList[index],
-                                style: contentTextStyle.copyWith(
-                                  fontWeight: FontWeight.w600,
+                                style: bodyTextStyle.copyWith(
                                   color: grayScaleGrey300,
                                 ),
                               ),
@@ -540,7 +541,8 @@ class MissionCreateState extends ChangeNotifier {
     /// 반복 미션인 경우
     if(isRepeatSelected) {
       if(titleController.text.isNotEmpty && contentController.text.isNotEmpty &&
-      isMethodSelected && ruleController.text.isNotEmpty) {
+      isMethodSelected) {
+        // && ruleController.text.isNotEmpty
         isSuccess = true;
       }
       else {
@@ -551,7 +553,8 @@ class MissionCreateState extends ChangeNotifier {
     else {
       /// TODO : formattedTime 설정 해줘야 함.
       if(titleController.text.isNotEmpty && contentController.text.isNotEmpty &&
-          formattedDate.length > 1 && isMethodSelected && ruleController.text.isNotEmpty) {
+          formattedDate.length > 1 && isMethodSelected) {
+        //  && ruleController.text.isNotEmpty
         isSuccess = true;
       }
       else {

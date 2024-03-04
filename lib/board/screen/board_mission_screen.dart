@@ -75,7 +75,7 @@ class _BoardMissionScreenState extends State<BoardMissionScreen>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 150), // 오른쪽에 여백 주기
+                  padding: const EdgeInsets.only(right: 135), // 오른쪽에 여백 주기
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: TabBar(

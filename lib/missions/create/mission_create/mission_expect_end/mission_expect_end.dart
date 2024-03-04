@@ -10,58 +10,80 @@ class MissionExpectEnd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 미션 반복 개수가 2개 이상인 경우
-    if (context.watch<MissionCreateState>().repeatMissions > 1) {
+    int countRepeatMissions = context.watch<MissionCreateState>().repeatMissions;
+    int expectedRepeatMissions =  context.watch<MissionCreateState>().isRepeatSelected == true
+        ? countRepeatMissions + 1 : countRepeatMissions;
+
+    /// 소모임원인 경우
+    if (!context.watch<MissionCreateState>().isLeader) {
       return Container(
         width: double.infinity,
         height: 48,
         child: Row(
           children: [
             Text(
-              '반복미션 불가',
-              style: bodyTextStyle.copyWith(
+              '반복미션은 소모임장만 만들 수 있어요.',
+                style: contentTextStyle.copyWith(
                 fontWeight: FontWeight.w600,
-                color: errorColor,
-              ),
-            ),
-            SizedBox(width: 4),
-            Text(
-              '2개의 반복미션이 있어 더 만들 수 없어요',
-              style: bodyTextStyle.copyWith(
-                fontWeight: FontWeight.w600,
-                color: grayScaleGrey550,
+                color: context.watch<MissionCreateState>().isRepeatSelected == true ? Colors.white : grayScaleGrey550,
               ),
             ),
           ],
         ),
       );
-    } else {
-      return Container(
-        width: double.infinity,
-        height: 48,
-        child: GestureDetector(
-          onTap: context.read<MissionCreateState>().setRepeatSelected,
+    }
+    else {
+      /// 미션 반복 개수가 2개 이상인 경우
+      if (context.watch<MissionCreateState>().repeatMissions > 1) {
+        return Container(
+          width: double.infinity,
+          height: 48,
           child: Row(
             children: [
-              Icon(Icons.check_box_rounded,
-                  color:
-                      context.watch<MissionCreateState>().isRepeatSelected ==
-                              true
-                          ? Colors.white
-                          : grayScaleGrey550,
-                  size: 20),
-              SizedBox(width: 12),
               Text(
-                '반복미션으로 변경하기',
-                style: contentTextStyle.copyWith(
+                '반복미션 불가',
+                style: bodyTextStyle.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: errorColor,
+                ),
+              ),
+              SizedBox(width: 4),
+              Text(
+                '2개의 반복미션이 있어 더 만들 수 없어요',
+                style: bodyTextStyle.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: grayScaleGrey550,
                 ),
               ),
             ],
           ),
-        ),
-      );
+        );
+      } else {
+        return Container(
+          width: double.infinity,
+          height: 48,
+          child: GestureDetector(
+            onTap: context.read<MissionCreateState>().setRepeatSelected,
+            child: Row(
+              children: [
+                Icon(Icons.check_box_rounded,
+                    color: context.watch<MissionCreateState>().isRepeatSelected == true
+                        ? Colors.white
+                        : grayScaleGrey550,
+                    size: 20),
+                SizedBox(width: 12),
+                Text(
+                  '반복미션으로 변경하기 ($expectedRepeatMissions/2)',
+                  style: contentTextStyle.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.watch<MissionCreateState>().isRepeatSelected == true ? Colors.white : grayScaleGrey550,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
     }
   }
 }

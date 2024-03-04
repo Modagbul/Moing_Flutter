@@ -20,10 +20,12 @@ class MissionsCreatePage extends StatelessWidget {
     final dynamic arguments = ModalRoute.of(context)?.settings.arguments;
     int teamId;
     int repeatMissions = 0;
+    bool isLeader = false;
 
     if (arguments is Map) {
       teamId = arguments['teamId'];
       repeatMissions = arguments['repeatMissions'] ?? 0;
+      isLeader = arguments['isLeader'] ?? false;
     } else if (arguments is int) {
       teamId = arguments;
     } else {
@@ -33,7 +35,8 @@ class MissionsCreatePage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => MissionCreateState(context: context, teamId: teamId, repeatMissions: repeatMissions),
+          create: (context) => MissionCreateState(
+              context: context, teamId: teamId, repeatMissions: repeatMissions, isLeader: isLeader),
           lazy: false,
         ),
       ],
@@ -70,7 +73,8 @@ class MissionsCreatePage extends StatelessWidget {
                         const MissionTitleContent(),
                         const MissionEndDate(),
                         const MissionChoose(),
-                        const MissionRule(),
+                        // const MissionRule(),
+                        const SizedBox(height: 32),
                       ],
                     ),
                   ),
@@ -100,7 +104,7 @@ class MissionsCreatePage extends StatelessWidget {
         ),
         const SizedBox(height: 52),
         Text(
-          '미션 제목과 내용',
+          '미션 제목과 설명',
           style: contentTextStyle.copyWith(
               color: grayScaleGrey200, fontWeight: FontWeight.w500),
         ),

@@ -151,6 +151,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                             title: e.title,
                             dueTo: e.dueTo,
                             done: e.done,
+                            isRead: e.isRead,
                             number: e.number,
                             missionId: e.missionId,
                             status: e.status,
@@ -164,15 +165,21 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                     teamId: context.read<OngoingMissionState>().teamId,
                                     missionId: e.missionId,
                                     status: e.status,
-                                    isEnded: false)
-                              ).then((_) {
+                                    isEnded: false,
+                                  isRead: e.isRead,
+                                )
+                              ).then((value) async {
                                 Provider.of<OngoingMissionState>(context,
                                         listen: false)
                                     .reloadMissionStatus();
+                                if(value == "END") {
+                                  await Future.delayed(Duration(milliseconds: 500));
+                                  context.read<OngoingMissionState>().showToast(false);
+                                }
                               });
                             },
                           ),
-                          if (e.status == "WAIT")
+                          if (!e.isRead)
                             Positioned(
                               top: -25,
                               child: FadeTransition(
@@ -236,6 +243,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                 title: e.title,
                                 status: e.status,
                                 dueTo: e.dueTo,
+                                isRead: e.isRead,
                                 missionType: e.missionType,
                                 missionId: e.missionId,
                                 fadeAnimation: _fadeAnimation,
@@ -247,15 +255,20 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
                                         teamId: context.read<OngoingMissionState>().teamId,
                                         missionId: e.missionId,
                                         status: e.status,
-                                        isEnded: false)
-                                  ).then((_) {
-                                    Provider.of<OngoingMissionState>(context,
-                                            listen: false)
-                                        .reloadMissionStatus();
+                                        isEnded: false,
+                                      isRead: e.isRead,
+                                    )
+                                  ).then((value) async {
+                                    print('미션 종료 VALUE : $value');
+                                    context.read<OngoingMissionState>().reloadMissionStatus();
+                                    if(value == "END") {
+                                      await Future.delayed(Duration(milliseconds: 500));
+                                      context.read<OngoingMissionState>().showToast(false);
+                                    }
                                   });
                                 },
                               ),
-                              if (e.status == "WAIT")
+                              if (!e.isRead)
                                 Positioned(
                                   top: -25,
                                   right: 15,
@@ -305,7 +318,7 @@ class _OngoingMissionPageState extends State<OngoingMissionPage>
           ),
         ),
       ),
-      floatingActionButton: (state.isLeader != null && state.isLeader!) ? const _BottomButton() : null,
+      floatingActionButton: const _BottomButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -361,6 +374,7 @@ class _BottomButton extends StatelessWidget {
           'teamId': ongoingMissionState.teamId,
           'repeatMissions':
               ongoingMissionState.repeatMissionStatus?.data.length ?? 0,
+          'isLeader': ongoingMissionState.isLeader,
         });
 
         if (result != null && result == true) {

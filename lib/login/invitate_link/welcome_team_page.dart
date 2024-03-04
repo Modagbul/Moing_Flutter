@@ -45,15 +45,15 @@ class InvitationWelcomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 128),
+                  const SizedBox(height: 128),
                   Center(
                     child: Text('모임에 오신 걸 환영해요!',
                         style: headerTextStyle.copyWith(color: grayScaleGrey100)),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Container(
                     width: 250,
-                    height: 54,
+                    height: 90,
                     alignment: Alignment.center,
                     child: Text(
                       '${state.teamLeaderName}님이 ${state.memberName}님을\n${state.teamName} 모임에 초대했어요',
@@ -61,7 +61,7 @@ class InvitationWelcomePage extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(height: 36),
+                  const SizedBox(height: 16),
                   Image.asset(
                     'asset/image/icon_invitation.png',
                     width: 255,
