@@ -628,6 +628,12 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
+  - Amplitude (8.18.0):
+    - AnalyticsConnector (~> 1.0.0)
+  - amplitude_flutter (0.0.1):
+    - Amplitude (= 8.18.0)
+    - Flutter
+  - AnalyticsConnector (1.0.3)
   - app_tracking_transparency (0.0.1):
     - Flutter
   - AppAuth (1.6.2):
@@ -885,6 +891,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - amplitude_flutter (from `.symlinks/plugins/amplitude_flutter/ios`)
   - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
@@ -913,6 +920,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - Amplitude
+    - AnalyticsConnector
     - AppAuth
     - BoringSSL-GRPC
     - Firebase
@@ -945,6 +954,8 @@ SPEC REPOS:
     - Toast
 
 EXTERNAL SOURCES:
+  amplitude_flutter:
+    :path: ".symlinks/plugins/amplitude_flutter/ios"
   app_tracking_transparency:
     :path: ".symlinks/plugins/app_tracking_transparency/ios"
   cloud_firestore:
@@ -996,6 +1007,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: 926fb7a82dc6d2b8e1f2ed7f3a718bce691d1e46
+  Amplitude: 184def4f87aa26f94a93a7faa334e06b1cae704d
+  amplitude_flutter: 0f617f89d62b10c40a0ab14849e660a7c12e4e46
+  AnalyticsConnector: a53214d38ae22734c6266106c0492b37832633a9
   app_tracking_transparency: 5b1745ef9ade815f7455cb6a0848349589afb7c5
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
@@ -1053,4 +1067,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: e34bce9ff482d1413df2c1a10870aef72cddff65
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.15.2

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moing_flutter/board/board_main_page.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/group_create_category_page.dart';
@@ -47,6 +49,9 @@ class HomeScreenState extends ChangeNotifier {
 
   Future<void> initState() async {
     log('Instance "HomeScreenState" has been created');
+    /// Amplitude Test
+    // Amplitude.getInstance().logEvent("홈 화면 테스트");
+    // AmplitudeConfig.analytics.logEvent("현석스가 로그를 남겨요.", eventProperties: {"모잉": "업데이트가보자!"});
     print('newCreated : $newCreated');
     fToast.init(context);
     await loadTeamData();
