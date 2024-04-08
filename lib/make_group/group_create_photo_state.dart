@@ -5,14 +5,17 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moing_flutter/main/main_page.dart';
-import 'package:moing_flutter/make_group/group_create_success_page.dart';
 import 'package:moing_flutter/utils/global/api_generic.dart';
 import 'package:moing_flutter/utils/global/api_response.dart';
 import 'package:moing_flutter/model/request/make_team_request.dart';
 import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../repository/group_create_photo_repository.dart';
+
 class GroupCreatePhotoState extends ChangeNotifier {
+  late final GroupCreatePhotoRepository _groupCreatePhotoRepository;
+
   final BuildContext context;
   final ViewUtil viewUtil = ViewUtil();
   final APICall call = APICall();
@@ -45,8 +48,8 @@ class GroupCreatePhotoState extends ChangeNotifier {
     initState();
   }
 
-  void initState() {
-    log('Instance "MeetingPhotoState" has been created');
+  void initState() async {
+    _groupCreatePhotoRepository = GroupCreatePhotoRepository();
   }
 
   /// 프로필 사진
@@ -59,7 +62,7 @@ class GroupCreatePhotoState extends ChangeNotifier {
       await Permission.photos.request();
       final XFile? assetFile =
       await ImagePicker().pickImage(source: ImageSource.gallery);
-      avatarFile = assetFile;
+      avatarFile = await _groupCreatePhotoRepository.pickImage();
     } catch (e) {
       print('소모임 대표 사진 업로드 실패 : ${e.toString()}');
       if(e.toString().contains('photo access')) {
