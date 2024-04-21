@@ -265,7 +265,7 @@ class MissionCreateState extends ChangeNotifier {
       builder: (BuildContext context) {
         return Container(
           width: double.infinity,
-          height: 391,
+          height: 340,
           decoration: const BoxDecoration(
             color: grayScaleGrey600,
             borderRadius: BorderRadius.only(
@@ -292,16 +292,6 @@ class MissionCreateState extends ChangeNotifier {
                           size: 28, color: Colors.white),
                     ),
                   ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0, left: 20),
-                child: Text(
-                  '주 1회는 일반 미션으로 가능해요',
-                  style: bodyTextStyle.copyWith(
-                    color: grayScaleGrey400,
-                    fontWeight: FontWeight.w500,
-                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -586,7 +576,7 @@ class MissionCreateState extends ChangeNotifier {
 
       // 반복 미션 변경한 경우
       if(isRepeatSelected) {
-        repeatMission = missionCountIndex + 2;
+        repeatMission = missionCountIndex + 1;
         dueTo = '2099-12-31 00:00:00.000';
       } else {
         if (formattedTime.length < 1) {

@@ -1,11 +1,12 @@
 const List<String> missionCountList = [
-    '주 2회',
-    '주 3회',
-    '주 4회',
-    '주 5회',
-    '주 6회',
-    '주 7회',
-  ];
+  '주 1회',
+  '주 2회',
+  '주 3회',
+  '주 4회',
+  '주 5회',
+  '주 6회',
+  '주 7회',
+];
 
 const List<String> timeCountList = [
   '00시',
