@@ -82,6 +82,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   app_tracking_transparency: ^2.0.4
   amplitude_flutter: ^3.13.0
+  cached_network_image: ^3.3.1
 
 
 dev_dependencies:
