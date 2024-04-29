@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_state.dart';
 import 'package:moing_flutter/model/response/mission/fire_person_list_repsonse.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 
@@ -40,7 +42,8 @@ class MissionFireUser extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final bool isSelected =
                       context.watch<MissionFireState>().selectedIndex == index;
-                  final filteredUserList = context.watch<MissionFireState>().userList;
+                  final filteredUserList =
+                      context.watch<MissionFireState>().userList;
 
                   return GestureDetector(
                     onTap: () {
@@ -81,8 +84,10 @@ class MissionFireUser extends StatelessWidget {
                             borderRadius: BorderRadius.circular(50.0),
                             child: Stack(
                               children: [
-                                _buildProfileImage(filteredUserList[index]),
-                                if (filteredUserList[index].fireStatus == "False")
+                                _buildProfileImage(
+                                    filteredUserList[index], context),
+                                if (filteredUserList[index].fireStatus ==
+                                    "False")
                                   Positioned(
                                     top: 0,
                                     left: 0,
@@ -109,7 +114,8 @@ class MissionFireUser extends StatelessWidget {
                               style: contentTextStyle.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: (isSelected ||
-                                    filteredUserList[index].fireStatus == "False")
+                                        filteredUserList[index].fireStatus ==
+                                            "False")
                                     ? coralGrey500
                                     : grayScaleGrey300,
                               ),
@@ -124,7 +130,7 @@ class MissionFireUser extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileImage(FireReceiverData user) {
+  Widget _buildProfileImage(FireReceiverData user, BuildContext context) {
     ColorFilter colorFilter = ColorFilter.mode(
       grayScaleGrey600.withOpacity(0.7),
       BlendMode.overlay,
@@ -138,28 +144,12 @@ class MissionFireUser extends StatelessWidget {
               BlendMode.overlay,
             ),
       child: user.profileImg != null
-          ? Image.network(
-              user.profileImg!,
+          ? CachedNetworkImage(
+              imageUrl: user.profileImg!,
               fit: BoxFit.cover,
               width: 90,
               height: 90,
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                } else {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(grayScaleGrey500),
-                        strokeWidth: 2.0,
-                      ),
-                    ),
-                  );
-                }
-              },
+              memCacheWidth: 90.cacheSize(context),
             )
           : SvgPicture.asset(
               'asset/icons/icon_user_profile.svg',

@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/post/post_model.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 
 class PostCard extends StatelessWidget {
   final PostData postData;
@@ -19,7 +21,7 @@ class PostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _renderNoticeCardHeader(nickName: postData.writerNickName),
+          _renderNoticeCardHeader(nickName: postData.writerNickName, context: context),
           const SizedBox(height: 8.0),
           _renderNoticeCardBody(
             title: postData.title,
@@ -33,17 +35,19 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget _renderNoticeCardHeader({required String nickName}) {
+  Widget _renderNoticeCardHeader({required String nickName, required BuildContext context}) {
     return Row(
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
           child: postData.writerProfileImage != null
-              ? Image.network(
-                  postData.writerProfileImage!,
+              ? CachedNetworkImage(
+                  imageUrl: postData.writerProfileImage!,
                   fit: BoxFit.cover,
                   width: 20,
                   height: 20,
+                  memCacheWidth: 20.cacheSize(context),
+                  memCacheHeight: 20.cacheSize(context),
                 )
               : SvgPicture.asset(
                   'asset/icons/icon_user_profile.svg',

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/board/board_main_state.dart';
@@ -5,6 +6,7 @@ import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/elevated_button.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/model/response/single_board_team_member_info.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 
 class BoardGoalBottomSheet extends StatefulWidget {
@@ -14,7 +16,8 @@ class BoardGoalBottomSheet extends StatefulWidget {
   State<BoardGoalBottomSheet> createState() => _BoardGoalBottomSheetState();
 }
 
-class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> with SingleTickerProviderStateMixin  {
+class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet>
+    with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
 
   @override
@@ -325,11 +328,13 @@ class _BoardGoalBottomSheetState extends State<BoardGoalBottomSheet> with Single
                           ClipRRect(
                             borderRadius: BorderRadius.circular(50),
                             child: memberList?[index].profileImage != null
-                                ? Image.network(
-                                    memberList?[index].profileImage ?? '',
-                                    fit: BoxFit.cover,
+                                ? CachedNetworkImage(
+                                    imageUrl:
+                                        memberList?[index].profileImage ?? '',
                                     width: 20,
                                     height: 20,
+                                    memCacheWidth: 20.cacheSize(context),
+                                    memCacheHeight: 20.cacheSize(context),
                                   )
                                 : SvgPicture.asset(
                                     'asset/icons/icon_user_profile.svg',

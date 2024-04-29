@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/post/post_detail_state.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 
 class CommentCard extends StatelessWidget {
@@ -38,11 +40,13 @@ class _Header extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
           child: commentData.writerProfileImage != null
-              ? Image.network(
-                  commentData.writerProfileImage!,
+              ? CachedNetworkImage(
+                  imageUrl: commentData.writerProfileImage!,
                   fit: BoxFit.cover,
                   width: 20,
                   height: 20,
+                  memCacheWidth: 20.cacheSize(context),
+                  memCacheHeight: 20.cacheSize(context),
                 )
               : SvgPicture.asset(
                   'asset/icons/icon_user_profile.svg',

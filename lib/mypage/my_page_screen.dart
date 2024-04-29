@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
 import 'package:moing_flutter/mypage/component/joined_group_card.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 
 class MyPageScreen extends StatelessWidget {
@@ -62,11 +64,16 @@ class _Profile extends StatelessWidget {
                 child: context.watch<MyPageState>().myPageData != null &&
                         context.watch<MyPageState>().myPageData!.profileImage !=
                             null
-                    ? Image.network(
-                        context.watch<MyPageState>().myPageData!.profileImage!,
+                    ? CachedNetworkImage(
+                        imageUrl: context
+                            .watch<MyPageState>()
+                            .myPageData!
+                            .profileImage!,
                         fit: BoxFit.cover,
                         width: 80,
                         height: 80,
+                        memCacheWidth: 80.cacheSize(context),
+                        memCacheHeight: 80.cacheSize(context),
                       )
                     : SvgPicture.asset(
                         'asset/icons/icon_user_profile.svg',

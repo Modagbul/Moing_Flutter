@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
 import 'package:moing_flutter/model/response/get_team_mission_photo_list_response.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 
@@ -66,34 +68,19 @@ class HomeCardScroll extends StatelessWidget {
                             ClipOval(
                               child: teamList[index].profileImgUrl != null &&
                                       teamList[index].profileImgUrl.isNotEmpty
-                                  ? Image.network(
-                                      teamList[index].profileImgUrl,
-                                      width: 52.0,
-                                      height: 52.0,
+                                  ? CachedNetworkImage(
+                                      imageUrl: teamList[index].profileImgUrl,
+                                      width: 52,
+                                      height: 52,
+                                      memCacheWidth: 52.cacheSize(context),
                                       fit: BoxFit.cover,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        }
-                                        return const CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  grayScaleGrey500),
-                                          strokeWidth: 2.0,
-                                        );
-                                      },
-                                      errorBuilder: (BuildContext context,
-                                          Object error,
-                                          StackTrace? stackTrace) {
-                                        return SvgPicture.asset(
-                                          'asset/icons/group_basic_image.svg',
-                                          width: 52.0,
-                                          height: 52.0,
-                                          fit: BoxFit.cover,
-                                        );
-                                      },
+                                      errorWidget: (context, url, error) =>
+                                          SvgPicture.asset(
+                                        'assets/icons/group_basic_image.svg',
+                                        width: 52.0,
+                                        height: 52.0,
+                                        fit: BoxFit.cover,
+                                      ),
                                     )
                                   : SvgPicture.asset(
                                       'asset/icons/group_basic_image.svg',
@@ -160,35 +147,14 @@ class HomeCardScroll extends StatelessWidget {
                                             ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(4.0),
-                                              child: Image.network(
-                                                photoData.photo[index],
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    photoData.photo[index],
                                                 fit: BoxFit.cover,
-                                                width: 54,
-                                                height: 54,
-                                                loadingBuilder:
-                                                    (BuildContext context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-                                                  if (loadingProgress == null) {
-                                                    return child;
-                                                  } else {
-                                                    return const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                      Color>(
-                                                                  grayScaleGrey500),
-                                                          strokeWidth: 2.0,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
+                                                memCacheWidth:
+                                                    54.cacheSize(context),
+                                                memCacheHeight:
+                                                    54.cacheSize(context),
                                               ),
                                             ),
                                             const SizedBox(width: 2),
