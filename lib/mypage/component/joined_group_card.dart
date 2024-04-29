@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/response/get_my_page_data_response.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 
 class JoinedGroupCard extends StatelessWidget {
   final TeamBlock teamBlock;
@@ -19,19 +21,18 @@ class JoinedGroupCard extends StatelessWidget {
           ClipOval(
             child: teamBlock.profileImgUrl != null &&
                     teamBlock.profileImgUrl.isNotEmpty
-                ? Image.network(
-                    teamBlock.profileImgUrl,
+                ? CachedNetworkImage(
+                    imageUrl: teamBlock.profileImgUrl,
+                    fit: BoxFit.cover,
                     width: 80,
                     height: 80,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return SvgPicture.asset(
-                        'asset/icons/group_basic_image.svg',
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                      );
-                    },
+                    memCacheWidth: 80.cacheSize(context),
+                    errorWidget: (context, url, error) => SvgPicture.asset(
+                      'asset/icons/group_basic_image.svg',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
                   )
                 : SvgPicture.asset(
                     'asset/icons/group_basic_image.svg',

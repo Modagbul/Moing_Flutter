@@ -235,21 +235,6 @@ class BoardGoalScreen extends StatelessWidget {
               ),
             ),
           ),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () => context.read<BoardMainState>().getTeamFireLevel(),
-              splashColor: Colors.white,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.refresh,
-                  color: grayScaleGrey400,
-                ),
-              ),
-            ),
-          ),
           const SizedBox(width: 5.0),
         ],
       ),

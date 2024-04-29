@@ -36,7 +36,6 @@ class PostCreatePage extends StatelessWidget {
       appBar: _renderAppBar(context),
       body: GestureDetector(
         onTap: () {
-
           FocusScope.of(context).requestFocus(FocusNode());
         },
         child: SafeArea(
@@ -49,10 +48,10 @@ class PostCreatePage extends StatelessWidget {
                   const SizedBox(height: 32.0),
                   _renderHeader(header: header),
                   const SizedBox(height: 52.0),
-                  const _PostInfoTextFields(),
-                  const SizedBox(height: 85.0),
                   const _NoticeCheckContainer(),
-                  const SizedBox(height: 32.0),
+                  const SizedBox(height: 52.0),
+                  const _PostInfoTextFields(),
+                  const SizedBox(height: 65.0),
                 ],
               ),
             ),
@@ -70,7 +69,7 @@ class PostCreatePage extends StatelessWidget {
       padding: const EdgeInsets.only(left: 20, right: 20, bottom: 32, top: 16),
       child: ElevatedButton(
         onPressed: () async {
-          if(state.isButtonEnabled) {
+          if (state.isButtonEnabled) {
             await context.read<PostCreateState>().requestCreatePost();
           }
         },
@@ -201,8 +200,7 @@ class _NoticeCheckContainer extends StatelessWidget {
             onTap: context.read<PostCreateState>().toggleCheckedNotice,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child:
-              SvgPicture.asset(
+              child: SvgPicture.asset(
                 context.watch<PostCreateState>().isCheckedNotice
                     ? 'asset/icons/icon_check_box_active.svg'
                     : 'asset/icons/icon_check_box_default.svg',

@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/response/single_board_team_member_info.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 
 class TeamMemeberCard extends StatelessWidget {
   final TeamMemberInfo teamMemberInfo;
@@ -15,11 +17,13 @@ class TeamMemeberCard extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
           child: teamMemberInfo.profileImage != null
-              ? Image.network(
-                  teamMemberInfo.profileImage ?? '',
+              ? CachedNetworkImage(
+                  imageUrl: teamMemberInfo.profileImage ?? '',
                   fit: BoxFit.cover,
                   width: 56,
                   height: 56,
+                  memCacheWidth: 56.cacheSize(context),
+                  memCacheHeight: 56.cacheSize(context),
                 )
               : SvgPicture.asset(
                   'asset/icons/icon_user_profile.svg',
