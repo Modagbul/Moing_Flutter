@@ -12,6 +12,8 @@ class SingleMissionCard extends StatelessWidget {
   final String missionTitle;
   final String dueTo;
   final String status;
+  final String done;
+  final String total;
   final VoidCallback onTap;
 
   const SingleMissionCard({
@@ -21,28 +23,26 @@ class SingleMissionCard extends StatelessWidget {
     required this.teamName,
     required this.missionTitle,
     required this.dueTo,
-    required this.status,
     required this.onTap,
+    required this.status,
+    required this.done,
+    required this.total,
   });
 
   @override
   Widget build(BuildContext context) {
-    final int singleMissionMyCount =
-        context.watch<MissionsAllState>().singleMissionMyCount;
-    final int singleMissionTotalCount =
-        context.watch<MissionsAllState>().singleMissionTotalCount;
 
-    String formattedDueTo = status == 'SUCCESS' ? '인증완료' : formatDueTo(dueTo);
-    Color textColor = status == 'SUCCESS' ? coralGrey500 : grayScaleGrey550;
-    String completionText = status == 'SUCCESS'
-        ? '$singleMissionMyCount/$singleMissionTotalCount이 인증했어요'
-        : '$singleMissionMyCount명이 벌써 인증했어요';
-    Color textColor2 = status == 'SUCCESS' ? grayScaleGrey400 : grayScaleWhite;
-    Color containerColor = status == 'SUCCESS' ? grayScaleGrey500 : coralGrey500;
-    String clockAssetPath = status == 'SUCCESS'
+    String formattedDueTo = (status == 'COMPLETE' || status == 'SKIP') ? '인증완료' : formatDueTo(dueTo);
+    Color textColor = (status == 'COMPLETE' || status == 'SKIP')  ? coralGrey500 : grayScaleGrey550;
+    String completionText = (status == 'COMPLETE' || status == 'SKIP')
+        ? '$done/$total이 인증했어요'
+        : '$done명이 벌써 인증했어요';
+    Color textColor2 = (status == 'COMPLETE' || status == 'SKIP') ? grayScaleGrey400 : grayScaleWhite;
+    Color containerColor = (status == 'COMPLETE' || status == 'SKIP')  ? grayScaleGrey500 : coralGrey500;
+    String clockAssetPath = (status == 'COMPLETE' || status == 'SKIP')
         ? 'asset/icons/mission_single_clock_col.svg'
         : 'asset/icons/mission_single_clock.svg';
-    String tickCircleAssetPath = status == 'SUCCESS'
+    String tickCircleAssetPath = (status == 'COMPLETE' || status == 'SKIP')
         ? 'asset/icons/icon_tick_circle_white.svg'
         : 'asset/icons/icon_tick_circle.svg';
 
@@ -107,10 +107,11 @@ class SingleMissionCard extends StatelessWidget {
                           width: 4.0,
                         ),
                         Text(
-                          formattedDueTo,
+                          formattedDueTo.length > 17 ? '${formattedDueTo.substring(0, 17)}...' : formattedDueTo,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 12.0,
+                            overflow: TextOverflow.ellipsis,
                             color: textColor,
                           ),
                         ),

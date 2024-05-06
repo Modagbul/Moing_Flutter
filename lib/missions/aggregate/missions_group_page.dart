@@ -91,8 +91,12 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                         child: GroupSingleMissionCard(
                           missionId: e!.missionId,
                           teamId: e.teamId,
+                          teamName: e.teamName,
                           missionTitle: e.missionTitle,
                           dueTo: e.dueTo,
+                          done: e.done,
+                          total: e.total,
+                          status: e.status,
                           onTap: () {
                             Navigator.of(context).pushNamed(
                                 MissionProvePage.routeName,
@@ -162,9 +166,12 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                     return GroupRepeatMissionCard(
                       missionId: e!.missionId,
                       teamId: e.teamId,
+                      teamName: e.teamName,
                       missionTitle: e.missionTitle,
                       totalNum: e.totalNum,
                       doneNum: e.doneNum,
+                      donePeople: e.donePeople,
+                      totalPeople: e.totalPeople,
                       onTap: () {
                         Navigator.of(context).pushNamed(
                           MissionProvePage.routeName,
