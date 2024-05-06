@@ -14,9 +14,6 @@ class MissionsAllState extends ChangeNotifier {
   final APICall call = APICall();
   final ApiCode apiCode = ApiCode();
 
-  int singleMissionMyCount = 0;
-  int singleMissionTotalCount = 0;
-
   AggregateSingleMissionResponse? aggregateSingleMissionStatus;
   AggregateRepeatMissionStatusResponse? aggregateRepeatMissionStatus;
 
@@ -49,50 +46,11 @@ class MissionsAllState extends ChangeNotifier {
     );
   }
 
-  /// 모임원 미션 인증 성공 인원 조회 API
-  Future<void> loadTeamMissionProveCount(int teamId, int missionId) async {
-    apiUrl =
-    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/status';
-
-    try {
-      ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
-        url: apiUrl,
-        method: 'GET',
-        fromJson: (dataJson) => dataJson as Map<String, dynamic>,
-      );
-
-      if (apiResponse.data != null) {
-        singleMissionMyCount = int.parse(apiResponse.data?['done']);
-        singleMissionTotalCount = int.parse(apiResponse.data?['total']);
-        notifyListeners();
-      } else {
-        log('loadTeamMissionProveCount is Null, error code : ${apiResponse.errorCode}');
-      }
-    } catch (e) {
-      log('나의 성공 횟수 조회 실패: $e');
-    }
-  }
-
   Future<void> getAggregateRepeatMissionStatus() async {
-    aggregateRepeatMissionStatus = await apiCode.getAggregateRepeatMissionStatus();
-    if (aggregateRepeatMissionStatus != null && aggregateRepeatMissionStatus!.isSuccess) {
-      for (var mission in aggregateRepeatMissionStatus!.data) {
-        int currentMissionId = mission.missionId;
-        int currentTeamId = mission.teamId;
-
-        // 예시: 다른 함수 호출 또는 처리
-        await loadTeamMissionProveCount(currentTeamId, currentMissionId);
-      }
-    }
+    aggregateRepeatMissionStatus =
+        await apiCode.getAggregateRepeatMissionStatus();
     notifyListeners();
   }
-
-  // Future<void> getAggregateRepeatMissionStatus() async {
-  //   aggregateRepeatMissionStatus =
-  //       await apiCode.getAggregateRepeatMissionStatus();
-  //   notifyListeners();
-  // }
 
   Future<void> getAggregateSingleMissionStatus() async {
     aggregateSingleMissionStatus =

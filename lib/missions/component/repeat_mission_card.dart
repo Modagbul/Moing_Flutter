@@ -11,6 +11,8 @@ class RepeatMissionCard extends StatelessWidget {
   final String missionTitle;
   final String totalNum;
   final String doneNum;
+  final String donePeople;
+  final String totalPeople;
   final VoidCallback onTap;
 
   const RepeatMissionCard({
@@ -20,16 +22,13 @@ class RepeatMissionCard extends StatelessWidget {
     required this.missionTitle,
     required this.totalNum,
     required this.doneNum,
+    required this.donePeople,
+    required this.totalPeople,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final int singleMissionMyCount =
-        context.watch<MissionsAllState>().singleMissionMyCount;
-    final int singleMissionTotalCount =
-        context.watch<MissionsAllState>().singleMissionTotalCount;
-
     int done = int.tryParse(doneNum) ?? 0;
     int total = int.tryParse(totalNum) ?? 1; // 0으로 나누는 것을 방지하기 위해 기본값을 1로 설정
 
@@ -96,7 +95,7 @@ class RepeatMissionCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '$singleMissionMyCount/$singleMissionTotalCount',
+                            '$donePeople/$totalPeople',
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14.0,

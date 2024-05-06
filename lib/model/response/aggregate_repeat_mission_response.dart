@@ -29,6 +29,8 @@ class AggregateRepeatMission {
   String missionTitle;
   String doneNum;
   String totalNum;
+  String donePeople;
+  String totalPeople;
   String status;
 
   AggregateRepeatMission({
@@ -38,6 +40,8 @@ class AggregateRepeatMission {
     required this.missionTitle,
     required this.doneNum,
     required this.totalNum,
+    required this.donePeople,
+    required this.totalPeople,
     required this.status,
   });
 
@@ -50,6 +54,8 @@ class AggregateRepeatMission {
       doneNum: json['doneNum'],
       totalNum: json['totalNum'],
       status: json['status'],
+      donePeople: json['donePeople'],
+      totalPeople: json['totalPeople'],
     );
   }
 }
