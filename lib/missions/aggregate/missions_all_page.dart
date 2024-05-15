@@ -16,17 +16,12 @@ class MissionsAllPage extends StatelessWidget {
   const MissionsAllPage({super.key});
 
   static route(BuildContext context) {
-    // final argument = ModalRoute.of(context)?.settings.arguments as MissionProveArgument;
-    // final int teamId = argument.teamId;
-    // final int missionId = argument.missionId;
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (context) => MissionsAllState(
             context: context,
-            // teamId: teamId,
-            // missionId: missionId,
           ),
           lazy: false,
         ),
@@ -75,6 +70,8 @@ class MissionsAllPage extends StatelessWidget {
                           teamName: e.teamName,
                           missionTitle: e.missionTitle,
                           dueTo: e.dueTo,
+                          done: e.done,
+                          total: e.total,
                           status: e.status,
                           onTap: () {
                             Navigator.of(context).pushNamed(
@@ -146,6 +143,8 @@ class MissionsAllPage extends StatelessWidget {
                       missionTitle: e.missionTitle,
                       totalNum: e.totalNum,
                       doneNum: e.doneNum,
+                      donePeople: e.donePeople,
+                      totalPeople: e.totalPeople,
                       onTap: () {
                         Navigator.of(context).pushNamed(
                           MissionProvePage.routeName,

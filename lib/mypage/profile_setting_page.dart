@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/mypage/profile_setting_state.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:moing_flutter/utils/text_field/outlined_text_field.dart';
 import 'package:provider/provider.dart';
 
@@ -154,11 +156,16 @@ class _Profile extends StatelessWidget {
                   null)
             ClipRRect(
               borderRadius: BorderRadius.circular(40),
-              child: Image.network(
-                context.watch<ProfileSettingState>().profileData!.profileImage!,
+              child: CachedNetworkImage(
+                imageUrl: context
+                    .watch<ProfileSettingState>()
+                    .profileData!
+                    .profileImage!,
                 fit: BoxFit.cover,
-                width: 80.0,
-                height: 80.0,
+                width: 80,
+                height: 80,
+                memCacheWidth: 80.cacheSize(context),
+                memCacheHeight: 80.cacheSize(context),
               ),
             ),
           if (context.watch<ProfileSettingState>().avatarFile != null)

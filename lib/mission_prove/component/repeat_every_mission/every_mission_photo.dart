@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 
 class EveryMissionPhoto extends StatelessWidget {
   final int index;
+
   const EveryMissionPhoto({required this.index, Key? key}) : super(key: key);
 
   @override
@@ -13,11 +16,13 @@ class EveryMissionPhoto extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Image.network(
-            state.everyMissionList![index].archive,
+          child: CachedNetworkImage(
+            imageUrl: state.everyMissionList![index].archive,
             fit: BoxFit.cover,
             width: 172,
             height: 155,
+            memCacheWidth: 172.cacheSize(context),
+            memCacheHeight: 155.cacheSize(context),
           ),
         ),
       ],

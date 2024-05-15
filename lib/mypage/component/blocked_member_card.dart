@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 
 import '../../make_group/component/warning_dialog.dart';
@@ -28,11 +30,12 @@ class BlockedMemberCard extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
           child: profileImg.isNotEmpty
-              ? Image.network(
-                  profileImg,
+              ? CachedNetworkImage(
+                  imageUrl: profileImg,
                   fit: BoxFit.cover,
                   width: 56,
                   height: 56,
+                  memCacheWidth: 56.cacheSize(context),
                 )
               : SvgPicture.asset(
                   'asset/icons/icon_user_profile.svg',
@@ -83,7 +86,6 @@ class BlockedMemberCard extends StatelessWidget {
     );
   }
 
-
   void _showQuestionDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -93,8 +95,7 @@ class BlockedMemberCard extends StatelessWidget {
           children: [
             WarningDialog(
               title: '$nickName님을 해제하시겠어요?',
-              content:
-              '차단한 이용자의 콘텐츠가 다시 표시돼요',
+              content: '차단한 이용자의 콘텐츠가 다시 표시돼요',
               leftText: '취소하기',
               onCanceled: () {
                 Navigator.of(ctx).pop();
@@ -102,7 +103,10 @@ class BlockedMemberCard extends StatelessWidget {
               rightText: '해제하기',
               onConfirm: () async {
                 await Provider.of<BlockedUsersState>(context, listen: false)
-                    .unblockUser(targetId: targetId, nickName: nickName,);
+                    .unblockUser(
+                  targetId: targetId,
+                  nickName: nickName,
+                );
 
                 Provider.of<BlockedUsersState>(context, listen: false)
                     .reloadBlockedMemberStatus();
@@ -116,5 +120,3 @@ class BlockedMemberCard extends StatelessWidget {
     );
   }
 }
-
-

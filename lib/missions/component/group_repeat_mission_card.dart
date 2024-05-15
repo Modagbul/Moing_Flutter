@@ -5,26 +5,32 @@ import '../../const/color/colors.dart';
 
 class GroupRepeatMissionCard extends StatelessWidget {
   final int missionId;
-  final int? teamId;
+  final int teamId;
+  final String teamName;
   final String missionTitle;
   final String totalNum;
   final String doneNum;
+  final String donePeople;
+  final String totalPeople;
   final VoidCallback onTap;
 
   const GroupRepeatMissionCard({
     super.key,
     required this.missionId,
     required this.teamId,
+    required this.teamName,
     required this.missionTitle,
     required this.totalNum,
     required this.doneNum,
+    required this.donePeople,
+    required this.totalPeople,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     int done = int.tryParse(doneNum) ?? 0;
-    int total = int.tryParse(totalNum) ?? 1;
+    int total = int.tryParse(totalNum) ?? 1; // 0으로 나누는 것을 방지하기 위해 기본값을 1로 설정
 
     double percent = (total > 0) ? done / total : 0.0;
 
@@ -83,6 +89,30 @@ class GroupRepeatMissionCard extends StatelessWidget {
                         ),
                       ],
                     ),
+                    footer: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '$donePeople/$totalPeople',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.0,
+                              color: coralGrey500,
+                            ),
+                          ),
+                          const Text(
+                            '명이 인증했어요',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.0,
+                              color: grayScaleGrey550,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor: coralGrey500,
                   ),
@@ -106,13 +136,28 @@ class GroupRepeatMissionCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                child: Text(
-                  '주 $totalNum회',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.0,
-                    color: grayScaleGrey550,
-                  ),
+                child: Row(
+                  children: [
+                    Text(
+                      teamName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.0,
+                        color: grayScaleGrey550,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      '주 ${total}회',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.0,
+                        color: grayScaleGrey550,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
