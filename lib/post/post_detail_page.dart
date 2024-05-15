@@ -407,7 +407,7 @@ class PostDetailPage extends StatelessWidget {
       ),
       child: Column(
         children: filteredCommentList.map((CommentData comment) {
-          return CommentCard(commentData: comment);
+          return CommentCard(commentData: comment, category: 'post');
         }).toList(),
       ),
     );

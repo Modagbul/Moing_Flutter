@@ -27,9 +27,12 @@ class MyMissionProveData {
   final String heartStatus;
   final int hearts;
   final String? nickname;
+  final String? contents;
+  int? comments;
 
   MyMissionProveData({required this.archiveId, required this.archive, required this.way, required this.createdDate,
-  required this.status, required this.count, required this.heartStatus, required this.hearts, required this.nickname});
+  required this.status, required this.count, required this.heartStatus, required this.hearts, required this.nickname,
+  required this.contents, required this.comments});
 
   factory MyMissionProveData.fromJson(Map<String, dynamic> json) {
     return MyMissionProveData(
@@ -42,11 +45,14 @@ class MyMissionProveData {
       heartStatus: json['heartStatus'] as String,
       hearts: json['hearts'] as int,
       nickname: json['nickname'] as String?,
+      contents: json['contents'] as String?,
+      comments: json['comments'] as int?,
     );
   }
 
   @override
   String toString() {
-    return 'MyMissionProveData(archiveId: $archiveId, archive: $archive, way: $way, createdDate: $createdDate, status: $status, count: $count, heartStatus: $heartStatus, hearts: $hearts)';
+    return 'MyMissionProveData(archiveId: $archiveId, archive: $archive, way: $way, createdDate: $createdDate, '
+        'status: $status, count: $count, heartStatus: $heartStatus, hearts: $hearts, nickname: $nickname, contensts: $contents)';
   }
 }

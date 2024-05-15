@@ -11,6 +11,7 @@ class EveryMissionProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int commentsCount = context.watch<MissionProveState>().everyMissionList![index].comments ?? 0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -48,13 +49,32 @@ class EveryMissionProfile extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-          context
-              .watch<MissionProveState>()
-              .everyMissionList![index].nickname,
-          style: bodyTextStyle.copyWith(color: grayScaleGrey100),
-          overflow: TextOverflow.ellipsis,
+        SizedBox(
+          width: 90,
+          child: Text(
+            context.watch<MissionProveState>().everyMissionList![index].nickname,
+            style: bodyTextStyle.copyWith(color: grayScaleGrey100),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
+        const Spacer(),
+        Row(
+          children: [
+            SvgPicture.asset(
+              'asset/icons/message.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.cover,
+              color: grayScaleGrey400,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              commentsCount > 99 ? '99+' : commentsCount.toString(),
+              style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+            ),
+          ],
+        ),
+        const SizedBox(width: 4),
       ],
     );
   }

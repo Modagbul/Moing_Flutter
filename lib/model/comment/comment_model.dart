@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 class CommentData {
-  final int boardCommentId;
+  final int commentId;
   final String content;
   final String writerNickName;
   final bool writerIsLeader;
@@ -12,7 +12,7 @@ class CommentData {
   final int makerId;
 
   CommentData({
-    required this.boardCommentId,
+    required this.commentId,
     required this.content,
     required this.writerNickName,
     required this.writerIsLeader,
@@ -24,9 +24,9 @@ class CommentData {
   });
 
   factory CommentData.fromJson(Map<String, dynamic> json) {
-    log(json.toString());
+    // log(json.toString());
     return CommentData(
-      boardCommentId: json['boardCommentId'] as int,
+      commentId: json['commentId'] as int,
       content: json['content'] as String,
       writerNickName: json['writerNickName'] as String,
       writerIsLeader: json['writerIsLeader'] as bool,

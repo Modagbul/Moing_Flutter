@@ -10,12 +10,15 @@ class EveryMissionProveData {
   final String status;
   final int count;
   final int makerId;
+  final String? contents;
+  final int? comments;
 
   EveryMissionProveData({required this.archiveId, required this.nickname, required this.profileImg,
     required this.archive, required this.createdDate, required this.way, required this.heartStatus,
-    required this.hearts, required this.status, required this.count, required this.makerId});
+    required this.hearts, required this.status, required this.count,
+    required this.makerId, required this.contents, required this.comments});
 
-  set setheartStatus(String newHeartStatus) {
+  set setHeartStatus(String newHeartStatus) {
     heartStatus = newHeartStatus;
   }
 
@@ -36,6 +39,8 @@ class EveryMissionProveData {
       status: json['status'] as String,
       count: json['count'] as int,
       makerId: json['makerId'] as int,
+      contents: json['contents'] as String?,
+      comments: json['comments'] as int?,
     );
   }
 
@@ -44,6 +49,6 @@ class EveryMissionProveData {
     return 'EveryMissionProveData(archiveId: $archiveId, nickname: $nickname, '
         'profileImg: $profileImg, archive: $archive, createdDate: $createdDate, '
         'way: $way, heartStatus: $heartStatus, hearts: $hearts,'
-        ' status: $status, count: $count, makerId: $makerId)';
+        ' status: $status, count: $count, makerId: $makerId, contents: $contents, comments: $comments)';
   }
 }

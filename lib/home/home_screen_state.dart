@@ -49,10 +49,6 @@ class HomeScreenState extends ChangeNotifier {
 
   Future<void> initState() async {
     log('Instance "HomeScreenState" has been created');
-    /// Amplitude Test
-    // Amplitude.getInstance().logEvent("홈 화면 테스트");
-    // AmplitudeConfig.analytics.logEvent("현석스가 로그를 남겨요.", eventProperties: {"모잉": "업데이트가보자!"});
-    print('newCreated : $newCreated');
     fToast.init(context);
     await loadTeamData();
     await getTeamMissionPhotoListData();
@@ -131,8 +127,8 @@ class HomeScreenState extends ChangeNotifier {
   Future<void> loadTeamData() async {
     futureData = await fetchApiData();
     if (futureData != null) {
-      print('futureData length : ${futureData?.teamBlocks.length}');
       teamList = futureData!.teamBlocks.reversed.toList();
+      setUserInfo(futureData!.userProperty.birthDate, futureData!.memberNickName);
       SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
       sharedPreferencesInfo.savePreferencesData(
           'teamCount', teamList.length.toString());
@@ -222,5 +218,37 @@ class HomeScreenState extends ChangeNotifier {
     }
 
     return convertedCategory;
+  }
+
+  void setUserInfo(String birthDay, String nickname) {
+    try {
+      /// Amplitude - 유저 프로퍼티 설정
+      AmplitudeConfig amplitudeConfig = AmplitudeConfig();
+      int birth = int.parse(birthDay.split("-")[0]);
+      // 나이
+      int userAge = DateTime.now().year - birth + 1;
+      String ageGroup = '';
+      if (birth >= 2015) {
+        ageGroup = '10대 이하';
+      } else if (birth >= 2006 && birth < 2015) {
+        ageGroup = '10대';
+      } else if (birth >= 2002 && birth <= 2005) {
+        ageGroup = '20대 초반';
+      } else if (birth >= 1999 && birth <= 2001) {
+        ageGroup = '20대 중반';
+      } else if (birth >= 1995 && birth <= 1998) {
+        ageGroup = '20대 후반';
+      } else if (birth >= 1991 && birth <= 1994) {
+        ageGroup = '30대 초반';
+      } else if (birth >= 1988 && birth <= 1990) {
+        ageGroup = '30대 중반';
+      } else if (birth >= 1985 && birth <= 1987) {
+        ageGroup = '30대 후반';
+      }
+      amplitudeConfig.setUserInfo(
+          gender: futureData!.userProperty.gender, age: userAge, ageGroup: ageGroup, nickname: nickname);
+    } catch(e) {
+      print('유저 프로퍼티 생성 도중 에러 발생: $e');
+    }
   }
 }
