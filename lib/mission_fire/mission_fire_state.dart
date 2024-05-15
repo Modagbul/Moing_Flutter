@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
@@ -112,8 +113,7 @@ class MissionFireState extends ChangeNotifier {
       return;
     }
 
-    apiUrl =
-        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/fire/${userList![selectedIndex!].receiveMemberId}';
+    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/fire/${userList![selectedIndex!].receiveMemberId}';
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -124,6 +124,13 @@ class MissionFireState extends ChangeNotifier {
       );
 
       if (apiResponse.data != null) {
+        String? nickname = await AmplitudeConfig.analytics.getUserId();
+        if(nickname == null) {
+          AmplitudeConfig.analytics.logEvent("불 던지기", eventProperties: {"불 떨어진 사람": userList![selectedIndex!].nickname});
+        } else {
+          AmplitudeConfig.analytics.logEvent("불 던지기", eventProperties: {
+            "불 떨어진 사람": userList![selectedIndex!].nickname, "불 던지는 사람": nickname});
+        }
         loadFirePersonList();
         compeleteThrowFireModal();
         initSelectedUser();

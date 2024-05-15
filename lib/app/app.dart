@@ -34,6 +34,7 @@ import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
+import 'package:moing_flutter/missions/create/photo_auth_page.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_page.dart';
 import 'package:moing_flutter/mypage/alarm_setting_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
@@ -110,6 +111,7 @@ class MoingApp extends StatelessWidget {
             MissionProvePage.routeName: (context) => MissionProvePage.route(context),
             TextAuthPage.routeName:(context) => TextAuthPage.route(context),
             LinkAuthPage.routeName:(context) => LinkAuthPage.route(context),
+            PhotoAuthPage.routeName:(context) => PhotoAuthPage.route(context),
             SkipMissionPage.routeName:(context) => SkipMissionPage.route(context),
 
             AlarmPage.routeName: (context) => AlarmPage.route(context),

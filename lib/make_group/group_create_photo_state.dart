@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/make_group/group_create_success_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
@@ -200,9 +201,13 @@ class GroupCreatePhotoState extends ChangeNotifier {
 
       if (apiResponse.data?['teamId'] != null) {
         print('소모임 생성 완료! : ${apiResponse.data?['teamId']}');
-        // Navigator.of(context).pushNamed(
-        //   GroupCreateSuccessPage.routeName,
-        // );
+        String? nickname = await AmplitudeConfig.analytics.getUserId();
+        if(nickname == null) {
+          AmplitudeConfig.analytics.logEvent("모임 생성", eventProperties: {"소모임 이름": name});
+        } else {
+          AmplitudeConfig.analytics.logEvent("모임 생성", eventProperties: {
+            "소모임 이름": name, "모임 만든 사람": nickname});
+        }
         Navigator.pushNamedAndRemoveUntil(
           context,
           MainPage.routeName,

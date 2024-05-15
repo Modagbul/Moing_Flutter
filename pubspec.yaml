@@ -82,7 +82,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   app_tracking_transparency: ^2.0.4
   amplitude_flutter: ^3.13.0
-
+  readmore: ^2.1.0
 
 dev_dependencies:
   flutter_test:

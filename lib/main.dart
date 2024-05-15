@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
   /// Amplitude 세팅
   AmplitudeConfig().init();
+  /// Amplitude 세션 자동 추적
+  Amplitude.getInstance().trackingSessionEvents(true);
   runApp(const MoingApp());
 }
 

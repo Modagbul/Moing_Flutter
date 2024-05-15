@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:amplitude_flutter/identify.dart';
 
 class AmplitudeConfig {
-  static late Amplitude analytics = Amplitude.getInstance(instanceName: "team-moing");
+  static Amplitude analytics = Amplitude.getInstance(instanceName: "team-moing");
 
   Future<void> init() async {
     String apiKey = dotenv.env['AMPLITUDE_API_KEY']!;
@@ -10,22 +13,11 @@ class AmplitudeConfig {
     // Enable COPPA privacy guard. This is useful when you choose not to report sensitive user information.
     analytics.enableCoppaControl();
 
-    // Set user Id
-    analytics.setUserId("IAMHYUNSEOK");
-
     // Turn on automatic session events
     analytics.trackingSessionEvents(true);
-
     // // Log an event
     // analytics.logEvent('MyApp startup',
     //     eventProperties: {'friend_num': 10, 'is_heavy_user': true});
-
-    // // Identify
-    // final Identify identify1 = Identify()
-    //   ..set('identify_test',
-    //       'identify sent at ${DateTime.now().millisecondsSinceEpoch}')
-    //   ..add('identify_count', 1);
-    // analytics.identify(identify1);
 
     // Set group
     // analytics.setGroup('orgId', 15);
@@ -33,5 +25,14 @@ class AmplitudeConfig {
     // // Group identify
     // final Identify identify2 = Identify()..set('identify_count', 1);
     // analytics.groupIdentify('orgId', '15', identify2);
+  }
+
+  void setUserInfo({required String gender, required int age, required String ageGroup, required String nickname}) {
+    analytics.setUserId(nickname);
+    final Identify identify = Identify()
+      ..set('gender', gender)
+      ..set('age', age)
+      ..set('age_group', ageGroup);
+    analytics.identify(identify);
   }
 }

@@ -28,8 +28,7 @@ class MissionState {
           children: [
             WarningDialog(
               title: title,
-              content:
-                  '차단한 이용자의 콘텐츠가 더 이상 표시되지 않아요\n[설정>차단 멤버 관리]에서 언제든 해제할 수 있어요',
+              content: '차단한 이용자의 콘텐츠가 더 이상 표시되지 않아요\n[설정>차단 멤버 관리]에서 언제든 해제할 수 있어요',
               onConfirm: () {
                 Navigator.of(ctx).pop(true);
               },

@@ -30,7 +30,7 @@ class EveryMissionProved extends StatelessWidget {
           childCount:
           context.watch<MissionProveState>().everyMissionList!.length,
         ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 8,
           mainAxisSpacing: 4,
@@ -50,7 +50,10 @@ class EveryMissionProved extends StatelessWidget {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () => readState.getMissionDetailContent(index),
+          onTap: () async {
+            await readState.loadMyMissionCommentData(readState.everyMissionList![index].archiveId);
+            readState.getMissionDetailContent(index);
+          },
           child: Column(
             children: [
               // 스킵일 때

@@ -7,8 +7,9 @@ import 'package:provider/provider.dart';
 
 class CommentCard extends StatelessWidget {
   final CommentData commentData;
+  final String category;
 
-  const CommentCard({super.key, required this.commentData});
+  const CommentCard({super.key, required this.commentData, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class CommentCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Header(commentData: commentData),
+          _Header(commentData: commentData, category: category),
           const SizedBox(height: 12.0),
           _Content(commentData: commentData),
         ],
@@ -28,8 +29,9 @@ class CommentCard extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   final CommentData commentData;
+  final String category;
 
-  const _Header({required this.commentData});
+  const _Header({required this.commentData, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +46,20 @@ class _Header extends StatelessWidget {
                   width: 20,
                   height: 20,
                 )
-              : SvgPicture.asset(
+              : category == 'post' 
+                ? SvgPicture.asset(
                   'asset/icons/icon_user_profile.svg',
                   fit: BoxFit.cover,
                   width: 20,
                   height: 20,
-                ),
+                )
+                : Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                        color: grayScaleGrey100,
+                        borderRadius: BorderRadius.circular(50)),
+                  ),
         ),
         const SizedBox(width: 8.0),
         Text(
@@ -71,8 +81,12 @@ class _Header extends StatelessWidget {
         commentData.isWriter
             ? GestureDetector(
                 onTap: () async {
-                  await context.read<PostDetailState>().deleteComment(
-                      boardCommentId: commentData.boardCommentId);
+                  if(category == 'post') {
+                    await context.read<PostDetailState>().deleteComment(
+                        boardCommentId: commentData.commentId);
+                  } else {
+                    // 미션인 경우
+                  }
                 },
                 child: const Text(
                   '삭제',
@@ -85,11 +99,15 @@ class _Header extends StatelessWidget {
               )
             : GestureDetector(
                 onTap: () {
-                  context.read<PostDetailState>().showReportCommentModal(
-                        context: context,
-                        reportType: "COMMENT",
-                        targetId: commentData.boardCommentId,
-                      );
+                  if(category == 'post') {
+                    context.read<PostDetailState>().showReportCommentModal(
+                      context: context,
+                      reportType: "COMMENT",
+                      targetId: commentData.commentId,
+                    );
+                  } else {
+                    // 미션인 경우
+                  }
                 },
                 child: const Text(
                   '신고',
