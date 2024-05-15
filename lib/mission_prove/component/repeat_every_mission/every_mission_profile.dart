@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 
 class EveryMissionProfile extends StatelessWidget {
@@ -30,22 +32,13 @@ class EveryMissionProfile extends StatelessWidget {
                   ),
                 )
               : ClipOval(
-            child: Image.network(
-              context.watch<MissionProveState>()
-                  .everyMissionList![index]
-                  .profileImg!,
+            child: CachedNetworkImage(
+              imageUrl: context.watch<MissionProveState>().everyMissionList![index].profileImg!,
+              fit: BoxFit.cover,
               width: 20,
               height: 20,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return ClipOval(
-                  child: SvgPicture.asset(
-                    'asset/icons/home_card_user.svg',
-                    width: 20,
-                    height: 20,
-                  ),
-                );
-              },
+              memCacheWidth: 20.cacheSize(context),
+              memCacheHeight: 20.cacheSize(context),
             ),
           ),
         ),

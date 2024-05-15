@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ import 'package:moing_flutter/model/response/mission/other_mission_get_prove_res
 import 'package:moing_flutter/post/component/comment_card.dart';
 import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
 import 'package:moing_flutter/utils/custom_text_elipsis/custom_text_elip.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:moing_flutter/utils/image_upload/image_upload.dart';
 import 'package:moing_flutter/utils/toast/toast_message.dart';
 import 'package:path_provider/path_provider.dart';
@@ -799,13 +801,15 @@ class MissionProveState with ChangeNotifier {
                             borderRadius: BorderRadius.circular(16),
                             child: Stack(
                               children: [
-                                Image.network(
-                                  index != null
+                                CachedNetworkImage(
+                                  imageUrl: index != null
                                       ? myMissionList![index].archive
                                       : myMissionList![0].archive,
+                                  fit: BoxFit.cover,
                                   width: 313,
                                   height: 313,
-                                  fit: BoxFit.cover,
+                                  memCacheWidth: 313.cacheSize(context),
+                                  memCacheHeight: 313.cacheSize(context),
                                 ),
                                 Positioned(
                                   bottom: 0,
@@ -1165,26 +1169,13 @@ class MissionProveState with ChangeNotifier {
                                           // 한번인증이면서 유저프로필이 있을 때
                                           !isRepeated && currentMission.profileImg != null
                                               ? ClipOval(
-                                                  child: Image.network(
-                                                    currentMission.profileImg,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: currentMission.profileImg,
+                                                    fit: BoxFit.cover,
                                                     width: 20,
                                                     height: 20,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context, error, stackTrace) {
-                                                      return Container(
-                                                        alignment: Alignment.center,
-                                                        width: 24,
-                                                        height: 24,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(16),
-                                                          color: Colors.white,
-                                                        ),
-                                                        child: Text(
-                                                          currentMission.count.toString(),
-                                                          style: bodyTextStyle.copyWith(color: grayScaleGrey700),
-                                                        ),
-                                                      );
-                                                    },
+                                                    memCacheWidth: 20.cacheSize(context),
+                                                    memCacheHeight: 20.cacheSize(context),
                                                   ),
                                                 )
                                               : Container(
@@ -1571,8 +1562,8 @@ class MissionProveState with ChangeNotifier {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.network(
-                        image,
+                      CachedNetworkImage(
+                        imageUrl: image,
                         fit: BoxFit.cover,
                       ),
                     ],
@@ -1621,8 +1612,8 @@ class MissionProveState with ChangeNotifier {
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Image.network(
-            currentMission.archive,
+          child: CachedNetworkImage(
+            imageUrl: currentMission.archive,
             fit: BoxFit.cover,
           ),
         ),

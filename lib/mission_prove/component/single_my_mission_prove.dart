@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,17 +51,19 @@ class SingleMyMissionProved extends StatelessWidget {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
-                                child: Image.network(
-                                  state.myMissionList![0].archive,
+                                child: CachedNetworkImage(
+                                  imageUrl: state.myMissionList![0].archive,
+                                  fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: double.infinity,
-                                  fit: BoxFit.cover,
+                                  memCacheWidth: double.infinity.cacheSize(context),
+                                  memCacheHeight: double.infinity.cacheSize(context),
                                 ),
                               ),
                               Align(
                                 alignment: Alignment.topCenter,
                                 child: Container(
-                                  height: 100, // 이 값을 조절하여 scrim의 높이를 조절하세요
+                                  height: 100,
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       begin: Alignment.topCenter,
