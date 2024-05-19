@@ -201,26 +201,21 @@ class RepeatMyMissionProved extends StatelessWidget {
               const SizedBox(height: 12),
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  final String text = context
-                      .watch<MissionProveState>()
-                      .myMissionList![index]
-                      .archive;
+                  final String text = context.watch<MissionProveState>().myMissionList![index].archive;
                   final TextStyle textStyle = bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500, color: grayScaleGrey200);
-                  final TextSpan textSpan =
-                      TextSpan(text: text, style: textStyle);
+                  final TextSpan textSpan = TextSpan(text: text, style: textStyle);
                   final TextPainter textPainter = TextPainter(
                     text: textSpan,
                     maxLines: 3,
                     textDirection: TextDirection.ltr,
                   );
-
                   textPainter.layout(maxWidth: constraints.maxWidth);
 
                   // overflow 발생 시
                   if (textPainter.didExceedMaxLines) {
                     return Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -228,7 +223,6 @@ class RepeatMyMissionProved extends StatelessWidget {
                             text,
                             style: textStyle,
                             maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             '...',

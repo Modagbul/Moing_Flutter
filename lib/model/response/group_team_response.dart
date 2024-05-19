@@ -62,8 +62,8 @@ class TeamBlock {
 }
 
 class UserProperty {
-  final String gender;
-  final String birthDate;
+  final String? gender;
+  final String? birthDate;
 
   UserProperty({
     required this.gender,

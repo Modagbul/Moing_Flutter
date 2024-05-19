@@ -14,6 +14,10 @@ class SingleMyMissionProved extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var state = context.watch<MissionProveState>();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = (state.missionWay.length > 1 && state.missionWay.contains('링크') &&
+        state.myMissionList![0].status == 'COMPLETE') ? 192 : 300;
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverToBoxAdapter(
@@ -22,12 +26,8 @@ class SingleMyMissionProved extends StatelessWidget {
             GestureDetector(
               onTap: () => context.read<MissionProveState>().getMissionDetailContent(0),
               child: Container(
-                width: double.infinity,
-                height: (state.missionWay.length > 1 &&
-                        state.missionWay.contains('링크') &&
-                        state.myMissionList![0].status == 'COMPLETE')
-                    ? 192
-                    : 300,
+                width: screenWidth,
+                height: screenHeight.toDouble(),
                 decoration: BoxDecoration(
                   color: grayScaleGrey700,
                   borderRadius: BorderRadius.circular(16),
@@ -56,8 +56,8 @@ class SingleMyMissionProved extends StatelessWidget {
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: double.infinity,
-                                  memCacheWidth: double.infinity.cacheSize(context),
-                                  memCacheHeight: double.infinity.cacheSize(context),
+                                  memCacheWidth: screenWidth.toInt(),
+                                  memCacheHeight: screenHeight,
                                 ),
                               ),
                               Align(

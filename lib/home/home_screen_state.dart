@@ -128,7 +128,12 @@ class HomeScreenState extends ChangeNotifier {
     futureData = await fetchApiData();
     if (futureData != null) {
       teamList = futureData!.teamBlocks.reversed.toList();
-      setUserInfo(futureData!.userProperty.birthDate, futureData!.memberNickName);
+      try {
+        print('유저 프로퍼티 설정 시작!');
+        setUserInfo(futureData!.userProperty.birthDate ?? 'null', futureData!.memberNickName, futureData!.userProperty.gender ?? 'null');
+      } catch(e) {
+        print('유저 프로퍼티 설정 도중 에러 발생: ${e.toString()}');
+      }
       SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
       sharedPreferencesInfo.savePreferencesData(
           'teamCount', teamList.length.toString());
@@ -220,35 +225,40 @@ class HomeScreenState extends ChangeNotifier {
     return convertedCategory;
   }
 
-  void setUserInfo(String birthDay, String nickname) {
-    try {
-      /// Amplitude - 유저 프로퍼티 설정
-      AmplitudeConfig amplitudeConfig = AmplitudeConfig();
-      int birth = int.parse(birthDay.split("-")[0]);
-      // 나이
-      int userAge = DateTime.now().year - birth + 1;
-      String ageGroup = '';
-      if (birth >= 2015) {
-        ageGroup = '10대 이하';
-      } else if (birth >= 2006 && birth < 2015) {
-        ageGroup = '10대';
-      } else if (birth >= 2002 && birth <= 2005) {
-        ageGroup = '20대 초반';
-      } else if (birth >= 1999 && birth <= 2001) {
-        ageGroup = '20대 중반';
-      } else if (birth >= 1995 && birth <= 1998) {
-        ageGroup = '20대 후반';
-      } else if (birth >= 1991 && birth <= 1994) {
-        ageGroup = '30대 초반';
-      } else if (birth >= 1988 && birth <= 1990) {
-        ageGroup = '30대 중반';
-      } else if (birth >= 1985 && birth <= 1987) {
-        ageGroup = '30대 후반';
-      }
+  void setUserInfo(String birthDay, String nickname, String gender) {
+    /// Amplitude - 유저 프로퍼티 설정
+    AmplitudeConfig amplitudeConfig = AmplitudeConfig();
+    if (birthDay == 'null') {
       amplitudeConfig.setUserInfo(
-          gender: futureData!.userProperty.gender, age: userAge, ageGroup: ageGroup, nickname: nickname);
-    } catch(e) {
-      print('유저 프로퍼티 생성 도중 에러 발생: $e');
+          gender: gender, age: 0, ageGroup: 'null', nickname: nickname);
+      return;
     }
+    int birth = int.parse(birthDay.split("-")[0]);
+    // 나이
+    int userAge = DateTime.now().year - birth + 1;
+    String ageGroup = '';
+    if (birth >= 2015) {
+      ageGroup = '10대 이하';
+    } else if (birth >= 2006 && birth < 2015) {
+      ageGroup = '10대';
+    } else if (birth >= 2002 && birth <= 2005) {
+      ageGroup = '20대 초반';
+    } else if (birth >= 1999 && birth <= 2001) {
+      ageGroup = '20대 중반';
+    } else if (birth >= 1995 && birth <= 1998) {
+      ageGroup = '20대 후반';
+    } else if (birth >= 1991 && birth <= 1994) {
+      ageGroup = '30대 초반';
+    } else if (birth >= 1988 && birth <= 1990) {
+      ageGroup = '30대 중반';
+    } else if (birth >= 1985 && birth <= 1987) {
+      ageGroup = '30대 후반';
+    }
+
+    amplitudeConfig.setUserInfo(
+        gender: futureData!.userProperty.gender ?? 'null',
+        age: userAge,
+        ageGroup: ageGroup,
+        nickname: nickname);
   }
 }

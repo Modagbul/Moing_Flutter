@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/missions/create/photo_auth_state.dart';
@@ -67,6 +68,10 @@ class PhotoAuthPage extends StatelessWidget {
                             ),
                           ),
                         ),
+                        Positioned(
+                          left: 16, bottom: 16,
+                          child: _changePhoto(context),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -91,6 +96,32 @@ class PhotoAuthPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: _completeButton(context),
+    );
+  }
+
+  Widget _changePhoto(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.read<PhotoAuthState>().changePhoto(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        height: 36,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          color: grayScaleGrey600,
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              'asset/icons/image_upload.svg',
+              fit: BoxFit.fill,
+              width: 20,
+              height: 20,
+            ),
+            const SizedBox(width: 4),
+            Text('사진변경', style: bodyTextStyle.copyWith(color: grayScaleGrey200))
+          ],
+        ),
+      ),
     );
   }
 

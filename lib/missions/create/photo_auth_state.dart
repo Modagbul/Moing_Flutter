@@ -4,7 +4,7 @@ import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 
 class PhotoAuthState extends ChangeNotifier {
   final BuildContext context;
-  final XFile avatarFile;
+  XFile avatarFile;
   final textController = TextEditingController();
   bool isShowBalloon = true;
 
@@ -13,6 +13,12 @@ class PhotoAuthState extends ChangeNotifier {
   // 텍스트 필드 변경 감지 메소드
   void updateTextField() {
     if(textController.value.text.isNotEmpty) isShowBalloon = false;
+    notifyListeners();
+  }
+
+  void changePhoto() async {
+    final XFile? assetFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if(assetFile != null) avatarFile = assetFile;
     notifyListeners();
   }
 
