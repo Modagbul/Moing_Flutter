@@ -29,17 +29,17 @@ class GroupSingleMissionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    String formattedDueTo = status == 'SUCCESS' ? '인증완료' : formatDueTo(dueTo);
-    Color textColor = status == 'SUCCESS' ? coralGrey500 : grayScaleGrey550;
-    String completionText = status == 'SUCCESS'
-        ? '$done/$done명이 인증했어요'
+    String formattedDueTo = (status == 'COMPLETE' || status == 'SKIP') ? '인증완료' : formatDueTo(dueTo);
+    Color textColor = (status == 'COMPLETE' || status == 'SKIP')  ? coralGrey500 : grayScaleGrey550;
+    String completionText = (status == 'COMPLETE' || status == 'SKIP')
+        ? '$done/$total명이 인증했어요'
         : '$done명이 벌써 인증했어요';
-    Color textColor2 = status == 'SUCCESS' ? grayScaleGrey400 : grayScaleWhite;
-    Color containerColor = status == 'SUCCESS' ? grayScaleGrey500 : coralGrey500;
-    String clockAssetPath = status == 'SUCCESS'
+    Color textColor2 = (status == 'COMPLETE' || status == 'SKIP') ? grayScaleGrey400 : grayScaleWhite;
+    Color containerColor = (status == 'COMPLETE' || status == 'SKIP')  ? grayScaleGrey500 : coralGrey500;
+    String clockAssetPath = (status == 'COMPLETE' || status == 'SKIP')
         ? 'asset/icons/mission_single_clock_col.svg'
         : 'asset/icons/mission_single_clock.svg';
-    String tickCircleAssetPath = status == 'SUCCESS'
+    String tickCircleAssetPath = (status == 'COMPLETE' || status == 'SKIP')
         ? 'asset/icons/icon_tick_circle_white.svg'
         : 'asset/icons/icon_tick_circle.svg';
 
