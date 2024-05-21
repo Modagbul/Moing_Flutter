@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
-
 import '../../const/color/colors.dart';
-import '../aggregate/missions_all_state.dart';
 
 class GroupSingleMissionCard extends StatelessWidget {
   final int missionId;
@@ -35,7 +32,7 @@ class GroupSingleMissionCard extends StatelessWidget {
     String formattedDueTo = status == 'SUCCESS' ? '인증완료' : formatDueTo(dueTo);
     Color textColor = status == 'SUCCESS' ? coralGrey500 : grayScaleGrey550;
     String completionText = status == 'SUCCESS'
-        ? '$done/$done이 인증했어요'
+        ? '$done/$done명이 인증했어요'
         : '$done명이 벌써 인증했어요';
     Color textColor2 = status == 'SUCCESS' ? grayScaleGrey400 : grayScaleWhite;
     Color containerColor = status == 'SUCCESS' ? grayScaleGrey500 : coralGrey500;
