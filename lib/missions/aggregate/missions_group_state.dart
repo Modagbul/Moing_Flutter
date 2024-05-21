@@ -20,6 +20,7 @@ class MissionsGroupState extends ChangeNotifier {
     required this.context,
     required this.selectedTeamId,
   }) {
+    initState();
   }
 
   Future<void> initState() async {

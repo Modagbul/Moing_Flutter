@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
-
 import '../../const/color/colors.dart';
-import '../aggregate/missions_all_state.dart';
 
 class SingleMissionCard extends StatelessWidget {
   final int missionId;
@@ -35,7 +32,7 @@ class SingleMissionCard extends StatelessWidget {
     String formattedDueTo = (status == 'COMPLETE' || status == 'SKIP') ? '인증완료' : formatDueTo(dueTo);
     Color textColor = (status == 'COMPLETE' || status == 'SKIP')  ? coralGrey500 : grayScaleGrey550;
     String completionText = (status == 'COMPLETE' || status == 'SKIP')
-        ? '$done/$total이 인증했어요'
+        ? '$done/$total명이 인증했어요'
         : '$done명이 벌써 인증했어요';
     Color textColor2 = (status == 'COMPLETE' || status == 'SKIP') ? grayScaleGrey400 : grayScaleWhite;
     Color containerColor = (status == 'COMPLETE' || status == 'SKIP')  ? grayScaleGrey500 : coralGrey500;

@@ -84,7 +84,7 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                     itemBuilder: (context, index) {
                       final e = state.aggregateTeamSingleMissionStatus?.data[index];
                       print('e : ${e.toString()}');
-                      log('Building item: ${e?.missionTitle}');
+                      log('Building item: ${e?.missionTitle}, Status: ${e?.status}, Done: ${e?.done}, Total: ${e?.total}');
 
                       return Padding(
                         padding: const EdgeInsets.only(right: 12.0),
@@ -112,6 +112,9 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                               Provider.of<MissionsGroupState>(context,
                                   listen: false)
                                   .reloadMissionStatus();
+                              setState(() {
+                                Provider.of<MissionsGroupState>(context, listen: false).reloadMissionStatus();
+                              });
                             });
                           },
                         ),
