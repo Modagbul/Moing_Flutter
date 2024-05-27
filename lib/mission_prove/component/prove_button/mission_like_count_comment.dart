@@ -5,8 +5,8 @@ import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:provider/provider.dart';
 
-class MissionLikeButton extends StatelessWidget {
-  const MissionLikeButton({Key? key}) : super(key: key);
+class MissionLikeOrCommentButton extends StatelessWidget {
+  const MissionLikeOrCommentButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,11 @@ class MissionLikeButton extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         GestureDetector(
-          onTap: () => context.read<MissionProveState>().getMissionDetailContent(0),
+          onTap: () async {
+            await context.read<MissionProveState>().loadMyMissionCommentData(
+                context.read<MissionProveState>().myMissionList![0].archiveId);
+            context.read<MissionProveState>().getMissionDetailContent(0);
+          },
           child: Row(
             children: [
               SvgPicture.asset(

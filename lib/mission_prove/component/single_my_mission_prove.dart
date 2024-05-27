@@ -24,7 +24,11 @@ class SingleMyMissionProved extends StatelessWidget {
         child: Stack(
           children: [
             GestureDetector(
-              onTap: () => context.read<MissionProveState>().getMissionDetailContent(0),
+              onTap: () async {
+                await context.read<MissionProveState>().loadMyMissionCommentData(
+                    context.read<MissionProveState>().myMissionList![0].archiveId);
+                context.read<MissionProveState>().getMissionDetailContent(0);
+              },
               child: Container(
                 width: screenWidth,
                 height: screenHeight.toDouble(),

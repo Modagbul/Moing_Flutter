@@ -592,8 +592,8 @@ class MissionProveState with ChangeNotifier {
         });
         if (result != null && result is bool && result) {
           // 미션 인증 성공 모달
-          await showMissionSuccessDialog();
           await initState();
+          await showMissionSuccessDialog();
         }
       }
       // 링크 인증 시
@@ -605,8 +605,8 @@ class MissionProveState with ChangeNotifier {
         });
         if (result != null && result is bool && result) {
           // 미션 인증 성공 모달
-          await showMissionSuccessDialog();
           await initState();
+          await showMissionSuccessDialog();
         }
       }
       // 사진 인증 시
@@ -991,7 +991,7 @@ class MissionProveState with ChangeNotifier {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          insetPadding: EdgeInsets.symmetric(horizontal: 20),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
               width: double.infinity,
               height: 455,
@@ -1107,6 +1107,7 @@ class MissionProveState with ChangeNotifier {
 
   /// 나의 인증 - 미션 상세 내용 댓글 조회
   Future<void> loadMyMissionCommentData(int missionArchiveId) async {
+    print('댓글 조회 시 archiveID: $missionArchiveId');
     var data = await missionRepository.loadMyMissionCommentData(teamId: teamId, missionArchiveId: missionArchiveId);
     if(data != null) comments = data;
     notifyListeners();
