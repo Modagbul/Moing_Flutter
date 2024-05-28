@@ -203,10 +203,13 @@ class GroupCreatePhotoState extends ChangeNotifier {
         print('소모임 생성 완료! : ${apiResponse.data?['teamId']}');
         String? nickname = await AmplitudeConfig.analytics.getUserId();
         if(nickname == null) {
-          AmplitudeConfig.analytics.logEvent("모임 생성", eventProperties: {"소모임 이름": name});
+          AmplitudeConfig.analytics.logEvent(
+              "group_make", eventProperties: {
+                "group_name": name});
         } else {
-          AmplitudeConfig.analytics.logEvent("모임 생성", eventProperties: {
-            "소모임 이름": name, "모임 만든 사람": nickname});
+          AmplitudeConfig.analytics.logEvent("group_make", eventProperties: {
+            "group_name": name,
+            "group_maker": nickname});
         }
         Navigator.pushNamedAndRemoveUntil(
           context,

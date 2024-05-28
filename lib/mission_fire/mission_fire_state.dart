@@ -126,10 +126,14 @@ class MissionFireState extends ChangeNotifier {
       if (apiResponse.data != null) {
         String? nickname = await AmplitudeConfig.analytics.getUserId();
         if(nickname == null) {
-          AmplitudeConfig.analytics.logEvent("불 던지기", eventProperties: {"불 떨어진 사람": userList![selectedIndex!].nickname});
+          AmplitudeConfig.analytics.logEvent(
+              "dropfire_complete",
+              eventProperties: {"receiver": userList![selectedIndex!].nickname});
         } else {
-          AmplitudeConfig.analytics.logEvent("불 던지기", eventProperties: {
-            "불 떨어진 사람": userList![selectedIndex!].nickname, "불 던지는 사람": nickname});
+          AmplitudeConfig.analytics.logEvent(
+              "dropfire_complete", eventProperties: {
+            "receiver": userList![selectedIndex!].nickname,
+            "sender": nickname});
         }
         loadFirePersonList();
         compeleteThrowFireModal();

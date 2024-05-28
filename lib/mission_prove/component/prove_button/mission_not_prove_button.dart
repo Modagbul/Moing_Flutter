@@ -36,7 +36,10 @@ class MissionNotProveButton extends StatelessWidget {
         : WhiteButton(
             onPressed: () {
               context.read<MissionProveState>().showModal('mission');
-              AmplitudeConfig.analytics.logEvent("미션 인증", eventProperties: {"미션 이름": state.missionTitle});
+              AmplitudeConfig.analytics.logEvent(
+                  "misson_complete",
+                  eventProperties: {
+                    "mission_name": state.missionTitle});
             },
             text: '미션 인증하기'),
       );

@@ -608,10 +608,15 @@ class MissionCreateState extends ChangeNotifier {
         log('미션 생성 성공: ${apiResponse.data}');
         String? nickname = await AmplitudeConfig.analytics.getUserId();
         if(nickname == null) {
-          AmplitudeConfig.analytics.logEvent("미션 생성", eventProperties: {"미션": isRepeatSelected == true ? '반복미션' : '한번미션'});
+          AmplitudeConfig.analytics.logEvent(
+              "misson_make", eventProperties: {
+                "mission_kind": isRepeatSelected == true ? 'repeat' : 'single'});
         } else {
-          AmplitudeConfig.analytics.logEvent("미션 생성", eventProperties: {
-            "미션": isRepeatSelected == true ? '반복미션' : '한번미션', "미션생성자": nickname, "미션 종류": way});
+          AmplitudeConfig.analytics.logEvent(
+              "misson_make", eventProperties: {
+            "mission_kind": isRepeatSelected == true ? 'repeat' : 'single',
+            "mission_maker": nickname,
+            "mission_category": way});
         }
 
         Navigator.of(context).pop(true);
