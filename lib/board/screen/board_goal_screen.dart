@@ -235,6 +235,17 @@ class BoardGoalScreen extends StatelessWidget {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: GestureDetector(
+              onTap: () => context
+                  .read<BoardMainState>()
+                  .navigateFireLevelGuidePage(context),
+              child: SvgPicture.asset(
+                'asset/icons/icon_info_circle.svg',
+              ),
+            ),
+          ),
           const SizedBox(width: 5.0),
         ],
       ),
