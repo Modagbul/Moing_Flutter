@@ -1,12 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/board/screen/team_member_list_page.dart';
+import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/response/get_single_board.dart';
 import 'package:moing_flutter/model/response/single_board_team_info.dart';
 import 'package:moing_flutter/model/team/team_fire_level_models.dart';
 import 'package:moing_flutter/post/post_main_page.dart';
+import 'package:moing_flutter/utils/web_page/web_page_screen.dart';
 
 class BoardMainState extends ChangeNotifier {
   final BuildContext context;
@@ -20,7 +23,7 @@ class BoardMainState extends ChangeNotifier {
   TeamFireLevelData? teamFireLevelData;
   TeamInfo? teamInfo;
 
-  BoardMainState( {
+  BoardMainState({
     required this.context,
     required this.teamId,
     required this.isSuccess,
@@ -54,7 +57,8 @@ class BoardMainState extends ChangeNotifier {
   }
 
   void navigatePostMainPage() async {
-    final result = await Navigator.pushNamed(context, PostMainPage.routeName, arguments: teamId);
+    final result = await Navigator.pushNamed(context, PostMainPage.routeName,
+        arguments: teamId);
 
     if (result as bool) {
       initState();
@@ -99,5 +103,26 @@ class BoardMainState extends ChangeNotifier {
     }
 
     return convertedCategory;
+  }
+
+  void navigateFireLevelGuidePage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebPageScreen(
+          appBar: AppBar(
+            backgroundColor: grayBackground,
+            elevation: 0,
+            leading: IconButton(
+              icon: SvgPicture.asset('asset/icons/arrow_left.svg',
+                  width: 24.0, height: 24.0),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          uri:
+              'https://moing-app.notion.site/MOING-b11ac116c646482f845868a0e306a7d0',
+        ),
+      ),
+    );
   }
 }
