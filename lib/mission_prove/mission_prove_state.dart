@@ -1030,13 +1030,11 @@ class MissionProveState with ChangeNotifier {
                       childLeft: Text(
                         isRepeated
                             ? '남은 횟수까지 파이팅!'
-                            : '${singleMissionMyCount + 1}/$singleMissionTotalCount명 인증성공',
+                            : '$singleMissionMyCount/$singleMissionTotalCount명 인증성공',
                         style: bodyTextStyle.copyWith(color: grayScaleGrey100),
                       ),
                       percent: singleMissionMyCount < singleMissionTotalCount
-                          ? (singleMissionMyCount + 1) *
-                              100 /
-                              singleMissionTotalCount
+                          ? singleMissionMyCount * 100 / singleMissionTotalCount
                           : 100,
                       style: RoundedProgressBarStyle(
                         colorBorder: Colors.transparent,
@@ -1052,7 +1050,7 @@ class MissionProveState with ChangeNotifier {
       },
     );
 
-    Future.delayed(Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 2000), () {
       Navigator.popUntil(context, ModalRoute.withName(MissionProvePage.routeName));
       notifyListeners();
       showFireToast();
@@ -1062,9 +1060,9 @@ class MissionProveState with ChangeNotifier {
   Future<void> _launchUrl(String link) async {
     if (onLoading) return;
     onLoading = true;
-    Uri _url = Uri.parse(link);
+    Uri url = Uri.parse(link);
     if (!await launchUrl(
-      _url,
+      url,
       mode: LaunchMode.externalApplication,
     )) {
       throw ArgumentError("해당 링크에 접속할 수 없습니다.");
@@ -1906,7 +1904,8 @@ class _CommentsInputWidget extends StatefulWidget {
   final int archiveId;
   final int teamId;
   final Function(bool isSuccess) onCommentResult; // 콜백 함수
-  const _CommentsInputWidget({required this.archiveId, required this.teamId, required this.onCommentResult});
+  const _CommentsInputWidget({required this.archiveId, required this.teamId,
+    required this.onCommentResult});
 
   @override
   State<_CommentsInputWidget> createState() => _CommentsInputWidgetState();
@@ -1914,6 +1913,7 @@ class _CommentsInputWidget extends StatefulWidget {
 
 class _CommentsInputWidgetState extends State<_CommentsInputWidget> {
   final TextEditingController commentController = TextEditingController();
+  bool createCommentLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -1978,14 +1978,24 @@ class _CommentsInputWidgetState extends State<_CommentsInputWidget> {
           height: 24,
         ),
         onPressed: () async {
-          final ApiCode apiCode = ApiCode();
-          final data = CreateCommentData(
-            content: commentController.value.text,
-          );
-          bool isSuccess = await apiCode.createMissionComment(
-              createCommentData: data, missionArchiveId: widget.archiveId, teamId: widget.teamId);
-          commentController.clear();
-          widget.onCommentResult(isSuccess);
+          if (createCommentLoading || commentController.value.text.isEmpty) {
+            return;
+          }
+          createCommentLoading = true;
+          try {
+            final ApiCode apiCode = ApiCode();
+            final data = CreateCommentData(
+              content: commentController.value.text,
+            );
+            bool isSuccess = await apiCode.createMissionComment(
+                createCommentData: data,
+                missionArchiveId: widget.archiveId,
+                teamId: widget.teamId);
+            widget.onCommentResult(isSuccess);
+          } finally {
+            commentController.clear();
+            createCommentLoading = false;
+          }
         },
       ),
     );

@@ -33,14 +33,6 @@ class MissionSliverAppBar extends StatelessWidget {
                 ),
               ),
             ],
-            if(context.watch<MissionProveState>().isEnded)
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: GestureDetector(
-                    onTap: () =>
-                        context.read<MissionProveState>().showModal('content'),
-                    child: Text('미션내용', style: ts,),),
-              ),
           ],
         ),
       ),

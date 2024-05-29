@@ -16,7 +16,7 @@ class MissionEndDate extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 52),
+        const SizedBox(height: 52),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

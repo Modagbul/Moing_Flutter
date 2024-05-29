@@ -398,10 +398,8 @@ class MissionState {
                       )
                       : WhiteButton(
                       onPressed: () async {
-                        if(isRead == false) {
-                          /// 미션 설명 읽음 처리
-                          readMissionRule(teamId, missionId);
-                        }
+                        /// 미션 설명 읽음 처리
+                        if(isRead == false) readMissionRule(teamId, missionId);
                         Navigator.of(context).pop();
                       },
                       text: '확인했어요'),
