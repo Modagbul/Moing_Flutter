@@ -57,7 +57,7 @@ class MissionProveState with ChangeNotifier {
   final bool isEnded;
   final bool isRepeated;
   final String repeatMissionStatus;
-  final bool isRead;
+  bool isRead;
   final MissionState missionState = MissionState();
   final ViewUtil viewUtil = ViewUtil();
   final MissionRepository missionRepository = MissionRepository();
@@ -427,6 +427,7 @@ class MissionProveState with ChangeNotifier {
     // 다시 인증하기 버튼 클릭 시..
     if (missionMoreButton.contains('retry')) {
       print('인증 다시 버튼 클릭!');
+      isRead = true;
       await missionDelete(index: index);
     }
     onLoading = false;
@@ -591,6 +592,7 @@ class MissionProveState with ChangeNotifier {
           'missionId': missionId,
         });
         if (result != null && result is bool && result) {
+          isRead = true;
           // 미션 인증 성공 모달
           await initState();
           await showMissionSuccessDialog();
@@ -604,6 +606,7 @@ class MissionProveState with ChangeNotifier {
           'missionId': missionId,
         });
         if (result != null && result is bool && result) {
+          isRead = true;
           // 미션 인증 성공 모달
           await initState();
           await showMissionSuccessDialog();
@@ -632,6 +635,7 @@ class MissionProveState with ChangeNotifier {
               if (imageUrl.isNotEmpty) {
                 bool? isSuccess = await submitMission(url: imageUrl, contents: contents);
                 if (isSuccess == true) {
+                  isRead = true;
                   await initState();
                   await showMissionSuccessDialog();
                 }
@@ -1832,8 +1836,10 @@ class MissionProveState with ChangeNotifier {
           isRead: isRead,
         );
 
-        if(result == 'missionFix') {
+        if(result != null && result.contains("missionFix")) {
           await getMissionContent();
+          String read = result.split("_") as String;
+          this.isRead = read == 'true' ? true : false;
         }
         break;
       // 미션 인증하기 클릭

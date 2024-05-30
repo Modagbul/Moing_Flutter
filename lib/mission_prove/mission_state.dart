@@ -397,11 +397,7 @@ class MissionState {
                   ),
                       )
                       : WhiteButton(
-                      onPressed: () async {
-                        /// 미션 설명 읽음 처리
-                        if(isRead == false) readMissionRule(teamId, missionId);
-                        Navigator.of(context).pop();
-                      },
+                      onPressed: () => Navigator.of(context).pop(),
                       text: '확인했어요'),
                 ),
               ],
@@ -410,14 +406,12 @@ class MissionState {
         );
       },
     );
-
+    /// 미션 설명 읽음 처리
+    bool read = false;
     if(isRead == false) {
-      /// 미션 설명 읽음 처리
-      readMissionRule(teamId, missionId);
-    } else if (result == "fix") {
-      print('미션 수정했지롱~');
-      return "missionFix";
+      read = await readMissionRule(teamId, missionId);
     }
+    if (result == "fix") return "missionFix_$read";
     return null;
   }
 
