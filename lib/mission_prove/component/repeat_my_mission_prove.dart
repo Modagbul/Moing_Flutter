@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
-import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 
 class RepeatMyMissionProved extends StatelessWidget {
@@ -122,8 +121,6 @@ class RepeatMyMissionProved extends StatelessWidget {
                   CachedNetworkImage(
                     imageUrl: state.myMissionList![index].archive,
                     fit: BoxFit.cover,
-                    memCacheWidth: 172.cacheSize(context),
-                    memCacheHeight: 155.cacheSize(context),
                   ),
                 ),
               ),

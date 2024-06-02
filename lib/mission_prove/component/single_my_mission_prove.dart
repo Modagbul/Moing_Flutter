@@ -60,8 +60,6 @@ class SingleMyMissionProved extends StatelessWidget {
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: double.infinity,
-                                  memCacheWidth: screenWidth.toInt(),
-                                  memCacheHeight: screenHeight,
                                 ),
                               ),
                               Align(

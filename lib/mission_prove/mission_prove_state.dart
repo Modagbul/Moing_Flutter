@@ -824,8 +824,6 @@ class MissionProveState with ChangeNotifier {
                                   fit: BoxFit.cover,
                                   width: 313,
                                   height: 313,
-                                  memCacheWidth: 313.cacheSize(context),
-                                  memCacheHeight: 313.cacheSize(context),
                                 ),
                                 Positioned(
                                   bottom: 0,

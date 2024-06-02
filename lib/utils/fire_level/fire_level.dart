@@ -103,7 +103,6 @@ class FireLevel {
     required String teamName,
   }) {
     String message = '';
-
     switch (category) {
       case 'SPORTS':
         message = '운동왕 $teamName 모임이네요!';

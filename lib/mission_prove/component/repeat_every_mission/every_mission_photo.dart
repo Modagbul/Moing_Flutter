@@ -21,8 +21,6 @@ class EveryMissionPhoto extends StatelessWidget {
             fit: BoxFit.cover,
             width: 172,
             height: 155,
-            memCacheWidth: 172.cacheSize(context),
-            memCacheHeight: 155.cacheSize(context),
           ),
         ),
       ],

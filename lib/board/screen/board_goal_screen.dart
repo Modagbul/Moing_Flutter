@@ -25,7 +25,7 @@ class BoardGoalScreen extends StatelessWidget {
         context.watch<BoardMainState>().teamFireLevelData?.score ?? 0;
     final String category =
         (context.watch<BoardMainState>().teamInfo?.category ?? '');
-    final teamName = (context.watch<BoardMainState>().teamInfo?.category ?? '');
+    final teamName = (context.watch<BoardMainState>().teamInfo?.teamName ?? '');
     final bool isDeleted =
         context.watch<BoardMainState>().teamInfo?.isDeleted ?? false;
 
