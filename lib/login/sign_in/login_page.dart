@@ -109,17 +109,16 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const Spacer(),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 54.0, top: 40),
-                      child: SvgPicture.asset(
-                        'asset/icons/modakbul_icon.svg',
-                        width: 100,
-                        height: 30,
-                      ),
+                    child: SvgPicture.asset(
+                      'asset/icons/modakbul_icon.svg',
+                      width: 100,
+                      height: 30,
                     ),
                   ),
+                  const Spacer(),
                 ],
               ),
             ),
