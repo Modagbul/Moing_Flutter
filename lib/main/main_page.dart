@@ -20,11 +20,11 @@ class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
   static route(BuildContext context) {
-    String newCreated = "";
+    String status = "";
     int selectedTeamId = 0;
 
     if (ModalRoute.of(context)?.settings.arguments != null) {
-      newCreated = ModalRoute.of(context)?.settings.arguments as String;
+      status = ModalRoute.of(context)?.settings.arguments as String;
     }
 
     return MultiProvider(
@@ -39,7 +39,7 @@ class MainPage extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) =>
-              HomeScreenState(context: context, newCreated: newCreated),
+              HomeScreenState(context: context, status: status),
           lazy: false,
         ),
         ChangeNotifierProvider(

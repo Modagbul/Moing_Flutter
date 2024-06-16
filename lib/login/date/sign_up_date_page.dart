@@ -142,7 +142,7 @@ class SignUpDatePage extends StatelessWidget {
                     onPressed: () {
                       context.read<SignUpDateState>().nextPressed();
                     },
-                    text: '다음으로'),
+                    text: '가입하기'),
               ),
             ],
           ),
