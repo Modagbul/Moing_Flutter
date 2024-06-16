@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,7 +26,7 @@ class HomeScreenState extends ChangeNotifier {
 
   // 토스트 문구
   final FToast fToast = FToast();
-  String? newCreated;
+  String? status;
   String nickname = '';
 
   TeamData? futureData;
@@ -43,7 +42,7 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  HomeScreenState({required this.context, this.newCreated}){
+  HomeScreenState({required this.context, this.status}) {
     // initState();
   }
 
@@ -53,7 +52,7 @@ class HomeScreenState extends ChangeNotifier {
     await loadTeamData();
     await getTeamMissionPhotoListData();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if(newCreated != "new") {
+      if (status != "new" && status != "fromSignUp") {
         await checkUserRegister();
       }
     });
@@ -63,17 +62,17 @@ class HomeScreenState extends ChangeNotifier {
   Future<void> checkUserRegister() async {
     String warningText = '';
     // 이미 가입한 유저일 때
-    if (newCreated == 'isRegistered') {
+    if (status == 'isRegistered') {
       warningText = '이미 가입한 소모임이에요';
-    } else if (newCreated == 'full') {
+    } else if (status == 'full') {
       warningText = '최대 3개의 소모임에서만 활동할 수 있어요';
-    } else if (newCreated == 'T0003') {
+    } else if (status == 'T0003') {
       warningText = '한번 탈퇴한 소모임에 다시 가입할 수 없어요';
-    } else if (newCreated == 'T0005') {
+    } else if (status == 'T0005') {
       warningText = '이미 종료된 소모임입니다.';
-    } else if (newCreated != null && newCreated!.isNotEmpty) {
+    } else if (status != null && status!.isNotEmpty) {
       warningText = '소모임 가입에 실패했어요';
-      print('소모임 가입 실패 에러 확인 : $newCreated');
+      print('소모임 가입 실패 에러 확인 : $status');
     }
     if (warningText.length > 1) {
       fToast.showToast(
@@ -92,16 +91,16 @@ class HomeScreenState extends ChangeNotifier {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'asset/icons/toast_danger.svg',
-                              width: 24,
-                              height: 24,
-                            ),
-                            SizedBox(width: 10),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            'asset/icons/toast_danger.svg',
+                            width: 24,
+                            height: 24,
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
                       Text(
                         warningText,
                         style: bodyTextStyle.copyWith(color: grayScaleGrey700),
@@ -110,7 +109,7 @@ class HomeScreenState extends ChangeNotifier {
                   ),
                 )),
           ),
-          toastDuration: Duration(milliseconds: 3000),
+          toastDuration: const Duration(milliseconds: 3000),
           positionedToastBuilder: (context, child) {
             return Positioned(
               child: child,
@@ -130,8 +129,11 @@ class HomeScreenState extends ChangeNotifier {
       teamList = futureData!.teamBlocks.reversed.toList();
       try {
         print('유저 프로퍼티 설정 시작!');
-        setUserInfo(futureData!.userProperty.birthDate ?? 'null', futureData!.memberNickName, futureData!.userProperty.gender ?? 'null');
-      } catch(e) {
+        setUserInfo(
+            futureData!.userProperty.birthDate ?? 'null',
+            futureData!.memberNickName,
+            futureData!.userProperty.gender ?? 'null');
+      } catch (e) {
         print('유저 프로퍼티 설정 도중 에러 발생: ${e.toString()}');
       }
       SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
@@ -161,8 +163,7 @@ class HomeScreenState extends ChangeNotifier {
       if (apiResponse.isSuccess == true) {
         nickname = apiResponse.data!.memberNickName;
         return apiResponse.data!;
-      }
-      else {
+      } else {
         print('fetchApiData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
@@ -179,11 +180,10 @@ class HomeScreenState extends ChangeNotifier {
       PageRouteBuilder(
         pageBuilder: (context, animation1, animation2) =>
             ChangeNotifierProvider(
-              create: (_) => GroupCreateCategoryState(context: context),
-              child: const GroupCreateCategoryPage(),
-            ),
-        transitionsBuilder:
-            (context, animation1, animation2, child) {
+          create: (_) => GroupCreateCategoryState(context: context),
+          child: const GroupCreateCategoryPage(),
+        ),
+        transitionsBuilder: (context, animation1, animation2, child) {
           return child;
         },
         transitionDuration: const Duration(milliseconds: 0),

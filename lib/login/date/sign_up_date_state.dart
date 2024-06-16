@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:moing_flutter/login/register_success/welcome_page.dart';
+import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/request/sign_up_request.dart';
@@ -37,21 +37,23 @@ class SignUpDateState extends ChangeNotifier {
     String formattedDate = selectedDate.toLocal().toString().split(' ')[0];
     bool? result = await signUp(formattedDate);
     if (result == true) {
-      navigateToWelcomePage();
+      navigateToHomePage();
     }
   }
 
   void skipPressed() async {
     bool? result = await signUp(null);
     if (result == true) {
-      navigateToWelcomePage();
+      navigateToHomePage();
     }
   }
 
-  void navigateToWelcomePage() {
-    Navigator.of(context).pushNamed(
-      WelcomePage.routeName,
-      arguments: nickname,
+  void navigateToHomePage() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      MainPage.routeName,
+          (route) => false,
+      arguments: 'fromSignUp',
     );
   }
 
