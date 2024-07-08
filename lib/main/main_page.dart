@@ -13,6 +13,8 @@ import 'package:moing_flutter/mypage/my_page_state.dart';
 import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
 
+import '../config/amplitude_config.dart';
+
 class MainPage extends StatelessWidget {
   static const routeName = '/main';
 
@@ -127,7 +129,15 @@ class MainPage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: BottomNavigationBar(
         currentIndex: context.watch<MainState>().mainIndex,
-        onTap: (index) {
+        onTap: (index) async {
+          if (index == 1) {
+            String? nickname = await AmplitudeConfig.analytics.getUserId();
+            AmplitudeConfig.analytics.logEvent("missioninprogress_click", eventProperties: {
+              "tab": "진행 중 미션 클릭",
+              // 진행 중 미션 클릭한 유저 닉네임도 생성, 필요 없을 시 삭제
+              "nickname": nickname ?? "unknown",  // 닉네임이 null일 경우 "unknown"으로 설정
+            });
+          }
           context.read<MainState>().mainIndex = index;
         },
         backgroundColor: grayBackground,

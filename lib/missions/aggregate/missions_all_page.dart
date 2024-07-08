@@ -1,10 +1,12 @@
 import 'dart:developer';
 
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/missions/aggregate/missions_all_state.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/amplitude_config.dart';
 import '../../const/color/colors.dart';
 import '../../mission_prove/mission_prove_page.dart';
 import '../component/repeat_mission_card.dart';
@@ -73,7 +75,15 @@ class MissionsAllPage extends StatelessWidget {
                           done: e.done,
                           total: e.total,
                           status: e.status,
-                          onTap: () {
+                          onTap: () async {
+                            String? nickname = await AmplitudeConfig.analytics.getUserId();
+                            Amplitude.getInstance().logEvent("misson_once_make", eventProperties: {
+                              "nickname": nickname ?? "unknown",
+                              "missionId": e.missionId,
+                              "teamId": e.teamId,
+                              "teamName": e.teamName,
+                              "missionTitle": e.missionTitle,
+                            });
                             Navigator.of(context).pushNamed(
                               MissionProvePage.routeName,
                               arguments: MissionProveArgument(
@@ -145,7 +155,15 @@ class MissionsAllPage extends StatelessWidget {
                       doneNum: e.doneNum,
                       donePeople: e.donePeople,
                       totalPeople: e.totalPeople,
-                      onTap: () {
+                      onTap: () async {
+                        String? nickname = await AmplitudeConfig.analytics.getUserId();
+                        Amplitude.getInstance().logEvent("misson_repeat_make", eventProperties: {
+                          "nickname": nickname ?? "unknown",
+                          "missionId": e.missionId,
+                          "teamId": e.teamId,
+                          "teamName": e.teamName,
+                          "missionTitle": e.missionTitle,
+                        });
                         Navigator.of(context).pushNamed(
                           MissionProvePage.routeName,
                             arguments: MissionProveArgument(
