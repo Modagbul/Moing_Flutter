@@ -126,6 +126,8 @@ class AlarmState extends ChangeNotifier {
         return 'asset/icons/icon_approve_team.svg';
       case 'REJECT_TEAM':
         return 'asset/icons/icon_reject_team.svg';
+      case 'COMMENT':
+        return 'asset/icons/icon_comment.svg';
       default:
         throw ArgumentError('Invalid alarm type: $type');
     }
@@ -146,8 +148,14 @@ class AlarmState extends ChangeNotifier {
         case '/post/detail': // 신규 공지 업로드 알림
           validateNewUploadPost(alarmData: alarmData);
           break;
-        case '/missions/prove': // (한번/반복) 신규 미션 업로드, 불 던지기 알림
-          navigateMissionsProvePage(alarmData: alarmData);
+        case '/missions/prove':
+          // 미션 댓글 알림
+          if (alarmData.type == 'COMMENT') {
+            navigateToMissionDetail(alarmData: alarmData);
+          } else {
+            // (한번/반복) 신규 미션 업로드, 불 던지기 알림
+            navigateMissionsProvePage(alarmData: alarmData);
+          }
           break;
         case '/missions': // (한번/반복) 미션 리마인드 알림
           navigateMissionsScreen(alarmData: alarmData);
@@ -159,6 +167,19 @@ class AlarmState extends ChangeNotifier {
           throw ArgumentError('Invalid alarm path: ${alarmData.path}');
       }
     }
+  }
+
+  void navigateToMissionDetail({required AlarmData alarmData}) {
+    Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
+    int teamId = idInfoMap['teamId'];
+    int missionId = idInfoMap['missionId'];
+    int missionArchiveId = idInfoMap['missionArchiveId'];
+
+    Navigator.pushNamed(context, alarmData.path, arguments: {
+      'teamId': teamId,
+      'missionId': missionId,
+      'missionArchiveId': missionArchiveId
+    });
   }
 
   void validateNewUploadPost({required AlarmData alarmData}) async {
