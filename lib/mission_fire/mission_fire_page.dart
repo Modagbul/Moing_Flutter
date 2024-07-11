@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
@@ -73,41 +74,98 @@ class MissionFirePage extends StatelessWidget {
                   ),
                 ),
             if (context.watch<MissionFireState>().selectedIndex != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    width: 190,
-                    height: 62,
-                    child: ElevatedButton(
-                      onPressed: context.read<MissionFireState>().firePressed,
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(grayScaleGrey100),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(32.0), // borderRadius 설정
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  color: grayScaleGrey700,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text(
-                            '불 던지기',
-                            style: buttonTextStyle.copyWith(
-                              color: grayScaleGrey900,
+                          Container(
+                            height: 1,
+                            color: grayScaleGrey500, // 선 색상 설정
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 28.0, top: 12, right: 20, left: 20),
+                            child: TextField(
+                              maxLength: 100,
+                              maxLines: 1,
+                              inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: grayScaleGrey600,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 20.0,
+                                  horizontal: 16.0,
+                                ),
+                                counterText: '',
+                                hintText: '불과 함께 메세지를 보낼 수 있어요',
+                                hintStyle: const TextStyle(
+                                  color: grayScaleGrey550,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              style: const TextStyle(
+                                color: grayScaleGrey100,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              cursorColor: grayScaleGrey100,
                             ),
                           ),
-                          const SizedBox(width: 5),
-                          SvgPicture.asset(
-                            'asset/icons/icon_fire_black.svg',
-                            width: 15.0,
-                            height: 18.0,
-                            fit: BoxFit.contain,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20, left: 20),
+                            child: SizedBox(
+                              width: 393,
+                              height: 62,
+                              child: ElevatedButton(
+                                onPressed: context.read<MissionFireState>().firePressed,
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(grayScaleGrey100),
+                                  shape:
+                                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(32.0), // borderRadius 설정
+                                    ),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '불 던지기',
+                                      style: buttonTextStyle.copyWith(
+                                        color: grayScaleGrey900,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    SvgPicture.asset(
+                                      'asset/icons/icon_fire_black.svg',
+                                      width: 15.0,
+                                      height: 18.0,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
