@@ -17,6 +17,7 @@ class MissionFireState extends ChangeNotifier {
   final int missionId;
   int singleMissionMyCount = 0;
   int singleMissionTotalCount = 0;
+  final TextEditingController messageController = TextEditingController();
 
   String selectedUserName = '모임원 프로필을 클릭해보세요';
   int? selectedIndex;
@@ -113,27 +114,40 @@ class MissionFireState extends ChangeNotifier {
       return;
     }
 
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/fire/${userList![selectedIndex!].receiveMemberId}';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/fire/${userList![selectedIndex!].receiveMemberId}';
 
     try {
+      Map<String, dynamic> body = {};
+      if (messageController.text.isNotEmpty) {
+        body['message'] = messageController.text;
+      }
+
+      log('불던지기 메세지: $body');
+
       ApiResponse<Map<String, dynamic>> apiResponse =
           await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
+        body: body.isNotEmpty ? body : null,
         fromJson: (data) => data as Map<String, dynamic>,
       );
 
+      log('throwFire response: ${apiResponse.data}');
+
       if (apiResponse.data != null) {
         String? nickname = await AmplitudeConfig.analytics.getUserId();
-        if(nickname == null) {
-          AmplitudeConfig.analytics.logEvent(
-              "dropfire_complete",
-              eventProperties: {"receiver": userList![selectedIndex!].nickname});
+        if (nickname == null) {
+          AmplitudeConfig.analytics.logEvent("dropfire_complete",
+              eventProperties: {
+                "receiver": userList![selectedIndex!].nickname
+              });
         } else {
-          AmplitudeConfig.analytics.logEvent(
-              "dropfire_complete", eventProperties: {
-            "receiver": userList![selectedIndex!].nickname,
-            "sender": nickname});
+          AmplitudeConfig.analytics.logEvent("dropfire_complete",
+              eventProperties: {
+                "receiver": userList![selectedIndex!].nickname,
+                "sender": nickname
+              });
         }
         loadFirePersonList();
         compeleteThrowFireModal();

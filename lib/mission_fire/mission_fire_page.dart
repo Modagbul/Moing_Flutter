@@ -94,6 +94,7 @@ class MissionFirePage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 28.0, top: 12, right: 20, left: 20),
                             child: TextField(
+                              controller: context.watch<MissionFireState>().messageController,
                               maxLength: 100,
                               maxLines: 1,
                               inputFormatters: [LengthLimitingTextInputFormatter(200)],
