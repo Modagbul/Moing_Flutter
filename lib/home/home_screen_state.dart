@@ -43,7 +43,7 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  HomeScreenState({required this.context, this.newCreated}){
+  HomeScreenState({required this.context, this.newCreated}) {
     // initState();
   }
 
@@ -53,7 +53,7 @@ class HomeScreenState extends ChangeNotifier {
     await loadTeamData();
     await getTeamMissionPhotoListData();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if(newCreated != "new") {
+      if (newCreated != "new") {
         await checkUserRegister();
       }
     });
@@ -92,16 +92,16 @@ class HomeScreenState extends ChangeNotifier {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'asset/icons/toast_danger.svg',
-                              width: 24,
-                              height: 24,
-                            ),
-                            SizedBox(width: 10),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            'asset/icons/toast_danger.svg',
+                            width: 24,
+                            height: 24,
+                          ),
+                          SizedBox(width: 10),
+                        ],
+                      ),
                       Text(
                         warningText,
                         style: bodyTextStyle.copyWith(color: grayScaleGrey700),
@@ -130,8 +130,11 @@ class HomeScreenState extends ChangeNotifier {
       teamList = futureData!.teamBlocks.reversed.toList();
       try {
         print('유저 프로퍼티 설정 시작!');
-        setUserInfo(futureData!.userProperty.birthDate ?? 'null', futureData!.memberNickName, futureData!.userProperty.gender ?? 'null');
-      } catch(e) {
+        setUserInfo(
+            futureData!.userProperty.birthDate ?? 'null',
+            futureData!.memberNickName,
+            futureData!.userProperty.gender ?? 'null');
+      } catch (e) {
         print('유저 프로퍼티 설정 도중 에러 발생: ${e.toString()}');
       }
       SharedPreferencesInfo sharedPreferencesInfo = SharedPreferencesInfo();
@@ -161,8 +164,7 @@ class HomeScreenState extends ChangeNotifier {
       if (apiResponse.isSuccess == true) {
         nickname = apiResponse.data!.memberNickName;
         return apiResponse.data!;
-      }
-      else {
+      } else {
         print('fetchApiData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
@@ -179,11 +181,10 @@ class HomeScreenState extends ChangeNotifier {
       PageRouteBuilder(
         pageBuilder: (context, animation1, animation2) =>
             ChangeNotifierProvider(
-              create: (_) => GroupCreateCategoryState(context: context),
-              child: const GroupCreateCategoryPage(),
-            ),
-        transitionsBuilder:
-            (context, animation1, animation2, child) {
+          create: (_) => GroupCreateCategoryState(context: context),
+          child: const GroupCreateCategoryPage(),
+        ),
+        transitionsBuilder: (context, animation1, animation2, child) {
           return child;
         },
         transitionDuration: const Duration(milliseconds: 0),
@@ -193,9 +194,19 @@ class HomeScreenState extends ChangeNotifier {
 
   // 가입한 모임 클릭
   void teamPressed(int teamId) {
-    /// 목표보드 페이지로 이동
+    addAmplitudeGroupClickEvent(teamId);
+    navigateBoardMainPage(teamId);
+  }
+
+  void navigateBoardMainPage(int teamId) {
     Navigator.pushNamed(context, BoardMainPage.routeName,
         arguments: {'teamId': teamId});
+  }
+
+  void addAmplitudeGroupClickEvent(int teamId) {
+    AmplitudeConfig.analytics.logEvent("group_click", eventProperties: {
+      "teamId": teamId,
+    });
   }
 
   String convertCategoryName({required String category}) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/app/app_state.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/main/main_appbar.dart';
 import 'package:moing_flutter/home/home_screen.dart';
@@ -127,7 +128,15 @@ class MainPage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: BottomNavigationBar(
         currentIndex: context.watch<MainState>().mainIndex,
-        onTap: (index) {
+        onTap: (index) async {
+          if (index == 1) {
+            String? nickname = await AmplitudeConfig.analytics.getUserId();
+            AmplitudeConfig.analytics
+                .logEvent("missioninprogress_click", eventProperties: {
+              "tab": "진행 중 미션 클릭",
+              "nickname": nickname ?? "unknown",
+            });
+          }
           context.read<MainState>().mainIndex = index;
         },
         backgroundColor: grayBackground,
