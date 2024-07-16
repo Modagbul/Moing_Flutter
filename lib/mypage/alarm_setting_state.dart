@@ -13,6 +13,7 @@ class AlarmSettingState extends ChangeNotifier {
   bool? isNewUploadPushOn;
   bool? isRemindPushOn;
   bool? isFirePushOn;
+  bool? isCommentPushOn;
 
   AlarmSettingsResponse? getAlarmSettings;
   AlarmSettingsEditor? updateAlarmSettings;
@@ -49,7 +50,8 @@ class AlarmSettingState extends ChangeNotifier {
       isNewUploadPushOn = response.newUploadPush;
       isRemindPushOn = response.remindPush;
       isFirePushOn = response.firePush;
-      isTotalAlarmOn = isNewUploadPushOn! && isRemindPushOn! && isFirePushOn!;
+      isCommentPushOn = response.commentPush;
+      isTotalAlarmOn = isNewUploadPushOn! && isRemindPushOn! && isFirePushOn! && isCommentPushOn!;
 
       notifyListeners();
     }
@@ -62,10 +64,12 @@ class AlarmSettingState extends ChangeNotifier {
       print('isNewUploadPushOn : $isNewUploadPushOn');
       print('isRemindPushOn : $isRemindPushOn');
       print('isFirePushOn : $isFirePushOn');
+      print('isCommentPushOn : $isCommentPushOn');
 
       await apiCode.updateAlarmSettings('isNewUploadPush', isNewUploadPushOn!);
       await apiCode.updateAlarmSettings('isRemindPush', isRemindPushOn!);
       await apiCode.updateAlarmSettings('isFirePush', isFirePushOn!);
+      await apiCode.updateAlarmSettings('isCommentPush', isCommentPushOn!);
 
       print('알람 설정이 성공적으로 업데이트되었습니다.');
       await fetchAlarmSettings();
@@ -76,16 +80,17 @@ class AlarmSettingState extends ChangeNotifier {
 
   /// 전체 불 변화
   void changeAllAlarms(bool isTotalOn) {
-    isNewUploadPushOn = isRemindPushOn = isFirePushOn = isTotalOn;
+    isNewUploadPushOn = isRemindPushOn = isFirePushOn = isCommentPushOn = isTotalOn;
     print('isNewUploadPushOn : $isNewUploadPushOn');
     print('isRemindPushOn : $isRemindPushOn');
     print('isFirePushOn : $isFirePushOn');
+    print('isCommentPushOn : $isCommentPushOn');
     checkAllAlarms();
   }
 
   /// 전체 ON/OFF 확인
   void checkAllAlarms() {
-    if(isNewUploadPushOn! && isRemindPushOn! && isFirePushOn!) {
+    if(isNewUploadPushOn! && isRemindPushOn! && isFirePushOn! && isCommentPushOn!) {
       isTotalAlarmOn = true;
     } else {
       isTotalAlarmOn = false;
@@ -109,6 +114,9 @@ class AlarmSettingState extends ChangeNotifier {
       case '불 던지기 알림':
         changeFireAlarm(isFixed);
         break;
+      case '댓글 알림':
+        changeCommentAlarm(isFixed);
+        break;
     }
   }
 
@@ -129,6 +137,12 @@ class AlarmSettingState extends ChangeNotifier {
   void changeFireAlarm(bool isChecked) {
     isFirePushOn = isChecked;
     print('불던지기 알림 : $isNewUploadPushOn');
+    checkAllAlarms();
+    notifyListeners();
+  }
+  void changeCommentAlarm(bool isChecked) {
+    isCommentPushOn = isChecked;
+    print('댓글 알림 : $isNewUploadPushOn');
     checkAllAlarms();
     notifyListeners();
   }

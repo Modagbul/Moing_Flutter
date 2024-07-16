@@ -30,9 +30,12 @@ class AlarmComponent extends StatelessWidget {
     } else if (title.contains('미션 리마인드')) {
       isTrue = state.isRemindPushOn != null && state.isRemindPushOn!;
       isFalse = state.isRemindPushOn != null && !state.isRemindPushOn!;
-    } else {
+    } else if (title.contains('불 던지기 알림')) {
       isTrue = state.isFirePushOn != null && state.isFirePushOn!;
       isFalse = state.isFirePushOn != null && !state.isFirePushOn!;
+    } else if (title.contains('댓글 알림')){
+      isTrue = state.isCommentPushOn != null && state.isCommentPushOn!;
+      isFalse = state.isCommentPushOn != null && !state.isCommentPushOn!;
     }
 
     return Container(
