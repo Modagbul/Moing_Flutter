@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
@@ -427,9 +428,11 @@ class FCMState extends ChangeNotifier {
     if (openedApp == true) {
       switch (data['path']) {
         case '/post/detail': // 신규 공지 업로드 알림
+          AmplitudeConfig.analytics.logEvent("push_click_announcement");
           navigatePostDetailPage(data: data);
           break;
         case '/missions/prove': // (한번/반복) 신규 미션 업로드, 불 던지기 알림
+          AmplitudeConfig.analytics.logEvent("push_click_mission_make");
           navigateMissionsProvePage(data: data);
           break;
         case '/missions': // (한번/반복) 미션 리마인드 알림

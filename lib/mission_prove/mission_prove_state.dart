@@ -12,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'dart:io';
 import 'dart:async';
 import 'dart:ui' as ui;
@@ -49,7 +50,6 @@ import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class MissionProveState with ChangeNotifier {
   final BuildContext context;
   final int teamId;
@@ -70,27 +70,34 @@ class MissionProveState with ChangeNotifier {
 
   String apiUrl = '';
   String imageUrl = '';
+
   // 사진 업로드
   XFile? avatarFile;
 
   // 미션 제목
   String missionTitle = '';
+
   // 미션 내용
   String missionContent = '';
+
   // 미션 규칙
   String missionRule = '';
 
   // 미션 방법(텍스트, 사진, 링크)
   String missionWay = '';
+
   // 미션 종료 날짜
   String missionDueTo = '';
+
   // 반복인증 시 나의 성공 횟수
   int repeatMissionMyCount = 0;
+
   // 반복인증 시 전체 성공 횟수
   int repeatMissionTotalCount = 0;
 
   // 한번인증 시 현재 성공 횟수
   int singleMissionMyCount = 0;
+
   // 한번인증 시 전체 성공 횟수
   int singleMissionTotalCount = 0;
 
@@ -99,6 +106,7 @@ class MissionProveState with ChangeNotifier {
 
   // 리더 여부
   bool isLeader = false;
+
   // 내가 당일에 인증한 경우 T/F 값
   bool isMeProved = false;
 
@@ -111,14 +119,17 @@ class MissionProveState with ChangeNotifier {
   // 나의 인증 조회 시 받아오는 리스트
   MyMissionProveAllData? myMissionData;
   List<MyMissionProveData>? myMissionList;
+
   // 시간대 정렬 리스트
   List<List<String>> myRepeatMissionTime = [];
+
   // 모두의 인증 조회 시 받아오는 리스트
   List<EveryMissionProveData>? everyMissionList;
   List<CommentData> comments = [];
 
   // 이미지 저장을 위한 key
   var globalKey = new GlobalKey();
+
   // 이미지 저장 성공 여부
   bool isSavedGallery = false;
 
@@ -178,7 +189,7 @@ class MissionProveState with ChangeNotifier {
     }
 
     /// TODO : 맨 처음 미션 설명이 보이도록 설정하기
-    if(!isRead) {
+    if (!isRead) {
       showModal('content', isRead: isRead);
     }
   }
@@ -277,7 +288,8 @@ class MissionProveState with ChangeNotifier {
 
   /// 모임원 미션 인증 성공 인원 조회 API
   Future<void> loadTeamMissionProveCount() async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/status';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/status';
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -335,10 +347,13 @@ class MissionProveState with ChangeNotifier {
   void _onTabChanged() {
     if (!tabController.indexIsChanging) {
       isMeOrEveryProved = tabController.index == 0 ? true : false;
-      if (!isMeOrEveryProved && everyMissionList != null && everyMissionList!.isEmpty) {
+      if (!isMeOrEveryProved &&
+          everyMissionList != null &&
+          everyMissionList!.isEmpty) {
         nobodyText = isEnded ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 아무도\n인증하지 않았어요';
       } else if (isMeOrEveryProved &&
-          myMissionList != null && myMissionList!.isEmpty) {
+          myMissionList != null &&
+          myMissionList!.isEmpty) {
         nobodyText = isEnded ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 아무도\n인증하지 않았어요';
       }
       notifyListeners();
@@ -355,7 +370,8 @@ class MissionProveState with ChangeNotifier {
 
   // 나의 인증 현황 조회하기
   Future<void> loadMissionData() async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
 
     try {
       ApiResponse<MyMissionProveAllData> apiResponse =
@@ -376,11 +392,11 @@ class MissionProveState with ChangeNotifier {
           }
         }
         if (myMissionList != null && myMissionList!.isEmpty) {
-          nobodyText = isEnded == true
-              ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!'
-              : '아직 인증하지 않았어요';
+          nobodyText =
+              isEnded == true ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 인증하지 않았어요';
         }
-        print('내가 오늘 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
+        print(
+            '내가 오늘 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
         notifyListeners();
       } else {
         print('loadMissionData is Null, error code : ${apiResponse.errorCode}');
@@ -392,7 +408,8 @@ class MissionProveState with ChangeNotifier {
 
   /// 모임원 미션 인증 조회
   Future<void> loadEveryMissionData() async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/others';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/others';
 
     try {
       ApiResponse<List<EveryMissionProveData>> apiResponse =
@@ -401,7 +418,8 @@ class MissionProveState with ChangeNotifier {
         method: 'GET',
         fromJson: (dataJson) => List<EveryMissionProveData>.from(
           (dataJson as List).map(
-            (item) => EveryMissionProveData.fromJson(item as Map<String, dynamic>),
+            (item) =>
+                EveryMissionProveData.fromJson(item as Map<String, dynamic>),
           ),
         ),
       );
@@ -409,10 +427,12 @@ class MissionProveState with ChangeNotifier {
       if (apiResponse.isSuccess == true) {
         everyMissionList = apiResponse.data;
         if (everyMissionList != null && everyMissionList!.isEmpty) {
-          nobodyText = isEnded == true ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 인증하지 않았어요';
+          nobodyText =
+              isEnded == true ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 인증하지 않았어요';
         }
       } else {
-        print('loadEveryMissionData is Null, error code : ${apiResponse.errorCode}');
+        print(
+            'loadEveryMissionData is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('모임원 인증 조회 실패: $e');
@@ -447,7 +467,8 @@ class MissionProveState with ChangeNotifier {
       count = myMissionList![0].count;
     }
     print('count : $count');
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$count';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$count';
 
     try {
       ApiResponse<int> apiResponse = await call.makeRequest<int>(
@@ -511,7 +532,8 @@ class MissionProveState with ChangeNotifier {
 
   /// 미션 종료 API
   Future<void> endRepeatMission() async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/end';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/end';
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -521,7 +543,7 @@ class MissionProveState with ChangeNotifier {
         fromJson: (dataJson) => dataJson as Map<String, dynamic>,
       );
 
-      if(apiResponse.isSuccess) {
+      if (apiResponse.isSuccess) {
         print('미션 종료에 성공했습니다!');
         Navigator.of(context).pop("END");
       } else {
@@ -535,9 +557,15 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 미션 인증 API
-  Future<bool?> submitMission({required String url, required String? contents}) async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
-    Map<String, dynamic> data = {"status": 'COMPLETE', "archive": url, "contents": contents};
+  Future<bool?> submitMission(
+      {required String url, required String? contents}) async {
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
+    Map<String, dynamic> data = {
+      "status": 'COMPLETE',
+      "archive": url,
+      "contents": contents
+    };
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -617,23 +645,27 @@ class MissionProveState with ChangeNotifier {
         print('사진 인증 시작!');
         try {
           await Permission.photos.request();
-          final XFile? assetFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+          final XFile? assetFile =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
           avatarFile = assetFile;
-          if(avatarFile != null) {
-            var result = await Navigator.of(context).pushNamed(PhotoAuthPage.routeName, arguments: avatarFile!);
-            if(result is Map<String, dynamic>) {
+          if (avatarFile != null) {
+            var result = await Navigator.of(context)
+                .pushNamed(PhotoAuthPage.routeName, arguments: avatarFile!);
+            if (result is Map<String, dynamic>) {
               avatarFile = result['avatarFile'];
               String contents = result['contents'];
               showLoading = true;
               notifyListeners();
               String extension = imageUpload.getFileExtension(avatarFile!);
-              String? tmpUrl = await imageUpload.getPresignedUrl(extension, avatarFile!);
+              String? tmpUrl =
+                  await imageUpload.getPresignedUrl(extension, avatarFile!);
 
               /// 이미지 url 받기
               imageUrl = tmpUrl ?? '';
               // presigned url 발급 성공 시
               if (imageUrl.isNotEmpty) {
-                bool? isSuccess = await submitMission(url: imageUrl, contents: contents);
+                bool? isSuccess =
+                    await submitMission(url: imageUrl, contents: contents);
                 if (isSuccess == true) {
                   isRead = true;
                   await initState();
@@ -649,7 +681,7 @@ class MissionProveState with ChangeNotifier {
       }
     } catch (e) {
       print('미션 인증 도중 에러 발생 : ${e}');
-      if(e.toString().contains('photo access')) {
+      if (e.toString().contains('photo access')) {
         bool? isImagePermissioned = await viewUtil.showWarningDialog(
             context: context,
             title: '갤러리 접근 권한이 필요해요',
@@ -671,8 +703,9 @@ class MissionProveState with ChangeNotifier {
     try {
       if (onLoading) return;
       onLoading = true;
+
       /// 내가 인증했을 때
-      if(myMissionList != null && myMissionList!.isNotEmpty && !isEnded) {
+      if (myMissionList != null && myMissionList!.isNotEmpty && !isEnded) {
         Navigator.of(context).pushNamed(MissionFirePage.routeName, arguments: {
           'teamId': teamId,
           'missionId': missionId,
@@ -715,7 +748,7 @@ class MissionProveState with ChangeNotifier {
     print('좋아요 누르기 전 heartStatus : $heartStatus');
     String beforeHeartStatus = heartStatus != 'true' ? 'True' : 'False';
     apiUrl =
-    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$archiveId/heart/$beforeHeartStatus';
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$archiveId/heart/$beforeHeartStatus';
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -732,8 +765,10 @@ class MissionProveState with ChangeNotifier {
         everyMissionList![index].heartStatus =
             missionHeartStatus == 'True' ? 'true' : 'false';
         everyMissionList![index].heartStatus == 'true'
-            ? everyMissionList![index].hearts = everyMissionList![index].hearts + newHearts
-        : everyMissionList![index].hearts = everyMissionList![index].hearts - 1;
+            ? everyMissionList![index].hearts =
+                everyMissionList![index].hearts + newHearts
+            : everyMissionList![index].hearts =
+                everyMissionList![index].hearts - 1;
         print('index : $index, hearts : ${everyMissionList![index].hearts}');
         notifyListeners();
       } else {
@@ -762,8 +797,7 @@ class MissionProveState with ChangeNotifier {
           Text(
             '이미지 저장',
             style: bodyTextStyle.copyWith(
-                color: grayScaleGrey300,
-                fontWeight: FontWeight.w500),
+                color: grayScaleGrey300, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -904,16 +938,24 @@ class MissionProveState with ChangeNotifier {
                                   globalKey.currentContext?.findRenderObject();
                               if (renderObject is RenderRepaintBoundary) {
                                 var boundary = renderObject;
-                                ui.Image image = await boundary.toImage(pixelRatio: 3);
-                                final directory = (await getApplicationDocumentsDirectory()).path;
-                                ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+                                ui.Image image =
+                                    await boundary.toImage(pixelRatio: 3);
+                                final directory =
+                                    (await getApplicationDocumentsDirectory())
+                                        .path;
+                                ByteData? byteData = await image.toByteData(
+                                    format: ui.ImageByteFormat.png);
                                 if (byteData != null) {
-                                  Uint8List pngBytes = byteData.buffer.asUint8List();
-                                  File imgFile = new File('$directory/screenshot.png');
+                                  Uint8List pngBytes =
+                                      byteData.buffer.asUint8List();
+                                  File imgFile =
+                                      new File('$directory/screenshot.png');
                                   await imgFile.writeAsBytes(pngBytes);
 
                                   // 갤러리에 저장
-                                  final result = await ImageGallerySaver.saveFile(imgFile.path);
+                                  final result =
+                                      await ImageGallerySaver.saveFile(
+                                          imgFile.path);
                                   if (result['isSuccess'] == true) {
                                     // 토스트 문구 출력
                                     fToast.showToast(
@@ -943,7 +985,8 @@ class MissionProveState with ChangeNotifier {
                                             ),
                                           ),
                                         ),
-                                        toastDuration: const Duration(milliseconds: 1500),
+                                        toastDuration:
+                                            const Duration(milliseconds: 1500),
                                         positionedToastBuilder:
                                             (context, child) {
                                           return Positioned(
@@ -1053,7 +1096,8 @@ class MissionProveState with ChangeNotifier {
     );
 
     Future.delayed(const Duration(milliseconds: 2000), () {
-      Navigator.popUntil(context, ModalRoute.withName(MissionProvePage.routeName));
+      Navigator.popUntil(
+          context, ModalRoute.withName(MissionProvePage.routeName));
       notifyListeners();
       showFireToast();
     });
@@ -1108,15 +1152,16 @@ class MissionProveState with ChangeNotifier {
   /// 나의 인증 - 미션 상세 내용 댓글 조회
   Future<void> loadMyMissionCommentData(int missionArchiveId) async {
     print('댓글 조회 시 archiveID: $missionArchiveId');
-    var data = await missionRepository.loadMyMissionCommentData(teamId: teamId, missionArchiveId: missionArchiveId);
-    if(data != null) comments = data;
+    var data = await missionRepository.loadMyMissionCommentData(
+        teamId: teamId, missionArchiveId: missionArchiveId);
+    if (data != null) comments = data;
     notifyListeners();
   }
 
   /// 미션 상세내용 확인
   void getMissionDetailContent(int index) async {
     print('상세내용 확인, $showLoading');
-    if(detailLoading) return;
+    if (detailLoading) return;
     detailLoading = true;
     await showModalBottomSheet(
       context: context,
@@ -1134,7 +1179,8 @@ class MissionProveState with ChangeNotifier {
               initialChildSize: 0.9,
               minChildSize: 0.1,
               maxChildSize: 0.9,
-              builder: (BuildContext context, ScrollController scrollController) {
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
                 return Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.9,
@@ -1153,7 +1199,8 @@ class MissionProveState with ChangeNotifier {
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16.0),
                                 child: Container(
                                   width: 32,
                                   height: 4,
@@ -1164,57 +1211,80 @@ class MissionProveState with ChangeNotifier {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 24, right: 24, top: 20),
+                                padding: const EdgeInsets.only(
+                                    left: 24, right: 24, top: 20),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
-                                            if(!(!isRepeated && isMeOrEveryProved)) ... [
+                                            if (!(!isRepeated &&
+                                                isMeOrEveryProved)) ...[
                                               // 한번인증이면서 유저프로필이 있을 때
-                                              !isRepeated && currentMission.profileImg != null
+                                              !isRepeated &&
+                                                      currentMission
+                                                              .profileImg !=
+                                                          null
                                                   ? ClipOval(
-                                                child: CachedNetworkImage(
-                                                  imageUrl: currentMission.profileImg,
-                                                  fit: BoxFit.cover,
-                                                  width: 20,
-                                                  height: 20,
-                                                  memCacheWidth: 20.cacheSize(context),
-                                                  memCacheHeight: 20.cacheSize(context),
-                                                ),
-                                              )
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: currentMission
+                                                            .profileImg,
+                                                        fit: BoxFit.cover,
+                                                        width: 20,
+                                                        height: 20,
+                                                        memCacheWidth: 20
+                                                            .cacheSize(context),
+                                                        memCacheHeight: 20
+                                                            .cacheSize(context),
+                                                      ),
+                                                    )
                                                   : Container(
-                                                alignment: Alignment.center,
-                                                width: 24,
-                                                height: 24,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(16),
-                                                  color: Colors.white,
-                                                ),
-                                                child: Text(
-                                                  currentMission.count.toString(),
-                                                  style: bodyTextStyle.copyWith(color: grayScaleGrey700),
-                                                ),
-                                              ),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width: 24,
+                                                      height: 24,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Text(
+                                                        currentMission.count
+                                                            .toString(),
+                                                        style: bodyTextStyle
+                                                            .copyWith(
+                                                                color:
+                                                                    grayScaleGrey700),
+                                                      ),
+                                                    ),
                                               const SizedBox(width: 8),
                                             ],
-                                            if(!isMeOrEveryProved) ... [
-                                              Text(currentMission.nickname ?? '인증 상세',
-                                                  style: bodyTextStyle.copyWith(color: grayScaleGrey400)),
+                                            if (!isMeOrEveryProved) ...[
+                                              Text(
+                                                  currentMission.nickname ??
+                                                      '인증 상세',
+                                                  style: bodyTextStyle.copyWith(
+                                                      color: grayScaleGrey400)),
                                               const SizedBox(width: 12),
                                             ],
                                             Text(
-                                              DateFormat('yy.MM.dd').format(DateTime.parse(currentMission.createdDate)),
+                                              DateFormat('yy.MM.dd').format(
+                                                  DateTime.parse(currentMission
+                                                      .createdDate)),
                                               style: bodyTextStyle.copyWith(
                                                   color: grayScaleGrey300,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                             const SizedBox(width: 12),
                                             Text(
-                                              DateFormat('HH:mm').format(DateTime.parse(currentMission.createdDate)),
+                                              DateFormat('HH:mm').format(
+                                                  DateTime.parse(currentMission
+                                                      .createdDate)),
                                               style: bodyTextStyle.copyWith(
                                                   color: grayScaleGrey300,
                                                   fontWeight: FontWeight.w500),
@@ -1222,7 +1292,9 @@ class MissionProveState with ChangeNotifier {
                                           ],
                                         ),
                                         const Spacer(),
-                                        if (isMeOrEveryProved && isTodayCreated && !isEnded)
+                                        if (isMeOrEveryProved &&
+                                            isTodayCreated &&
+                                            !isEnded)
                                           DropdownButtonHideUnderline(
                                             child: DropdownButton2<String>(
                                               isExpanded: true,
@@ -1230,42 +1302,63 @@ class MissionProveState with ChangeNotifier {
                                                 DropdownMenuItem(
                                                     value: 'retry',
                                                     child: Container(
-                                                      padding: const EdgeInsets.only(top: 4, right: 8),
-                                                      alignment: Alignment.centerRight,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 4, right: 8),
+                                                      alignment:
+                                                          Alignment.centerRight,
                                                       child: Column(
                                                         crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
+                                                            CrossAxisAlignment
+                                                                .end,
                                                         children: [
-                                                          Text('다시 인증하기', style: contentTextStyle.copyWith(color: grayScaleGrey100)),
-                                                          const SizedBox(height: 2),
+                                                          Text('다시 인증하기',
+                                                              style: contentTextStyle
+                                                                  .copyWith(
+                                                                      color:
+                                                                          grayScaleGrey100)),
+                                                          const SizedBox(
+                                                              height: 2),
                                                           Text(
                                                             '기존 인증내역이 취소돼요',
-                                                            style: bodyTextStyle.copyWith(fontWeight: FontWeight.w500),
+                                                            style: bodyTextStyle
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
                                                           ),
                                                         ],
                                                       ),
                                                     )),
                                               ],
                                               onChanged: (String? val) {
-                                                setMission(val: val, index: currentMission.count);
+                                                setMission(
+                                                    val: val,
+                                                    index:
+                                                        currentMission.count);
                                                 Navigator.of(context).pop();
                                               },
-                                              buttonStyleData: const ButtonStyleData(
+                                              buttonStyleData:
+                                                  const ButtonStyleData(
                                                 height: 20,
                                                 width: 20,
                                               ),
-                                              iconStyleData: const IconStyleData(
+                                              iconStyleData:
+                                                  const IconStyleData(
                                                 icon: Icon(
                                                   Icons.more_vert_outlined,
                                                 ),
                                                 iconSize: 20,
-                                                iconEnabledColor: grayScaleGrey300,
+                                                iconEnabledColor:
+                                                    grayScaleGrey300,
                                               ),
-                                              dropdownStyleData: DropdownStyleData(
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
                                                 maxHeight: 110,
                                                 width: 180,
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
                                                   color: grayScaleGrey500,
                                                 ),
                                               ),
@@ -1279,26 +1372,38 @@ class MissionProveState with ChangeNotifier {
                                                 DropdownMenuItem(
                                                   value: 'report',
                                                   child: Container(
-                                                    padding: const EdgeInsets.all(16),
-                                                    alignment: Alignment.centerRight,
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16),
+                                                    alignment:
+                                                        Alignment.centerRight,
                                                     child: Text(
                                                       '인증내용 신고하기',
-                                                      style: contentTextStyle.copyWith(
-                                                          color: grayScaleGrey100),
-                                                      textAlign: TextAlign.right,
+                                                      style: contentTextStyle
+                                                          .copyWith(
+                                                              color:
+                                                                  grayScaleGrey100),
+                                                      textAlign:
+                                                          TextAlign.right,
                                                     ),
                                                   ),
                                                 ),
                                                 DropdownMenuItem(
                                                   value: 'block',
                                                   child: Container(
-                                                    padding: const EdgeInsets.all(16),
-                                                    alignment: Alignment.centerRight,
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16),
+                                                    alignment:
+                                                        Alignment.centerRight,
                                                     child: Text(
                                                       '이용자 차단하기',
-                                                      style: contentTextStyle.copyWith(
-                                                          color: grayScaleGrey100),
-                                                      textAlign: TextAlign.right,
+                                                      style: contentTextStyle
+                                                          .copyWith(
+                                                              color:
+                                                                  grayScaleGrey100),
+                                                      textAlign:
+                                                          TextAlign.right,
                                                     ),
                                                   ),
                                                 ),
@@ -1306,46 +1411,68 @@ class MissionProveState with ChangeNotifier {
                                               onChanged: (String? val) async {
                                                 if (val == 'report') {
                                                   print('신고하기 버튼 클릭');
-                                                  bool? agreeReport = await viewUtil.showWarningDialog(
-                                                      context: context,
-                                                      title: '이 인증을 신고하시겠어요?',
-                                                      content: '신고한 인증은 모든 모임원들에게 숨겨져요.',
-                                                      leftText: '취소하기',
-                                                      rightText: '신고하기');
+                                                  bool? agreeReport = await viewUtil
+                                                      .showWarningDialog(
+                                                          context: context,
+                                                          title:
+                                                              '이 인증을 신고하시겠어요?',
+                                                          content:
+                                                              '신고한 인증은 모든 모임원들에게 숨겨져요.',
+                                                          leftText: '취소하기',
+                                                          rightText: '신고하기');
 
-                                                  if(agreeReport == true) {
-                                                    await doReport(currentMission.archiveId);
+                                                  if (agreeReport == true) {
+                                                    await doReport(
+                                                        currentMission
+                                                            .archiveId);
                                                     Navigator.of(context).pop();
                                                     fToast.showToast(
                                                         child: Material(
-                                                          type: MaterialType.transparency,
+                                                          type: MaterialType
+                                                              .transparency,
                                                           child: Padding(
-                                                              padding: const EdgeInsets.symmetric(
-                                                                  horizontal: 20.0),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          20.0),
                                                               child: Container(
-                                                                alignment: Alignment.center,
-                                                                width: double.infinity,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: double
+                                                                    .infinity,
                                                                 height: 60,
-                                                                decoration: BoxDecoration(
+                                                                decoration:
+                                                                    BoxDecoration(
                                                                   borderRadius:
-                                                                  BorderRadius.circular(12),
-                                                                  color: Colors.white,
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                  color: Colors
+                                                                      .white,
                                                                 ),
                                                                 child: Row(
                                                                   mainAxisAlignment:
-                                                                  MainAxisAlignment.center,
+                                                                      MainAxisAlignment
+                                                                          .center,
                                                                   children: [
                                                                     Text(
                                                                       '신고가 접수되었어요. 24시간 이내에 확인 후 조치할게요.',
                                                                       style: bodyTextStyle.copyWith(
-                                                                          color: grayScaleGrey700),
+                                                                          color:
+                                                                              grayScaleGrey700),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               )),
                                                         ),
-                                                        toastDuration: const Duration(milliseconds: 2000),
-                                                        positionedToastBuilder: (context, child) {
+                                                        toastDuration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    2000),
+                                                        positionedToastBuilder:
+                                                            (context, child) {
                                                           return Positioned(
                                                             top: 114.0,
                                                             left: 0.0,
@@ -1354,27 +1481,35 @@ class MissionProveState with ChangeNotifier {
                                                           );
                                                         });
                                                   }
-                                                }
-                                                else if (val == 'block') {
-                                                  showModal('block', nickname: currentMission.nickname, makerId: currentMission.makerId);
+                                                } else if (val == 'block') {
+                                                  showModal('block',
+                                                      nickname: currentMission
+                                                          .nickname,
+                                                      makerId: currentMission
+                                                          .makerId);
                                                 }
                                               },
-                                              buttonStyleData: const ButtonStyleData(
+                                              buttonStyleData:
+                                                  const ButtonStyleData(
                                                 height: 20,
                                                 width: 20,
                                               ),
-                                              iconStyleData: const IconStyleData(
+                                              iconStyleData:
+                                                  const IconStyleData(
                                                 icon: Icon(
                                                   Icons.more_vert_outlined,
                                                 ),
                                                 iconSize: 20,
-                                                iconEnabledColor: grayScaleGrey300,
+                                                iconEnabledColor:
+                                                    grayScaleGrey300,
                                               ),
-                                              dropdownStyleData: DropdownStyleData(
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
                                                 maxHeight: 110,
                                                 width: 180,
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
                                                   color: grayScaleGrey500,
                                                 ),
                                               ),
@@ -1383,15 +1518,26 @@ class MissionProveState with ChangeNotifier {
                                       ],
                                     ),
                                     const SizedBox(height: 16),
+
                                     /// 사진 텍스트 링크 중 선택
-                                    if (missionWay.contains('사진') && currentMission.status == 'COMPLETE')
-                                      missionDetailPhoto(context: context, currentMission: currentMission),
-                                    if (missionWay.contains('링크') && currentMission.status == 'COMPLETE')
-                                      missionDetailLink(context: context, currentMission: currentMission),
-                                    if (missionWay.contains('텍스트') || currentMission.status == 'SKIP')
-                                      missionDetailTextOrSkip(context: context, currentMission: currentMission),
+                                    if (missionWay.contains('사진') &&
+                                        currentMission.status == 'COMPLETE')
+                                      missionDetailPhoto(
+                                          context: context,
+                                          currentMission: currentMission),
+                                    if (missionWay.contains('링크') &&
+                                        currentMission.status == 'COMPLETE')
+                                      missionDetailLink(
+                                          context: context,
+                                          currentMission: currentMission),
+                                    if (missionWay.contains('텍스트') ||
+                                        currentMission.status == 'SKIP')
+                                      missionDetailTextOrSkip(
+                                          context: context,
+                                          currentMission: currentMission),
+
                                     /// 미션 내용(문구) 추가
-                                    if(currentMission.contents != null) ... [
+                                    if (currentMission.contents != null) ...[
                                       const SizedBox(height: 16),
                                       CustomReadMoreText(
                                         currentMission.contents,
@@ -1399,39 +1545,54 @@ class MissionProveState with ChangeNotifier {
                                         trimMode: CustomTrimMode.Line,
                                         trimCollapsedText: '더보기',
                                         trimExpandedText: '',
-                                        style: contentTextStyle.copyWith(color: grayScaleGrey200, height: 1.75),
-                                        moreStyle: contentTextStyle.copyWith(color: grayScaleGrey400),
+                                        style: contentTextStyle.copyWith(
+                                            color: grayScaleGrey200,
+                                            height: 1.75),
+                                        moreStyle: contentTextStyle.copyWith(
+                                            color: grayScaleGrey400),
                                       ),
                                     ],
                                     const SizedBox(height: 24),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         GestureDetector(
                                           onTap: () async {
                                             // 내 사진 좋아요 버튼 클릭
-                                            if (currentMission.runtimeType.toString() == 'MyMissionProveData') {
+                                            if (currentMission.runtimeType
+                                                    .toString() ==
+                                                'MyMissionProveData') {
                                               print('내 미션 바텀시트에서 좋아요 클릭');
                                               likePressedToast();
                                             }
                                             // 모두으 인증 좋아요 버튼 클릭
-                                            else if (currentMission.runtimeType.toString() == 'EveryMissionProveData') {
+                                            else if (currentMission.runtimeType
+                                                    .toString() ==
+                                                'EveryMissionProveData') {
                                               int selectedIndex = index;
                                               print('사진에서 좋아요 클릭');
                                               await likePressed(
-                                                  archiveId: currentMission.archiveId,
+                                                  archiveId:
+                                                      currentMission.archiveId,
                                                   index: selectedIndex,
-                                                  heartStatus: currentMission.heartStatus);
+                                                  heartStatus: currentMission
+                                                      .heartStatus);
                                               setState(() {
-                                                currentMission.hearts = everyMissionList![index].hearts;
-                                                currentMission.heartStatus = everyMissionList![index].heartStatus;
+                                                currentMission.hearts =
+                                                    everyMissionList![index]
+                                                        .hearts;
+                                                currentMission.heartStatus =
+                                                    everyMissionList![index]
+                                                        .heartStatus;
                                               });
                                             }
                                           },
                                           child: Row(
                                             children: [
                                               SvgPicture.asset(
-                                                currentMission.heartStatus == 'true'
+                                                currentMission.heartStatus ==
+                                                        'true'
                                                     ? 'asset/icons/mission_like_coral.svg'
                                                     : 'asset/icons/mission_like.svg',
                                                 width: 20,
@@ -1440,9 +1601,13 @@ class MissionProveState with ChangeNotifier {
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
-                                                currentMission.hearts.toString(),
-                                                style: contentTextStyle.copyWith(
-                                                  color: currentMission.heartStatus == 'true'
+                                                currentMission.hearts
+                                                    .toString(),
+                                                style:
+                                                    contentTextStyle.copyWith(
+                                                  color: currentMission
+                                                              .heartStatus ==
+                                                          'true'
                                                       ? coralGrey500
                                                       : grayScaleGrey400,
                                                 ),
@@ -1469,14 +1634,17 @@ class MissionProveState with ChangeNotifier {
                                           ],
                                         ),
                                         const Spacer(),
-                                        if (isMeOrEveryProved && missionWay.contains('사진') &&
+                                        if (isMeOrEveryProved &&
+                                            missionWay.contains('사진') &&
                                             currentMission.status == 'COMPLETE')
-                                          missionShare(context: context, index: index),
+                                          missionShare(
+                                              context: context, index: index),
                                       ],
                                     ),
                                   ],
                                 ),
                               ),
+
                               /// 댓글 컴포넌트
                               const SizedBox(height: 20),
                               Container(
@@ -1484,35 +1652,45 @@ class MissionProveState with ChangeNotifier {
                                 height: 8,
                                 color: grayScaleGrey700,
                               ),
-                              if(comments.isEmpty) ... [
+                              if (comments.isEmpty) ...[
                                 const SizedBox(height: 72),
                                 const Text('첫 번째 댓글을 남겨보세요!',
                                     style: contentTextStyle),
                               ],
-                              if(comments.isNotEmpty) ... [
+                              if (comments.isNotEmpty) ...[
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 20.0,
                                     vertical: 8.0,
                                   ),
                                   child: Column(
-                                    children: comments.map((CommentData comment) {
+                                    children:
+                                        comments.map((CommentData comment) {
                                       return CommentCard(
                                         commentData: comment,
                                         category: 'mission',
                                         onDelete: () async {
-                                          if(commentLoading) return ;
+                                          if (commentLoading) return;
                                           commentLoading = true;
-                                          bool? isDelete = await missionRepository.deleteComment(
-                                              teamId: teamId,
-                                              missionArchiveId: currentMission.archiveId,
-                                              missionCommentId: comment.commentId);
-                                          if(isDelete == true) {
-                                            var data = await missionRepository.loadMyMissionCommentData(
-                                                teamId: teamId, missionArchiveId: currentMission.archiveId);
+                                          bool? isDelete =
+                                              await missionRepository
+                                                  .deleteComment(
+                                                      teamId: teamId,
+                                                      missionArchiveId:
+                                                          currentMission
+                                                              .archiveId,
+                                                      missionCommentId:
+                                                          comment.commentId);
+                                          if (isDelete == true) {
+                                            var data = await missionRepository
+                                                .loadMyMissionCommentData(
+                                                    teamId: teamId,
+                                                    missionArchiveId:
+                                                        currentMission
+                                                            .archiveId);
 
                                             setState(() {
-                                              if(data != null) comments = data;
+                                              if (data != null) comments = data;
                                             });
                                             notifyListeners();
 
@@ -1530,24 +1708,28 @@ class MissionProveState with ChangeNotifier {
                                           commentLoading = false;
                                         },
                                         onReport: () async {
-                                          if(commentLoading) return ;
+                                          if (commentLoading) return;
                                           commentLoading = true;
                                           bool checkReport = await showDialog(
                                             context: context,
                                             builder: (ctx) {
                                               return Column(
-                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
                                                 children: [
                                                   WarningDialog(
                                                     title: '이 댓글을 신고하시겠어요?',
-                                                    content: '신고한 댓글은 모든 모임원들에게 숨겨져요',
+                                                    content:
+                                                        '신고한 댓글은 모든 모임원들에게 숨겨져요',
                                                     leftText: '취소하기',
                                                     onCanceled: () {
-                                                      Navigator.of(ctx).pop(false);
+                                                      Navigator.of(ctx)
+                                                          .pop(false);
                                                     },
                                                     rightText: '신고하기',
                                                     onConfirm: () {
-                                                      Navigator.of(ctx).pop(true);
+                                                      Navigator.of(ctx)
+                                                          .pop(true);
                                                     },
                                                   ),
                                                 ],
@@ -1555,15 +1737,18 @@ class MissionProveState with ChangeNotifier {
                                             },
                                           );
                                           // 댓글 신고
-                                          if(checkReport == true) {
-                                            bool? isReport = await missionRepository.ReportMissionComment(
+                                          if (checkReport == true) {
+                                            bool? isReport =
+                                                await missionRepository
+                                                    .ReportMissionComment(
                                               reportType: "MCOMMENT",
                                               targetId: comment.commentId,
                                             );
-                                            if(isReport == true) {
+                                            if (isReport == true) {
                                               toastMessage.showToastMessage(
                                                 fToast: fToast,
-                                                warningText: '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
+                                                warningText:
+                                                    '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
                                                 toastBottom: 48.0,
                                                 toastLeft: 0,
                                                 toastRight: 0,
@@ -1581,7 +1766,9 @@ class MissionProveState with ChangeNotifier {
                                 ),
                               ],
                               const SizedBox(height: 150),
-                              SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                              SizedBox(
+                                  height:
+                                      MediaQuery.of(context).viewInsets.bottom),
                             ],
                           ),
                         ),
@@ -1592,7 +1779,8 @@ class MissionProveState with ChangeNotifier {
                           child: Container(
                             color: grayScaleGrey700,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 12.0),
                               child: _CommentsInputWidget(
                                 archiveId: currentMission.archiveId,
                                 teamId: teamId,
@@ -1600,15 +1788,18 @@ class MissionProveState with ChangeNotifier {
                                   FocusScope.of(context).unfocus();
                                   if (isSuccess) {
                                     print("댓글이 성공적으로 추가되었습니다.");
-                                    await loadMyMissionCommentData(currentMission.archiveId);
+                                    await loadMyMissionCommentData(
+                                        currentMission.archiveId);
                                     setState(() {
                                       commentsCount = comments.length;
                                     });
-                                    if (currentMission.runtimeType.toString() == 'MyMissionProveData') {
+                                    if (currentMission.runtimeType.toString() ==
+                                        'MyMissionProveData') {
                                       // 댓글 개수 갱신을 위해 나의 인증 조회
                                       loadMissionData();
-                                    }
-                                    else if (currentMission.runtimeType.toString() == 'EveryMissionProveData') {
+                                    } else if (currentMission.runtimeType
+                                            .toString() ==
+                                        'EveryMissionProveData') {
                                       // 댓글 개수 갱신을 위해 모두의 인증 조회
                                       loadEveryMissionData();
                                     }
@@ -1687,7 +1878,8 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
-  Widget missionDetailPhoto({required BuildContext context, required dynamic currentMission}) {
+  Widget missionDetailPhoto(
+      {required BuildContext context, required dynamic currentMission}) {
     return Container(
       width: double.infinity,
       height: 265,
@@ -1710,7 +1902,8 @@ class MissionProveState with ChangeNotifier {
     );
   }
 
-  Widget missionDetailLink({required BuildContext context, required dynamic currentMission}) {
+  Widget missionDetailLink(
+      {required BuildContext context, required dynamic currentMission}) {
     return GestureDetector(
       onTap: () async {
         await _launchUrl(currentMission.archive);
@@ -1739,15 +1932,14 @@ class MissionProveState with ChangeNotifier {
                     ),
                     const SizedBox(width: 12),
                     Text('링크 바로보기',
-                        style: contentTextStyle.copyWith(
-                            color: grayScaleGrey100)),
+                        style:
+                            contentTextStyle.copyWith(color: grayScaleGrey100)),
                   ],
                 ),
               ),
               const SizedBox(height: 4),
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 48.0, bottom: 20),
+                padding: const EdgeInsets.only(left: 48.0, bottom: 20),
                 child: Text(
                   currentMission.archive,
                   style: smallTextStyle,
@@ -1760,7 +1952,8 @@ class MissionProveState with ChangeNotifier {
     );
   }
 
-  Widget missionDetailTextOrSkip({required BuildContext context, required dynamic currentMission}) {
+  Widget missionDetailTextOrSkip(
+      {required BuildContext context, required dynamic currentMission}) {
     return Stack(
       children: [
         SizedBox(
@@ -1777,7 +1970,8 @@ class MissionProveState with ChangeNotifier {
               ],
               Text(
                 currentMission.archive,
-                style: contentTextStyle.copyWith(color: grayScaleGrey200, height: 1.75),
+                style: contentTextStyle.copyWith(
+                    color: grayScaleGrey200, height: 1.75),
               ),
             ],
           ),
@@ -1794,7 +1988,8 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 바텀 모달 클릭
-  void showModal(String value, {String? nickname, int? makerId, bool? isRead}) async {
+  void showModal(String value,
+      {String? nickname, int? makerId, bool? isRead}) async {
     switch (value) {
       // 더보기 클릭
       case 'more':
@@ -1834,7 +2029,7 @@ class MissionProveState with ChangeNotifier {
           isRead: isRead,
         );
 
-        if(result != null && result.contains("missionFix")) {
+        if (result != null && result.contains("missionFix")) {
           await getMissionContent();
           String read = result.split("_") as String;
           this.isRead = read == 'true' ? true : false;
@@ -1842,7 +2037,8 @@ class MissionProveState with ChangeNotifier {
         break;
       // 미션 인증하기 클릭
       case 'mission':
-        var missionResult = await missionState.MissionSuccessPressed(context: context);
+        var missionResult =
+            await missionState.MissionSuccessPressed(context: context);
         print('missionResult2 : $missionResult');
         if (missionResult != null) {
           if (missionResult == 'skip') {
@@ -1853,18 +2049,18 @@ class MissionProveState with ChangeNotifier {
           }
         }
         break;
-        // 유저 차단
+      // 유저 차단
       case 'block':
         print('block 모달 수행합니다~');
         var result = await missionState.showUserBlockModal(
             context: context, makerId: makerId!, nickname: nickname!);
 
-        if(result == 'userBlock') {
+        if (result == 'userBlock') {
           /// 차단 신고 API
           final bool? isSuccess =
-          await apiCode.postBlockUser(targetId: makerId);
+              await apiCode.postBlockUser(targetId: makerId);
 
-          if(isSuccess == true) {
+          if (isSuccess == true) {
             toastMessage.showToastMessage(
               fToast: fToast,
               warningText: '차단이 완료되었어요.',
@@ -1891,7 +2087,9 @@ class MissionProveState with ChangeNotifier {
     int month = created.month;
     int day = created.day;
     // 같은 날짜인 경우
-    return (year == now.year && month == now.month && day == now.day) ? true : false;
+    return (year == now.year && month == now.month && day == now.day)
+        ? true
+        : false;
   }
 
   // 인증 날짜 변환
@@ -1908,8 +2106,10 @@ class _CommentsInputWidget extends StatefulWidget {
   final int archiveId;
   final int teamId;
   final Function(bool isSuccess) onCommentResult; // 콜백 함수
-  const _CommentsInputWidget({required this.archiveId, required this.teamId,
-    required this.onCommentResult});
+  const _CommentsInputWidget(
+      {required this.archiveId,
+      required this.teamId,
+      required this.onCommentResult});
 
   @override
   State<_CommentsInputWidget> createState() => _CommentsInputWidgetState();
@@ -1996,6 +2196,12 @@ class _CommentsInputWidgetState extends State<_CommentsInputWidget> {
                 missionArchiveId: widget.archiveId,
                 teamId: widget.teamId);
             widget.onCommentResult(isSuccess);
+            AmplitudeConfig.analytics
+                .logEvent("mission_comment", eventProperties: {
+              "teamId": widget.teamId,
+              "missionArchiveId": widget.archiveId,
+              "comment": commentController.value.text,
+            });
           } finally {
             commentController.clear();
             createCommentLoading = false;

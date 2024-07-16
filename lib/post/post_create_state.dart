@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/request/create_post_request.dart';
 
@@ -84,6 +85,10 @@ class PostCreateState extends ChangeNotifier {
 
     String warningText = '${isCheckedNotice ? '공지가' : '게시글이'} 등록되었어요.';
 
+    isCheckedNotice
+        ? addAmplitudeNoticeMakeEvent()
+        : addAmplitudePostMakeEvent();
+
     if (warningText.isNotEmpty) {
       fToast.showToast(
           child: Material(
@@ -123,5 +128,23 @@ class PostCreateState extends ChangeNotifier {
             );
           });
     }
+  }
+
+  void addAmplitudeNoticeMakeEvent() {
+    AmplitudeConfig.analytics.logEvent("announcement_make", eventProperties: {
+      "teamId": teamId,
+      "title": titleController.value.text,
+      "content": contentController.value.text,
+      "isNotice": isCheckedNotice,
+    });
+  }
+
+  void addAmplitudePostMakeEvent() {
+    AmplitudeConfig.analytics.logEvent("post_make", eventProperties: {
+      "teamId": teamId,
+      "title": titleController.value.text,
+      "content": contentController.value.text,
+      "isNotice": isCheckedNotice,
+    });
   }
 }

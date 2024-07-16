@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/login/register_success/welcome_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
@@ -37,6 +38,7 @@ class SignUpDateState extends ChangeNotifier {
     String formattedDate = selectedDate.toLocal().toString().split(' ')[0];
     bool? result = await signUp(formattedDate);
     if (result == true) {
+      addAmplitudeSignUpEvent(formattedDate);
       navigateToWelcomePage();
     }
   }
@@ -44,8 +46,17 @@ class SignUpDateState extends ChangeNotifier {
   void skipPressed() async {
     bool? result = await signUp(null);
     if (result == true) {
+      addAmplitudeSignUpEvent(null);
       navigateToWelcomePage();
     }
+  }
+
+  void addAmplitudeSignUpEvent(String? formattedDate) {
+    AmplitudeConfig.analytics.logEvent("signup_complete", eventProperties: {
+      "nickname": nickname,
+      "gender": gender,
+      "date": formattedDate ?? 'unknown',
+    });
   }
 
   void navigateToWelcomePage() {

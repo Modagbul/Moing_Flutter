@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:http/http.dart' as http;
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/fcm/fcm_state.dart';
 import 'package:moing_flutter/login/sign_up/sign_up_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
@@ -50,7 +51,7 @@ class LoginState extends ChangeNotifier {
   /// 카카오 로그인 함수
   void signInWithKakao() async {
     try {
-      if(onLoading) return;
+      if (onLoading) return;
       onLoading = true;
 
       bool isInstalled = await isKakaoTalkInstalled();
@@ -72,7 +73,6 @@ class LoginState extends ChangeNotifier {
       print('key hash : ${await KakaoSdk.origin}');
       // 카카오 로그인 후 백엔드에 토큰 전송
       await sendKakaoTokenToBackend(token.accessToken);
-
     } catch (error) {
       // showErrorDialog("카카오 로그인 에러 : ${error.toString()}");
       print('카카오톡으로 로그인 실패 $error');
@@ -87,7 +87,7 @@ class LoginState extends ChangeNotifier {
       builder: (context) => AlertDialog(
         content: Text(
           error,
-          style: TextStyle(fontSize: 14, color: Colors.indigo),
+          style: const TextStyle(fontSize: 14, color: Colors.indigo),
           textAlign: TextAlign.center,
         ),
       ),
@@ -98,8 +98,8 @@ class LoginState extends ChangeNotifier {
   Future<void> sendKakaoTokenToBackend(String token) async {
     try {
       String? fcmToken = await getFCMToken();
-      if(fcmToken == null) {
-        return ;
+      if (fcmToken == null) {
+        return;
       }
 
       String deviceType = (Platform.isAndroid ? 'ANDROID' : 'APPLE');
@@ -119,7 +119,7 @@ class LoginState extends ChangeNotifier {
       );
 
       Map<String, dynamic> responseBody = jsonDecode(response.body);
-      if(responseBody['isSuccess'] == true) {
+      if (responseBody['isSuccess'] == true) {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
 
@@ -130,19 +130,19 @@ class LoginState extends ChangeNotifier {
         sharedPreferencesInfo.savePreferencesData('sign', 'kakao');
         checkRegister(_isRegistered!);
       }
+
       /// 에러 처리
       else {
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
           String? accessToken = await tokenManagement.loadAccessToken();
-          if(accessToken == null) {
+          if (accessToken == null) {
             print('accessToken이 존재하지 않습니다..');
             return null;
           }
           await sendKakaoTokenToBackend(accessToken);
         }
-
       }
     } catch (e) {
       print('카카오 - 백엔드 연동 간 에러 발생 : ${e.toString()}');
@@ -163,7 +163,6 @@ class LoginState extends ChangeNotifier {
     return fcmToken;
   }
 
-
   /// IOS 13 버전 앱 로그인
   Future<void> signInWithApple() async {
     /// IOS 13 버전 이상인지 확인
@@ -172,7 +171,7 @@ class LoginState extends ChangeNotifier {
     /// IOS 13 버전 이상인 경우
     if (isAvailable) {
       try {
-        if (onLoading) return ;
+        if (onLoading) return;
         onLoading = true;
 
         // Request credential for the currently signed in Apple account.
@@ -203,8 +202,8 @@ class LoginState extends ChangeNotifier {
   Future<void> appleLoginSendToken(String token) async {
     try {
       String? fcmToken = await getFCMToken();
-      if(fcmToken == null) {
-        return ;
+      if (fcmToken == null) {
+        return;
       }
 
       final String apiUrl = '${dotenv.env['MOING_API']}/api/auth/signIn/apple';
@@ -221,7 +220,7 @@ class LoginState extends ChangeNotifier {
       );
 
       Map<String, dynamic> responseBody = jsonDecode(response.body);
-      if(responseBody['isSuccess'] == true) {
+      if (responseBody['isSuccess'] == true) {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
         print('애플JWT : $accessToken');
@@ -232,13 +231,14 @@ class LoginState extends ChangeNotifier {
         checkRegister(_isRegistered!);
         sharedPreferencesInfo.savePreferencesData('sign', 'apple');
       }
+
       /// 에러 처리
       else {
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
           String? accessToken = await tokenManagement.loadAccessToken();
-          if(accessToken == null) {
+          if (accessToken == null) {
             print('accessToken이 존재하지 않습니다..');
             return null;
           }
@@ -258,10 +258,12 @@ class LoginState extends ChangeNotifier {
         return;
       }
 
-      final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       // Firebase 사용자 인증
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(
         GoogleAuthProvider.credential(
           accessToken: googleAuth?.accessToken,
           idToken: googleAuth?.idToken,
@@ -299,7 +301,7 @@ class LoginState extends ChangeNotifier {
       );
 
       Map<String, dynamic> responseBody = jsonDecode(response.body);
-      if(responseBody['isSuccess'] == true) {
+      if (responseBody['isSuccess'] == true) {
         final String accessToken = responseBody['data']['accessToken'];
         final String refreshToken = responseBody['data']['refreshToken'];
 
@@ -308,13 +310,14 @@ class LoginState extends ChangeNotifier {
         sharedPreferencesInfo.savePreferencesData('sign', 'google');
         checkRegister(_isRegistered!);
       }
+
       /// 에러 처리
       else {
         // 토큰 재발급 처리 완료
         if (responseBody['errorCode'] == 'J0003') {
           print('토큰 재발급 처리 수행합니다.');
           String? accessToken = await tokenManagement.loadAccessToken();
-          if(accessToken == null) {
+          if (accessToken == null) {
             print('accessToken이 존재하지 않습니다..');
             return null;
           }
@@ -326,11 +329,11 @@ class LoginState extends ChangeNotifier {
     }
   }
 
-
   /// 회원가입 여부 판단
   void checkRegister(bool isRegistered) {
     // 가입되어 있는 경우
-    if(isRegistered) {
+    if (isRegistered) {
+      addAmplitudeLoginEvent();
       Navigator.of(context).pushNamed(
         MainPage.routeName,
       );
@@ -342,5 +345,9 @@ class LoginState extends ChangeNotifier {
         SignUpPage.routeName,
       );
     }
+  }
+
+  void addAmplitudeLoginEvent() {
+    AmplitudeConfig.analytics.logEvent("login_complete");
   }
 }
