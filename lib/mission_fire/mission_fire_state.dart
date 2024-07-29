@@ -135,6 +135,22 @@ class MissionFireState extends ChangeNotifier {
 
       log('throwFire response: ${apiResponse.data}');
 
+      // 불 던지기 메세지 추가 유무
+      if (apiResponse.data != null) {
+        AmplitudeConfig.analytics.logEvent(
+            messageController.text.isNotEmpty
+                ? "dropfire_message_complete"
+                : "dropfire_nomessage_complete",
+            eventProperties: {
+              // 사용자가 보낸 메세지 길이(필요 없을 거 같긴 함)
+              "message_length": messageController.text.length,
+              // 메세지 받는 사람 이름(필요 없을 거 같긴 함22)
+              "receiver": userList![selectedIndex!].nickname
+            }
+        );
+      }
+
+      // 불 던지기 성공적으로 완료
       if (apiResponse.data != null) {
         String? nickname = await AmplitudeConfig.analytics.getUserId();
         if (nickname == null) {
@@ -149,6 +165,7 @@ class MissionFireState extends ChangeNotifier {
                 "sender": nickname
               });
         }
+
         loadFirePersonList();
         compeleteThrowFireModal();
         initSelectedUser();

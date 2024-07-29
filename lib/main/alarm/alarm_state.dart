@@ -12,6 +12,8 @@ import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/response/alarm_model.dart';
 
+import '../../config/amplitude_config.dart';
+
 class AlarmState extends ChangeNotifier {
   final BuildContext context;
   final APICall apiCall = APICall();
@@ -206,6 +208,18 @@ class AlarmState extends ChangeNotifier {
     Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
     bool? isEnded;
     String? status;
+
+    // 푸시 알림 클릭 불 던지기 메세지 유무
+    bool hasMessage = alarmData.body.isNotEmpty;
+
+    AmplitudeConfig.analytics.logEvent(
+        hasMessage ? "push_click_dropfire_message" : "push_click_dropfire_nomessage",
+        eventProperties: {
+          'alarmType': alarmData.type,
+          'alarmTitle': alarmData.title,
+          'messageContent': hasMessage ? alarmData.body : 'No message',
+        }
+    );
 
     if (idInfoMap['teamId'] != null && idInfoMap['missionId'] != null) {
       final missionEndStatus = await getMissionEndStatus(

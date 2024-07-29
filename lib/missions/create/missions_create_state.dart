@@ -606,15 +606,17 @@ class MissionCreateState extends ChangeNotifier {
           fromJson: (data) => data as Map<String, dynamic>,
         );
         log('미션 생성 성공: ${apiResponse.data}');
+
+        // 한번 미션 생성 or 반복 미션 생성
         String? nickname = await AmplitudeConfig.analytics.getUserId();
         if(nickname == null) {
           AmplitudeConfig.analytics.logEvent(
-              "misson_make", eventProperties: {
-                "mission_kind": isRepeatSelected == true ? 'repeat' : 'single'});
+              "mission_make", eventProperties: {
+                "mission_kind": isRepeatSelected == true ? 'mission_repeat_make' : 'mission_once_make'});
         } else {
           AmplitudeConfig.analytics.logEvent(
-              "misson_make", eventProperties: {
-            "mission_kind": isRepeatSelected == true ? 'repeat' : 'single',
+              "mission_make", eventProperties: {
+            "mission_kind": isRepeatSelected == true ? 'mission_repeat_make' : 'mission_once_make',
             "mission_maker": nickname,
             "mission_category": way});
         }
