@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dart';
 import 'package:moing_flutter/missions/aggregate/missions_all_state.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +17,6 @@ class MissionsAllPage extends StatelessWidget {
   const MissionsAllPage({super.key});
 
   static route(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -76,25 +74,28 @@ class MissionsAllPage extends StatelessWidget {
                           total: e.total,
                           status: e.status,
                           onTap: () async {
-                            String? nickname = await AmplitudeConfig.analytics.getUserId();
-                            Amplitude.getInstance().logEvent("misson_once_make", eventProperties: {
+                            String? nickname =
+                                await AmplitudeConfig.analytics.getUserId();
+                            Amplitude.getInstance()
+                                .logEvent("misson_once_make", eventProperties: {
                               "nickname": nickname ?? "unknown",
                               "missionId": e.missionId,
                               "teamId": e.teamId,
                               "teamName": e.teamName,
                               "missionTitle": e.missionTitle,
                             });
-                            Navigator.of(context).pushNamed(
-                              MissionProvePage.routeName,
-                              arguments: MissionProveArgument(
-                                isRepeated: false,
-                                teamId: e.teamId,
-                                missionId: e.missionId,
-                                status: e.status,
-                                isEnded: false,
-                                isRead: true,
-                              )
-                            ).then((_) {
+
+                            Navigator.of(context)
+                                .pushNamed(MissionProvePage.routeName,
+                                    arguments: MissionProveArgument(
+                                      isRepeated: false,
+                                      teamId: e.teamId,
+                                      missionId: e.missionId,
+                                      status: e.status,
+                                      isEnded: false,
+                                      isRead: true,
+                                    ))
+                                .then((_) {
                               Provider.of<MissionsAllState>(context,
                                       listen: false)
                                   .reloadMissionStatus();
@@ -107,7 +108,8 @@ class MissionsAllPage extends StatelessWidget {
                 )
               else
                 Visibility(
-                  visible: state.aggregateSingleMissionStatus?.data.isEmpty ?? true,
+                  visible:
+                      state.aggregateSingleMissionStatus?.data.isEmpty ?? true,
                   replacement: const SizedBox(height: 126),
                   child: const SizedBox(
                     height: 126,
@@ -156,25 +158,27 @@ class MissionsAllPage extends StatelessWidget {
                       donePeople: e.donePeople,
                       totalPeople: e.totalPeople,
                       onTap: () async {
-                        String? nickname = await AmplitudeConfig.analytics.getUserId();
-                        Amplitude.getInstance().logEvent("misson_repeat_make", eventProperties: {
+                        String? nickname =
+                            await AmplitudeConfig.analytics.getUserId();
+                        Amplitude.getInstance()
+                            .logEvent("mission_repeat_make", eventProperties: {
                           "nickname": nickname ?? "unknown",
                           "missionId": e.missionId,
                           "teamId": e.teamId,
                           "teamName": e.teamName,
                           "missionTitle": e.missionTitle,
                         });
-                        Navigator.of(context).pushNamed(
-                          MissionProvePage.routeName,
-                            arguments: MissionProveArgument(
-                              isRepeated: true,
-                              teamId: e.teamId,
-                              missionId: e.missionId,
-                              status: e.status,
-                              isEnded: false,
-                              isRead: true,
-                            )
-                        ).then((_) {
+                        Navigator.of(context)
+                            .pushNamed(MissionProvePage.routeName,
+                                arguments: MissionProveArgument(
+                                  isRepeated: true,
+                                  teamId: e.teamId,
+                                  missionId: e.missionId,
+                                  status: e.status,
+                                  isEnded: false,
+                                  isRead: true,
+                                ))
+                            .then((_) {
                           Provider.of<MissionsAllState>(context, listen: false)
                               .reloadMissionStatus();
                         });
@@ -184,7 +188,8 @@ class MissionsAllPage extends StatelessWidget {
                 )
               else
                 Visibility(
-                  visible: state.aggregateRepeatMissionStatus?.data.isEmpty ?? true,
+                  visible:
+                      state.aggregateRepeatMissionStatus?.data.isEmpty ?? true,
                   replacement: const SizedBox(height: 182),
                   child: const SizedBox(
                     height: 182,
@@ -214,7 +219,7 @@ class _Title extends StatelessWidget {
   final String mainText;
   final String countText;
 
-  _Title({
+  const _Title({
     required this.mainText,
     required this.countText,
   });

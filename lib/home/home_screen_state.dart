@@ -42,7 +42,7 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  HomeScreenState({required this.context, this.status}) {
+  HomeScreenState({required this.context, this.newCreated}) {
     // initState();
   }
 
@@ -52,7 +52,7 @@ class HomeScreenState extends ChangeNotifier {
     await loadTeamData();
     await getTeamMissionPhotoListData();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (status != "new" && status != "fromSignUp") {
+      if (newCreated != "new") {
         await checkUserRegister();
       }
     });
@@ -98,7 +98,7 @@ class HomeScreenState extends ChangeNotifier {
                             width: 24,
                             height: 24,
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10),
                         ],
                       ),
                       Text(
@@ -193,9 +193,19 @@ class HomeScreenState extends ChangeNotifier {
 
   // 가입한 모임 클릭
   void teamPressed(int teamId) {
-    /// 목표보드 페이지로 이동
+    addAmplitudeGroupClickEvent(teamId);
+    navigateBoardMainPage(teamId);
+  }
+
+  void navigateBoardMainPage(int teamId) {
     Navigator.pushNamed(context, BoardMainPage.routeName,
         arguments: {'teamId': teamId});
+  }
+
+  void addAmplitudeGroupClickEvent(int teamId) {
+    AmplitudeConfig.analytics.logEvent("group_click", eventProperties: {
+      "teamId": teamId,
+    });
   }
 
   String convertCategoryName({required String category}) {

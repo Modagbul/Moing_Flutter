@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/app/app_state.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/main/main_appbar.dart';
 import 'package:moing_flutter/home/home_screen.dart';
@@ -132,11 +133,13 @@ class MainPage extends StatelessWidget {
         onTap: (index) async {
           if (index == 1) {
             String? nickname = await AmplitudeConfig.analytics.getUserId();
-            AmplitudeConfig.analytics.logEvent("missioninprogress_click", eventProperties: {
+            
+            AmplitudeConfig.analytics
+                .logEvent("missioninprogress_click", eventProperties: {
               "tab": "진행 중 미션 클릭",
-              // 진행 중 미션 클릭한 유저 닉네임도 생성, 필요 없을 시 삭제
-              "nickname": nickname ?? "unknown",  // 닉네임이 null일 경우 "unknown"으로 설정
+              "nickname": nickname ?? "unknown",
             });
+            
           }
           context.read<MainState>().mainIndex = index;
         },
