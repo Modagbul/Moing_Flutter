@@ -43,24 +43,26 @@ class MissionFirePage extends StatelessWidget {
       backgroundColor: grayBackground,
       appBar: const MissionFireAppBar(),
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const MissionFireProgressBar(),
-                    if (context.watch<MissionFireState>().userList !=
-                        null)
-                      if (context
-                          .watch<MissionFireState>()
-                          .userList!
-                          .isNotEmpty)
-                        const MissionFireUser(),
-                    const SizedBox(height: 80),
-                  ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const MissionFireProgressBar(),
+                      if (context.watch<MissionFireState>().userList !=
+                          null)
+                        if (context
+                            .watch<MissionFireState>()
+                            .userList!
+                            .isNotEmpty)
+                          const MissionFireUser(),
+                      const SizedBox(height: 80),
+                    ],
+                  ),
                 ),
               ),
             ),
