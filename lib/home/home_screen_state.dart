@@ -42,7 +42,7 @@ class HomeScreenState extends ChangeNotifier {
   // 알림 여부
   bool isNotification = false;
 
-  HomeScreenState({required this.context, this.newCreated}) {
+  HomeScreenState({required this.context, this.status}) {
     // initState();
   }
 
@@ -52,7 +52,7 @@ class HomeScreenState extends ChangeNotifier {
     await loadTeamData();
     await getTeamMissionPhotoListData();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (newCreated != "new") {
+      if (status != "new" && status != "fromSignUp") {
         await checkUserRegister();
       }
     });
@@ -98,7 +98,7 @@ class HomeScreenState extends ChangeNotifier {
                             width: 24,
                             height: 24,
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                         ],
                       ),
                       Text(

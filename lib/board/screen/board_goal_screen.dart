@@ -266,14 +266,14 @@ class BoardGoalScreen extends StatelessWidget {
         barRadius: const Radius.circular(24.0),
         backgroundColor: grayScaleGrey600,
         progressColor: coralGrey500,
-        center: const Align(
+        center: Align(
           alignment: Alignment.centerRight,
           child: Padding(
-            padding: EdgeInsets.only(right: 16.0),
+            padding: const EdgeInsets.only(right: 16.0),
             child: Text(
-              'Level up!',
-              style: TextStyle(
-                color: grayScaleGrey550,
+              '$score/100',
+              style: const TextStyle(
+                color: grayScaleWhite,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w600,
               ),

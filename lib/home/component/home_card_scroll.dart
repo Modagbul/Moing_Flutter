@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -76,7 +78,7 @@ class HomeCardScroll extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       errorWidget: (context, url, error) =>
                                           SvgPicture.asset(
-                                        'assets/icons/group_basic_image.svg',
+                                        'asset/icons/group_basic_image.svg',
                                         width: 52.0,
                                         height: 52.0,
                                         fit: BoxFit.cover,
