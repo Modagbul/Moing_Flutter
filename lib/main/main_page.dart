@@ -14,17 +14,19 @@ import 'package:moing_flutter/mypage/my_page_state.dart';
 import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
 
+import '../config/amplitude_config.dart';
+
 class MainPage extends StatelessWidget {
   static const routeName = '/main';
 
   const MainPage({super.key});
 
   static route(BuildContext context) {
-    String newCreated = "";
+    String status = "";
     int selectedTeamId = 0;
 
     if (ModalRoute.of(context)?.settings.arguments != null) {
-      newCreated = ModalRoute.of(context)?.settings.arguments as String;
+      status = ModalRoute.of(context)?.settings.arguments as String;
     }
 
     return MultiProvider(
@@ -39,7 +41,7 @@ class MainPage extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) =>
-              HomeScreenState(context: context, newCreated: newCreated),
+              HomeScreenState(context: context, status: status),
           lazy: false,
         ),
         ChangeNotifierProvider(
@@ -131,11 +133,13 @@ class MainPage extends StatelessWidget {
         onTap: (index) async {
           if (index == 1) {
             String? nickname = await AmplitudeConfig.analytics.getUserId();
+            
             AmplitudeConfig.analytics
                 .logEvent("missioninprogress_click", eventProperties: {
               "tab": "진행 중 미션 클릭",
               "nickname": nickname ?? "unknown",
             });
+            
           }
           context.read<MainState>().mainIndex = index;
         },

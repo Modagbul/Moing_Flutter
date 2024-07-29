@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,7 +26,7 @@ class HomeScreenState extends ChangeNotifier {
 
   // 토스트 문구
   final FToast fToast = FToast();
-  String? newCreated;
+  String? status;
   String nickname = '';
 
   TeamData? futureData;
@@ -63,17 +62,17 @@ class HomeScreenState extends ChangeNotifier {
   Future<void> checkUserRegister() async {
     String warningText = '';
     // 이미 가입한 유저일 때
-    if (newCreated == 'isRegistered') {
+    if (status == 'isRegistered') {
       warningText = '이미 가입한 소모임이에요';
-    } else if (newCreated == 'full') {
+    } else if (status == 'full') {
       warningText = '최대 3개의 소모임에서만 활동할 수 있어요';
-    } else if (newCreated == 'T0003') {
+    } else if (status == 'T0003') {
       warningText = '한번 탈퇴한 소모임에 다시 가입할 수 없어요';
-    } else if (newCreated == 'T0005') {
+    } else if (status == 'T0005') {
       warningText = '이미 종료된 소모임입니다.';
-    } else if (newCreated != null && newCreated!.isNotEmpty) {
+    } else if (status != null && status!.isNotEmpty) {
       warningText = '소모임 가입에 실패했어요';
-      print('소모임 가입 실패 에러 확인 : $newCreated');
+      print('소모임 가입 실패 에러 확인 : $status');
     }
     if (warningText.length > 1) {
       fToast.showToast(
@@ -110,7 +109,7 @@ class HomeScreenState extends ChangeNotifier {
                   ),
                 )),
           ),
-          toastDuration: Duration(milliseconds: 3000),
+          toastDuration: const Duration(milliseconds: 3000),
           positionedToastBuilder: (context, child) {
             return Positioned(
               child: child,

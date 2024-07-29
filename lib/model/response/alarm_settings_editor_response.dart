@@ -2,11 +2,13 @@ class AlarmSettingsEditor {
   final bool newUploadPush;
   final bool firePush;
   final bool remindPush;
+  final bool commentPush;
 
   AlarmSettingsEditor({
     required this.newUploadPush,
     required this.firePush,
     required this.remindPush,
+    required this.commentPush,
   });
 
   factory AlarmSettingsEditor.fromJson(Map<String, dynamic> json) {
@@ -14,6 +16,7 @@ class AlarmSettingsEditor {
       newUploadPush: json['newUploadPush'],
       firePush: json['firePush'],
       remindPush: json['remindPush'],
+      commentPush: json['commentPush'],
     );
   }
 
@@ -22,6 +25,7 @@ class AlarmSettingsEditor {
       'newUploadPush': newUploadPush,
       'firePush': firePush,
       'remindPush': remindPush,
+      'commentPush': commentPush,
     };
   }
 //   bool isSuccess;

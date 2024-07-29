@@ -5,6 +5,7 @@ import 'package:moing_flutter/mission_prove/component/mission_prove_argument.dar
 import 'package:moing_flutter/missions/aggregate/missions_all_state.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/amplitude_config.dart';
 import '../../const/color/colors.dart';
 import '../../mission_prove/mission_prove_page.dart';
 import '../component/repeat_mission_card.dart';
@@ -160,14 +161,13 @@ class MissionsAllPage extends StatelessWidget {
                         String? nickname =
                             await AmplitudeConfig.analytics.getUserId();
                         Amplitude.getInstance()
-                            .logEvent("misson_repeat_make", eventProperties: {
+                            .logEvent("mission_repeat_make", eventProperties: {
                           "nickname": nickname ?? "unknown",
                           "missionId": e.missionId,
                           "teamId": e.teamId,
                           "teamName": e.teamName,
                           "missionTitle": e.missionTitle,
                         });
-
                         Navigator.of(context)
                             .pushNamed(MissionProvePage.routeName,
                                 arguments: MissionProveArgument(

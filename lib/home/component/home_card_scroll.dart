@@ -166,7 +166,7 @@ class HomeCardScroll extends StatelessWidget {
                                 : const SizedBox(height: 54)
                             : const SizedBox(height: 54),
                         //위치 좌측으로, 1초 이후 사라지게
-                        (context.watch<HomeScreenState>().newCreated == "new" &&
+                        (context.watch<HomeScreenState>().status == "new" &&
                                 index == 0)
                             ? const Column(
                                 children: [
@@ -210,9 +210,7 @@ class HomeCardScroll extends StatelessWidget {
                             color: grayScaleGrey600,
                             borderRadius: BorderRadius.circular(32),
                             border: Border.all(
-                              color: (context
-                                              .watch<HomeScreenState>()
-                                              .newCreated ==
+                              color: (context.watch<HomeScreenState>().status ==
                                           "new" &&
                                       index == 0)
                                   ? coralGrey500
