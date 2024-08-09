@@ -14,8 +14,6 @@ import 'package:moing_flutter/mypage/my_page_state.dart';
 import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
 
-import '../config/amplitude_config.dart';
-
 class MainPage extends StatelessWidget {
   static const routeName = '/main';
 
@@ -113,7 +111,7 @@ class MainPage extends StatelessWidget {
           IndexedStack(
             sizing: StackFit.expand,
             index: context.watch<MainState>().mainIndex,
-            children: [
+            children: const [
               HomeScreen(),
               MissionsScreen(),
               MyPageScreen(),
@@ -133,13 +131,13 @@ class MainPage extends StatelessWidget {
         onTap: (index) async {
           if (index == 1) {
             String? nickname = await AmplitudeConfig.analytics.getUserId();
-            
+
             AmplitudeConfig.analytics
                 .logEvent("missioninprogress_click", eventProperties: {
               "tab": "진행 중 미션 클릭",
               "nickname": nickname ?? "unknown",
             });
-            
+
           }
           context.read<MainState>().mainIndex = index;
         },

@@ -42,6 +42,11 @@ import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/post/post_update_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
+import '../login/onboarding_tutorial/tutorial_first.dart';
+import '../login/onboarding_tutorial/tutorial_last.dart';
+import '../login/onboarding_tutorial/tutorial_second.dart';
+import '../login/onboarding_tutorial/tutorial_third.dart';
+import '../login/onboarding_tutorial/tutorial_zero.dart';
 import '../missions/aggregate/missions_all_page.dart';
 import '../missions/aggregate/missions_screen.dart';
 import 'package:moing_flutter/post/post_main_page.dart';
@@ -96,6 +101,13 @@ class MoingApp extends StatelessWidget {
             OnBoardingSecondPage.routeName: (context) => OnBoardingSecondPage.route(context),
             OnBoardingThirdPage.routeName: (context) => OnBoardingThirdPage.route(context),
             OnBoardingLastPage.routeName: (context) => OnBoardingLastPage.route(context),
+
+            TutorialZero.routeName: (context) => TutorialZero.route(context),
+            TutorialFirst.routeName: (context) => TutorialFirst.route(context),
+            TutorialSecond.routeName: (context) => TutorialSecond.route(context),
+            TutorialThird.routeName: (context) => TutorialThird.route(context),
+            TutorialLast.routeName: (context) => TutorialLast.route(context),
+
             SignUpPage.routeName: (context) => SignUpPage.route(context),
             SignUpGenderPage.routeName: (context) => SignUpGenderPage.route(context),
             SignUpDatePage.routeName: (context) => SignUpDatePage.route(context),
