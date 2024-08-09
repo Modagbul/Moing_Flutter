@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/app/app_state.dart';
 import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
-import 'package:moing_flutter/login/onboarding_tutorial/tutorial_zero.dart';
 import 'package:moing_flutter/main/main_appbar.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
@@ -14,8 +13,6 @@ import 'package:moing_flutter/mypage/my_page_screen.dart';
 import 'package:moing_flutter/mypage/my_page_state.dart';
 import 'package:moing_flutter/utils/loading/loading.dart';
 import 'package:provider/provider.dart';
-
-import '../config/amplitude_config.dart';
 
 class MainPage extends StatelessWidget {
   static const routeName = '/main';
@@ -101,12 +98,12 @@ class MainPage extends StatelessWidget {
 
   Widget _mainContent(BuildContext context) {
     return Scaffold(
-      // appBar: MainAppBar(
-      //   notificationCount: context.watch<MainState>().alarmCount ?? '0',
-      //   onTapAlarm: context.read<MainState>().alarmPressed,
-      //   onTapSetting: context.read<MainState>().settingPressed,
-      //   screenIndex: context.watch<MainState>().mainIndex,
-      // ),
+      appBar: MainAppBar(
+        notificationCount: context.watch<MainState>().alarmCount ?? '0',
+        onTapAlarm: context.read<MainState>().alarmPressed,
+        onTapSetting: context.read<MainState>().settingPressed,
+        screenIndex: context.watch<MainState>().mainIndex,
+      ),
       backgroundColor: grayBackground,
       body: Stack(
         fit: StackFit.expand,
@@ -114,69 +111,68 @@ class MainPage extends StatelessWidget {
           IndexedStack(
             sizing: StackFit.expand,
             index: context.watch<MainState>().mainIndex,
-            children: [
-              TutorialZero(),
-              // HomeScreen(),
+            children: const [
+              HomeScreen(),
               MissionsScreen(),
               MyPageScreen(),
             ],
           ),
         ],
       ),
-      // bottomNavigationBar: _bottomNavigationBar(context),
+      bottomNavigationBar: _bottomNavigationBar(context),
     );
   }
 
-  // Widget _bottomNavigationBar(BuildContext context) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(bottom: 16.0),
-  //     child: BottomNavigationBar(
-  //       currentIndex: context.watch<MainState>().mainIndex,
-  //       onTap: (index) async {
-  //         if (index == 1) {
-  //           String? nickname = await AmplitudeConfig.analytics.getUserId();
-  //
-  //           AmplitudeConfig.analytics
-  //               .logEvent("missioninprogress_click", eventProperties: {
-  //             "tab": "진행 중 미션 클릭",
-  //             "nickname": nickname ?? "unknown",
-  //           });
-  //
-  //         }
-  //         context.read<MainState>().mainIndex = index;
-  //       },
-  //       backgroundColor: grayBackground,
-  //       type: BottomNavigationBarType.fixed,
-  //       unselectedItemColor: grayScaleGrey550,
-  //       selectedItemColor: grayScaleGrey100,
-  //       selectedLabelStyle: const TextStyle(
-  //           fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey100),
-  //       unselectedLabelStyle: const TextStyle(
-  //           fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey550),
-  //       items: const [
-  //         BottomNavigationBarItem(
-  //           icon: Padding(
-  //             padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
-  //             child: Icon(Icons.home),
-  //           ),
-  //           label: '홈',
-  //         ),
-  //         BottomNavigationBarItem(
-  //           icon: Padding(
-  //             padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
-  //             child: Icon(Icons.tour),
-  //           ),
-  //           label: '진행 중 미션',
-  //         ),
-  //         BottomNavigationBarItem(
-  //           icon: Padding(
-  //             padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
-  //             child: Icon(Icons.person),
-  //           ),
-  //           label: '마이페이지',
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget _bottomNavigationBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: BottomNavigationBar(
+        currentIndex: context.watch<MainState>().mainIndex,
+        onTap: (index) async {
+          if (index == 1) {
+            String? nickname = await AmplitudeConfig.analytics.getUserId();
+
+            AmplitudeConfig.analytics
+                .logEvent("missioninprogress_click", eventProperties: {
+              "tab": "진행 중 미션 클릭",
+              "nickname": nickname ?? "unknown",
+            });
+
+          }
+          context.read<MainState>().mainIndex = index;
+        },
+        backgroundColor: grayBackground,
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: grayScaleGrey550,
+        selectedItemColor: grayScaleGrey100,
+        selectedLabelStyle: const TextStyle(
+            fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey100),
+        unselectedLabelStyle: const TextStyle(
+            fontSize: 14, fontWeight: FontWeight.w500, color: grayScaleGrey550),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
+              child: Icon(Icons.home),
+            ),
+            label: '홈',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
+              child: Icon(Icons.tour),
+            ),
+            label: '진행 중 미션',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 6),
+              child: Icon(Icons.person),
+            ),
+            label: '마이페이지',
+          ),
+        ],
+      ),
+    );
+  }
 }
