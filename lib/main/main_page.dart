@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moing_flutter/app/app_state.dart';
 import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/login/onboarding_tutorial/tutorial_last.dart';
+import 'package:moing_flutter/login/onboarding_tutorial/tutorial_third.dart';
 import 'package:moing_flutter/main/main_appbar.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
