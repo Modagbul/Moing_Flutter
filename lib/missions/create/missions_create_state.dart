@@ -48,14 +48,17 @@ class MissionCreateState extends ChangeNotifier {
 
   // 미션 만들기 성공 여부
   bool isSuccess = false;
+
   // 오늘 날짜 선택 여부
   bool isPickedToday = false;
   bool onLoading = false;
 
   // 미션 추천 문구 리스트
   List<String> textList = [];
+
   // 당일 날짜와 그 이후 날짜를 위한 list
   List<String> timeList = [];
+
   // 미션 추천 문구
   String recommendText = '';
 
@@ -79,7 +82,8 @@ class MissionCreateState extends ChangeNotifier {
 
   void initState() async {
     log('Instance "MissionCreateState" has been created');
-    print('teamId : $teamId, repeatMissions : $repeatMissions, isLeader: $isLeader');
+    print(
+        'teamId : $teamId, repeatMissions : $repeatMissions, isLeader: $isLeader');
     await getMissionRecommend();
 
     titleController.addListener(_onTitleTextChanged);
@@ -183,15 +187,14 @@ class MissionCreateState extends ChangeNotifier {
     apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/recommend';
 
     try {
-      ApiResponse<String> apiResponse =
-      await call.makeRequest<String>(
+      ApiResponse<String> apiResponse = await call.makeRequest<String>(
         url: apiUrl,
         method: 'GET',
         fromJson: (dataJson) => dataJson as String,
       );
 
       if (apiResponse.data != null) {
-        switch(apiResponse.data!) {
+        switch (apiResponse.data!) {
           case 'SPORTS':
             textList = sportsList;
             recommendText = '건강한 몸을 만드는';
@@ -218,10 +221,9 @@ class MissionCreateState extends ChangeNotifier {
             break;
         }
         notifyListeners();
-      }
-
-      else {
-        print('getMissionRecommend is Null, error code : ${apiResponse.errorCode}');
+      } else {
+        print(
+            'getMissionRecommend is Null, error code : ${apiResponse.errorCode}');
       }
     } catch (e) {
       log('나의 성공 횟수 조회 실패: $e');
@@ -341,17 +343,20 @@ class MissionCreateState extends ChangeNotifier {
 
   /// 마감 날짜 선택 시 IOS 날짜 선택 모달
   void datePicker() {
-    if(onLoading) return;
+    if (onLoading) return;
     onLoading = true;
     DateTime now = DateTime.now();
     DatePicker.showDatePicker(context,
         showTitleActions: true,
         minTime: now,
-        maxTime: DateTime(now.year + 3, now.month, now.day),
-        onConfirm: (date) {
-      formattedDate = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-      isPickedToday = (now.year == date.year && now.month == date.month && now.day == date.day)
-      ? true : false;
+        maxTime: DateTime(now.year + 3, now.month, now.day), onConfirm: (date) {
+      formattedDate =
+          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+      isPickedToday = (now.year == date.year &&
+              now.month == date.month &&
+              now.day == date.day)
+          ? true
+          : false;
 
       // 만약 당일 날짜를 설정한 경우
       if (isPickedToday) {
@@ -360,8 +365,7 @@ class MissionCreateState extends ChangeNotifier {
         timeCountIndex = afterOneHour;
         timeList = timeCountList.sublist(afterOneHour, 24);
         formattedTime = timeList[0].replaceAll("시", ":00");
-      }
-      else {
+      } else {
         timeList = List.from(timeCountList);
         timeCountIndex = 12;
         formattedTime = timeList[12].replaceAll("시", ":00");
@@ -374,18 +378,19 @@ class MissionCreateState extends ChangeNotifier {
 
   /// 마감 시간 선택 시 IOS 시간 선택 모달
   void timePicker() {
-    if(onLoading) return;
+    if (onLoading) return;
     onLoading = true;
 
     timeScrollController.dispose();
-    timeScrollController = FixedExtentScrollController(initialItem: timeCountIndex);
+    timeScrollController =
+        FixedExtentScrollController(initialItem: timeCountIndex);
     timeList = timeList.length < 1 ? List.from(timeCountList) : timeList;
 
     showCupertinoModalPopup(
       context: context,
       builder: (_) => Container(
         color: Colors.white,
-        height: 300,  // 높이를 약간 조절하여 버튼에 공간을 확보
+        height: 300, // 높이를 약간 조절하여 버튼에 공간을 확보
         child: Column(
           children: [
             Container(
@@ -403,16 +408,20 @@ class MissionCreateState extends ChangeNotifier {
                     child: Text('확인'),
                     onPressed: () {
                       /// 날짜 지정 안했을 때
-                      if(formattedDate.length < 1) {
+                      if (formattedDate.length < 1) {
                         DateTime now = DateTime.now();
                         int currentHour = now.hour;
                         // 현재 시간이 선택한 시간보다 큰 경우
-                        if(int.parse(timeList[timeCountIndex].replaceAll("시", "")) <= currentHour) {
+                        if (int.parse(
+                                timeList[timeCountIndex].replaceAll("시", "")) <=
+                            currentHour) {
                           DateTime tomorrow = now.add(Duration(days: 1));
-                          formattedDate = "${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}";
+                          formattedDate =
+                              "${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}";
                         }
                       }
-                      formattedTime = timeList[timeCountIndex].replaceAll("시", ":00");
+                      formattedTime =
+                          timeList[timeCountIndex].replaceAll("시", ":00");
                       checkAddition();
                       notifyListeners();
                       Navigator.of(context).pop(); // Picker 닫기
@@ -430,17 +439,18 @@ class MissionCreateState extends ChangeNotifier {
                   timeCountIndex = index;
                   notifyListeners();
                 },
-                children: timeList.map(
+                children: timeList
+                    .map(
                       (item) => Center(
-                    child: Text(
-                      item,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                          color: Colors.black),
-                    ),
-                  ),
-                )
+                        child: Text(
+                          item,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                              color: Colors.black),
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
             ),
@@ -450,7 +460,6 @@ class MissionCreateState extends ChangeNotifier {
     );
     onLoading = false;
   }
-
 
   /// 미션 제목 시 생기는 바텀 모달
   void openBottomModal() {
@@ -530,25 +539,27 @@ class MissionCreateState extends ChangeNotifier {
   /// 성공 조건인지 확인하기
   void checkAddition() {
     /// 반복 미션인 경우
-    if(isRepeatSelected) {
-      if(titleController.text.isNotEmpty && contentController.text.isNotEmpty &&
-      isMethodSelected) {
+    if (isRepeatSelected) {
+      if (titleController.text.isNotEmpty &&
+          contentController.text.isNotEmpty &&
+          isMethodSelected) {
         // && ruleController.text.isNotEmpty
         isSuccess = true;
-      }
-      else {
+      } else {
         isSuccess = false;
       }
     }
+
     /// 한번 미션인 경우
     else {
       /// TODO : formattedTime 설정 해줘야 함.
-      if(titleController.text.isNotEmpty && contentController.text.isNotEmpty &&
-          formattedDate.length > 1 && isMethodSelected) {
+      if (titleController.text.isNotEmpty &&
+          contentController.text.isNotEmpty &&
+          formattedDate.length > 1 &&
+          isMethodSelected) {
         //  && ruleController.text.isNotEmpty
         isSuccess = true;
-      }
-      else {
+      } else {
         isSuccess = false;
       }
     }
@@ -556,14 +567,14 @@ class MissionCreateState extends ChangeNotifier {
   }
 
   Future<void> submit() async {
-    if(onLoading) return;
+    if (onLoading) return;
     onLoading = true;
 
     if (isSuccess) {
       int repeatMission;
       String way = '';
       String dueTo = '';
-      switch(selectedMethod) {
+      switch (selectedMethod) {
         case '텍스트로 인증하기':
           way = 'TEXT';
           break;
@@ -576,7 +587,7 @@ class MissionCreateState extends ChangeNotifier {
       }
 
       // 반복 미션 변경한 경우
-      if(isRepeatSelected) {
+      if (isRepeatSelected) {
         repeatMission = missionCountIndex + 1;
         dueTo = '2099-12-31 00:00:00.000';
       } else {
@@ -599,7 +610,7 @@ class MissionCreateState extends ChangeNotifier {
 
       try {
         ApiResponse<Map<String, dynamic>> apiResponse =
-        await call.makeRequest<Map<String, dynamic>>(
+            await call.makeRequest<Map<String, dynamic>>(
           url: apiUrl,
           method: 'POST',
           body: data.toJson(),
@@ -609,16 +620,22 @@ class MissionCreateState extends ChangeNotifier {
 
         // 한번 미션 생성 or 반복 미션 생성
         String? nickname = await AmplitudeConfig.analytics.getUserId();
-        if(nickname == null) {
-          AmplitudeConfig.analytics.logEvent(
-              "mission_make", eventProperties: {
-                "mission_kind": isRepeatSelected == true ? 'mission_repeat_make' : 'mission_once_make'});
+        if (nickname == null) {
+          isRepeatSelected == true
+              ? AmplitudeConfig.analytics.logEvent("mission_repeat_make")
+              : AmplitudeConfig.analytics.logEvent("mission_once_make");
         } else {
-          AmplitudeConfig.analytics.logEvent(
-              "mission_make", eventProperties: {
-            "mission_kind": isRepeatSelected == true ? 'mission_repeat_make' : 'mission_once_make',
-            "mission_maker": nickname,
-            "mission_category": way});
+          isRepeatSelected == true
+              ? AmplitudeConfig.analytics.logEvent("mission_repeat_make",
+                  eventProperties: {
+                      "mission_maker": nickname,
+                      "mission_category": way
+                    })
+              : AmplitudeConfig.analytics.logEvent("mission_once_make",
+                  eventProperties: {
+                      "mission_maker": nickname,
+                      "mission_category": way
+                    });
         }
 
         Navigator.of(context).pop(true);
