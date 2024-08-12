@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/login/onboarding_tutorial/tutorial_first.dart';
+import 'package:moing_flutter/login/onboarding_tutorial/tutorial_zero.dart';
 
 import '../../const/color/colors.dart';
 import '../../utils/button/white_button.dart';
@@ -47,7 +48,7 @@ class InviteBottomSheet extends StatelessWidget {
           WhiteButton(
             onPressed: () {
               Navigator.of(context).pushNamed(
-                TutorialFirst.routeName,
+                TutorialZero.routeName,
               );            },
             text: '확인했어요',
           ),
