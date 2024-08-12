@@ -425,14 +425,34 @@ class FCMState extends ChangeNotifier {
 
     if (data['path'] == null) return;
 
+    final idInfo = _decodeIdInfo(data['idInfo']);
+    String? typeValue = idInfo?['type'];
+    if (typeValue == null) return;
+
+
     if (openedApp == true) {
       switch (data['path']) {
-        case '/post/detail': // 신규 공지 업로드 알림
-          AmplitudeConfig.analytics.logEvent("push_click_announcement");
+        case '/post/detail':
+          if (typeValue == 'COMMENT_BOARD') {
+            AmplitudeConfig.analytics.logEvent("push_click_posting_comment");
+          } else if (typeValue == 'NEW_UPLOAD_BOARD') {
+            AmplitudeConfig.analytics.logEvent("push_click_announcement");
+          }
           navigatePostDetailPage(data: data);
           break;
-        case '/missions/prove': // (한번/반복) 신규 미션 업로드, 불 던지기 알림
-          AmplitudeConfig.analytics.logEvent("push_click_mission_make");
+        case '/missions/prove':
+          if (typeValue == 'NEW_UPLOAD_MISSION') {
+            AmplitudeConfig.analytics.logEvent("push_click_mission_make");
+          } else if (typeValue == 'FIRE_MESSAGE_EXIST') {
+            AmplitudeConfig.analytics.logEvent("push_click_dropfire_message");
+          } else if (typeValue == 'FIRE_MESSAGE_NULL') {
+            AmplitudeConfig.analytics.logEvent("push_click_dropfire_nomessage");
+          } else if (typeValue == 'COMMENT_MISSION') {
+            AmplitudeConfig.analytics.logEvent("push_click_misson_comment");
+          } else if (typeValue == 'COMPLETE_MISSION') {
+            AmplitudeConfig.analytics
+                .logEvent("push_click_misson_new_complete");
+          }
           navigateMissionsProvePage(data: data);
           break;
         case '/missions': // (한번/반복) 미션 리마인드 알림
@@ -444,168 +464,6 @@ class FCMState extends ChangeNotifier {
         default:
           throw ArgumentError('Invalid path: ${data['path']}');
       }
-
-      //   if (data['title'] == null && data['body'] == null) return;
-      //
-      //   final title = data['title'];
-      //   final body = data['body'];
-      //
-      //   // 랜딩 데이터 및 앱이 열려 있음
-      //   if (message.data.containsKey('landing') && openedApp == false) {
-      //     log('1');
-      //     final landing = message.data['landing'] as String;
-      //
-      //     final topRouteName = navigationHistory.top?.settings.name;
-      //     final topRouteArguments = navigationHistory.top?.settings.arguments;
-      //
-      //     // 랜딩 데이터 확인
-      //     // if (landing.startsWith('/chat-rooms')) {
-      //     //   final receiveChatRoomId = landing.replaceAll('/chat-rooms/', '');
-      //     //   if (topRouteName == '/chats/room' && topRouteArguments is ChatsRoomArgument) {
-      //     //     final originalChatRoomId = topRouteArguments.chatsRoomWithInfo.chatsRoom.id;
-      //     //
-      //     //     if (receiveChatRoomId == originalChatRoomId) return;
-      //     //   }
-      //     // } else if (landing.startsWith('/counselors')) {
-      //     //   final receiveCounselorId = landing.replaceAll('/counselors/', '');
-      //     //
-      //     //   if (topRouteName == '/counselor/detail' && topRouteArguments is CounselorDetailArgument) {
-      //     //     final originalCounselorId = topRouteArguments.counselorId;
-      //     //
-      //     //     if (receiveCounselorId == originalCounselorId) return;
-      //     //   }
-      //     // }
-      //
-      //     await _showNotification(
-      //       id: message.hashCode,
-      //       title: title,
-      //       body: body,
-      //       smallIcon: message.notification?.android?.smallIcon,
-      //       payload: data['landing'],
-      //     );
-      //   }
-      //   // 앱이 열려 있음
-      //   else if (openedApp == false) {
-      //     log('2');
-      //     await _showNotification(
-      //       id: message.hashCode,
-      //       title: title,
-      //       body: body,
-      //       smallIcon: message.notification?.android?.smallIcon,
-      //       payload: data['landing'],
-      //     );
-      //     navigatorKey.currentState?.pushNamed(AlarmPage.routeName);
-      //   }
-      //   // 앱이 닫혀 있음
-      //   else if (openedApp == true) {
-      //     log('3');
-      //     // 랜딩 처리
-      //     final landing = message.data['landing'] as String;
-      //
-      //     final topRouteName = navigationHistory.top?.settings.name;
-      //     final topRouteArguments = navigationHistory.top?.settings.arguments;
-      //
-      //     log('landing 값 : ${landing.toString()}');
-      //
-      //     navigatorKey.currentState?.pushNamed(AlarmPage.routeName);
-      //
-      //     // // 랜딩 데이터 확인
-      //     // if (landing.startsWith('/chat-rooms')) {
-      //     //   final receiveChatRoomId = landing.replaceAll('/chat-rooms/', '');
-      //     //   final isSameChatRoom = topRouteName == '/chats/room' && topRouteArguments is ChatsRoomArgument && topRouteArguments.chatsRoomWithInfo.chatsRoom.id == receiveChatRoomId;
-      //     //
-      //     //   // Push Chat Room
-      //     //   // if (isSameChatRoom == false) {
-      //     //   //   _openChatRoom(receiveChatRoomId);
-      //     //   // }
-      //     // } else if (landing.startsWith('/counselors')) {
-      //     //   final receiveCounselorId = landing.replaceAll('/counselors/', '');
-      //     //   final isSameCounselor = topRouteName == '/counselor/detail' && topRouteArguments is CounselorDetailArgument && topRouteArguments.counselorId == receiveCounselorId;
-      //     //
-      //     //   // Push Chat Room
-      //     //   // if (isSameCounselor == false) {
-      //     //   //   _openCounselorDetail(receiveCounselorId);
-      //     //   // }
-      //     // }
-      //   }
-      // }
-
-      // _openChatRoom(String id) async {
-      //   try {
-      //     EasyLoading.show();
-      //
-      //     final ChatsRealtimeRepository chatsRealtimeRepository = ChatsRealtimeRepository();
-      //     final UserRepository userRepository = UserRepository();
-      //     final ChatsRoom chatsRoom = await chatsRealtimeRepository.getChatsRoom(chatsRoomId: id);
-      //     final User user = await userRepository.getUserInfo(userId: chatsRoom.userId) ?? userRepository.getUnknownUser(userId: chatsRoom.userId);
-      //     final User counselor = await userRepository.getUserInfo(userId: chatsRoom.counselorId) ?? userRepository.getUnknownCounselor(counselorId: chatsRoom.counselorId);
-      //
-      //     navigatorKey.currentState?.pushNamedAndRemoveUntil(
-      //       ChatsRoomPage.routeName,
-      //       ModalRoute.withName(MainPage.routeName),
-      //       arguments: ChatsRoomArgument(
-      //         chatsRoomWithInfo: ChatsRoomWithInfo(
-      //               (e) => e
-      //             ..chatsRoom = chatsRoom.toBuilder()
-      //             ..user = user.toBuilder()
-      //             ..counselor = counselor.toBuilder(),
-      //         ),
-      //       ),
-      //     );
-      //   } finally {
-      //     EasyLoading.dismiss();
-      //   }
     }
   }
-
-// _openCounselorDetail(String id) async {
-//   try {
-//     EasyLoading.show();
-//
-//     navigatorKey.currentState?.pushNamedAndRemoveUntil(
-//       CounselorDetailPage.routeName,
-//       ModalRoute.withName(MainPage.routeName),
-//       arguments: CounselorDetailArgument(counselorId: id),
-//     );
-//   } finally {
-//     EasyLoading.dismiss();
-//   }
-// }
-//
-// /// 메세지를 보여줌
-// _showNotification({
-//   required int id,
-//   String? title,
-//   String? body,
-//   String? payload,
-//   String? smallIcon,
-// }) async {
-//   log('11');
-//   await localNotification.show(
-//     id,
-//     title,
-//     body,
-//     NotificationDetails(
-//       android: AndroidNotificationDetails(
-//         androidChannel.id,
-//         androidChannel.name,
-//         icon: smallIcon,
-//       ),
-//     ),
-//     payload: payload,
-//   );
-// }
-
-// void _configureSelectNotificationSubject() {
-//   selectNotificationStream.stream.listen((String? payload) async {
-//     if (payload != null && payload.startsWith('/chat-rooms/')) {
-//       final chatRoomId = payload.replaceAll('/chat-rooms/', '');
-//       await _openChatRoom(chatRoomId);
-//     }
-//     if (payload != null && payload.startsWith('/counselors/')) {
-//       final counselorId = payload.replaceAll('/counselors/', '');
-//       await _openCounselorDetail(counselorId);
-//     }
-//   });
-// }
 }
