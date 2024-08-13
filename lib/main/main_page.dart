@@ -116,7 +116,6 @@ class MainPage extends StatelessWidget {
             index: context.watch<MainState>().mainIndex,
             children: const [
               HomeScreen(),
-              TutorialZero(),
               MissionsScreen(),
               MyPageScreen(),
             ],
