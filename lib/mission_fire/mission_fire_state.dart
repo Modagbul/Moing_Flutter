@@ -109,8 +109,10 @@ class MissionFireState extends ChangeNotifier {
   /// 불 던지기 API
   Future<void> throwFire() async {
     _isThrowFireInProgress = true;
+    notifyListeners();
 
     if (selectedIndex == null || userList == null) {
+      notifyListeners();
       return;
     }
 
@@ -146,8 +148,7 @@ class MissionFireState extends ChangeNotifier {
               "message_length": messageController.text.length,
               // 메세지 받는 사람 이름(필요 없을 거 같긴 함22)
               "receiver": userList![selectedIndex!].nickname
-            }
-        );
+            });
       }
 
       // 불 던지기 성공적으로 완료
@@ -167,7 +168,7 @@ class MissionFireState extends ChangeNotifier {
         }
 
         loadFirePersonList();
-        compeleteThrowFireModal();
+        completeThrowFireModal();
         initSelectedUser();
       } else {
         log('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
@@ -215,12 +216,12 @@ class MissionFireState extends ChangeNotifier {
     }
   }
 
-  void compeleteThrowFireModal() {
+  void completeThrowFireModal() {
     showDialog(
       context: context,
       builder: (context) {
         Future.delayed(const Duration(seconds: 2), () {
-          Navigator.of(context).pop(); // 2초 후에 다이얼로그를 닫습니다.
+          Navigator.of(context).pop(true); // 2초 후에 다이얼로그를 닫습니다.
         });
 
         return Dialog(
@@ -259,6 +260,10 @@ class MissionFireState extends ChangeNotifier {
           ),
         );
       },
-    );
+    ).then((value) {
+      if (value == true) {
+        log('Dialog closed');
+      }
+    });
   }
 }
