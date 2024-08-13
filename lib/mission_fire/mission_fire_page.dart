@@ -43,38 +43,42 @@ class MissionFirePage extends StatelessWidget {
       backgroundColor: grayBackground,
       appBar: const MissionFireAppBar(),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const MissionFireProgressBar(),
-                      if (context.watch<MissionFireState>().userList !=
-                          null)
-                        if (context
-                            .watch<MissionFireState>()
-                            .userList!
-                            .isNotEmpty)
-                          const MissionFireUser(),
-                      const SizedBox(height: 80),
-                    ],
+            Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const MissionFireProgressBar(),
+                          if (context.watch<MissionFireState>().userList !=
+                              null)
+                            if (context
+                                .watch<MissionFireState>()
+                                .userList!
+                                .isNotEmpty)
+                              const MissionFireUser(),
+                          const SizedBox(height: 80),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                if (context.watch<MissionFireState>().userList != null)
+                  if (context.watch<MissionFireState>().userList!.isEmpty)
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        '모든 모임원들이 인증을 완료했어요!',
+                        style: contentTextStyle,
+                      ),
+                    ),
+              ],
             ),
-            if (context.watch<MissionFireState>().userList != null)
-              if (context.watch<MissionFireState>().userList!.isEmpty)
-                const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '모든 모임원들이 인증을 완료했어요!',
-                    style: contentTextStyle,
-                  ),
-                ),
             if (context.watch<MissionFireState>().selectedIndex != null)
               Positioned(
                 bottom: 0,
@@ -91,15 +95,20 @@ class MissionFirePage extends StatelessWidget {
                         children: [
                           Container(
                             height: 1,
-                            color: grayScaleGrey500, // 선 색상 설정
+                            color: grayScaleGrey500,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 28.0, top: 12, right: 20, left: 20),
+                            padding: const EdgeInsets.only(
+                                bottom: 28.0, top: 12, right: 20, left: 20),
                             child: TextField(
-                              controller: context.watch<MissionFireState>().messageController,
+                              controller: context
+                                  .watch<MissionFireState>()
+                                  .messageController,
                               maxLength: 100,
                               maxLines: 1,
-                              inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(200)
+                              ],
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: grayScaleGrey600,
@@ -137,15 +146,18 @@ class MissionFirePage extends StatelessWidget {
                               width: 393,
                               height: 62,
                               child: ElevatedButton(
-                                onPressed: context.read<MissionFireState>().firePressed,
+                                onPressed: context
+                                    .read<MissionFireState>()
+                                    .firePressed,
                                 style: ButtonStyle(
                                   backgroundColor:
-                                      MaterialStateProperty.all<Color>(grayScaleGrey100),
-                                  shape:
-                                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      MaterialStateProperty.all<Color>(
+                                          grayScaleGrey100),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(32.0), // borderRadius 설정
+                                      borderRadius: BorderRadius.circular(
+                                          32.0), // borderRadius 설정
                                     ),
                                   ),
                                 ),
