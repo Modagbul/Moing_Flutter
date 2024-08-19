@@ -4,6 +4,7 @@ import 'package:moing_flutter/login/onboarding_tutorial/tutorial_first.dart';
 import 'package:moing_flutter/login/onboarding_tutorial/tutorial_state.dart';
 import 'package:provider/provider.dart';
 
+import '../../main/main_page.dart';
 import '../../utils/button/white_button.dart';
 import 'component/tutorial_appbar.dart';
 
@@ -68,35 +69,53 @@ class TutorialZero extends StatelessWidget {
                     height: 28,
                   ),
                   const SizedBox(height: 24.0),
-                  WhiteButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        TutorialFirst.routeName,
-                      );
-                    },
-                    text: '튜토리얼 시작하기',
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 62,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: WhiteButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed(
                           TutorialFirst.routeName,
                         );
                       },
-                      child: const Text(
-                        '괜찮아요',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
+                      text: '튜토리얼 시작하기',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 62,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                          overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.transparent;
+                              }
+                              return null;
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                          ),
+                          elevation: MaterialStateProperty.all(0),
+                          shadowColor: MaterialStateProperty.all(Colors.transparent),
+                          splashFactory: NoSplash.splashFactory,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              MainPage.routeName, (route) => false);
+                        },
+                        child: const Text(
+                          '괜찮아요',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),

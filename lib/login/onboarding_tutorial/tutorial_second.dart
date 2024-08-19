@@ -117,13 +117,24 @@ class _TutorialSecondState extends State<TutorialSecond> {
                           width: 87,
                           height: 45,
                           child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                              overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.transparent;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),
-                                elevation: 0,
-                                splashFactory: NoSplash.splashFactory
+                              ),
+                              elevation: MaterialStateProperty.all(0),
+                              shadowColor: MaterialStateProperty.all(Colors.transparent),
+                              splashFactory: NoSplash.splashFactory,
                             ),
                             onPressed: () {
                               Navigator.of(context).pushNamed(
