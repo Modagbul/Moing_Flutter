@@ -142,6 +142,7 @@ class AlarmState extends ChangeNotifier {
 
     // 알림 읽음 처리 성공 -> 화면 이동
     AlarmData alarmData = alarmList![index];
+
     if (await postSingleAlarmData(alarmHistoryId: alarmData.alarmHistoryId)) {
       await getAllAlarmData();
       notifyListeners();
@@ -209,9 +210,6 @@ class AlarmState extends ChangeNotifier {
     bool? isEnded;
     String? status;
 
-    // bool isRepeated = idInfoMap['isRepeated'] ?? false;
-    bool isRepeated = idInfoMap['isRepeated'] ?? false;
-
     // 푸시 알림 클릭 불 던지기 메세지 유무
     bool hasMessage = alarmData.body.isNotEmpty;
 
@@ -234,8 +232,7 @@ class AlarmState extends ChangeNotifier {
     }
 
     MissionProveArgument missionProveArgument = MissionProveArgument(
-      isRepeated: isRepeated,
-      // isRepeated: idInfoMap['isRepeated'] ?? false,
+      isRepeated: idInfoMap['isRepeated'] ?? false,
       teamId: idInfoMap['teamId'] ?? 0,
       missionId: idInfoMap['missionId'] ?? 0,
       status: status ?? idInfoMap['status'] ?? '',
@@ -243,7 +240,7 @@ class AlarmState extends ChangeNotifier {
       isRead: alarmData.isRead,
     );
 
-    log('API Response: $idInfoMap');
+    log('MissionProveArgument API Response: $idInfoMap');
 
     Navigator.pushNamed(
       context,
