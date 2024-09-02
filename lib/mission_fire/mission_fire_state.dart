@@ -112,6 +112,7 @@ class MissionFireState extends ChangeNotifier {
     notifyListeners();
 
     if (selectedIndex == null || userList == null) {
+      _isThrowFireInProgress = false;
       notifyListeners();
       return;
     }
@@ -166,6 +167,7 @@ class MissionFireState extends ChangeNotifier {
                 "sender": nickname
               });
         }
+        messageController.clear();
 
         loadFirePersonList();
         completeThrowFireModal();
@@ -177,6 +179,7 @@ class MissionFireState extends ChangeNotifier {
       log('불던지기 실패: $e');
     } finally {
       _isThrowFireInProgress = false;
+      notifyListeners();
     }
   }
 

@@ -156,9 +156,16 @@ class _TutorialFirstState extends State<TutorialFirst> {
                             splashFactory: NoSplash.splashFactory,
                           ),
                           onPressed: () {
-                            Navigator.of(context).pushNamed(
-                              TutorialSecond.routeName,
-                            );
+                            Navigator.of(context).push(PageRouteBuilder(
+                              pageBuilder: (context, animation1, animation2) => const TutorialSecond(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(milliseconds: 300), // 전환 지속시간 설정
+                            ));
                           },
                           child: const Text(
                             '',

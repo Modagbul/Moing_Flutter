@@ -101,12 +101,12 @@ class MainPage extends StatelessWidget {
 
   Widget _mainContent(BuildContext context) {
     return Scaffold(
-      // appBar: MainAppBar(
-      //   notificationCount: context.watch<MainState>().alarmCount ?? '0',
-      //   onTapAlarm: context.read<MainState>().alarmPressed,
-      //   onTapSetting: context.read<MainState>().settingPressed,
-      //   screenIndex: context.watch<MainState>().mainIndex,
-      // ),
+      appBar: MainAppBar(
+        notificationCount: context.watch<MainState>().alarmCount ?? '0',
+        onTapAlarm: context.read<MainState>().alarmPressed,
+        onTapSetting: context.read<MainState>().settingPressed,
+        screenIndex: context.watch<MainState>().mainIndex,
+      ),
       backgroundColor: grayBackground,
       body: Stack(
         fit: StackFit.expand,
@@ -115,15 +115,14 @@ class MainPage extends StatelessWidget {
             sizing: StackFit.expand,
             index: context.watch<MainState>().mainIndex,
             children: const [
-              // HomeScreen(),
-              TutorialZero(),
+              HomeScreen(),
               MissionsScreen(),
               MyPageScreen(),
             ],
           ),
         ],
       ),
-      // bottomNavigationBar: _bottomNavigationBar(context),
+      bottomNavigationBar: _bottomNavigationBar(context),
     );
   }
 

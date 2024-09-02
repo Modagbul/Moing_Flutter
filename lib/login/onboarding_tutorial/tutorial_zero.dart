@@ -73,9 +73,16 @@ class TutorialZero extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: WhiteButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed(
-                          TutorialFirst.routeName,
-                        );
+                        Navigator.of(context).push(PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) => const TutorialFirst(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            );
+                          },
+                          transitionDuration: const Duration(milliseconds: 300), // 전환 지속시간 설정
+                        ));
                       },
                       text: '튜토리얼 시작하기',
                     ),
