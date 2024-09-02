@@ -79,7 +79,8 @@ class MissionFirePage extends StatelessWidget {
                     ),
               ],
             ),
-            if (context.watch<MissionFireState>().selectedIndex != null)
+            if (context.watch<MissionFireState>().selectedIndex != null &&
+                context.watch<MissionFireState>().userList![context.watch<MissionFireState>().selectedIndex!].fireStatus == "True")
               Positioned(
                 bottom: 0,
                 left: 0,

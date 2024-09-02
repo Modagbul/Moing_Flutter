@@ -142,6 +142,7 @@ class AlarmState extends ChangeNotifier {
 
     // 알림 읽음 처리 성공 -> 화면 이동
     AlarmData alarmData = alarmList![index];
+
     if (await postSingleAlarmData(alarmHistoryId: alarmData.alarmHistoryId)) {
       await getAllAlarmData();
       notifyListeners();
@@ -238,6 +239,8 @@ class AlarmState extends ChangeNotifier {
       isEnded: isEnded ?? false,
       isRead: alarmData.isRead,
     );
+
+    log('MissionProveArgument API Response: $idInfoMap');
 
     Navigator.pushNamed(
       context,
