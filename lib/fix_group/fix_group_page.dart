@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
@@ -207,8 +208,10 @@ class FixGroupPage extends StatelessWidget {
             .watch<FixGroupState>()
             .getProfileImageUrl!
             .startsWith('asset/')) {
-      return Image.network(context.watch<FixGroupState>().getProfileImageUrl!,
-          fit: BoxFit.cover);
+      return CachedNetworkImage(
+        imageUrl: context.watch<FixGroupState>().getProfileImageUrl!,
+        fit: BoxFit.cover,
+      );
     } else {
       return _defaultImg(context);
     }

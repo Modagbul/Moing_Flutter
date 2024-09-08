@@ -1,14 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/post/post_detail_state.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:provider/provider.dart';
 
 class CommentCard extends StatelessWidget {
   final CommentData commentData;
+  final String category;
+  final Function? onDelete;
+  final Function? onReport;
 
-  const CommentCard({super.key, required this.commentData});
+  const CommentCard({Key? key, required this.commentData, required this.category, this.onDelete, this.onReport}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +23,7 @@ class CommentCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Header(commentData: commentData),
+          _Header(commentData: commentData, category: category, onDelete: onDelete, onReport: onReport),
           const SizedBox(height: 12.0),
           _Content(commentData: commentData),
         ],
@@ -28,8 +34,10 @@ class CommentCard extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   final CommentData commentData;
-
-  const _Header({required this.commentData});
+  final String category;
+  final Function? onDelete;
+  final Function? onReport;
+  const _Header({required this.commentData, required this.category, this.onDelete, this.onReport});
 
   @override
   Widget build(BuildContext context) {
@@ -38,18 +46,28 @@ class _Header extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
           child: commentData.writerProfileImage != null
-              ? Image.network(
-                  commentData.writerProfileImage!,
+              ? CachedNetworkImage(
+                  imageUrl: commentData.writerProfileImage!,
                   fit: BoxFit.cover,
                   width: 20,
                   height: 20,
+                  memCacheWidth: 20.cacheSize(context),
+                  memCacheHeight: 20.cacheSize(context),
                 )
-              : SvgPicture.asset(
+              : category == 'post' 
+                ? SvgPicture.asset(
                   'asset/icons/icon_user_profile.svg',
                   fit: BoxFit.cover,
                   width: 20,
                   height: 20,
-                ),
+                )
+                : Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                        color: grayScaleGrey100,
+                        borderRadius: BorderRadius.circular(50)),
+                  ),
         ),
         const SizedBox(width: 8.0),
         Text(
@@ -71,8 +89,13 @@ class _Header extends StatelessWidget {
         commentData.isWriter
             ? GestureDetector(
                 onTap: () async {
-                  await context.read<PostDetailState>().deleteComment(
-                      boardCommentId: commentData.boardCommentId);
+                  if(category == 'post') {
+                    await context.read<PostDetailState>().deleteComment(boardCommentId: commentData.commentId);
+                  } else {
+                    // 미션인 경우
+                    print('미션에서 댓글 삭제');
+                    onDelete?.call();
+                  }
                 },
                 child: const Text(
                   '삭제',
@@ -85,11 +108,17 @@ class _Header extends StatelessWidget {
               )
             : GestureDetector(
                 onTap: () {
-                  context.read<PostDetailState>().showReportCommentModal(
-                        context: context,
-                        reportType: "COMMENT",
-                        targetId: commentData.boardCommentId,
-                      );
+                  if(category == 'post') {
+                    context.read<PostDetailState>().showReportCommentModal(
+                      context: context,
+                      reportType: "BCOMMENT",
+                      targetId: commentData.commentId,
+                    );
+                  } else {
+                    // 미션인 경우
+                    print('미션 댓글 신고 ');
+                    onReport?.call();
+                  }
                 },
                 child: const Text(
                   '신고',

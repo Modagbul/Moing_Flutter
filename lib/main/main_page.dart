@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:moing_flutter/app/app_state.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
+import 'package:moing_flutter/login/onboarding_tutorial/tutorial_last.dart';
+import 'package:moing_flutter/login/onboarding_tutorial/tutorial_third.dart';
+import 'package:moing_flutter/login/onboarding_tutorial/tutorial_zero.dart';
 import 'package:moing_flutter/main/main_appbar.dart';
 import 'package:moing_flutter/home/home_screen.dart';
 import 'package:moing_flutter/home/home_screen_state.dart';
@@ -19,11 +23,11 @@ class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
   static route(BuildContext context) {
-    String newCreated = "";
+    String status = "";
     int selectedTeamId = 0;
 
     if (ModalRoute.of(context)?.settings.arguments != null) {
-      newCreated = ModalRoute.of(context)?.settings.arguments as String;
+      status = ModalRoute.of(context)?.settings.arguments as String;
     }
 
     return MultiProvider(
@@ -38,7 +42,7 @@ class MainPage extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) =>
-              HomeScreenState(context: context, newCreated: newCreated),
+              HomeScreenState(context: context, status: status),
           lazy: false,
         ),
         ChangeNotifierProvider(
@@ -110,7 +114,7 @@ class MainPage extends StatelessWidget {
           IndexedStack(
             sizing: StackFit.expand,
             index: context.watch<MainState>().mainIndex,
-            children: [
+            children: const [
               HomeScreen(),
               MissionsScreen(),
               MyPageScreen(),
@@ -127,7 +131,17 @@ class MainPage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: BottomNavigationBar(
         currentIndex: context.watch<MainState>().mainIndex,
-        onTap: (index) {
+        onTap: (index) async {
+          if (index == 1) {
+            String? nickname = await AmplitudeConfig.analytics.getUserId();
+
+            AmplitudeConfig.analytics
+                .logEvent("missioninprogress_click", eventProperties: {
+              "tab": "진행 중 미션 클릭",
+              "nickname": nickname ?? "unknown",
+            });
+
+          }
           context.read<MainState>().mainIndex = index;
         },
         backgroundColor: grayBackground,

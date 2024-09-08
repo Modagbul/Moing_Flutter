@@ -4,11 +4,13 @@ class TeamData {
   String memberNickName;
   int numOfTeam;
   List<TeamBlock> teamBlocks;
-
+  UserProperty userProperty;
   TeamData({
     required this.memberNickName,
     required this.numOfTeam,
-    required this.teamBlocks});
+    required this.teamBlocks,
+    required this.userProperty,
+  });
 
   factory TeamData.fromJson(Map<String, dynamic> json) {
     return TeamData(
@@ -19,6 +21,7 @@ class TeamData {
           .map((item) => TeamBlock.fromJson(item))
           .toList()
           : [],
+      userProperty: UserProperty.fromJson(json['userProperty']),
     );
   }
 }
@@ -54,6 +57,23 @@ class TeamBlock {
       category: json['category'],
       startDate: json['startDate'],
       profileImgUrl: json['profileImgUrl'],
+    );
+  }
+}
+
+class UserProperty {
+  final String? gender;
+  final String? birthDate;
+
+  UserProperty({
+    required this.gender,
+    required this.birthDate,
+  });
+
+  factory UserProperty.fromJson(Map<String, dynamic> json) {
+    return UserProperty(
+      gender: json['gender'],
+      birthDate: json['birthDate'],
     );
   }
 }

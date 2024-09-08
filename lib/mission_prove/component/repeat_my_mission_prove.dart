@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
@@ -19,7 +20,7 @@ class RepeatMyMissionProved extends StatelessWidget {
           },
           childCount: context.watch<MissionProveState>().myMissionList!.length,
         ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
@@ -33,9 +34,14 @@ class RepeatMyMissionProved extends StatelessWidget {
     required int index,
     required BuildContext context,
   }) {
-    if (context.watch<MissionProveState>().myMissionList![index].status == 'SKIP') {
+    var state = context.watch<MissionProveState>();
+    int comment = 0;
+    if(state.myMissionList != null) comment = state.myMissionList![index].comments ?? 0;
+    if (state.myMissionList![index].status == 'SKIP') {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
+          await context.read<MissionProveState>().loadMyMissionCommentData(
+              context.read<MissionProveState>().myMissionList![index].archiveId);
           context.read<MissionProveState>().getMissionDetailContent(index);
         },
         child: Container(
@@ -46,36 +52,46 @@ class RepeatMyMissionProved extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0, left: 12),
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: grayScaleGrey500,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${context.watch<MissionProveState>().myMissionList!.length - index}',
-                      style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0, left: 12),
+                    child: Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: grayScaleGrey500,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${state.myMissionList!.length - index}',
+                          style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0, right: 12),
+                    child: missionComment(comment: comment),
+                  ),
+                ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Text(
-                  context.watch<MissionProveState>().myMissionList![index].archive,
+                  state.myMissionList![index].archive,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: bodyTextStyle.copyWith(color: grayScaleGrey200, fontWeight: FontWeight.w500),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
-                padding: EdgeInsets.only(left: 12, bottom: 12),
+                padding: const EdgeInsets.only(left: 12, bottom: 12),
                 child: Text(
                   '미션을 건너뛰었어요',
                   style: bodyTextStyle.copyWith(color: grayScaleGrey400),
@@ -86,12 +102,14 @@ class RepeatMyMissionProved extends StatelessWidget {
         ),
       );
     }
-    if (context.watch<MissionProveState>().myMissionList![index].way == 'PHOTO' &&
-        context.watch<MissionProveState>().myMissionList![index].status == 'COMPLETE') {
+    if (state.myMissionList![index].way == 'PHOTO' &&
+        state.myMissionList![index].status == 'COMPLETE') {
       return Stack(
         children: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              await context.read<MissionProveState>().loadMyMissionCommentData(
+                  context.read<MissionProveState>().myMissionList![index].archiveId);
               context.read<MissionProveState>().getMissionDetailContent(index);
             },
               child: ClipRRect(
@@ -99,8 +117,9 @@ class RepeatMyMissionProved extends StatelessWidget {
                 child: Container(
                   width: 172,
                   height: 155,
-                  child: Image.network(
-                    context.watch<MissionProveState>().myMissionList![index].archive,
+                  child:
+                  CachedNetworkImage(
+                    imageUrl: state.myMissionList![index].archive,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -118,28 +137,27 @@ class RepeatMyMissionProved extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  '${context.watch<MissionProveState>().myMissionList!.length - index}',
+                  '${state.myMissionList!.length - index}',
                   style: bodyTextStyle.copyWith(color: grayScaleGrey400),
                 ),
               ),
             ),
           ),
+          Positioned(
+            right: 12,
+            top: 12,
+            child: missionComment(comment: comment),
+          ),
         ],
       );
     }
     // 텍스트인 경우
-    else if (context
-                .watch<MissionProveState>()
-                .myMissionList![index]
-                .way ==
-            'TEXT' &&
-        context
-                .watch<MissionProveState>()
-                .myMissionList![index]
-                .status ==
-            'COMPLETE') {
+    else if (context.watch<MissionProveState>().myMissionList![index].way == 'TEXT' &&
+        context.watch<MissionProveState>().myMissionList![index].status == 'COMPLETE') {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
+          await context.read<MissionProveState>().loadMyMissionCommentData(
+              context.read<MissionProveState>().myMissionList![index].archiveId);
           context.read<MissionProveState>().getMissionDetailContent(index);
         },
         child: Container(
@@ -150,46 +168,51 @@ class RepeatMyMissionProved extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0, left: 12),
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: grayScaleGrey500,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${context.watch<MissionProveState>().myMissionList!.length - index}',
-                      style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0, left: 12),
+                    child: Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: grayScaleGrey500,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${context.watch<MissionProveState>().myMissionList!.length - index}',
+                          style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0, right: 12),
+                    child: missionComment(comment: comment),
+                  ),
+                ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  final String text = context
-                      .watch<MissionProveState>()
-                      .myMissionList![index]
-                      .archive;
+                  final String text = context.watch<MissionProveState>().myMissionList![index].archive;
                   final TextStyle textStyle = bodyTextStyle.copyWith(
                       fontWeight: FontWeight.w500, color: grayScaleGrey200);
-                  final TextSpan textSpan =
-                      TextSpan(text: text, style: textStyle);
+                  final TextSpan textSpan = TextSpan(text: text, style: textStyle);
                   final TextPainter textPainter = TextPainter(
                     text: textSpan,
                     maxLines: 3,
                     textDirection: TextDirection.ltr,
                   );
-
                   textPainter.layout(maxWidth: constraints.maxWidth);
 
                   // overflow 발생 시
                   if (textPainter.didExceedMaxLines) {
                     return Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -197,7 +220,6 @@ class RepeatMyMissionProved extends StatelessWidget {
                             text,
                             style: textStyle,
                             maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             '...',
@@ -228,7 +250,9 @@ class RepeatMyMissionProved extends StatelessWidget {
     // 링크인 경우
     else {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
+          await context.read<MissionProveState>().loadMyMissionCommentData(
+              context.read<MissionProveState>().myMissionList![index].archiveId);
           context.read<MissionProveState>().getMissionDetailContent(index);
         },
         child: Container(
@@ -239,22 +263,32 @@ class RepeatMyMissionProved extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 12.0, left: 12),
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: grayScaleGrey500,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${context.watch<MissionProveState>().myMissionList!.length - index}',
-                        style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0, left: 12),
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: grayScaleGrey500,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${context.watch<MissionProveState>().myMissionList!.length - index}',
+                            style: bodyTextStyle.copyWith(color: grayScaleGrey400),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0, right: 12),
+                      child: missionComment(comment: comment),
+                    ),
+                  ],
                 ),
                 Padding(
                     padding:
@@ -318,5 +352,33 @@ class RepeatMyMissionProved extends StatelessWidget {
             )),
       );
     }
+  }
+
+  Widget missionComment({required int comment}) {
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        height: 25,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: grayScaleGrey500.withOpacity(0.5),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+                'asset/icons/message.svg',
+                width: 16,
+                height: 16,
+                fit: BoxFit.cover,
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+            ),
+            const SizedBox(width: 4),
+            Text(
+              comment > 99 ? '99+' : comment.toString(),
+              style: bodyTextStyle.copyWith(color: grayScaleGrey200),
+            ),
+          ],
+        )
+    );
   }
 }

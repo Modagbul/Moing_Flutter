@@ -856,4 +856,32 @@ class ApiCode {
 
     return null;
   }
+
+  Future<bool> createMissionComment({required CreateCommentData createCommentData,
+    required int missionArchiveId, required int teamId}) async {
+    String? apiUrl = '${dotenv.env['MOING_API']}/api/$teamId/$missionArchiveId/mcomment';
+
+    try {
+      ApiResponse<Map<String, dynamic>> apiResponse =
+      await call.makeRequest<Map<String, dynamic>>(
+        url: apiUrl,
+        method: 'POST',
+        body: createCommentData.toJson(),
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      if (apiResponse.data != null) {
+        log('미션 댓글 생성 성공: ${apiResponse.data}');
+        return true;
+      } else {
+        log('createMissionComment is Null, error code : ${apiResponse.errorCode}');
+        return false;
+      }
+    } catch (e) {
+      log('나의 인증 댓글 조회 실패: $e');
+      return false;
+    } finally {
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+  }
 }

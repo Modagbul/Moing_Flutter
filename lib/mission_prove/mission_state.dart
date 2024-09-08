@@ -4,15 +4,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
-import 'package:moing_flutter/mission_prove/mission_prove_state.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_data.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/utils/button/white_button.dart';
-import 'package:provider/provider.dart';
 
 class MissionState {
+  Map<int, bool> missionReadStatus = {};
+
   /// 사용자 차단 클릭 시
   Future<String> showUserBlockModal({
     required BuildContext context,
@@ -132,8 +132,10 @@ class MissionState {
                           GestureDetector(
                             onTap: () async {
                               print('한번미션 종료하기 클릭');
-                              var endResult = await showEndOnceModal(context: context);
-                              (endResult.runtimeType == String && endResult == 'end')
+                              var endResult =
+                                  await showEndOnceModal(context: context);
+                              (endResult.runtimeType == String &&
+                                      endResult == 'end')
                                   ? Navigator.of(context).pop('end')
                                   : Navigator.of(context).pop();
                             },
@@ -299,6 +301,11 @@ class MissionState {
     bool? isRead,
   }) async {
     print('미션 설명 클릭');
+
+    if (missionReadStatus[missionId] == true) {
+      return null;
+    }
+
     MissionFixData data = MissionFixData(
       missionTitle: missionTitle,
       missionContent: missionContent,
@@ -367,7 +374,8 @@ class MissionState {
                       child: Text(
                         missionContent,
                         style: bodyTextStyle.copyWith(
-                            fontWeight: FontWeight.w500, color: grayScaleGrey400),
+                            fontWeight: FontWeight.w500,
+                            color: grayScaleGrey400),
                       ),
                     ),
                   ),
@@ -376,36 +384,36 @@ class MissionState {
                   padding: const EdgeInsets.symmetric(vertical: 32.0),
                   child: isLeader
                       ? GestureDetector(
-                      onTap: () async {
-                        print('미션 수정하기 클릭');
-                        var result = await Navigator.of(context).pushNamed(MissionFixPage.routeName, arguments: data);
-                        if(result != null && result == true) {
-                          print('미션을 수정하였습니다.');
-                          Navigator.of(context).pop("fix");
-                        }
-                        else {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                        child: Container(
-                    decoration: BoxDecoration(
-                        color: grayScaleGrey500,
-                        borderRadius: BorderRadius.circular(16),
-                    ),
-                    width: double.infinity,
-                    height: 62,
-                    child: Center(child: Text('미션 수정하기', style: buttonTextStyle.copyWith(color: Colors.white),)),
-                  ),
-                      )
+                          onTap: () async {
+                            print('미션 수정하기 클릭');
+                            var result = await Navigator.of(context).pushNamed(
+                                MissionFixPage.routeName,
+                                arguments: data);
+                            if (result != null && result == true) {
+                              print('미션을 수정하였습니다.');
+                              Navigator.of(context).pop("fix");
+                            } else {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: grayScaleGrey500,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            width: double.infinity,
+                            height: 62,
+                            child: Center(
+                                child: Text(
+                              '미션 수정하기',
+                              style:
+                                  buttonTextStyle.copyWith(color: Colors.white),
+                            )),
+                          ),
+                        )
                       : WhiteButton(
-                      onPressed: () async {
-                        if(isRead == false) {
-                          /// 미션 설명 읽음 처리
-                          readMissionRule(teamId, missionId);
-                        }
-                        Navigator.of(context).pop();
-                      },
-                      text: '확인했어요'),
+                          onPressed: () => Navigator.of(context).pop(),
+                          text: '확인했어요'),
                 ),
               ],
             ),
@@ -414,24 +422,27 @@ class MissionState {
       },
     );
 
-    if(isRead == false) {
-      /// 미션 설명 읽음 처리
-      readMissionRule(teamId, missionId);
-    } else if (result == "fix") {
-      print('미션 수정했지롱~');
-      return "missionFix";
+    /// 미션 설명 읽음 처리
+    bool read = false;
+    if (isRead == false) {
+      read = await readMissionRule(teamId, missionId);
     }
+    if (read) {
+      missionReadStatus[missionId] = true;
+    }
+    if (result == "fix") return "missionFix_$read";
     return null;
   }
 
   /// 미션 읽음 처리
   Future<bool> readMissionRule(int teamId, int missionId) async {
-    String apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/confirm';
+    String apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/confirm';
     APICall call = APICall();
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
-      await call.makeRequest<Map<String, dynamic>>(
+          await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
         fromJson: (dataJson) => dataJson as Map<String, dynamic>,

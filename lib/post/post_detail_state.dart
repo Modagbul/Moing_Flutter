@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
@@ -87,6 +88,7 @@ class PostDetailState extends ChangeNotifier {
     );
 
     if (isSuccess != null && isSuccess) {
+      addAmplitudePostingCommentEvent();
       await getAllCommentData();
       clearCommentTextField();
       FocusScope.of(context).unfocus();
@@ -95,6 +97,14 @@ class PostDetailState extends ChangeNotifier {
     }
 
     _isCreateCommentInProgress = false;
+  }
+
+  void addAmplitudePostingCommentEvent() {
+    AmplitudeConfig.analytics.logEvent("posting_comment", eventProperties: {
+      "teamId": teamId,
+      "boardId": boardId,
+      "comment": commentController.value.text,
+    });
   }
 
   /// 댓글 삭제 API

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +8,7 @@ import 'package:moing_flutter/model/comment/comment_model.dart';
 import 'package:moing_flutter/model/post/post_detail_model.dart';
 import 'package:moing_flutter/post/component/comment_card.dart';
 import 'package:moing_flutter/post/post_detail_state.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 
 import 'package:provider/provider.dart';
 
@@ -91,13 +93,17 @@ class PostDetailPage extends StatelessWidget {
                                         child: postDetailData
                                                     ?.writerProfileImage !=
                                                 null
-                                            ? Image.network(
-                                                postDetailData
+                                            ? CachedNetworkImage(
+                                                imageUrl: postDetailData
                                                         ?.writerProfileImage ??
                                                     '',
                                                 fit: BoxFit.cover,
                                                 width: 20,
                                                 height: 20,
+                                                memCacheWidth:
+                                                    20.cacheSize(context),
+                                                memCacheHeight:
+                                                    20.cacheSize(context),
                                               )
                                             : SvgPicture.asset(
                                                 'asset/icons/icon_user_profile.svg',
@@ -401,7 +407,7 @@ class PostDetailPage extends StatelessWidget {
       ),
       child: Column(
         children: filteredCommentList.map((CommentData comment) {
-          return CommentCard(commentData: comment);
+          return CommentCard(commentData: comment, category: 'post');
         }).toList(),
       ),
     );

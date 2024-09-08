@@ -1,12 +1,17 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../main/alarm/alarm.dart';
 import '../../model/api_code/api_code.dart';
+import '../../model/api_generic.dart';
+import '../../model/api_response.dart';
 import '../../model/response/aggregate_repeat_mission_response.dart';
 import '../../model/response/aggregate_single_mission_response.dart';
 
 class MissionsAllState extends ChangeNotifier {
+  String apiUrl = '';
+  final APICall call = APICall();
   final ApiCode apiCode = ApiCode();
 
   AggregateSingleMissionResponse? aggregateSingleMissionStatus;
@@ -31,7 +36,9 @@ class MissionsAllState extends ChangeNotifier {
     super.dispose();
   }
 
-  void initState() {}
+  void initState() async{
+    // log('teamId : $teamId, missionId : $missionId');
+  }
 
   void alarmPressed() {
     Navigator.of(context).pushNamed(

@@ -34,6 +34,7 @@ import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
 import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/missions/aggregate/missions_group_page.dart';
 import 'package:moing_flutter/missions/create/missions_create_page.dart';
+import 'package:moing_flutter/missions/create/photo_auth_page.dart';
 import 'package:moing_flutter/missions/fix/mission_fix_page.dart';
 import 'package:moing_flutter/mypage/alarm_setting_page.dart';
 import 'package:moing_flutter/mypage/profile_setting_page.dart';
@@ -41,6 +42,11 @@ import 'package:moing_flutter/mypage/revoke/mypage_revoke_reason_page.dart';
 import 'package:moing_flutter/post/post_update_page.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:provider/provider.dart';
+import '../login/onboarding_tutorial/tutorial_first.dart';
+import '../login/onboarding_tutorial/tutorial_last.dart';
+import '../login/onboarding_tutorial/tutorial_second.dart';
+import '../login/onboarding_tutorial/tutorial_third.dart';
+import '../login/onboarding_tutorial/tutorial_zero.dart';
 import '../missions/aggregate/missions_all_page.dart';
 import '../missions/aggregate/missions_screen.dart';
 import 'package:moing_flutter/post/post_main_page.dart';
@@ -95,6 +101,13 @@ class MoingApp extends StatelessWidget {
             OnBoardingSecondPage.routeName: (context) => OnBoardingSecondPage.route(context),
             OnBoardingThirdPage.routeName: (context) => OnBoardingThirdPage.route(context),
             OnBoardingLastPage.routeName: (context) => OnBoardingLastPage.route(context),
+
+            TutorialZero.routeName: (context) => TutorialZero.route(context),
+            TutorialFirst.routeName: (context) => TutorialFirst.route(context),
+            TutorialSecond.routeName: (context) => TutorialSecond.route(context),
+            TutorialThird.routeName: (context) => TutorialThird.route(context),
+            TutorialLast.routeName: (context) => TutorialLast.route(context),
+
             SignUpPage.routeName: (context) => SignUpPage.route(context),
             SignUpGenderPage.routeName: (context) => SignUpGenderPage.route(context),
             SignUpDatePage.routeName: (context) => SignUpDatePage.route(context),
@@ -110,6 +123,7 @@ class MoingApp extends StatelessWidget {
             MissionProvePage.routeName: (context) => MissionProvePage.route(context),
             TextAuthPage.routeName:(context) => TextAuthPage.route(context),
             LinkAuthPage.routeName:(context) => LinkAuthPage.route(context),
+            PhotoAuthPage.routeName:(context) => PhotoAuthPage.route(context),
             SkipMissionPage.routeName:(context) => SkipMissionPage.route(context),
 
             AlarmPage.routeName: (context) => AlarmPage.route(context),

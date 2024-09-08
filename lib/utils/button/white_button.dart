@@ -7,9 +7,10 @@ class WhiteButton extends StatelessWidget {
 
   const WhiteButton({required this.onPressed, required this.text, super.key});
 
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 62,
       child: ElevatedButton(

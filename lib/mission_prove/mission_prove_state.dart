@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'dart:io';
 import 'dart:async';
 import 'dart:ui' as ui;
@@ -18,19 +20,27 @@ import 'dart:typed_data';
 
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/const/style/text.dart';
+import 'package:moing_flutter/make_group/component/warning_dialog.dart';
 import 'package:moing_flutter/mission_fire/mission_fire_page.dart';
+import 'package:moing_flutter/mission_prove/mission_prove_page.dart';
 import 'package:moing_flutter/mission_prove/mission_state.dart';
+import 'package:moing_flutter/mission_prove/repository/mission_repository.dart';
 import 'package:moing_flutter/missions/create/link_auth_page.dart';
+import 'package:moing_flutter/missions/create/photo_auth_page.dart';
 import 'package:moing_flutter/missions/create/skip_mission_page.dart';
 import 'package:moing_flutter/missions/create/text_auth_page.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
+import 'package:moing_flutter/model/comment/comment_model.dart';
+import 'package:moing_flutter/model/request/create_comment_request.dart';
 import 'package:moing_flutter/model/response/mission/my_mission_get_prove_response.dart';
 import 'package:moing_flutter/model/response/mission/other_mission_get_prove_response.dart';
+import 'package:moing_flutter/post/component/comment_card.dart';
 import 'package:moing_flutter/utils/alert_dialog/alert_dialog.dart';
+import 'package:moing_flutter/utils/custom_text_elipsis/custom_text_elip.dart';
+import 'package:moing_flutter/utils/image_resize/image_resize.dart';
 import 'package:moing_flutter/utils/image_upload/image_upload.dart';
-import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
 import 'package:moing_flutter/utils/toast/toast_message.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -38,10 +48,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_balloon/speech_balloon.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'mission_prove_page.dart';
 
 class MissionProveState with ChangeNotifier {
   final BuildContext context;
@@ -50,9 +57,10 @@ class MissionProveState with ChangeNotifier {
   final bool isEnded;
   final bool isRepeated;
   final String repeatMissionStatus;
-  final bool isRead;
+  bool isRead;
   final MissionState missionState = MissionState();
   final ViewUtil viewUtil = ViewUtil();
+  final MissionRepository missionRepository = MissionRepository();
 
   late TabController tabController;
 
@@ -62,27 +70,34 @@ class MissionProveState with ChangeNotifier {
 
   String apiUrl = '';
   String imageUrl = '';
+
   // 사진 업로드
   XFile? avatarFile;
 
   // 미션 제목
   String missionTitle = '';
+
   // 미션 내용
   String missionContent = '';
+
   // 미션 규칙
   String missionRule = '';
 
   // 미션 방법(텍스트, 사진, 링크)
   String missionWay = '';
+
   // 미션 종료 날짜
   String missionDueTo = '';
+
   // 반복인증 시 나의 성공 횟수
   int repeatMissionMyCount = 0;
+
   // 반복인증 시 전체 성공 횟수
   int repeatMissionTotalCount = 0;
 
   // 한번인증 시 현재 성공 횟수
   int singleMissionMyCount = 0;
+
   // 한번인증 시 전체 성공 횟수
   int singleMissionTotalCount = 0;
 
@@ -91,6 +106,7 @@ class MissionProveState with ChangeNotifier {
 
   // 리더 여부
   bool isLeader = false;
+
   // 내가 당일에 인증한 경우 T/F 값
   bool isMeProved = false;
 
@@ -103,13 +119,17 @@ class MissionProveState with ChangeNotifier {
   // 나의 인증 조회 시 받아오는 리스트
   MyMissionProveAllData? myMissionData;
   List<MyMissionProveData>? myMissionList;
+
   // 시간대 정렬 리스트
   List<List<String>> myRepeatMissionTime = [];
+
   // 모두의 인증 조회 시 받아오는 리스트
   List<EveryMissionProveData>? everyMissionList;
+  List<CommentData> comments = [];
 
   // 이미지 저장을 위한 key
   var globalKey = new GlobalKey();
+
   // 이미지 저장 성공 여부
   bool isSavedGallery = false;
 
@@ -120,6 +140,8 @@ class MissionProveState with ChangeNotifier {
   String nobodyText = '데이터를 불러오는 중입니다...';
   bool onLoading = false;
   bool showLoading = false;
+  bool detailLoading = false;
+  bool commentLoading = false;
 
   MissionProveState({
     required this.context,
@@ -167,7 +189,7 @@ class MissionProveState with ChangeNotifier {
     }
 
     /// TODO : 맨 처음 미션 설명이 보이도록 설정하기
-    if(!isRead) {
+    if (!isRead) {
       showModal('content', isRead: isRead);
     }
   }
@@ -370,9 +392,8 @@ class MissionProveState with ChangeNotifier {
           }
         }
         if (myMissionList != null && myMissionList!.isEmpty) {
-          nobodyText = isEnded == true
-              ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!'
-              : '아직 인증하지 않았어요';
+          nobodyText =
+              isEnded == true ? '미션이 종료되었어요\n다음번엔 꼭 성공해요!' : '아직 인증하지 않았어요';
         }
         print(
             '내가 오늘 인증했나 ? $isMeProved, 미션리스트 비었니? : ${myMissionList?.isEmpty}');
@@ -426,6 +447,7 @@ class MissionProveState with ChangeNotifier {
     // 다시 인증하기 버튼 클릭 시..
     if (missionMoreButton.contains('retry')) {
       print('인증 다시 버튼 클릭!');
+      isRead = true;
       await missionDelete(index: index);
     }
     onLoading = false;
@@ -510,7 +532,8 @@ class MissionProveState with ChangeNotifier {
 
   /// 미션 종료 API
   Future<void> endRepeatMission() async {
-    apiUrl = '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/end';
+    apiUrl =
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/end';
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -520,7 +543,7 @@ class MissionProveState with ChangeNotifier {
         fromJson: (dataJson) => dataJson as Map<String, dynamic>,
       );
 
-      if(apiResponse.isSuccess) {
+      if (apiResponse.isSuccess) {
         print('미션 종료에 성공했습니다!');
         Navigator.of(context).pop("END");
       } else {
@@ -533,11 +556,16 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
-  /// 미션 인증 APIf
-  Future<bool?> submitMission({required String url}) async {
+  /// 미션 인증 API
+  Future<bool?> submitMission(
+      {required String url, required String? contents}) async {
     apiUrl =
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive';
-    Map<String, dynamic> data = {"status": 'COMPLETE', "archive": url};
+    Map<String, dynamic> data = {
+      "status": 'COMPLETE',
+      "archive": url,
+      "contents": contents
+    };
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -592,9 +620,10 @@ class MissionProveState with ChangeNotifier {
           'missionId': missionId,
         });
         if (result != null && result is bool && result) {
+          isRead = true;
           // 미션 인증 성공 모달
-          await showMissionSuccessDialog();
           await initState();
+          await showMissionSuccessDialog();
         }
       }
       // 링크 인증 시
@@ -605,41 +634,54 @@ class MissionProveState with ChangeNotifier {
           'missionId': missionId,
         });
         if (result != null && result is bool && result) {
+          isRead = true;
           // 미션 인증 성공 모달
-          await showMissionSuccessDialog();
           await initState();
+          await showMissionSuccessDialog();
         }
       }
       // 사진 인증 시
       else {
         print('사진 인증 시작!');
-        await Permission.photos.request();
-        final XFile? assetFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-        avatarFile = assetFile;
-        if (avatarFile != null) {
-          showLoading = true;
-          notifyListeners();
-          String extension = imageUpload.getFileExtension(avatarFile!);
-          String? tmpUrl =
-              await imageUpload.getPresignedUrl(extension, avatarFile!);
+        try {
+          await Permission.photos.request();
+          final XFile? assetFile =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
+          avatarFile = assetFile;
+          if (avatarFile != null) {
+            var result = await Navigator.of(context)
+                .pushNamed(PhotoAuthPage.routeName, arguments: avatarFile!);
+            if (result is Map<String, dynamic>) {
+              avatarFile = result['avatarFile'];
+              String contents = result['contents'];
+              showLoading = true;
+              notifyListeners();
+              String extension = imageUpload.getFileExtension(avatarFile!);
+              String? tmpUrl =
+                  await imageUpload.getPresignedUrl(extension, avatarFile!);
 
-          /// 이미지 url 받기
-          imageUrl = tmpUrl ?? '';
-          // presigned url 발급 성공 시
-          if (imageUrl.isNotEmpty) {
-            bool? isSuccess = await submitMission(url: imageUrl);
-            if (isSuccess != null && isSuccess) {
-              await showMissionSuccessDialog();
-              await initState();
+              /// 이미지 url 받기
+              imageUrl = tmpUrl ?? '';
+              // presigned url 발급 성공 시
+              if (imageUrl.isNotEmpty) {
+                bool? isSuccess =
+                    await submitMission(url: imageUrl, contents: contents);
+                if (isSuccess == true) {
+                  isRead = true;
+                  await initState();
+                  await showMissionSuccessDialog();
+                }
+              }
             }
           }
+        } finally {
+          showLoading = false;
+          notifyListeners();
         }
-        showLoading = false;
-        notifyListeners();
       }
     } catch (e) {
       print('미션 인증 도중 에러 발생 : ${e}');
-      if(e.toString().contains('photo access')) {
+      if (e.toString().contains('photo access')) {
         bool? isImagePermissioned = await viewUtil.showWarningDialog(
             context: context,
             title: '갤러리 접근 권한이 필요해요',
@@ -661,8 +703,9 @@ class MissionProveState with ChangeNotifier {
     try {
       if (onLoading) return;
       onLoading = true;
+
       /// 내가 인증했을 때
-      if(myMissionList != null && myMissionList!.isNotEmpty && !isEnded) {
+      if (myMissionList != null && myMissionList!.isNotEmpty && !isEnded) {
         Navigator.of(context).pushNamed(MissionFirePage.routeName, arguments: {
           'teamId': teamId,
           'missionId': missionId,
@@ -676,17 +719,22 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
+  /// 토스트 메세지 띄우기
+  void _showToast({required String text, double? toastBottom}) {
+    toastMessage.showToastMessage(
+      fToast: fToast,
+      warningText: text,
+      toastBottom: toastBottom,
+      toastLeft: 0,
+      toastRight: 0,
+    );
+  }
+
   /// 미션 인증물 에러토스트 띄우기
   likePressedToast() {
     if (onLoading) return;
     onLoading = true;
-    toastMessage.showToastMessage(
-      fToast: fToast,
-      warningText: '내 인증에는 좋아요를 누를 수 없어요.',
-      toastBottom: 145.0,
-      toastLeft: 0,
-      toastRight: 0,
-    );
+    _showToast(text: '내 인증에는 좋아요를 누를 수 없어요.', toastBottom: 145);
     onLoading = false;
   }
 
@@ -700,7 +748,7 @@ class MissionProveState with ChangeNotifier {
     print('좋아요 누르기 전 heartStatus : $heartStatus');
     String beforeHeartStatus = heartStatus != 'true' ? 'True' : 'False';
     apiUrl =
-    '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$archiveId/heart/$beforeHeartStatus';
+        '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/archive/$archiveId/heart/$beforeHeartStatus';
 
     try {
       ApiResponse<Map<String, dynamic>> apiResponse =
@@ -717,8 +765,10 @@ class MissionProveState with ChangeNotifier {
         everyMissionList![index].heartStatus =
             missionHeartStatus == 'True' ? 'true' : 'false';
         everyMissionList![index].heartStatus == 'true'
-            ? everyMissionList![index].hearts = everyMissionList![index].hearts + newHearts
-        : everyMissionList![index].hearts = everyMissionList![index].hearts - 1;
+            ? everyMissionList![index].hearts =
+                everyMissionList![index].hearts + newHearts
+            : everyMissionList![index].hearts =
+                everyMissionList![index].hearts - 1;
         print('index : $index, hearts : ${everyMissionList![index].hearts}');
         notifyListeners();
       } else {
@@ -729,6 +779,29 @@ class MissionProveState with ChangeNotifier {
     }
     notifyListeners();
     onLoading = false;
+  }
+
+  /// 이미지 저장 UI
+  Widget missionShare({required BuildContext context, required int index}) {
+    return GestureDetector(
+      onTap: () => missionShareDialog(index: index),
+      child: Row(
+        children: [
+          SvgPicture.asset(
+            'asset/icons/mission_image_upload.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '이미지 저장',
+            style: bodyTextStyle.copyWith(
+                color: grayScaleGrey300, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
+    );
   }
 
   /// 이미지 공유하기 모달
@@ -778,13 +851,13 @@ class MissionProveState with ChangeNotifier {
                             borderRadius: BorderRadius.circular(16),
                             child: Stack(
                               children: [
-                                Image.network(
-                                  index != null
+                                CachedNetworkImage(
+                                  imageUrl: index != null
                                       ? myMissionList![index].archive
                                       : myMissionList![0].archive,
+                                  fit: BoxFit.cover,
                                   width: 313,
                                   height: 313,
-                                  fit: BoxFit.cover,
                                 ),
                                 Positioned(
                                   bottom: 0,
@@ -913,7 +986,7 @@ class MissionProveState with ChangeNotifier {
                                           ),
                                         ),
                                         toastDuration:
-                                            Duration(milliseconds: 1500),
+                                            const Duration(milliseconds: 1500),
                                         positionedToastBuilder:
                                             (context, child) {
                                           return Positioned(
@@ -963,7 +1036,7 @@ class MissionProveState with ChangeNotifier {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          insetPadding: EdgeInsets.symmetric(horizontal: 20),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
               width: double.infinity,
               height: 455,
@@ -983,7 +1056,7 @@ class MissionProveState with ChangeNotifier {
                   const SizedBox(height: 16),
                   Text(
                     isRepeated
-                        ? '${myMissionList!.length + 1}회차 인증완료!'
+                        ? '${myMissionList!.length}회차 인증완료!'
                         : '모잉불이 기뻐해요!',
                     style: middleTextStyle.copyWith(color: grayScaleGrey100),
                   ),
@@ -1002,13 +1075,11 @@ class MissionProveState with ChangeNotifier {
                       childLeft: Text(
                         isRepeated
                             ? '남은 횟수까지 파이팅!'
-                            : '${singleMissionMyCount + 1}/$singleMissionTotalCount명 인증성공',
+                            : '$singleMissionMyCount/$singleMissionTotalCount명 인증성공',
                         style: bodyTextStyle.copyWith(color: grayScaleGrey100),
                       ),
                       percent: singleMissionMyCount < singleMissionTotalCount
-                          ? (singleMissionMyCount + 1) *
-                              100 /
-                              singleMissionTotalCount
+                          ? singleMissionMyCount * 100 / singleMissionTotalCount
                           : 100,
                       style: RoundedProgressBarStyle(
                         colorBorder: Colors.transparent,
@@ -1024,8 +1095,9 @@ class MissionProveState with ChangeNotifier {
       },
     );
 
-    Future.delayed(Duration(milliseconds: 2000), () {
-      Navigator.of(context).pop();
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      Navigator.popUntil(
+          context, ModalRoute.withName(MissionProvePage.routeName));
       notifyListeners();
       showFireToast();
     });
@@ -1034,9 +1106,9 @@ class MissionProveState with ChangeNotifier {
   Future<void> _launchUrl(String link) async {
     if (onLoading) return;
     onLoading = true;
-    Uri _url = Uri.parse(link);
+    Uri url = Uri.parse(link);
     if (!await launchUrl(
-      _url,
+      url,
       mode: LaunchMode.externalApplication,
     )) {
       throw ArgumentError("해당 링크에 접속할 수 없습니다.");
@@ -1077,495 +1149,678 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
+  /// 나의 인증 - 미션 상세 내용 댓글 조회
+  Future<void> loadMyMissionCommentData(int missionArchiveId) async {
+    print('댓글 조회 시 archiveID: $missionArchiveId');
+    var data = await missionRepository.loadMyMissionCommentData(
+        teamId: teamId, missionArchiveId: missionArchiveId);
+    if (data != null) comments = data;
+    notifyListeners();
+  }
+
   /// 미션 상세내용 확인
-  void getMissionDetailContent(int index) {
-    print('반복 미션 상세내용 확인');
-    showModalBottomSheet(
+  void getMissionDetailContent(int index) async {
+    print('상세내용 확인, $showLoading');
+    if (detailLoading) return;
+    detailLoading = true;
+    await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (BuildContext context) {
+        var currentMission = getCurrentMission(index);
+        // 댓글 수
+        int commentsCount = currentMission.comments ?? 0;
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            var currentMission = getCurrentMission(index);
-            // 오늘 인증했는지 여부
+            // 오늘 인증 여부
             bool isTodayCreated = isSameDate(currentMission.createdDate);
-            return Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.58,
-              decoration: const BoxDecoration(
-                color: grayScaleGrey600,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 24, right: 24, top: 46),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+            return DraggableScrollableSheet(
+              initialChildSize: 0.9,
+              minChildSize: 0.1,
+              maxChildSize: 0.9,
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.9,
+                  decoration: const BoxDecoration(
+                    color: grayScaleGrey600,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Stack(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                if(isRepeated)
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: 24,
-                                  height: 24,
+                        SingleChildScrollView(
+                          controller: scrollController,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16.0),
+                                child: Container(
+                                  width: 32,
+                                  height: 4,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    color: Colors.white,
-                                  ),
-                                  child: Text(
-                                    currentMission.count.toString(),
-                                    style: bodyTextStyle.copyWith(color: grayScaleGrey700),
+                                    borderRadius: BorderRadius.circular(24),
+                                    color: grayScaleGrey550,
                                   ),
                                 ),
-                                if(!isRepeated)
-                                ClipOval(
-                                  child: Image.network(
-                                    currentMission.profileImg ?? '',
-                                    width: 24,
-                                    height: 24,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return ClipOval(
-                                        child: SvgPicture.asset(
-                                          'asset/icons/icon_user_profile.svg',
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(currentMission.nickname != null ? currentMission.nickname : '나의 인증 상세',
-                                  style: bodyTextStyle.copyWith(color: grayScaleGrey400),),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Text(
-                                  DateFormat('yy.MM.dd').format(DateTime.parse(currentMission.createdDate)),
-                                  style: bodyTextStyle.copyWith(
-                                      color: grayScaleGrey400,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  DateFormat('HH:mm').format(DateTime.parse(currentMission.createdDate)),
-                                  style: bodyTextStyle.copyWith(
-                                      color: grayScaleGrey400,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        if (isMeOrEveryProved && isTodayCreated && !isEnded)
-                          DropdownButton<String>(
-                            underline: const SizedBox.shrink(),
-                            style: contentTextStyle.copyWith(
-                                color: grayScaleGrey100),
-                            dropdownColor: grayScaleGrey500,
-                            icon: Icon(
-                              Icons.more_vert_outlined,
-                              color: grayScaleGrey300,
-                            ),
-                            iconEnabledColor: Colors.white,
-                            items: <DropdownMenuItem<String>>[
-                              DropdownMenuItem(
-                                  value: 'retry',
-                                  child: Container(
-                                    padding: EdgeInsets.only(top: 4, right: 8),
-                                    alignment: Alignment.centerRight,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 24, right: 24, top: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
-                                        Text('다시 인증하기'),
-                                        Text(
-                                          '기존 인증내역이 취소돼요',
-                                          style: bodyTextStyle.copyWith(
-                                              fontWeight: FontWeight.w500),
+                                        Row(
+                                          children: [
+                                            if (!(!isRepeated &&
+                                                isMeOrEveryProved)) ...[
+                                              // 한번인증이면서 유저프로필이 있을 때
+                                              !isRepeated &&
+                                                      currentMission
+                                                              .profileImg !=
+                                                          null
+                                                  ? ClipOval(
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: currentMission
+                                                            .profileImg,
+                                                        fit: BoxFit.cover,
+                                                        width: 20,
+                                                        height: 20,
+                                                        memCacheWidth: 20
+                                                            .cacheSize(context),
+                                                        memCacheHeight: 20
+                                                            .cacheSize(context),
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width: 24,
+                                                      height: 24,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Text(
+                                                        currentMission.count
+                                                            .toString(),
+                                                        style: bodyTextStyle
+                                                            .copyWith(
+                                                                color:
+                                                                    grayScaleGrey700),
+                                                      ),
+                                                    ),
+                                              const SizedBox(width: 8),
+                                            ],
+                                            if (!isMeOrEveryProved) ...[
+                                              Text(
+                                                  currentMission.nickname ??
+                                                      '인증 상세',
+                                                  style: bodyTextStyle.copyWith(
+                                                      color: grayScaleGrey400)),
+                                              const SizedBox(width: 12),
+                                            ],
+                                            Text(
+                                              DateFormat('yy.MM.dd').format(
+                                                  DateTime.parse(currentMission
+                                                      .createdDate)),
+                                              style: bodyTextStyle.copyWith(
+                                                  color: grayScaleGrey300,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Text(
+                                              DateFormat('HH:mm').format(
+                                                  DateTime.parse(currentMission
+                                                      .createdDate)),
+                                              style: bodyTextStyle.copyWith(
+                                                  color: grayScaleGrey300,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  )),
-                            ],
-                            isDense: true,
-                            onChanged: (String? val) {
-                              setMission(val: val, index: currentMission.count);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        if (!isMeOrEveryProved)
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton2<String>(
-                              isExpanded: true,
-                              items: <DropdownMenuItem<String>>[
-                                DropdownMenuItem(
-                                    value: 'report',
-                                    child: Container(
-                                      padding: EdgeInsets.all(16),
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        '인증내용 신고하기',
-                                        style: contentTextStyle.copyWith(
-                                            color: grayScaleGrey100),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'block',
-                                  child: Container(
-                                    padding: EdgeInsets.all(16),
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      '이용자 차단하기',
-                                      style: contentTextStyle.copyWith(
-                                          color: grayScaleGrey100),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              onChanged: (String? val) async {
-                                if (val == 'report') {
-                                  print('신고하기 버튼 클릭');
-                                  bool? agreeReport = await viewUtil.showWarningDialog(
-                                      context: context,
-                                      title: '이 인증을 신고하시겠어요?',
-                                      content: '신고한 인증은 모든 모임원들에게 숨겨져요.',
-                                      leftText: '취소하기',
-                                      rightText: '신고하기');
-
-                                  if(agreeReport == true) {
-                                    await doReport(currentMission.archiveId);
-                                    Navigator.of(context).pop();
-                                    fToast.showToast(
-                                        child: Material(
-                                          type: MaterialType.transparency,
-                                          child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 20.0),
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                width: double.infinity,
-                                                height: 60,
+                                        const Spacer(),
+                                        if (isMeOrEveryProved &&
+                                            isTodayCreated &&
+                                            !isEnded)
+                                          DropdownButtonHideUnderline(
+                                            child: DropdownButton2<String>(
+                                              isExpanded: true,
+                                              items: <DropdownMenuItem<String>>[
+                                                DropdownMenuItem(
+                                                    value: 'retry',
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 4, right: 8),
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Text('다시 인증하기',
+                                                              style: contentTextStyle
+                                                                  .copyWith(
+                                                                      color:
+                                                                          grayScaleGrey100)),
+                                                          const SizedBox(
+                                                              height: 2),
+                                                          Text(
+                                                            '기존 인증내역이 취소돼요',
+                                                            style: bodyTextStyle
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )),
+                                              ],
+                                              onChanged: (String? val) {
+                                                setMission(
+                                                    val: val,
+                                                    index:
+                                                        currentMission.count);
+                                                Navigator.of(context).pop();
+                                              },
+                                              buttonStyleData:
+                                                  const ButtonStyleData(
+                                                height: 20,
+                                                width: 20,
+                                              ),
+                                              iconStyleData:
+                                                  const IconStyleData(
+                                                icon: Icon(
+                                                  Icons.more_vert_outlined,
+                                                ),
+                                                iconSize: 20,
+                                                iconEnabledColor:
+                                                    grayScaleGrey300,
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight: 110,
+                                                width: 180,
                                                 decoration: BoxDecoration(
                                                   borderRadius:
-                                                  BorderRadius.circular(12),
-                                                  color: Colors.white,
+                                                      BorderRadius.circular(8),
+                                                  color: grayScaleGrey500,
                                                 ),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
-                                                      style: bodyTextStyle.copyWith(
-                                                          color: grayScaleGrey700),
+                                              ),
+                                            ),
+                                          ),
+                                        if (!isMeOrEveryProved)
+                                          DropdownButtonHideUnderline(
+                                            child: DropdownButton2<String>(
+                                              isExpanded: true,
+                                              items: <DropdownMenuItem<String>>[
+                                                DropdownMenuItem(
+                                                  value: 'report',
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16),
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Text(
+                                                      '인증내용 신고하기',
+                                                      style: contentTextStyle
+                                                          .copyWith(
+                                                              color:
+                                                                  grayScaleGrey100),
+                                                      textAlign:
+                                                          TextAlign.right,
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
-                                              )),
-                                        ),
-                                        toastDuration: Duration(milliseconds: 2000),
-                                        positionedToastBuilder: (context, child) {
-                                          return Positioned(
-                                            child: child,
-                                            top: 114.0,
-                                            left: 0.0,
-                                            right: 0,
-                                          );
-                                        });
-                                  }
-                                }
-                                else if (val == 'block') {
-                                  showModal('block', nickname: currentMission.nickname, makerId: currentMission.makerId);
-                                }
-                              },
-                              buttonStyleData: const ButtonStyleData(
-                                height: 20,
-                                width: 180,
-                              ),
-                              iconStyleData: const IconStyleData(
-                                icon: Icon(
-                                  Icons.more_vert_outlined,
-                                ),
-                                iconSize: 20,
-                                iconEnabledColor: grayScaleGrey300,
-                              ),
-                              dropdownStyleData: DropdownStyleData(
-                                maxHeight: 110,
-                                width: 180,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: grayScaleGrey500,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    /// 사진 텍스트 링크 중 선택
-                    if (missionWay.contains('사진') &&
-                        currentMission.status == 'COMPLETE')
-                      Container(
-                          width: double.infinity,
-                          height: 265,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: GestureDetector(
-                            onTap: (){
-                              print('미션 상세내용에서 사진 클릭');
-                              openFullImage(image: currentMission.archive);
-                            },
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Image.network(
-                                currentMission.archive,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          )),
-                    if (missionWay.contains('링크') &&
-                        currentMission.status == 'COMPLETE')
-                      GestureDetector(
-                        onTap: () async {
-                          await _launchUrl(currentMission.archive);
-                        },
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            minHeight: 77,
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border:
-                                  Border.all(color: grayScaleGrey500, width: 1),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16.0, top: 20),
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'asset/icons/icon_link.svg',
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Text('링크 바로보기',
-                                          style: contentTextStyle.copyWith(
-                                              color: grayScaleGrey100)),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 48.0, bottom: 20),
-                                  child: Text(
-                                    currentMission.archive,
-                                    style: smallTextStyle,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    if (missionWay.contains('텍스트') ||
-                        currentMission.status == 'SKIP')
-                      Stack(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            height: 265,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border:
-                                  Border.all(color: grayScaleGrey500, width: 1),
-                            ),
-                            child: SingleChildScrollView(
-                              padding: EdgeInsets.all(16),
-                              child: Text(
-                                currentMission.archive,
-                                style: contentTextStyle.copyWith(
-                                    color: grayScaleGrey200),
-                              ),
-                            ),
-                          ),
-                          if (currentMission.status == 'SKIP')
-                            const Positioned(
-                              bottom: 16,
-                              left: 0,
-                              right: 0,
-                              child: Text(
-                                '미션을 건너뛰었어요',
-                                style: contentTextStyle,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                        ],
-                      ),
-                    const SizedBox(height: 12),
-                    /// 버튼 구현
-                    if (missionWay.contains('사진') &&
-                        currentMission.status == 'COMPLETE')
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 40.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                // 내 사진 좋아요 버튼 클릭
-                                if (currentMission.runtimeType.toString() == 'MyMissionProveData') {
-                                  print('내 미션 바텀시트에서 좋아요 클릭');
-                                  likePressedToast();
-                                }
-                                // 모두으 인증 좋아요 버튼 클릭
-                                else if (currentMission.runtimeType.toString() == 'EveryMissionProveData') {
-                                  int selectedIndex = index;
-                                  print('사진에서 좋아요 클릭');
-                                  await likePressed(
-                                      archiveId: currentMission.archiveId,
-                                      index: selectedIndex,
-                                      heartStatus: currentMission.heartStatus);
-                                  setState(() {
+                                                DropdownMenuItem(
+                                                  value: 'block',
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16),
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Text(
+                                                      '이용자 차단하기',
+                                                      style: contentTextStyle
+                                                          .copyWith(
+                                                              color:
+                                                                  grayScaleGrey100),
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                              onChanged: (String? val) async {
+                                                if (val == 'report') {
+                                                  print('신고하기 버튼 클릭');
+                                                  bool? agreeReport = await viewUtil
+                                                      .showWarningDialog(
+                                                          context: context,
+                                                          title:
+                                                              '이 인증을 신고하시겠어요?',
+                                                          content:
+                                                              '신고한 인증은 모든 모임원들에게 숨겨져요.',
+                                                          leftText: '취소하기',
+                                                          rightText: '신고하기');
 
-                                    currentMission.hearts = everyMissionList![index].hearts;
-                                    currentMission.heartStatus = everyMissionList![index].heartStatus;
-                                  });
-                                }
-                              },
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    currentMission.heartStatus == 'true'
-                                        ? 'asset/icons/mission_like_coral.svg' : 'asset/icons/mission_like.svg',
-                                    width: 20,
-                                    height: 20,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    currentMission.hearts.toString(),
-                                    style: contentTextStyle.copyWith(
-                                      color: currentMission.heartStatus == 'true'
-                                          ? coralGrey500 : grayScaleGrey400,
+                                                  if (agreeReport == true) {
+                                                    await doReport(
+                                                        currentMission
+                                                            .archiveId);
+                                                    Navigator.of(context).pop();
+                                                    fToast.showToast(
+                                                        child: Material(
+                                                          type: MaterialType
+                                                              .transparency,
+                                                          child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          20.0),
+                                                              child: Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: double
+                                                                    .infinity,
+                                                                height: 60,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      '신고가 접수되었어요. 24시간 이내에 확인 후 조치할게요.',
+                                                                      style: bodyTextStyle.copyWith(
+                                                                          color:
+                                                                              grayScaleGrey700),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              )),
+                                                        ),
+                                                        toastDuration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    2000),
+                                                        positionedToastBuilder:
+                                                            (context, child) {
+                                                          return Positioned(
+                                                            top: 114.0,
+                                                            left: 0.0,
+                                                            right: 0,
+                                                            child: child,
+                                                          );
+                                                        });
+                                                  }
+                                                } else if (val == 'block') {
+                                                  showModal('block',
+                                                      nickname: currentMission
+                                                          .nickname,
+                                                      makerId: currentMission
+                                                          .makerId);
+                                                }
+                                              },
+                                              buttonStyleData:
+                                                  const ButtonStyleData(
+                                                height: 20,
+                                                width: 20,
+                                              ),
+                                              iconStyleData:
+                                                  const IconStyleData(
+                                                icon: Icon(
+                                                  Icons.more_vert_outlined,
+                                                ),
+                                                iconSize: 20,
+                                                iconEnabledColor:
+                                                    grayScaleGrey300,
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight: 110,
+                                                width: 180,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: grayScaleGrey500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Spacer(),
-                            if(isMeOrEveryProved)
-                            GestureDetector(
-                              onTap: () => missionShareDialog(index: index),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'asset/icons/mission_image_upload.svg',
-                                    width: 20,
-                                    height: 20,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '이미지 저장',
-                                    style: bodyTextStyle.copyWith(
-                                        color: grayScaleGrey300,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    if (missionWay.contains('텍스트') ||
-                        missionWay.contains('링크') ||
-                        currentMission.status == 'SKIP')
-                      Padding(
-                          padding: const EdgeInsets.only(bottom: 40.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  // 내 사진 좋아요 버튼 클릭
-                                  if (currentMission.runtimeType.toString() ==
-                                      'MyMissionProveData') {
-                                    print('내 미션 바텀시트에서 좋아요 클릭');
-                                    likePressedToast();
-                                  }
-                                  // 모두의 인증 좋아요 버튼 클릭
-                                  else if (currentMission.runtimeType.toString() == 'EveryMissionProveData') {
-                                    int selectedIndex = index;
-                                    await likePressed(
-                                        archiveId: currentMission.archiveId,
-                                        index: selectedIndex,
-                                        heartStatus: currentMission.heartStatus).then((value) {
-                                      setState(() {
-                                        currentMission.hearts = everyMissionList![index].hearts;
-                                        currentMission.heartStatus = everyMissionList![index].heartStatus;
-                                      });
-                                    });
-                                  }
-                                },
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      currentMission.heartStatus == 'true'
-                                          ? 'asset/icons/mission_like_coral.svg'
-                                          : 'asset/icons/mission_like.svg',
-                                      width: 20,
-                                      height: 20,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      currentMission.hearts.toString(),
-                                      style: contentTextStyle.copyWith(
-                                        color: currentMission.heartStatus == 'true'
-                                            ? coralGrey500 : grayScaleGrey400,
+                                    const SizedBox(height: 16),
+
+                                    /// 사진 텍스트 링크 중 선택
+                                    if (missionWay.contains('사진') &&
+                                        currentMission.status == 'COMPLETE')
+                                      missionDetailPhoto(
+                                          context: context,
+                                          currentMission: currentMission),
+                                    if (missionWay.contains('링크') &&
+                                        currentMission.status == 'COMPLETE')
+                                      missionDetailLink(
+                                          context: context,
+                                          currentMission: currentMission),
+                                    if (missionWay.contains('텍스트') ||
+                                        currentMission.status == 'SKIP')
+                                      missionDetailTextOrSkip(
+                                          context: context,
+                                          currentMission: currentMission),
+
+                                    /// 미션 내용(문구) 추가
+                                    if (currentMission.contents != null) ...[
+                                      const SizedBox(height: 16),
+                                      CustomReadMoreText(
+                                        currentMission.contents,
+                                        trimLines: 2,
+                                        trimMode: CustomTrimMode.Line,
+                                        trimCollapsedText: '더보기',
+                                        trimExpandedText: '',
+                                        style: contentTextStyle.copyWith(
+                                            color: grayScaleGrey200,
+                                            height: 1.75),
+                                        moreStyle: contentTextStyle.copyWith(
+                                            color: grayScaleGrey400),
                                       ),
+                                    ],
+                                    const SizedBox(height: 24),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            // 내 사진 좋아요 버튼 클릭
+                                            if (currentMission.runtimeType
+                                                    .toString() ==
+                                                'MyMissionProveData') {
+                                              print('내 미션 바텀시트에서 좋아요 클릭');
+                                              likePressedToast();
+                                            }
+                                            // 모두으 인증 좋아요 버튼 클릭
+                                            else if (currentMission.runtimeType
+                                                    .toString() ==
+                                                'EveryMissionProveData') {
+                                              int selectedIndex = index;
+                                              print('사진에서 좋아요 클릭');
+                                              await likePressed(
+                                                  archiveId:
+                                                      currentMission.archiveId,
+                                                  index: selectedIndex,
+                                                  heartStatus: currentMission
+                                                      .heartStatus);
+                                              setState(() {
+                                                currentMission.hearts =
+                                                    everyMissionList![index]
+                                                        .hearts;
+                                                currentMission.heartStatus =
+                                                    everyMissionList![index]
+                                                        .heartStatus;
+                                              });
+                                            }
+                                          },
+                                          child: Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                currentMission.heartStatus ==
+                                                        'true'
+                                                    ? 'asset/icons/mission_like_coral.svg'
+                                                    : 'asset/icons/mission_like.svg',
+                                                width: 20,
+                                                height: 20,
+                                                fit: BoxFit.cover,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                currentMission.hearts
+                                                    .toString(),
+                                                style:
+                                                    contentTextStyle.copyWith(
+                                                  color: currentMission
+                                                              .heartStatus ==
+                                                          'true'
+                                                      ? coralGrey500
+                                                      : grayScaleGrey400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              'asset/icons/message.svg',
+                                              width: 20,
+                                              height: 20,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              commentsCount > 99
+                                                  ? '99+'
+                                                  : commentsCount.toString(),
+                                              style: contentTextStyle,
+                                            ),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        if (isMeOrEveryProved &&
+                                            missionWay.contains('사진') &&
+                                            currentMission.status == 'COMPLETE')
+                                          missionShare(
+                                              context: context, index: index),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ),
+
+                              /// 댓글 컴포넌트
+                              const SizedBox(height: 20),
+                              Container(
+                                width: double.infinity,
+                                height: 8,
+                                color: grayScaleGrey700,
+                              ),
+                              if (comments.isEmpty) ...[
+                                const SizedBox(height: 72),
+                                const Text('첫 번째 댓글을 남겨보세요!',
+                                    style: contentTextStyle),
+                              ],
+                              if (comments.isNotEmpty) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                    vertical: 8.0,
+                                  ),
+                                  child: Column(
+                                    children:
+                                        comments.map((CommentData comment) {
+                                      return CommentCard(
+                                        commentData: comment,
+                                        category: 'mission',
+                                        onDelete: () async {
+                                          if (commentLoading) return;
+                                          commentLoading = true;
+                                          bool? isDelete =
+                                              await missionRepository
+                                                  .deleteComment(
+                                                      teamId: teamId,
+                                                      missionArchiveId:
+                                                          currentMission
+                                                              .archiveId,
+                                                      missionCommentId:
+                                                          comment.commentId);
+                                          if (isDelete == true) {
+                                            var data = await missionRepository
+                                                .loadMyMissionCommentData(
+                                                    teamId: teamId,
+                                                    missionArchiveId:
+                                                        currentMission
+                                                            .archiveId);
+
+                                            setState(() {
+                                              if (data != null) comments = data;
+                                            });
+                                            notifyListeners();
+
+                                            toastMessage.showToastMessage(
+                                              fToast: fToast,
+                                              warningText: '댓글이 삭제되었어요.',
+                                              toastBottom: 48.0,
+                                              toastLeft: 0,
+                                              toastRight: 0,
+                                              height: 51,
+                                              textSize: '18',
+                                              isWarning: false,
+                                            );
+                                          }
+                                          commentLoading = false;
+                                        },
+                                        onReport: () async {
+                                          if (commentLoading) return;
+                                          commentLoading = true;
+                                          bool checkReport = await showDialog(
+                                            context: context,
+                                            builder: (ctx) {
+                                              return Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  WarningDialog(
+                                                    title: '이 댓글을 신고하시겠어요?',
+                                                    content:
+                                                        '신고한 댓글은 모든 모임원들에게 숨겨져요',
+                                                    leftText: '취소하기',
+                                                    onCanceled: () {
+                                                      Navigator.of(ctx)
+                                                          .pop(false);
+                                                    },
+                                                    rightText: '신고하기',
+                                                    onConfirm: () {
+                                                      Navigator.of(ctx)
+                                                          .pop(true);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                          // 댓글 신고
+                                          if (checkReport == true) {
+                                            bool? isReport =
+                                                await missionRepository
+                                                    .ReportMissionComment(
+                                              reportType: "MCOMMENT",
+                                              targetId: comment.commentId,
+                                            );
+                                            if (isReport == true) {
+                                              toastMessage.showToastMessage(
+                                                fToast: fToast,
+                                                warningText:
+                                                    '신고가 접수되었어요.\n 24시간 이내에 확인 후 조치할게요.',
+                                                toastBottom: 48.0,
+                                                toastLeft: 0,
+                                                toastRight: 0,
+                                                height: 51,
+                                                textSize: '18',
+                                                isWarning: false,
+                                              );
+                                            }
+                                          }
+                                          commentLoading = false;
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(height: 150),
+                              SizedBox(
+                                  height:
+                                      MediaQuery.of(context).viewInsets.bottom),
                             ],
-                          )),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            color: grayScaleGrey700,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 12.0),
+                              child: _CommentsInputWidget(
+                                archiveId: currentMission.archiveId,
+                                teamId: teamId,
+                                onCommentResult: (bool isSuccess) async {
+                                  FocusScope.of(context).unfocus();
+                                  if (isSuccess) {
+                                    print("댓글이 성공적으로 추가되었습니다.");
+                                    await loadMyMissionCommentData(
+                                        currentMission.archiveId);
+                                    setState(() {
+                                      commentsCount = comments.length;
+                                    });
+                                    if (currentMission.runtimeType.toString() ==
+                                        'MyMissionProveData') {
+                                      // 댓글 개수 갱신을 위해 나의 인증 조회
+                                      loadMissionData();
+                                    } else if (currentMission.runtimeType
+                                            .toString() ==
+                                        'EveryMissionProveData') {
+                                      // 댓글 개수 갱신을 위해 모두의 인증 조회
+                                      loadEveryMissionData();
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
         );
       },
     );
     notifyListeners();
+    detailLoading = false;
   }
 
   // 사진 전체 크기로 확대하기
@@ -1587,8 +1842,8 @@ class MissionProveState with ChangeNotifier {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.network(
-                        image,
+                      CachedNetworkImage(
+                        imageUrl: image,
                         fit: BoxFit.cover,
                       ),
                     ],
@@ -1604,7 +1859,7 @@ class MissionProveState with ChangeNotifier {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         padding: EdgeInsets.all(16),
-                        child: Icon(
+                        child: const Icon(
                           Icons.close,
                           size: 24,
                           color: Colors.white,
@@ -1623,6 +1878,108 @@ class MissionProveState with ChangeNotifier {
     }
   }
 
+  Widget missionDetailPhoto(
+      {required BuildContext context, required dynamic currentMission}) {
+    return Container(
+      width: double.infinity,
+      height: 265,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: GestureDetector(
+        onTap: () {
+          print('미션 상세내용에서 사진 클릭');
+          openFullImage(image: currentMission.archive);
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: CachedNetworkImage(
+            imageUrl: currentMission.archive,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget missionDetailLink(
+      {required BuildContext context, required dynamic currentMission}) {
+    return GestureDetector(
+      onTap: () async {
+        await _launchUrl(currentMission.archive);
+      },
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minHeight: 77,
+        ),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: grayScaleGrey500, width: 1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 20),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'asset/icons/icon_link.svg',
+                      width: 20,
+                      height: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Text('링크 바로보기',
+                        style:
+                            contentTextStyle.copyWith(color: grayScaleGrey100)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.only(left: 48.0, bottom: 20),
+                child: Text(
+                  currentMission.archive,
+                  style: smallTextStyle,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget missionDetailTextOrSkip(
+      {required BuildContext context, required dynamic currentMission}) {
+    return Stack(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (currentMission.status == 'SKIP') ...[
+                Text(
+                  '미션을 건너뛰었어요',
+                  style: contentTextStyle.copyWith(color: coralGrey400),
+                ),
+                const SizedBox(height: 8),
+              ],
+              Text(
+                currentMission.archive,
+                style: contentTextStyle.copyWith(
+                    color: grayScaleGrey200, height: 1.75),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   /// 더보기 버튼 클릭 시
   clickMoreModal() {
     if (isLeader) {
@@ -1631,7 +1988,8 @@ class MissionProveState with ChangeNotifier {
   }
 
   /// 바텀 모달 클릭
-  void showModal(String value, {String? nickname, int? makerId, bool? isRead}) async {
+  void showModal(String value,
+      {String? nickname, int? makerId, bool? isRead}) async {
     switch (value) {
       // 더보기 클릭
       case 'more':
@@ -1671,8 +2029,10 @@ class MissionProveState with ChangeNotifier {
           isRead: isRead,
         );
 
-        if(result == 'missionFix') {
+        if (result != null && result.contains("missionFix")) {
           await getMissionContent();
+          String read = result.split("_") as String;
+          this.isRead = read == 'true' ? true : false;
         }
         break;
       // 미션 인증하기 클릭
@@ -1684,22 +2044,23 @@ class MissionProveState with ChangeNotifier {
           if (missionResult == 'skip') {
             missionSkip();
           } else if (missionResult == 'submit') {
+            /// 미션 인증
             submit();
           }
         }
         break;
-        // 유저 차단
+      // 유저 차단
       case 'block':
         print('block 모달 수행합니다~');
         var result = await missionState.showUserBlockModal(
             context: context, makerId: makerId!, nickname: nickname!);
 
-        if(result == 'userBlock') {
+        if (result == 'userBlock') {
           /// 차단 신고 API
           final bool? isSuccess =
-          await apiCode.postBlockUser(targetId: makerId);
+              await apiCode.postBlockUser(targetId: makerId);
 
-          if(isSuccess == true) {
+          if (isSuccess == true) {
             toastMessage.showToastMessage(
               fToast: fToast,
               warningText: '차단이 완료되었어요.',
@@ -1726,7 +2087,9 @@ class MissionProveState with ChangeNotifier {
     int month = created.month;
     int day = created.day;
     // 같은 날짜인 경우
-    return (year == now.year && month == now.month && day == now.day) ? true : false;
+    return (year == now.year && month == now.month && day == now.day)
+        ? true
+        : false;
   }
 
   // 인증 날짜 변환
@@ -1736,5 +2099,115 @@ class MissionProveState with ChangeNotifier {
     String formattedTime = DateFormat('HH:mm').format(parsedDate);
 
     return [formattedDate, formattedTime];
+  }
+}
+
+class _CommentsInputWidget extends StatefulWidget {
+  final int archiveId;
+  final int teamId;
+  final Function(bool isSuccess) onCommentResult; // 콜백 함수
+  const _CommentsInputWidget(
+      {required this.archiveId,
+      required this.teamId,
+      required this.onCommentResult});
+
+  @override
+  State<_CommentsInputWidget> createState() => _CommentsInputWidgetState();
+}
+
+class _CommentsInputWidgetState extends State<_CommentsInputWidget> {
+  final TextEditingController commentController = TextEditingController();
+  bool createCommentLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _renderTextField(context: context),
+        ),
+        const SizedBox(width: 8.0),
+        _renderSendButton(context: context),
+      ],
+    );
+  }
+
+  Widget _renderTextField({required BuildContext context}) {
+    return TextField(
+      controller: commentController,
+      maxLength: 255,
+      maxLines: 1,
+      inputFormatters: [LengthLimitingTextInputFormatter(200)],
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: grayScaleGrey600,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.transparent),
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 20.0,
+          horizontal: 16.0,
+        ),
+        counterText: '',
+        hintText: '댓글을 작성해주세요',
+        hintStyle: const TextStyle(
+          color: grayScaleGrey550,
+          fontSize: 16.0,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      style: const TextStyle(
+        color: grayScaleGrey100,
+        fontSize: 16.0,
+        fontWeight: FontWeight.w500,
+      ),
+      cursorColor: grayScaleGrey100,
+    );
+  }
+
+  Widget _renderSendButton({required BuildContext context}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: grayScaleGrey600,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      padding: const EdgeInsets.all(6.0),
+      child: IconButton(
+        icon: SvgPicture.asset(
+          commentController.text.isNotEmpty
+              ? 'asset/icons/icon_send_white.svg'
+              : 'asset/icons/icon_send.svg',
+          width: 24,
+          height: 24,
+        ),
+        onPressed: () async {
+          if (createCommentLoading || commentController.value.text.isEmpty) {
+            return;
+          }
+          createCommentLoading = true;
+          try {
+            final ApiCode apiCode = ApiCode();
+            final data = CreateCommentData(
+              content: commentController.value.text,
+            );
+            bool isSuccess = await apiCode.createMissionComment(
+                createCommentData: data,
+                missionArchiveId: widget.archiveId,
+                teamId: widget.teamId);
+            widget.onCommentResult(isSuccess);
+            AmplitudeConfig.analytics
+                .logEvent("mission_comment", eventProperties: {
+              "teamId": widget.teamId,
+              "missionArchiveId": widget.archiveId,
+              "comment": commentController.value.text,
+            });
+          } finally {
+            commentController.clear();
+            createCommentLoading = false;
+          }
+        },
+      ),
+    );
   }
 }

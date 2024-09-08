@@ -87,9 +87,7 @@ class LinkAuthPage extends StatelessWidget {
       centerTitle: false,
       leading: IconButton(
         icon: const Icon(Icons.close), // 뒤로 가기 아이콘
-        onPressed: () {
-          Navigator.of(context).pop(); // 뒤로 가기 버튼을 누르면 이전 화면으로 돌아갑니다.
-        },
+        onPressed: () => context.read<LinkAuthState>().showEndRepeatModal(context: context),
       ),
     );
   }

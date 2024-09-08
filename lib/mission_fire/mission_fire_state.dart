@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:moing_flutter/const/color/colors.dart';
 import 'package:moing_flutter/model/api_code/api_code.dart';
 import 'package:moing_flutter/model/api_generic.dart';
@@ -16,6 +17,7 @@ class MissionFireState extends ChangeNotifier {
   final int missionId;
   int singleMissionMyCount = 0;
   int singleMissionTotalCount = 0;
+  final TextEditingController messageController = TextEditingController();
 
   String selectedUserName = '모임원 프로필을 클릭해보세요';
   int? selectedIndex;
@@ -107,8 +109,11 @@ class MissionFireState extends ChangeNotifier {
   /// 불 던지기 API
   Future<void> throwFire() async {
     _isThrowFireInProgress = true;
+    notifyListeners();
 
     if (selectedIndex == null || userList == null) {
+      _isThrowFireInProgress = false;
+      notifyListeners();
       return;
     }
 
@@ -116,16 +121,56 @@ class MissionFireState extends ChangeNotifier {
         '${dotenv.env['MOING_API']}/api/team/$teamId/missions/$missionId/fire/${userList![selectedIndex!].receiveMemberId}';
 
     try {
+      Map<String, dynamic> body = {};
+      if (messageController.text.isNotEmpty) {
+        body['message'] = messageController.text;
+      }
+
+      log('불던지기 메세지: $body');
+
       ApiResponse<Map<String, dynamic>> apiResponse =
           await call.makeRequest<Map<String, dynamic>>(
         url: apiUrl,
         method: 'POST',
+        body: body.isNotEmpty ? body : null,
         fromJson: (data) => data as Map<String, dynamic>,
       );
 
+      log('throwFire response: ${apiResponse.data}');
+
+      // 불 던지기 메세지 추가 유무
       if (apiResponse.data != null) {
+        AmplitudeConfig.analytics.logEvent(
+            messageController.text.isNotEmpty
+                ? "dropfire_message_complete"
+                : "dropfire_nomessage_complete",
+            eventProperties: {
+              // 사용자가 보낸 메세지 길이(필요 없을 거 같긴 함)
+              "message_length": messageController.text.length,
+              // 메세지 받는 사람 이름(필요 없을 거 같긴 함22)
+              "receiver": userList![selectedIndex!].nickname
+            });
+      }
+
+      // 불 던지기 성공적으로 완료
+      if (apiResponse.data != null) {
+        String? nickname = await AmplitudeConfig.analytics.getUserId();
+        if (nickname == null) {
+          AmplitudeConfig.analytics.logEvent("dropfire_complete",
+              eventProperties: {
+                "receiver": userList![selectedIndex!].nickname
+              });
+        } else {
+          AmplitudeConfig.analytics.logEvent("dropfire_complete",
+              eventProperties: {
+                "receiver": userList![selectedIndex!].nickname,
+                "sender": nickname
+              });
+        }
+        messageController.clear();
+
         loadFirePersonList();
-        compeleteThrowFireModal();
+        completeThrowFireModal();
         initSelectedUser();
       } else {
         log('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
@@ -134,6 +179,7 @@ class MissionFireState extends ChangeNotifier {
       log('불던지기 실패: $e');
     } finally {
       _isThrowFireInProgress = false;
+      notifyListeners();
     }
   }
 
@@ -173,12 +219,12 @@ class MissionFireState extends ChangeNotifier {
     }
   }
 
-  void compeleteThrowFireModal() {
+  void completeThrowFireModal() {
     showDialog(
       context: context,
       builder: (context) {
         Future.delayed(const Duration(seconds: 2), () {
-          Navigator.of(context).pop(); // 2초 후에 다이얼로그를 닫습니다.
+          Navigator.of(context).pop(true); // 2초 후에 다이얼로그를 닫습니다.
         });
 
         return Dialog(
@@ -217,6 +263,10 @@ class MissionFireState extends ChangeNotifier {
           ),
         );
       },
-    );
+    ).then((value) {
+      if (value == true) {
+        log('Dialog closed');
+      }
+    });
   }
 }

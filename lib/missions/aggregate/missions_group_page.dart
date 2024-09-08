@@ -84,15 +84,19 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                     itemBuilder: (context, index) {
                       final e = state.aggregateTeamSingleMissionStatus?.data[index];
                       print('e : ${e.toString()}');
-                      log('Building item: ${e?.missionTitle}');
+                      log('Building item: ${e?.missionTitle}, Status: ${e?.status}, Done: ${e?.done}, Total: ${e?.total}');
 
                       return Padding(
                         padding: const EdgeInsets.only(right: 12.0),
                         child: GroupSingleMissionCard(
                           missionId: e!.missionId,
                           teamId: e.teamId,
+                          teamName: e.teamName,
                           missionTitle: e.missionTitle,
                           dueTo: e.dueTo,
+                          done: e.done,
+                          total: e.total,
+                          status: e.status,
                           onTap: () {
                             Navigator.of(context).pushNamed(
                                 MissionProvePage.routeName,
@@ -108,6 +112,9 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                               Provider.of<MissionsGroupState>(context,
                                   listen: false)
                                   .reloadMissionStatus();
+                              setState(() {
+                                Provider.of<MissionsGroupState>(context, listen: false).reloadMissionStatus();
+                              });
                             });
                           },
                         ),
@@ -162,9 +169,12 @@ class _MissionsGroupPageState extends State<MissionsGroupPage> {
                     return GroupRepeatMissionCard(
                       missionId: e!.missionId,
                       teamId: e.teamId,
+                      teamName: e.teamName,
                       missionTitle: e.missionTitle,
                       totalNum: e.totalNum,
                       doneNum: e.doneNum,
+                      donePeople: e.donePeople,
+                      totalPeople: e.totalPeople,
                       onTap: () {
                         Navigator.of(context).pushNamed(
                           MissionProvePage.routeName,

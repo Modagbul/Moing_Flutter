@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moing_flutter/app/app.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:moing_flutter/config/amplitude_config.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -17,9 +19,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await initializeDefault();
-  // 화면 세로로 고정
+  /// 화면 세로로 고정
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   HttpOverrides.global = MyHttpOverrides();
+  /// Amplitude 세팅
+  AmplitudeConfig().init();
+  /// Amplitude 세션 자동 추적
+  Amplitude.getInstance().trackingSessionEvents(true);
   runApp(const MoingApp());
 }
 

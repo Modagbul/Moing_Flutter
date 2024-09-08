@@ -12,6 +12,8 @@ import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
 import 'package:moing_flutter/model/response/alarm_model.dart';
 
+import '../../config/amplitude_config.dart';
+
 class AlarmState extends ChangeNotifier {
   final BuildContext context;
   final APICall apiCall = APICall();
@@ -126,6 +128,8 @@ class AlarmState extends ChangeNotifier {
         return 'asset/icons/icon_approve_team.svg';
       case 'REJECT_TEAM':
         return 'asset/icons/icon_reject_team.svg';
+      case 'COMMENT':
+        return 'asset/icons/icon_comment.svg';
       default:
         throw ArgumentError('Invalid alarm type: $type');
     }
@@ -138,6 +142,7 @@ class AlarmState extends ChangeNotifier {
 
     // 알림 읽음 처리 성공 -> 화면 이동
     AlarmData alarmData = alarmList![index];
+
     if (await postSingleAlarmData(alarmHistoryId: alarmData.alarmHistoryId)) {
       await getAllAlarmData();
       notifyListeners();
@@ -146,9 +151,15 @@ class AlarmState extends ChangeNotifier {
         case '/post/detail': // 신규 공지 업로드 알림
           validateNewUploadPost(alarmData: alarmData);
           break;
-        case '/missions/prove': // (한번/반복) 신규 미션 업로드, 불 던지기 알림
+        case '/missions/prove': // (한번/반복) 신규 미션 업로드, 불 던지기 알림, 미션 댓글 알림
           navigateMissionsProvePage(alarmData: alarmData);
           break;
+      // if (alarmData.type == 'COMMENT') {
+          //   navigateToMissionDetail(alarmData: alarmData);
+          // } else {
+          //   // (한번/반복) 신규 미션 업로드, 불 던지기 알림
+          //   navigateMissionsProvePage(alarmData: alarmData);
+          // }
         case '/missions': // (한번/반복) 미션 리마인드 알림
           navigateMissionsScreen(alarmData: alarmData);
           break;
@@ -160,6 +171,20 @@ class AlarmState extends ChangeNotifier {
       }
     }
   }
+
+  // void navigateToMissionDetail({required AlarmData alarmData}) {
+  //   Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
+  //
+  //   int teamId = idInfoMap['teamId'];
+  //   int missionId = idInfoMap['missionId'];
+  //   int missionArchiveId = idInfoMap['missionArchiveId'];
+  //
+  //   Navigator.pushNamed(context, alarmData.path, arguments: {
+  //     'teamId': teamId,
+  //     'missionId': missionId,
+  //     'missionArchiveId': missionArchiveId
+  //   });
+  // }
 
   void validateNewUploadPost({required AlarmData alarmData}) async {
     Map<String, dynamic> idInfoMap = json.decode(alarmData.idInfo);
@@ -185,6 +210,18 @@ class AlarmState extends ChangeNotifier {
     bool? isEnded;
     String? status;
 
+    // 푸시 알림 클릭 불 던지기 메세지 유무
+    bool hasMessage = alarmData.body.isNotEmpty;
+
+    AmplitudeConfig.analytics.logEvent(
+        hasMessage ? "push_click_dropfire_message" : "push_click_dropfire_nomessage",
+        eventProperties: {
+          'alarmType': alarmData.type,
+          'alarmTitle': alarmData.title,
+          'messageContent': hasMessage ? alarmData.body : 'No message',
+        }
+    );
+
     if (idInfoMap['teamId'] != null && idInfoMap['missionId'] != null) {
       final missionEndStatus = await getMissionEndStatus(
           teamId: idInfoMap['teamId'], missionId: idInfoMap['missionId']);
@@ -202,6 +239,8 @@ class AlarmState extends ChangeNotifier {
       isEnded: isEnded ?? false,
       isRead: alarmData.isRead,
     );
+
+    log('MissionProveArgument API Response: $idInfoMap');
 
     Navigator.pushNamed(
       context,

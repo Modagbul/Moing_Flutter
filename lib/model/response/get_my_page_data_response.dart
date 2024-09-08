@@ -45,7 +45,7 @@ class TeamBlock {
       teamId: json['teamId'],
       teamName: json['teamName'],
       category: json['category'],
-      profileImgUrl: json['profileImgUrl'],
+      profileImgUrl: json['profileImgUrl'] ,
     );
   }
 }

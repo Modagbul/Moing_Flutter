@@ -30,6 +30,8 @@ class AggregateTeamRepeatMission {
   String doneNum;
   String totalNum;
   String status;
+  String donePeople;
+  String totalPeople;
 
   AggregateTeamRepeatMission({
     required this.missionId,
@@ -39,6 +41,8 @@ class AggregateTeamRepeatMission {
     required this.doneNum,
     required this.totalNum,
     required this.status,
+    required this.donePeople,
+    required this.totalPeople,
   });
 
   factory AggregateTeamRepeatMission.fromJson(Map<String, dynamic> json) {
@@ -50,6 +54,8 @@ class AggregateTeamRepeatMission {
       doneNum: json['doneNum'],
       totalNum: json['totalNum'],
       status: json['status'],
+      donePeople: json['donePeople'],
+      totalPeople: json['totalPeople'],
     );
   }
 }

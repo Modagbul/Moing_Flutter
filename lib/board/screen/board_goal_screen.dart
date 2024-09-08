@@ -25,7 +25,7 @@ class BoardGoalScreen extends StatelessWidget {
         context.watch<BoardMainState>().teamFireLevelData?.score ?? 0;
     final String category =
         (context.watch<BoardMainState>().teamInfo?.category ?? '');
-    final teamName = (context.watch<BoardMainState>().teamInfo?.category ?? '');
+    final teamName = (context.watch<BoardMainState>().teamInfo?.teamName ?? '');
     final bool isDeleted =
         context.watch<BoardMainState>().teamInfo?.isDeleted ?? false;
 
@@ -235,18 +235,14 @@ class BoardGoalScreen extends StatelessWidget {
               ),
             ),
           ),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () => context.read<BoardMainState>().getTeamFireLevel(),
-              splashColor: Colors.white,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.refresh,
-                  color: grayScaleGrey400,
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: GestureDetector(
+              onTap: () => context
+                  .read<BoardMainState>()
+                  .navigateFireLevelGuidePage(context),
+              child: SvgPicture.asset(
+                'asset/icons/icon_info_circle.svg',
               ),
             ),
           ),
@@ -270,14 +266,14 @@ class BoardGoalScreen extends StatelessWidget {
         barRadius: const Radius.circular(24.0),
         backgroundColor: grayScaleGrey600,
         progressColor: coralGrey500,
-        center: const Align(
+        center: Align(
           alignment: Alignment.centerRight,
           child: Padding(
-            padding: EdgeInsets.only(right: 16.0),
+            padding: const EdgeInsets.only(right: 16.0),
             child: Text(
-              'Level up!',
-              style: TextStyle(
-                color: grayScaleGrey550,
+              '$score/100',
+              style: const TextStyle(
+                color: grayScaleWhite,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w600,
               ),

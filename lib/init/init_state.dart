@@ -3,14 +3,12 @@ import 'dart:async';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:moing_flutter/login/gender/sign_up_gender_page.dart';
 import 'package:moing_flutter/login/invitate_link/welcome_team_page.dart';
 import 'package:moing_flutter/login/onboarding/on_boarding_first.dart';
 import 'package:moing_flutter/login/sign_in/login_page.dart';
 import 'package:moing_flutter/main/main_page.dart';
 import 'package:moing_flutter/model/api_generic.dart';
 import 'package:moing_flutter/model/api_response.dart';
-import 'package:moing_flutter/mypage/profile_setting_page.dart';
 import 'package:moing_flutter/utils/api/refresh_token.dart';
 import 'package:moing_flutter/utils/dynamic_link/dynamic_link.dart';
 import 'package:moing_flutter/utils/shared_preferences/shared_preferences.dart';
@@ -164,16 +162,15 @@ class InitState extends ChangeNotifier {
             }
           }
         }
-
         /// 일반적으로 접속한 사람 (teamId = null)
         else {
           bool? isUser = await checkUser();
           if(isUser != null && isUser) {
+            print('JWTTOKEN: $accessToken');
             Navigator.pushNamedAndRemoveUntil(
                 context, MainPage.routeName, (route) => false);
           }
           else {
-            print(1);
             Navigator.pushNamedAndRemoveUntil(
                 context, LoginPage.routeName, (route) => false);
           }

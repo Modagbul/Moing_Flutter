@@ -119,9 +119,7 @@ class TextAuthPage extends StatelessWidget {
       centerTitle: false,
       leading: IconButton(
         icon: const Icon(Icons.close), // 뒤로 가기 아이콘
-        onPressed: () {
-          Navigator.of(context).pop(); // 뒤로 가기 버튼을 누르면 이전 화면으로 돌아갑니다.
-        },
+        onPressed: () => context.read<TextAuthState>().showEndRepeatModal(context: context),
       ),
     );
   }
@@ -148,47 +146,6 @@ class _InfoTextFields extends StatelessWidget {
               context.read<TextAuthState>().clearTextField(),
         ),
       ],
-    );
-  }
-}
-
-class _NextBtn extends StatelessWidget {
-  const _NextBtn();
-
-  @override
-  Widget build(BuildContext context) {
-    final categoryState = Provider.of<TextAuthState>(context);
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 32),
-      child: SizedBox(
-        width: 353,
-        height: 62,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: categoryState.getNextButtonColor(),
-            disabledBackgroundColor: grayScaleGrey700,
-            disabledForegroundColor: grayScaleGrey500,
-            padding: const EdgeInsets.all(16.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-          ),
-          onPressed: categoryState.isCategorySelected()
-              ? () {
-                  categoryState.submit();
-                }
-              : null, // 카테고리가 선택되지 않았다면 버튼은 비활성화 상태가 되어야 함
-          child: Text(
-            '인증하기',
-            style: TextStyle(
-              color: categoryState.getNextButtonTextColor(),
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
