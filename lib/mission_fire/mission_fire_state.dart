@@ -95,14 +95,18 @@ class MissionFireState extends ChangeNotifier {
         ),
       );
 
-      if (apiResponse.data != null) {
+      if (apiResponse.data != null && apiResponse.data!.isNotEmpty) {
         userList = apiResponse.data;
         notifyListeners();
       } else {
-        log('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
+        log('loadFirePersonList is Null or Empty, error code: ${apiResponse.errorCode}');
+        userList = [];
+        notifyListeners();
       }
     } catch (e) {
       log('불 던질 사람 조회 실패: $e');
+      userList = [];
+      notifyListeners();
     }
   }
 
@@ -111,7 +115,7 @@ class MissionFireState extends ChangeNotifier {
     _isThrowFireInProgress = true;
     notifyListeners();
 
-    if (selectedIndex == null || userList == null) {
+    if (selectedIndex == null || userList == null || userList!.isEmpty || selectedIndex! >= userList!.length) {
       _isThrowFireInProgress = false;
       notifyListeners();
       return;
@@ -172,6 +176,7 @@ class MissionFireState extends ChangeNotifier {
         loadFirePersonList();
         completeThrowFireModal();
         initSelectedUser();
+        notifyListeners();
       } else {
         log('loadFirePersonList is Null, error code : ${apiResponse.errorCode}');
       }
@@ -192,25 +197,23 @@ class MissionFireState extends ChangeNotifier {
 
   // 선택 적용
   void setSelectedIndex(int index) {
-    selectedIndex = index;
-
-    if (userList != null) {
-      userList![selectedIndex!].fireStatus == "False"
-          ? selectedUserName = '불 던지기는 1시간에 1번 가능해요'
-          : selectedUserName =
-              '${userList![selectedIndex!].nickname}님에게 불을 던져\n 푸시알림을 보내요';
+    if (userList != null && userList!.isNotEmpty && index < userList!.length) {
+      selectedIndex = index;
+      if (userList![selectedIndex!].fireStatus == "False") {
+        selectedUserName = '불 던지기는 1시간에 1번 가능해요';
+      } else {
+        selectedUserName = '${userList![selectedIndex!].nickname}님에게 불을 던져\n 푸시알림을 보내요';
+      }
+    } else {
+      selectedUserName = '유효한 사용자가 없습니다.';
+      selectedIndex = null;
     }
-
     notifyListeners();
   }
 
   // 불 던지기 버튼 클릭
   void firePressed() async {
-    if (_isThrowFireInProgress) {
-      return;
-    }
-
-    if (selectedIndex == null || userList == null) {
+    if (_isThrowFireInProgress || selectedIndex == null || userList == null || userList!.isEmpty) {
       return;
     }
 
@@ -222,9 +225,11 @@ class MissionFireState extends ChangeNotifier {
   void completeThrowFireModal() {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext dialogContext) {
         Future.delayed(const Duration(seconds: 2), () {
-          Navigator.of(context).pop(true); // 2초 후에 다이얼로그를 닫습니다.
+          if (ModalRoute.of(dialogContext)?.isCurrent ?? false) {
+            Navigator.of(dialogContext).pop();
+          }
         });
 
         return Dialog(
